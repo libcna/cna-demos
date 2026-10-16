@@ -6752,3 +6752,23 @@ issue or fresh XNA run.
 The next measured format gap is reference-string and character fidelity: whitespace/newlines,
 escaping, Unicode, empty/null distinction and one-character width deserve one coherent text asset,
 not encoding variants.
+
+### Focused1089 intermediate XML text fidelity
+
+New `content.custom.intermediate_text_values` covers the measured text grammar with one resource.
+Eleven controls pass: empty/null distinction; preserved surrounding space and newlines; escaped
+markup, quotes and apostrophes; BMP and supplementary Unicode; tab/space/markup chars; complete
+round trip; CDATA/entity normalization; three invalid character widths; and pre-output U+0000
+rejection.
+
+The twelfth control records ISSUE-147. XNA's checked-in failure corpus names
+`System.ArgumentException` for NUL output, while CNA's sharp-runtime XML writer throws
+`System::Xml::XmlException`. Five runs under each renderer label retain the same11/12 controls with
+common stdout SHA-256 `493b93aa7a6b5ab97f53e39e3ad805674c182f509918871f38a4e466cccc96d8` and empty stderr. The
+warning-free `-j3` build, metadata716/0, thirteen related CTests and self-tests all pass. Coverage
+contains all716 IDs while surface totals stay307/329 types,2128/2326 members,674/753 fields and
+3079/3205 C routes. Evidence:`/tmp/checkpoint-1089-intermediate-text-values/*`. No fresh XNA run.
+
+Curve remains the distinct framework-value serialization grammar: required loop elements and
+packed five-token keys. Add that behavior to the existing framework-values demo, including empty
+and malformed forms, rather than creating another catalog ID.

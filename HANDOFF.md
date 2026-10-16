@@ -11688,3 +11688,32 @@ Next, commit and push this batch, then continue the measured intermediate format
 and character fidelity: leading/trailing space and line endings, XML escaping, Unicode, empty/null
 reference text, exact one-character forms and representative invalid widths. Keep one authored text
 resource rather than encoding variants. Keep every compile at three jobs or fewer.
+
+## Focused1089-intermediate-XML-text-fidelity
+
+The716th catalog ID, `content.custom.intermediate_text_values`, uses one authored text resource.
+Eleven passing controls distinguish empty/null strings; preserve padded/multiline text, XML escaping
+and BMP/supplementary Unicode; retain tab, space and markup characters; round-trip every value;
+normalize CDATA/entities; reject empty, two-character and supplementary `char16_t` inputs; and
+prove U+0000 is refused before output.
+
+The sole expected failure is new CNA-DEMOS-ISSUE-147. Genuine XNA's checked-in corpus and CNA's
+format document specify `ArgumentException` for NUL output, but sharp-runtime's XML writer throws
+`XmlException`. The initial direct attempt caught only XNA's expected type and reached the outer
+failure handler; source and corpus inspection established the CNA mismatch, so the final demo keeps
+the rejection pass and exception-category failure separately visible.
+
+The clean incremental build is warning-free with `-j3`; metadata validates716/0. Twelve related
+SOFTWARE intermediate-XML demos plus the catalog parser pass13/13, and validator/comparator
+self-tests pass5/5 and4/4. Five runs under each renderer label retain exactly11 passes and one
+ISSUE-147 failure with byte-identical stdout SHA-256
+`493b93aa7a6b5ab97f53e39e3ad805674c182f509918871f38a4e466cccc96d8` and empty stderr. Generated
+coverage merges Focused1085-1089 with Complete1084, contains all716 IDs and remains307/329 XNA
+types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1089-intermediate-text-values/*`. No fresh genuine-XNA execution, rendering,
+screenshot or manual visual claim was made.
+
+Next, commit and push this batch, then extend the existing
+`content.custom.intermediate_framework_values` ID with Curve's distinct intermediate grammar:
+required PreLoop/PostLoop elements, packed five-token keys, empty keys and representative malformed
+forms. Do not add a Curve-only ID. Keep every compile at three jobs or fewer.

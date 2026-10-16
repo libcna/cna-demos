@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added an intermediate-XML text workflow for empty/null, whitespace, multiline, escaped and
+  Unicode strings plus exact character widths; it records CNA-DEMOS-ISSUE-147 for CNA's NUL-output
+  exception category.
 - Added an intermediate-XML framework-value workflow for fixed-width vector/matrix tuples, packed
   ARGB Color text, integer rectangles, structured BoundingBox/Ray values, normalization and
   representative malformed forms.

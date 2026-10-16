@@ -12178,3 +12178,30 @@ Continue the measured format audit with string and character fidelity: preserved
 space and line endings, XML escaping, Unicode, empty versus null reference text, single-character
 forms and representative invalid character widths. Keep these in one authored text resource rather
 than adding encoding variants.
+
+## Focused1089 intermediate XML text fidelity
+
+New `content.custom.intermediate_text_values` keeps the string/character grammar in one authored
+text resource. Eleven passing controls distinguish empty from null strings; preserve padded and
+multiline text, XML escaping, BMP/supplementary Unicode and whitespace/XML-significant chars;
+round-trip every value; normalize CDATA and numeric entities; reject empty, two-character and
+supplementary-code-point `char16_t` inputs; and prove that U+0000 is refused before output.
+
+The sole expected failure records new ISSUE-147. Genuine XNA and CNA's own format document specify
+`ArgumentException` for NUL character output, while sharp-runtime's XML writer throws
+`XmlException`. The first direct attempt caught only the expected XNA type and therefore reached
+the outer failure handler; source/corpus review identified the real mismatch, after which the demo
+kept the rejection control passing and made the exception-category difference explicit.
+
+The warning-free `-j3` build validates metadata716/0. Twelve related SOFTWARE intermediate-XML
+demos plus the catalog parser pass13/13; validator/comparator self-tests pass5/5 and4/4. Five runs
+under each renderer label retain exactly11 passes and one ISSUE-147 failure with byte-identical
+stdout SHA-256 `493b93aa7a6b5ab97f53e39e3ad805674c182f509918871f38a4e466cccc96d8` and empty stderr.
+Generated coverage contains all716 IDs and remains307/329 types,2128/2326 members,674/753 fields
+and3079/3205 C routes. Evidence:`/tmp/checkpoint-1089-intermediate-text-values/*`. No fresh XNA
+execution or rendered result is claimed.
+
+Continue without another ID by extending `content.custom.intermediate_framework_values` with the
+remaining distinct framework grammar: Curve's required PreLoop/PostLoop elements and packed
+five-token keys, including empty and representative malformed forms. Ordinary math tuple widths
+remain intentionally represented rather than exhaustively repeated.

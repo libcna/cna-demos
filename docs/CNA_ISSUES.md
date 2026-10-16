@@ -15,6 +15,29 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-147 -- intermediate NUL character reports XmlException instead of ArgumentException
+
+- **Area/API:** `IntermediateSerializer::Serialize<char16_t>` through the content-pipeline
+  character serializer and `System::Xml::XmlWriter::WriteString`.
+- **Demo/reproduction:** run `content.custom.intermediate_text_values`. After exact string/character
+  output, round trip, CDATA/entity normalization and invalid character-width checks, serialize
+  `u'\0'` as an intermediate XML root value.
+- **Observed:** CNA refuses the unrepresentable NUL before producing a document, but the underlying
+  sharp-runtime XML writer throws `System::Xml::XmlException` with a clear NUL diagnostic. This is
+  the sole expected failure among twelve checks; the rejection itself is a passing safety control.
+- **Expected/reference:** the checked-in genuine-XNA corpus records `System.ArgumentException`
+  with the .NET XML writer's invalid-character diagnostic for the same character serialization.
+  CNA's `docs/xna-intermediate-xml-format.md` section 4 also names `ArgumentException`.
+- **Cause/suggested repair:** sharp-runtime's `XmlWriter::ThrowIfContainsNul` deliberately throws
+  `XmlException`, while its non-NUL invalid-XML-character validation uses `ArgumentException`.
+  Align the NUL path with .NET's/XNA's public exception category while preserving pre-write
+  rejection and the useful diagnostic.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` with the current sharp-runtime dependency on Linux.
+  Focused evidence is under `/tmp/checkpoint-1089-intermediate-text-values/*`. The reference is
+  CNA's checked-in genuine-XNA corpus; no fresh XNA execution, CNA/sharp-runtime source
+  modification or upstream message is claimed.
+
 ### CNA-DEMOS-ISSUE-146 -- OpaqueDataDictionary reports the wrong null-value exception
 
 - **Area/API:** `Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::Add`
