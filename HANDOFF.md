@@ -3523,8 +3523,9 @@ image export and compressed-cube alpha sampling. The complete warning-free three
 
 Resume the deeper semantic behavior audit: reconcile explicit residual gaps in
 `docs/COVERAGE_AUDIT.md` against pinned CNA d23e139de and prioritize reachable deterministic behavior
-that strengthens an existing coherent demo. Choose the next gap outside the Focused1015-1021
-ownership, audio-transport and texture-alpha slices now absorbed by Complete1022. Revisit the126 intentionally
+that strengthens an existing coherent demo. Focused1023 closes Texture3D's explicit non-Color
+sampling gap with signed/HDR Vector4 values on both GLSL dialects. Choose the next gap outside the
+Focused1015-1023 ownership, audio-transport and texture-format slices. Revisit the126 intentionally
 uncredited C routes only if public headers or reachable environment capabilities change. Do not add
 metadata merely to raise a count.
 Focused957 closes the strict public build-configuration parser;
@@ -10166,3 +10167,20 @@ OPENGLES3 result SHA-256 values are
 `178f5eecb6295359832b135fdb58f7e1ac8cda557058548c167663610aab0026`. No screenshot, listening
 test, physical input, external service session or manual visual inspection was performed. Continue
 the deterministic behavior audit outside the now-absorbed Focused1015-1021 slices.
+
+## Focused1023-Texture3D-Vector4-sampling
+
+`graphics.texture3d.sampler_coordinates` grows from ten to eleven GL controls without a new ID or
+metadata credit. Alongside its moved Color mip chain, it uploads two Vector4 texels whose channels
+span -1 through2. The shader maps each sampled channel with `.25*x+.5`; exact framebuffer values
+RGBA(64,128,191,255) and (255,191,128,64) therefore prove signed and above-one float data survives
+volume upload and actual sampler3D access instead of being clamped like Color storage.
+
+The warning-free `-j3` build, metadata693/0, exact SOFTWARE CustomEffects skip and validator/
+comparator self-tests5/5 plus4/4 pass. Ten OPENGLES3 and ten OPENGL33/Xvfb runs pass11/11 with
+byte-identical stdout SHA-256 `d0d393b8d38c8b60b22a3e321d0b0bb8ca9c12f4a8cb74950cbd665101998cb0`
+and empty stderr. Generated totals remain307/329 XNA types,2128/2326 members,674/753 fields and
+3079/3205 C routes. Evidence:`/tmp/checkpoint-1023-texture3d-vector-sampling/*`; source SHA-256
+`84b0920762ccab97956878cba29386acc430b7749ee8f7f76d7a04b577b1480a`. Pixels were read
+programmatically; no screenshot or manual visual inspection was performed, and no CNA issue was
+found. Continue with the next deterministic behavior gap outside sampled volume formats.

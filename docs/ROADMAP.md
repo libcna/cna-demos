@@ -11200,3 +11200,19 @@ Evidence is `build/linux-full/reports/checkpoint-1022-complete-*`; result SHA-25
 `178f5eecb6295359832b135fdb58f7e1ac8cda557058548c167663610aab0026`. No screenshot, listening
 test, physical input, external service session or manual visual inspection was performed. Resume
 the deterministic behavior audit outside the absorbed Focused1015-1021 slices.
+
+## Focused1023-Texture3D-Vector4-sampling
+
+The existing `graphics.texture3d.sampler_coordinates` workflow adds one exact framebuffer control.
+Two Vector4 voxels carry -1,0,1,2 in opposing channel order; a `.25*x+.5` shader remap makes signed
+and above-one preservation observable as RGBA(64,128,191,255) and (255,191,128,64). This closes the
+explicit non-Color sampling gap while preserving all Color coordinate, addressing, filtering, mip
+and ownership checks.
+
+The warning-free three-job build, metadata693/0 and exact SOFTWARE CustomEffects skip pass. Ten
+OPENGLES3 and ten OPENGL33/Xvfb runs pass11/11 with byte-identical stdout and empty stderr;
+validator/comparator self-tests pass5/5 and4/4. Counts remain307/329 XNA types,2128/2326 members,
+674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1023-texture3d-vector-sampling/*`. Pixel validation was programmatic; no screenshot
+or manual visual inspection was performed, and no CNA issue was found. Continue the deterministic
+behavior audit outside sampled volume formats.

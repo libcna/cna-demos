@@ -14,6 +14,7 @@
 #include "CnaDemos/PixelChecks.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "Microsoft/Xna/Framework/Vector4.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BlendState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BufferUsage.hpp"
 #include "Microsoft/Xna/Framework/Graphics/DepthStencilState.hpp"
@@ -34,6 +35,7 @@
 #include "Microsoft/Xna/Framework/Graphics/VertexElementFormat.hpp"
 #include "Microsoft/Xna/Framework/Graphics/VertexElementUsage.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Viewport.hpp"
+#include "System/NotSupportedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
@@ -52,8 +54,10 @@ void main() { gl_Position = vec4(aPosition, 1.0); }
 uniform highp sampler3D volume;
 uniform vec3 coordinate;
 uniform float lod;
+uniform float valueScale;
+uniform float valueBias;
 out vec4 FragColor;
-void main() { FragColor = textureLod(volume, coordinate, lod); }
+void main() { FragColor = textureLod(volume, coordinate, lod) * valueScale + vec4(valueBias); }
 )";
     class VolumeSamplingDemo final : public CnaDemos::DemoGame
     {
@@ -108,6 +112,21 @@ void main() { FragColor = textureLod(volume, coordinate, lod); }
                                 "move assignment replaces an occupied destination and retains both slices after the staging wrapper is disposed");
             } // both moved-from wrappers are destroyed before any sampler3D draw
 
+            try
+            {
+                vectorVolume_ = std::make_unique<Texture3D>(device, 2, 1, 1, false, SurfaceFormat::Vector4);
+            }
+            catch (const System::NotSupportedException&)
+            {
+                Context().Skip("the live renderer must support Vector4 volume sampling");
+            }
+            // The shader remaps [-1, 2] into [.25, 1], so the framebuffer can distinguish
+            // signed and above-one float channels from an upload that was clamped to Color.
+            const std::array<Vector4, 2> vectorTexels{{
+                Vector4(-1.0f, 0.0f, 1.0f, 2.0f),
+                Vector4(2.0f, 1.0f, 0.0f, -1.0f)}};
+            vectorVolume_->SetData(vectorTexels.data(), 2);
+
             declaration_.emplace(static_cast<int>(sizeof(Vertex)), std::vector<VertexElement>{
                 VertexElement(0, VertexElementFormat::Vector3, VertexElementUsage::Position, 0)});
             const std::array<Vertex, 6> quad{{{-1,-1,0}, {1,-1,0}, {-1,1,0},
@@ -145,6 +164,8 @@ void main() { FragColor = textureLod(volume, coordinate, lod); }
                     shader_->SetUniformInt("volume", 1);
                     shader_->SetUniformVec3("coordinate", .5f, .5f, Coordinates[column]);
                     shader_->SetUniformFloat("lod", 0.0f);
+                    shader_->SetUniformFloat("valueScale", 1.0f);
+                    shader_->SetUniformFloat("valueBias", 0.0f);
                     device.DrawPrimitives(PrimitiveType::TriangleList, 0, 2);
                 }
             }
@@ -157,6 +178,8 @@ void main() { FragColor = textureLod(volume, coordinate, lod); }
                 shader_->SetUniformInt("volume", 1);
                 shader_->SetUniformVec3("coordinate", x, y, z);
                 shader_->SetUniformFloat("lod", lod);
+                shader_->SetUniformFloat("valueScale", 1.0f);
+                shader_->SetUniformFloat("valueBias", 0.0f);
                 device.DrawPrimitives(PrimitiveType::TriangleList, 0, 2);
             };
             // Four small cards occupy the corners of the red slice-centre cell without covering
@@ -185,6 +208,21 @@ void main() { FragColor = textureLod(volume, coordinate, lod); }
                        .5f, .5f, .5f, 1.25f);
             drawSample(Viewport(right, mipTop, swatch, swatch), mipLinear,
                        .5f, .5f, .5f, 1.25f);
+            const int vectorTop = rowHeight * 2 + 103;
+            const auto drawVectorSample = [&](int x, float u) {
+                device.setViewportProperty(Viewport(x, vectorTop, swatch, swatch));
+                device.getSamplerStatesProperty()(1, SamplerState::PointClamp);
+                shader_->Apply();
+                shader_->SetTexture(1, *vectorVolume_);
+                shader_->SetUniformInt("volume", 1);
+                shader_->SetUniformVec3("coordinate", u, .5f, .5f);
+                shader_->SetUniformFloat("lod", 0.0f);
+                shader_->SetUniformFloat("valueScale", .25f);
+                shader_->SetUniformFloat("valueBias", .5f);
+                device.DrawPrimitives(PrimitiveType::TriangleList, 0, 2);
+            };
+            drawVectorSample(left, .25f);
+            drawVectorSample(right, .75f);
             device.setViewportProperty(full);
             batch_->Begin();
             batch_->DrawString(*font_, "Texture3D: red slice at Z=0.25, blue at Z=0.75", Vector2(12, 12), Color::White);
@@ -237,10 +275,16 @@ void main() { FragColor = textureLod(volume, coordinate, lod); }
                                     CnaDemos::Near(screen.At(right + swatch / 2, mipTop + swatch / 2),
                                                   Color(0, 191, 64), 2),
                                 "point versus linear mip filtering selects mip1 or blends mip1/mip2 at LOD1.25");
+                Context().Check(CnaDemos::Near(screen.At(left + swatch / 2, vectorTop + swatch / 2),
+                                              Color(64, 128, 191, 255), 1) &&
+                                    CnaDemos::Near(screen.At(right + swatch / 2, vectorTop + swatch / 2),
+                                                  Color(255, 191, 128, 64), 1),
+                                "Vector4 volume sampling preserves signed and above-one channels before shader remapping");
             }
             DemoGame::Draw(time);
         }
         std::unique_ptr<Texture3D> volume_;
+        std::unique_ptr<Texture3D> vectorVolume_;
         std::unique_ptr<ShaderEffect> shader_;
         std::optional<VertexDeclaration> declaration_;
         std::unique_ptr<VertexBuffer> vertices_;
@@ -252,8 +296,9 @@ void main() { FragColor = textureLod(volume, coordinate, lod); }
 CNA_DEMOS_GAME(VolumeSamplingDemo, {
     .id = "graphics.texture3d.sampler_coordinates",
     .title = "Sampling volume slices and the W axis",
-    .description = "Binds a moved two-slice Texture3D to an explicit sampler unit, verifies U/V/W coordinates, compares "
-                   "point and linear filtering within and between authored mip levels, and checks W wrapping.",
+    .description = "Binds moved Color and Vector4 Texture3D resources to an explicit sampler unit, verifies U/V/W "
+                   "coordinates, compares point and linear filtering within and between authored mip levels, checks W "
+                   "wrapping, and samples signed and above-one float channels through a visible shader remap.",
     .apis = {"ShaderEffect::SetTexture", "ShaderEffect::SetUniformInt", "ShaderEffect::SetUniformFloat",
              "ShaderEffect::SetUniformVec3", "SamplerState::Filter", "TextureFilter::LinearMipPoint",
              "TextureFilter::PointMipLinear",
@@ -265,7 +310,8 @@ CNA_DEMOS_GAME(VolumeSamplingDemo, {
     .frames = 1,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
-    .restrictions = "GLSL only. Backbuffer pixels establish Color-volume coordinate, addressing and explicit-LOD filtering "
-                    "behavior; public GetData checks retained base payloads after moves. No direct GPU readback, active-binding "
-                    "move, external-reference rebinding, cross-device assignment or non-Color sampling is inferred.",
+    .restrictions = "GLSL only; the live renderer must support Vector4 volume storage. Backbuffer pixels establish Color-volume "
+                    "coordinate, addressing and explicit-LOD filtering plus Vector4 signed/HDR sampling; public GetData checks "
+                    "retained base payloads after moves. No direct GPU readback, active-binding move, external-reference "
+                    "rebinding, cross-device assignment or other non-Color formats are inferred.",
 })
