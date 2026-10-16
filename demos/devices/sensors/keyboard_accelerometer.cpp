@@ -5,6 +5,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <vector>
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Devices/Sensors/Accelerometer.hpp"
@@ -22,6 +23,9 @@
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
 using Microsoft::Devices::Sensors::Accelerometer;
+using Microsoft::Devices::Sensors::AccelerometerReadingEventArgs;
+using Microsoft::Devices::Sensors::SensorReadingEventArgs;
+using Microsoft::Devices::Sensors::SensorState;
 
 namespace
 {
@@ -41,13 +45,37 @@ namespace
             Accelerometer::setKeyboardEmulationEnabledEXT(true);
             Context().Check(Accelerometer::getIsSupportedProperty(), "with emulation the accelerometer is supported");
             accelerometer_.emplace();
+            Context().Check(accelerometer_->getStateProperty() == SensorState::Initializing,
+                            "a supported sensor starts in Initializing state");
+            accelerometer_->CurrentValueChanged +=
+                [this](System::Object* sender,
+                       const SensorReadingEventArgs<Microsoft::Devices::Sensors::AccelerometerReading>& args) {
+                    eventOrder_.push_back('C');
+                    ++currentEvents_;
+                    eventSendersMatch_ = eventSendersMatch_ && sender == &*accelerometer_;
+                    eventAcceleration_ = args.getSensorReadingProperty().getAccelerationProperty();
+                };
+            accelerometer_->ReadingChanged +=
+                [this](System::Object* sender, const AccelerometerReadingEventArgs& args) {
+                    eventOrder_.push_back('R');
+                    ++legacyEvents_;
+                    eventSendersMatch_ = eventSendersMatch_ && sender == &*accelerometer_;
+                    legacyAcceleration_ = Vector3(static_cast<float>(args.getXProperty()),
+                                                  static_cast<float>(args.getYProperty()),
+                                                  static_cast<float>(args.getZProperty()));
+                    legacyTimestampIsSet_ = args.getTimestampProperty() != System::DateTimeOffset();
+                };
             accelerometer_->Start();
+            Context().Check(accelerometer_->getStateProperty() == SensorState::Ready,
+                            "Start moves the emulated sensor to Ready state");
         }
 
         void UnloadContent() override
         {
             // Process-wide: stop the sensor first, then switch the emulation off again.
             accelerometer_->Stop();
+            Context().Check(accelerometer_->getStateProperty() == SensorState::Disabled,
+                            "Stop moves the sensor to Disabled state");
             accelerometer_->Dispose();
             Accelerometer::setKeyboardEmulationEnabledEXT(false);
         }
@@ -86,6 +114,19 @@ namespace
             if (Context().Automated())
             {
                 Context().Check(checked_, "readings arrived (IsDataValid) during the run");
+                const bool pairedOrder = eventOrder_.size() == static_cast<std::size_t>(currentEvents_ * 2) &&
+                    currentEvents_ == legacyEvents_ && currentEvents_ > 0 &&
+                    [&] {
+                        for (std::size_t i = 0; i < eventOrder_.size(); i += 2)
+                        {
+                            if (eventOrder_[i] != 'C' || eventOrder_[i + 1] != 'R') return false;
+                        }
+                        return true;
+                    }();
+                Context().Check(pairedOrder && eventSendersMatch_,
+                                "CurrentValueChanged precedes legacy ReadingChanged for every reading");
+                Context().Check(legacyTimestampIsSet_ && eventAcceleration_ == legacyAcceleration_,
+                                "both event payload forms carry the same acceleration and a real timestamp");
             }
             DemoGame::EndRun();
         }
@@ -111,6 +152,13 @@ namespace
         Vector2 position_ = Vector2(400.0f, 280.0f);
         Vector2 velocity_;
         bool checked_ = false;
+        int currentEvents_ = 0;
+        int legacyEvents_ = 0;
+        bool eventSendersMatch_ = true;
+        bool legacyTimestampIsSet_ = false;
+        Vector3 eventAcceleration_;
+        Vector3 legacyAcceleration_;
+        std::vector<char> eventOrder_;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
         std::unique_ptr<Texture2D> ball_;
@@ -122,10 +170,15 @@ CNA_DEMOS_GAME(KeyboardAccelerometerDemo, {
     .title = "Tilt with the arrow keys (CNAEXT)",
     .description = "Turns on Accelerometer::setKeyboardEmulationEnabledEXT, starts an Accelerometer and rolls a ball "
                    "by its CurrentValue: flat at rest it reads (0, 0, -1) g, and the arrow keys tilt the emulated "
-                   "device; emulation is switched off on unload.",
+                   "device. It also verifies sensor states and the modern/legacy event order before emulation is "
+                   "switched off on unload.",
     .apis = {"Accelerometer::KeyboardEmulationEnabledEXT", "Accelerometer::IsSupported", "Accelerometer::Start",
-             "Accelerometer::Stop", "SensorBase::CurrentValue", "SensorBase::IsDataValid",
-             "AccelerometerReading::Acceleration"},
+             "Accelerometer::Stop", "Accelerometer::State", "SensorState::Initializing", "SensorState::Ready",
+             "SensorState::Disabled", "SensorBase::CurrentValue", "SensorBase::IsDataValid",
+             "SensorBase::CurrentValueChanged", "Accelerometer::ReadingChanged",
+             "SensorReadingEventArgs::SensorReading", "AccelerometerReadingEventArgs::X",
+             "AccelerometerReadingEventArgs::Y", "AccelerometerReadingEventArgs::Z",
+             "AccelerometerReadingEventArgs::Timestamp", "AccelerometerReading::Acceleration"},
     .tags = {"devices", "sensors", "accelerometer", "tilt", "keyboard", "testing", "cnaext"},
     .needs = CnaDemos::Need::Keyboard,
     .frames = 40,

@@ -141,4 +141,6 @@ CNA_DEMOS_GAME(LifecycleDemo, {
     .tags = {"phone", "lifecycle", "tombstoning", "save", "focus"},
     .frames = 30,
     .assets = {"fonts/pixel_font.cnb"},
+    .restrictions = "Automation verifies fresh Launching and final Closing. Deactivated/Activated and preserved "
+                    "State restoration require manually moving the game window out of and back into focus.",
 })

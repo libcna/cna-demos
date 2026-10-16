@@ -12718,3 +12718,30 @@ fields. Evidence:`/tmp/checkpoint-1115-media-public-headers/*`. No host-library 
 network media source, screenshot or manual visual claim is made. Continue with the public Devices
 and Phone header surfaces, using existing sensor/camera/location workflows and keeping hardware-
 only values explicit.
+
+## Focused1116 Microsoft.Devices and Microsoft.Phone public-header audit
+
+All20 public Devices headers and nine public Phone headers now have a consolidated semantic
+disposition. The generated XNA inventory omits these Windows Phone namespaces, so the audit works
+from installed headers and source rather than changing XNA totals.
+
+Two focused IDs close real gaps. `devices.sensors.reading_values` demonstrates the complete public
+reading-value family, shared interface and event payloads without hardware.
+`phone.notification.local_push` exercises the entire Notification group with an actual loopback
+HTTP channel, all three priorities, exact raw/toast payloads and queued caller-thread delivery.
+Existing availability, keyboard-accelerometer and vibration workflows now cover the remaining
+locally reachable sensor states, failure/lifecycle, event ordering and haptic validation behavior.
+
+Hardware readings/calibration/north reference/physical vibration remain platform or manual work;
+`SensorState::NoData`/`NoPermissions` are not produced by pinned CNA. Public test hooks stay unit-
+test scope. The Shell lifecycle surface was already coherent: Launching/Closing are automated and
+focus-driven Deactivated/Activated remain manual. CNA-DEMOS-ISSUE-154 records a public comment
+that incorrectly says the now-runtime-proven legacy accelerometer event is never raised.
+
+The `-j3` build, metadata719/0 and catalog/validator/comparator checks pass. Seven of eight exact
+SOFTWARE Devices/Phone CTests pass; the display demo has its expected environment skip. Both new
+focused demos and the enhanced keyboard path pass under SOFTWARE and OPENGLES3. Coverage remains
+308/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes, with all719 IDs represented
+in both renderer columns. Evidence:`/tmp/checkpoint-1116-devices-phone-public-headers/*`. Continue
+with the public Design header surface, then Diagnostics/Inspector/CNAEXT, adding behavior only for
+a concrete semantic gap.

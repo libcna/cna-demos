@@ -11,7 +11,11 @@
 #include "Microsoft/Devices/Sensors/Compass.hpp"
 #include "Microsoft/Devices/Sensors/Gyroscope.hpp"
 #include "Microsoft/Devices/Sensors/Motion.hpp"
+#include "Microsoft/Devices/Sensors/SensorFailedException.hpp"
 #include "Microsoft/Devices/Sensors/SensorState.hpp"
+#include "System/InvalidOperationException.hpp"
+#include "System/ObjectDisposedException.hpp"
+#include "System/TimeSpan.hpp"
 
 using namespace Microsoft::Devices;
 using namespace Microsoft::Devices::Sensors;
@@ -46,13 +50,33 @@ namespace
         ctx.Print("Motion::IsSupported        {}", Motion::getIsSupportedProperty());
 
         Accelerometer accelerometer;
-        const bool supported = Accelerometer::getIsSupportedProperty();
+        Compass compass;
+        Gyroscope gyroscope;
+        Motion motion;
+        const bool accelerometerSupported = Accelerometer::getIsSupportedProperty();
+        const bool compassSupported = Compass::getIsSupportedProperty();
+        const bool gyroscopeSupported = Gyroscope::getIsSupportedProperty();
+        const bool motionSupported = Motion::getIsSupportedProperty();
         ctx.Print("a new Accelerometer: State {}", StateName(accelerometer.getStateProperty()));
-        ctx.Check((accelerometer.getStateProperty() == SensorState::NotSupported) == !supported,
-                  "a new Accelerometer's State is NotSupported exactly when IsSupported is false");
-        ctx.Check(!accelerometer.getIsDataValidProperty(), "before Start there is no valid reading");
+        ctx.Check((accelerometer.getStateProperty() == SensorState::NotSupported) == !accelerometerSupported &&
+                      (compass.getStateProperty() == SensorState::NotSupported) == !compassSupported &&
+                      (gyroscope.getStateProperty() == SensorState::NotSupported) == !gyroscopeSupported &&
+                      (motion.getStateProperty() == SensorState::NotSupported) == !motionSupported,
+                  "each new sensor reports NotSupported exactly when its static support probe is false");
+        ctx.Check(!accelerometer.getIsDataValidProperty() && !compass.getIsDataValidProperty() &&
+                      !gyroscope.getIsDataValidProperty() && !motion.getIsDataValidProperty(),
+                  "before Start none of the four sensors has a valid reading");
 
-        if (!supported)
+        const System::TimeSpan initialInterval = accelerometer.getTimeBetweenUpdatesProperty();
+        accelerometer.setTimeBetweenUpdatesProperty(initialInterval);
+        accelerometer.setTimeBetweenUpdatesProperty(System::TimeSpan::FromMilliseconds(10.0));
+        ctx.Check(initialInterval == System::TimeSpan::FromMilliseconds(2.0) &&
+                      accelerometer.getTimeBetweenUpdatesProperty() == System::TimeSpan::FromMilliseconds(10.0),
+                  "TimeBetweenUpdates starts at 2 ms and stores a new value");
+
+        int missingStartFailures = 0;
+        bool missingErrorIdsDefault = true;
+        if (!accelerometerSupported)
         {
             // Without the sensor, Start reports the failure the WP7 way.
             bool failed = false;
@@ -64,12 +88,78 @@ namespace
             catch (const AccelerometerFailedException& failure)
             {
                 failed = true;
+                ++missingStartFailures;
+                missingErrorIdsDefault = missingErrorIdsDefault && failure.getErrorIdProperty() == 0;
                 ctx.Print("Start: AccelerometerFailedException: {}", failure.what());
             }
             ctx.Check(failed, "starting a missing accelerometer throws AccelerometerFailedException");
         }
-        // Sensors hold platform resources: dispose them when done.
+
+        const auto startMissing = [&missingStartFailures, &missingErrorIdsDefault](auto& sensor) {
+            try
+            {
+                sensor.Start();
+                sensor.Stop();
+            }
+            catch (const SensorFailedException& failure)
+            {
+                ++missingStartFailures;
+                missingErrorIdsDefault = missingErrorIdsDefault && failure.getErrorIdProperty() == 0;
+            }
+        };
+        if (!compassSupported) startMissing(compass);
+        if (!gyroscopeSupported) startMissing(gyroscope);
+        if (!motionSupported) startMissing(motion);
+        ctx.Check(missingStartFailures ==
+                      static_cast<int>(!accelerometerSupported) + static_cast<int>(!compassSupported) +
+                          static_cast<int>(!gyroscopeSupported) + static_cast<int>(!motionSupported),
+                  "every missing sensor refuses Start with its documented failed exception");
+        ctx.Check(missingErrorIdsDefault,
+                  "unsupported-sensor failures carry the documented default platform error ID");
+
+        int unsupportedCurrentValues = 0;
+        const auto readMissing = [&unsupportedCurrentValues](const auto& sensor) {
+            try
+            {
+                static_cast<void>(sensor.getCurrentValueProperty());
+            }
+            catch (const System::InvalidOperationException&)
+            {
+                ++unsupportedCurrentValues;
+            }
+        };
+        if (!accelerometerSupported) readMissing(accelerometer);
+        if (!compassSupported) readMissing(compass);
+        if (!gyroscopeSupported) readMissing(gyroscope);
+        if (!motionSupported) readMissing(motion);
+        ctx.Check(unsupportedCurrentValues ==
+                      static_cast<int>(!accelerometerSupported) + static_cast<int>(!compassSupported) +
+                          static_cast<int>(!gyroscopeSupported) + static_cast<int>(!motionSupported),
+                  "CurrentValue refuses every unsupported sensor before returning a placeholder reading");
+
+        // Sensors hold platform resources: dispose them when done. Repeating the operation on all
+        // four verifies the shared SensorBase lifecycle with one grouped check.
         accelerometer.Dispose();
+        compass.Dispose();
+        gyroscope.Dispose();
+        motion.Dispose();
+        int repeatedDisposeFailures = 0;
+        const auto repeatDispose = [&repeatedDisposeFailures](auto& sensor) {
+            try
+            {
+                sensor.Dispose();
+            }
+            catch (const System::ObjectDisposedException&)
+            {
+                ++repeatedDisposeFailures;
+            }
+        };
+        repeatDispose(accelerometer);
+        repeatDispose(compass);
+        repeatDispose(gyroscope);
+        repeatDispose(motion);
+        ctx.Check(repeatedDisposeFailures == 4,
+                  "repeated Dispose throws ObjectDisposedException for every sensor instance");
     }
 }
 
@@ -78,9 +168,15 @@ CNA_DEMOS_CONSOLE(Availability, {
     .title = "Which sensors are there",
     .description = "Asks Accelerometer, Compass, Gyroscope and Motion whether this device supports them and reads "
                    "Environment::DeviceType; a new Accelerometer reports NotSupported without the sensor, and Start "
-                   "then throws AccelerometerFailedException.",
+                   "then throws the sensor-specific failed exception. It also shows the shared update interval and "
+                   "disposal contracts.",
     .apis = {"Accelerometer::IsSupported", "Compass::IsSupported", "Gyroscope::IsSupported", "Motion::IsSupported",
-             "Accelerometer::Accelerometer", "SensorBase::State", "SensorBase::IsDataValid", "Accelerometer::Start",
-             "AccelerometerFailedException", "SensorBase::Dispose", "Environment::DeviceType", "SensorState"},
+             "Accelerometer::Accelerometer", "Compass::Compass", "Gyroscope::Gyroscope", "Motion::Motion",
+             "SensorBase::State", "SensorBase::CurrentValue", "SensorBase::IsDataValid",
+             "SensorBase::TimeBetweenUpdates",
+             "Accelerometer::Start", "Compass::Start", "Gyroscope::Start", "Motion::Start",
+             "AccelerometerFailedException", "SensorFailedException", "SensorFailedException::ErrorId",
+             "SensorBase::Dispose",
+             "Environment::DeviceType", "SensorState::NotSupported"},
     .tags = {"devices", "sensors", "accelerometer", "phone", "capabilities"},
 })

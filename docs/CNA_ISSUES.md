@@ -15,6 +15,24 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-154 -- AccelerometerReadingEventArgs says its event is never raised
+
+- **Area/API:** public `AccelerometerReadingEventArgs` documentation in
+  `modules/devices/include/Microsoft/Devices/Sensors/AccelerometerReadingEventArgs.hpp` and the
+  public `Accelerometer::ReadingChanged` event.
+- **Observed contract conflict:** the event-arguments class says `ReadingChanged` "is not raised
+  by this implementation." `Accelerometer::DispatchSensorReading` explicitly snapshots and raises
+  it after `CurrentValueChanged`, and the `Accelerometer.hpp` event comment documents that exact
+  order. The keyboard-emulation path reaches the production dispatcher: every automated reading
+  raised one `CurrentValueChanged` followed by one `ReadingChanged`, with the same sender/vector
+  and a nondefault timestamp, under both SOFTWARE and OPENGLES3 labels.
+- **Expected:** describe the class as the legacy payload that CNA still raises after the modern
+  event, consistent with the event declaration and implementation.
+- **Evidence/status:** source-confirmed documentation defect at pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`; runtime evidence is under
+  `/tmp/checkpoint-1116-devices-phone-public-headers/*`. Open; no CNA source was modified, no
+  runtime knownIssue marker is needed and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-153 -- GraphicsDevice DeviceLost comment contradicts implemented desktop backends
 
 - **Area/API:** public `GraphicsDevice::DeviceLost` event documentation in

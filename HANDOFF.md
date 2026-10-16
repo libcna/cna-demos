@@ -21,7 +21,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 * In progress: 7 (models/glTF, 30), 8 (content, 68), 9 (audio 23 incl. 10 C++ XACT plus a complete
   semantic C XACT route audit, media 17 incl. compiled video/song plus C video asset/player audits),
   **12 (gamer services 33 incl. avatars, leaderboards and C Gamer/profile/friend/achievement/Guide/property workflows; net 24 incl. complete C `net.h`/`net_gamers.h`/`net_sessions.h`; remainders in ROADMAP)**.
-* In progress too: 13 (devices 5, phone 1, design 4, diagnostics 6 + logger 2, inspector 3,
+* In progress too: 13 (devices 6, phone 2, design 4, diagnostics 6 + logger 2, inspector 3,
   cnaext 4).
 * In progress: 14 (C API, 177 standalone C demos in the source tree; `linux-full` builds CNA with
   `CNA_BUILD_C_API=ON`).
@@ -69,12 +69,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-717 project-built catalog demos in19 categories: math95, game33, graphics186, audio23, core6,
-content73, input40, storage7, media17, gamer services20, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are205 console,297 game and215
-standalone; 683 are automated,31 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md merges Focused1112 metadata into Complete1099's full reports;
-the semantic public-header audit is current through Focused1114 and includes all717 catalog IDs in
+719 project-built catalog demos in19 categories: math95, game33, graphics186, audio23, core6,
+content73, input40, storage7, media17, gamer services20, net14, devices6, phone2, design4,
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are207 console,297 game and215
+standalone; 685 are automated,31 smoke-only and3 manual. Every declared category has demos.
+Coverage: generated docs/COVERAGE.md merges Focused1116 results into Complete1099's full reports;
+the semantic public-header audit is current through Focused1116 and includes all719 catalog IDs in
 both renderer columns. It incorporates every
 focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
@@ -3521,24 +3521,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Complete1022 is the authoritative693-demo full-build/full-runtime baseline at
-cna-demos `219f8b3` against pinned CNA `d23e139de`. It absorbs Focused1015-1021: SkinnedEffect
-texture ownership/disposal, SpriteFont atlas lifetime, nonterminal SoundEffect loop release
-ISSUE-114, live DynamicSoundEffect format refusals, SkinnedEffect composed alpha, transparent-RGB
-image export and compressed-cube alpha sampling. The complete warning-free three-job run passes all
-706 enabled CTests and both693-ID smoke suites with no unexpected result.
-
-Resume the deeper semantic behavior audit: reconcile explicit residual gaps in
-`docs/COVERAGE_AUDIT.md` against pinned CNA d23e139de and prioritize reachable deterministic behavior
-that strengthens an existing coherent demo. Focused1023 closes Texture3D's explicit non-Color
-sampling gap with signed/HDR Vector4 values on both GLSL dialects, and Focused1024 closes exact
-PNG/JPEG resize mapping. Focused1025 closes the explicit SpriteBatch crop-origin and signed-scale/
-flip composition gap, including default winding culling. Focused1026 closes bounded post-mix
-visualization and relative FFT localization with authored 440/660 Hz tones. Choose the next gap
-outside the Focused1015-1026 ownership, audio-transport, texture-format, sprite-transform and
-visualization slices. Revisit the126 intentionally
-uncredited C routes only if public headers or reachable environment capabilities change. Do not add
-metadata merely to raise a count.
+HIGHEST PRIORITY: Focused1116 completes the public Devices and Phone header audit at719 demos
+against pinned CNA `d23e139de`. Commit and push its source/documentation changes, then audit the
+public Design header surface. Continue with Diagnostics/Inspector/CNAEXT after Design, adding a new
+demo only for a coherent, reachable behavior gap. Complete1099 remains the latest full two-renderer
+smoke baseline; the focused result merge supplies every later catalog ID to both coverage columns.
+Keep every compilation at three jobs or fewer and run another full checkpoint after a meaningful
+set of focused batches.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -12436,7 +12425,36 @@ routes; Media is24/24 types,178/192 members and7/8 fields. Evidence:
 `/tmp/checkpoint-1115-media-public-headers/*`. No host-library mutation, listening, network media
 source, screenshot or manual visual claim is made.
 
-Commit and push this batch. Next consolidate the public Devices and Phone headers, mapping their
-remaining types/members/values to the existing camera, sensors, accelerometer and vibration
-workflows and retaining physical/mobile-only behavior as explicit manual scope. Keep every compile
+## Focused1116-Devices-and-Phone-public-header-audit
+
+All20 public Devices headers,13 `Detail` implementation headers and nine public Phone headers are
+now dispositioned. These namespaces are absent from CNA's generated XNA inventory, so the audit is
+source-driven and does not manufacture XNA coverage counters.
+
+Two coherent IDs were added. `devices.sensors.reading_values` covers the five public reading-value
+classes, all payload properties, the shared timestamp interface, value/text/type behavior and the
+three event-payload forms. `phone.notification.local_push` covers the complete Notification group
+through an actual loopback listener, exact raw/toast bodies, all priorities, URI/registry/open/
+close/reopen behavior and caller-thread dispatch. Availability, keyboard accelerometer and
+vibration were extended with all-four-sensor failure/lifecycle behavior, update interval/error ID,
+accelerometer state/event ordering and haptic capability/dual-motor/validation paths.
+
+Real compass/gyro/fused-motion readings, calibration, north reference, physical vibration and
+focus-driven Phone lifecycle transitions remain hardware/platform/manual scope. NoData and
+NoPermissions have no production assignment. Public `ForTesting` and backend replacement methods
+remain CNA unit-test seams. Local notification delivery does not claim a background endpoint or a
+rendered phone-shell toast. CNA-DEMOS-ISSUE-154 records the stale
+`AccelerometerReadingEventArgs` comment that says the runtime-proven legacy event is never raised.
+
+The final `-j3` build passes with only the known vendored Draco CMP0148 CMake developer warning and
+no compiler warning. Metadata is719/0. Seven of eight SOFTWARE Devices/Phone CTests pass; only the
+display environment check skips as declared. The reading-value demo passes13/13 and keyboard
+accelerometer8/8 on both SOFTWARE and OPENGLES3. Local push passes9/9 on both labels and produced
+byte-identical stdout over five runs per label. Catalog/validator/comparator self-tests pass.
+Coverage stays308/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes, with all719
+catalog IDs in both renderer columns. Evidence:
+`/tmp/checkpoint-1116-devices-phone-public-headers/*`.
+
+Commit and push this batch. Next audit the public Design headers; then continue through
+Diagnostics/Inspector/CNAEXT. Add behavior only for concrete semantic gaps, and keep every compile
 at three jobs or fewer.

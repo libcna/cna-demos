@@ -6,7 +6,7 @@ Generated 2026-10-16 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**717 demos** in 19 categories. Kinds: console 205, game 297, standalone 215. Automation: automated 683, manual 3, smoke-only 31.
+**719 demos** in 19 categories. Kinds: console 207, game 297, standalone 215. Automation: automated 685, manual 3, smoke-only 31.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -16,7 +16,7 @@ Generated 2026-10-16 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | content | 73 | 73 | 0 | 0 | 56 / 0 / 17 / 0 / 0 | 56 / 0 / 17 / 0 / 0 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
+| devices | 6 | 6 | 0 | 0 | 5 / 1 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | diagnostics | 6 | 6 | 0 | 0 | 2 / 4 / 0 / 0 / 0 | 2 / 4 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 18 / 7 / 7 / 1 / 0 | 25 / 0 / 7 / 1 / 0 |
 | gamer_services | 20 | 19 | 0 | 1 | 17 / 0 / 2 / 1 / 0 | 17 / 0 / 2 / 1 / 0 |
@@ -26,7 +26,7 @@ Generated 2026-10-16 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | math | 95 | 95 | 0 | 0 | 44 / 0 / 51 / 0 / 0 | 44 / 0 / 51 / 0 / 0 |
 | media | 17 | 16 | 1 | 0 | 11 / 0 / 6 / 0 / 0 | 11 / 0 / 6 / 0 / 0 |
 | net | 14 | 14 | 0 | 0 | 12 / 0 / 2 / 0 / 0 | 12 / 0 / 2 / 0 / 0 |
-| phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 / 0 / 0 | 1 / 0 / 0 / 0 / 0 |
+| phone | 2 | 2 | 0 | 0 | 2 / 0 / 0 / 0 / 0 | 2 / 0 / 0 / 0 / 0 |
 | platform | 3 | 3 | 0 | 0 | 1 / 2 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
 | storage | 7 | 7 | 0 | 0 | 5 / 0 / 2 / 0 / 0 | 5 / 0 / 2 / 0 / 0 |
 
@@ -136,10 +136,28 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Accelerometer::Accelerometer` -- devices.sensors.availability
 - `Accelerometer::IsSupported` -- devices.sensors.availability, devices.sensors.keyboard_accelerometer
 - `Accelerometer::KeyboardEmulationEnabledEXT` -- devices.sensors.keyboard_accelerometer
+- `Accelerometer::ReadingChanged` -- devices.sensors.keyboard_accelerometer
 - `Accelerometer::Start` -- devices.sensors.availability, devices.sensors.keyboard_accelerometer
+- `Accelerometer::State` -- devices.sensors.keyboard_accelerometer
 - `Accelerometer::Stop` -- devices.sensors.keyboard_accelerometer
 - `AccelerometerFailedException` -- devices.sensors.availability
-- `AccelerometerReading::Acceleration` -- devices.sensors.keyboard_accelerometer
+- `AccelerometerReading::Acceleration` -- devices.sensors.keyboard_accelerometer, devices.sensors.reading_values
+- `AccelerometerReading::AccelerometerReading` -- devices.sensors.reading_values
+- `AccelerometerReading::GetHashCode` -- devices.sensors.reading_values
+- `AccelerometerReading::GetTypeName` -- devices.sensors.reading_values
+- `AccelerometerReading::Timestamp` -- devices.sensors.reading_values
+- `AccelerometerReading::ToString` -- devices.sensors.reading_values
+- `AccelerometerReading::operator!=` -- devices.sensors.reading_values
+- `AccelerometerReading::operator==` -- devices.sensors.reading_values
+- `AccelerometerReadingEventArgs::AccelerometerReadingEventArgs` -- devices.sensors.reading_values
+- `AccelerometerReadingEventArgs::GetHashCode` -- devices.sensors.reading_values
+- `AccelerometerReadingEventArgs::GetTypeName` -- devices.sensors.reading_values
+- `AccelerometerReadingEventArgs::Timestamp` -- devices.sensors.keyboard_accelerometer, devices.sensors.reading_values
+- `AccelerometerReadingEventArgs::ToString` -- devices.sensors.reading_values
+- `AccelerometerReadingEventArgs::X` -- devices.sensors.keyboard_accelerometer, devices.sensors.reading_values
+- `AccelerometerReadingEventArgs::Y` -- devices.sensors.keyboard_accelerometer, devices.sensors.reading_values
+- `AccelerometerReadingEventArgs::Z` -- devices.sensors.keyboard_accelerometer, devices.sensors.reading_values
+- `AccelerometerReadingEventArgs::operator==` -- devices.sensors.reading_values
 - `AchievementCollection::Add` -- gamer_services.achievement.award
 - `AchievementCollection::Clear` -- gamer_services.achievement.award
 - `AchievementCollection::Contains` -- gamer_services.achievement.award
@@ -162,6 +180,18 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `AnimationPlayer::Update` -- graphics.model.multi_skin_animation_report, graphics.model.multiple_skins, graphics.model.skinned_animation
 - `ApplyClipToBonesEXT` -- graphics.model.animation_validation, graphics.model.clip_interpolation, graphics.model.gltf_cameras, graphics.model.node_animation
 - `ArgumentException` -- audio.sound_effect.loop_region
+- `AttitudeReading::AttitudeReading` -- devices.sensors.reading_values
+- `AttitudeReading::GetHashCode` -- devices.sensors.reading_values
+- `AttitudeReading::GetTypeName` -- devices.sensors.reading_values
+- `AttitudeReading::Pitch` -- devices.sensors.reading_values
+- `AttitudeReading::Quaternion` -- devices.sensors.reading_values
+- `AttitudeReading::Roll` -- devices.sensors.reading_values
+- `AttitudeReading::RotationMatrix` -- devices.sensors.reading_values
+- `AttitudeReading::Timestamp` -- devices.sensors.reading_values
+- `AttitudeReading::ToString` -- devices.sensors.reading_values
+- `AttitudeReading::Yaw` -- devices.sensors.reading_values
+- `AttitudeReading::operator!=` -- devices.sensors.reading_values
+- `AttitudeReading::operator==` -- devices.sensors.reading_values
 - `BlendMorphTargetsEXT` -- graphics.model.morph_animation_import, graphics.model.morph_targets
 - `Buttons::Misc1EXT` -- input.gamepad.extra_buttons
 - `Buttons::Paddle1EXT` -- input.gamepad.extra_buttons
@@ -1482,11 +1512,26 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::isPreReleaseVersion` -- core.version.version_string
 - `CNA::toStringView` -- core.renderer.metadata
 - `CNA::tryParseGraphicsRendererName` -- core.renderer.metadata
+- `CalibrationEventArgs::CalibrationEventArgs` -- devices.sensors.reading_values
+- `CalibrationEventArgs::GetTypeName` -- devices.sensors.reading_values
 - `ClipTargetSpaceEXT` -- graphics.model.node_animation
 - `ColorMatrixEffect::ColorMatrixEffect` -- graphics.color_matrix_effect.sepia_and_invert
 - `ColorMatrixEffect::SetColorMatrix` -- graphics.color_matrix_effect.sepia_and_invert
 - `ColorMatrixEffect::SetColorOffset` -- graphics.color_matrix_effect.sepia_and_invert
+- `Compass::Compass` -- devices.sensors.availability
 - `Compass::IsSupported` -- devices.sensors.availability
+- `Compass::Start` -- devices.sensors.availability
+- `CompassReading::CompassReading` -- devices.sensors.reading_values
+- `CompassReading::GetHashCode` -- devices.sensors.reading_values
+- `CompassReading::GetTypeName` -- devices.sensors.reading_values
+- `CompassReading::HeadingAccuracy` -- devices.sensors.reading_values
+- `CompassReading::MagneticHeading` -- devices.sensors.reading_values
+- `CompassReading::MagnetometerReading` -- devices.sensors.reading_values
+- `CompassReading::Timestamp` -- devices.sensors.reading_values
+- `CompassReading::ToString` -- devices.sensors.reading_values
+- `CompassReading::TrueHeading` -- devices.sensors.reading_values
+- `CompassReading::operator!=` -- devices.sensors.reading_values
+- `CompassReading::operator==` -- devices.sensors.reading_values
 - `ContentManager::GetContentManifest` -- content.content_manager.manifest
 - `ContentManager::GetXnbReaderUsageSummary` -- content.content_manager.manifest
 - `ContentManager::RefreshContentManifest` -- content.content_manager.manifest
@@ -1636,9 +1681,33 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Guide::SimulateKeyboardInputCancelEXT` -- gamer_services.guide.keyboard_input, gamer_services.guide.sign_in_screen
 - `Guide::SimulateMessageBoxClickEXT` -- gamer_services.guide.message_box
 - `Guide::WasKeyboardInputCanceledEXT` -- gamer_services.guide.keyboard_input
+- `Gyroscope::Gyroscope` -- devices.sensors.availability
 - `Gyroscope::IsSupported` -- devices.sensors.availability
+- `Gyroscope::Start` -- devices.sensors.availability
+- `GyroscopeReading::GetHashCode` -- devices.sensors.reading_values
+- `GyroscopeReading::GetTypeName` -- devices.sensors.reading_values
+- `GyroscopeReading::GyroscopeReading` -- devices.sensors.reading_values
+- `GyroscopeReading::RotationRate` -- devices.sensors.reading_values
+- `GyroscopeReading::Timestamp` -- devices.sensors.reading_values
+- `GyroscopeReading::ToString` -- devices.sensors.reading_values
+- `GyroscopeReading::operator!=` -- devices.sensors.reading_values
+- `GyroscopeReading::operator==` -- devices.sensors.reading_values
+- `HttpNotificationChannel::BindToShellToast` -- phone.notification.local_push
+- `HttpNotificationChannel::ChannelName` -- phone.notification.local_push
+- `HttpNotificationChannel::ChannelUri` -- phone.notification.local_push
+- `HttpNotificationChannel::ChannelUriUpdated` -- phone.notification.local_push
+- `HttpNotificationChannel::Close` -- phone.notification.local_push
+- `HttpNotificationChannel::DispatchPendingNotificationsEXT` -- phone.notification.local_push
+- `HttpNotificationChannel::Find` -- phone.notification.local_push
+- `HttpNotificationChannel::HttpNotificationChannel` -- phone.notification.local_push
+- `HttpNotificationChannel::HttpNotificationReceived` -- phone.notification.local_push
+- `HttpNotificationChannel::IsShellToastBound` -- phone.notification.local_push
+- `HttpNotificationChannel::Open` -- phone.notification.local_push
+- `HttpNotificationEventArgs::Body` -- phone.notification.local_push
+- `HttpNotificationEventArgs::BodyAsString` -- phone.notification.local_push
 - `IAsyncResult::AsyncState` -- gamer_services.guide.message_box, net.network_session.begin_create
 - `IAsyncResult::IsCompleted` -- gamer_services.guide.keyboard_input, net.network_session.begin_create
+- `ISensorReading::Timestamp` -- devices.sensors.reading_values
 - `ImageBasedLightEXT` -- graphics.pbr_effect.color_spaces, graphics.pbr_effect.image_based_lighting, graphics.pbr_effect.specular_material
 - `ImageBasedLightEXT::BrdfLut` -- graphics.pbr_effect.image_based_lighting
 - `ImageBasedLightEXT::Intensity` -- graphics.pbr_effect.image_based_lighting
@@ -1665,6 +1734,9 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `MediaQueue::Add` -- media.media_player.queue_and_repeat
 - `MediaQueue::Clear` -- media.media_player.queue_and_repeat
 - `MediaQueue::MediaQueue` -- media.media_player.queue_and_repeat
+- `MessageSendPriority::High` -- phone.notification.local_push
+- `MessageSendPriority::Low` -- phone.notification.local_push
+- `MessageSendPriority::Normal` -- phone.notification.local_push
 - `Microsoft::Xna::Framework::Audio::DynamicSoundEffectInstance::ClearBuffers` -- audio.dynamic_sound_effect_instance.buffer_formats
 - `Microsoft::Xna::Framework::Audio::DynamicSoundEffectInstance::QueueInitialBuffers` -- audio.dynamic_sound_effect_instance.buffer_formats
 - `Microsoft::Xna::Framework::Audio::DynamicSoundEffectInstance::SubmitFloatBufferEXT` -- audio.dynamic_sound_effect_instance.buffer_formats
@@ -1841,6 +1913,19 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `MorphTargetDataEXT` -- graphics.model.material_variants, graphics.model.morph_animation_import, graphics.model.morph_targets
 - `MorphWeightTrackEXT` -- graphics.model.morph_animation_import, graphics.model.morph_targets
 - `Motion::IsSupported` -- devices.sensors.availability
+- `Motion::Motion` -- devices.sensors.availability
+- `Motion::Start` -- devices.sensors.availability
+- `MotionReading::Attitude` -- devices.sensors.reading_values
+- `MotionReading::DeviceAcceleration` -- devices.sensors.reading_values
+- `MotionReading::DeviceRotationRate` -- devices.sensors.reading_values
+- `MotionReading::GetHashCode` -- devices.sensors.reading_values
+- `MotionReading::GetTypeName` -- devices.sensors.reading_values
+- `MotionReading::Gravity` -- devices.sensors.reading_values
+- `MotionReading::MotionReading` -- devices.sensors.reading_values
+- `MotionReading::Timestamp` -- devices.sensors.reading_values
+- `MotionReading::ToString` -- devices.sensors.reading_values
+- `MotionReading::operator!=` -- devices.sensors.reading_values
+- `MotionReading::operator==` -- devices.sensors.reading_values
 - `Mouse::ClickedEXT` -- input.mouse.clicked_event
 - `Mouse::IsRelativeMouseModeEXT` -- input.mouse.relative_mode
 - `Mouse::SetCursor` -- input.mouse.cursors
@@ -1868,6 +1953,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `NetworkSessionProperties::IsReadOnly` -- net.network_session.session_properties
 - `NetworkSessionProperties::Remove` -- net.network_session.session_properties
 - `NetworkSessionProperties::RemoveAt` -- net.network_session.session_properties
+- `NotificationChannelUriEventArgs::ChannelUri` -- phone.notification.local_push
 - `OcclusionQuery::isPixelCountPreciseEXT` -- graphics.occlusion_query.visible_pixels
 - `PbrEffect` -- graphics.model.gltf_lights, graphics.pbr_effect.shadow_receivers
 - `PbrEffect::Alpha` -- graphics.pbr_effect.material_surface
@@ -1929,15 +2015,26 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `PropertyDictionary::Keys` -- gamer_services.leaderboard.paging
 - `PropertyDictionary::Remove` -- gamer_services.leaderboard.paging
 - `PropertyDictionary::Values` -- gamer_services.leaderboard.paging
+- `RawPushNotificationMessage::RawData` -- phone.notification.local_push
+- `RawPushNotificationMessage::RawPushNotificationMessage` -- phone.notification.local_push
+- `RawPushNotificationMessage::SendAsync` -- phone.notification.local_push
 - `RectangleConverter::ConvertFrom` -- design.type_converter.string_round_trip
 - `ReflectiveTypeReaderBuilder::Field` -- content.xnb.object_dictionary
 - `ReflectiveTypeReaderBuilder::RegisterShared` -- content.xnb.object_dictionary
 - `ResourceManager::ResourceManager` -- content.content_manager.resource_content_manager
-- `SensorBase::CurrentValue` -- devices.sensors.keyboard_accelerometer
+- `SensorBase::CurrentValue` -- devices.sensors.availability, devices.sensors.keyboard_accelerometer
+- `SensorBase::CurrentValueChanged` -- devices.sensors.keyboard_accelerometer
 - `SensorBase::Dispose` -- devices.sensors.availability
 - `SensorBase::IsDataValid` -- devices.sensors.availability, devices.sensors.keyboard_accelerometer
 - `SensorBase::State` -- devices.sensors.availability
-- `SensorState` -- devices.sensors.availability
+- `SensorBase::TimeBetweenUpdates` -- devices.sensors.availability
+- `SensorFailedException` -- devices.sensors.availability
+- `SensorFailedException::ErrorId` -- devices.sensors.availability
+- `SensorReadingEventArgs::SensorReading` -- devices.sensors.keyboard_accelerometer, devices.sensors.reading_values
+- `SensorState::Disabled` -- devices.sensors.keyboard_accelerometer
+- `SensorState::Initializing` -- devices.sensors.keyboard_accelerometer
+- `SensorState::NotSupported` -- devices.sensors.availability
+- `SensorState::Ready` -- devices.sensors.keyboard_accelerometer
 - `SetMorphWeightsEXT` -- graphics.model.material_variants, graphics.model.morph_animation_import, graphics.model.morph_targets
 - `ShaderEffect::Clone` -- graphics.shader_effect.clone_state
 - `ShaderEffect::FragmentSource` -- graphics.shader_effect.compiler_diagnostics
@@ -1995,6 +2092,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `TextureTransformEXT` -- graphics.pbr_effect.specular_material, graphics.pbr_effect.texture_coordinates
 - `TitleLocation::Path` -- game.title_container.open_stream, media.media_player.play_song
 - `TitleLocation::setPathProperty` -- game.title_container.open_stream
+- `ToastPushNotificationMessage::SendAsync` -- phone.notification.local_push
+- `ToastPushNotificationMessage::SubTitle` -- phone.notification.local_push
+- `ToastPushNotificationMessage::Title` -- phone.notification.local_push
+- `ToastPushNotificationMessage::ToastPushNotificationMessage` -- phone.notification.local_push
 - `TouchLocation::PressureEXT` -- input.touch.touch_values
 - `TouchPanel::EnqueueGesture` -- input.touch.gesture_queue
 - `TouchPanel::MouseTouchEmulationEnabledEXT` -- input.touch.get_state
@@ -2004,7 +2105,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `VertexTypeRegistryEXT::Resolve` -- graphics.vertex_declaration.custom_vertex
 - `VertexTypeRegistryEXT::TryResolve` -- graphics.vertex_declaration.custom_vertex
 - `VibrateController::Default` -- devices.vibrate_controller.start_stop
+- `VibrateController::DeviceName` -- devices.vibrate_controller.start_stop
+- `VibrateController::IsSupported` -- devices.vibrate_controller.start_stop
 - `VibrateController::Start` -- devices.vibrate_controller.start_stop
+- `VibrateController::StartLeftRight` -- devices.vibrate_controller.start_stop
 - `VibrateController::Stop` -- devices.vibrate_controller.start_stop
 - `Video::FromUriEXT` -- media.video.uri_and_metadata, media.video_player.pause_and_loop
 - `Video::GetTypeName` -- media.video_player.pause_and_loop

@@ -7410,3 +7410,47 @@ smoke-only controlled-library test. The warning-free incremental build remains `
 2128/2326 members,674/753 fields and3079/3205 C routes; Media remains24/24 types,178/192 members
 and7/8 fields. Evidence:`/tmp/checkpoint-1115-media-public-headers/*`. No host-library mutation,
 listening, network media source, screenshot or manual visual result is claimed.
+
+### Focused1116 Microsoft.Devices and Microsoft.Phone public-header audit
+
+The Devices module installs20 caller-facing headers and13 implementation headers below `Detail`;
+the Phone module installs nine caller-facing headers. The generated XNA inventory does not include
+either Windows Phone namespace, so this audit used the installed declarations, production source,
+existing demos and the pinned CNA tests directly instead of assigning misleading XNA counters.
+
+One coherent Devices gap warranted a new demo. `devices.sensors.reading_values` constructs the
+accelerometer, gyroscope, compass, attitude and fused-motion values and checks all payload
+properties, `ISensorReading` timestamp dispatch, equality/inequality/hash/text/type behavior and
+the generic, legacy and calibration event payloads without hardware. The availability demo now
+constructs all four sensors and checks support/state/data validity, the update interval,
+unsupported `Start`/`CurrentValue`, production exception types/error IDs and disposal. The
+keyboard accelerometer now verifies Initializing/Ready/Disabled, modern-before-legacy event order,
+senders and matching vector/timestamp payloads. The vibration demo adds capability/name,
+dual-motor use and both negative/overlong validation paths.
+
+The remaining Devices behaviors have explicit dispositions. Real compass, gyroscope and fused
+motion samples, calibration, north-referenced attitude and physical vibration require suitable
+Android/sensor/haptic hardware and manual observation. `SensorState::NoData` and `NoPermissions`
+have no production assignment in pinned CNA. The many named `ForTesting` methods and backend
+replacement hooks are test seams covered by CNA's own unit tests, not application demos. Fixed
+reflection names, destructors and exception payload constructors add no independent behavior.
+
+`phone.notification.local_push` covers the four Notification headers through an actual loopback
+channel: initial/open/reopen/close registry state, URI events, shell-toast binding, queued
+caller-thread dispatch, exact raw bytes and generated toast XML, and Low/Normal/High send paths.
+The existing lifecycle demo covers all five Shell headers; automation observes Launching and
+Closing, while Deactivated/Activated and preserved in-memory State remain accurately marked for
+manual focus transitions. Background/unaddressable delivery and visible shell toast rendering are
+outside CNA's documented local endpoint model.
+
+The audit also records CNA-DEMOS-ISSUE-154: `AccelerometerReadingEventArgs` says its legacy event is
+not raised, contradicting both production dispatch and the adjacent `Accelerometer` documentation.
+The warning-free compiler portion of the `-j3` build passes; CMake emits only the known vendored
+Draco CMP0148 developer warning. Seven of eight SOFTWARE Devices/Phone CTests pass and the display
+information demo declares its expected environment skip. Focused value and keyboard runs pass on
+both SOFTWARE and OPENGLES3; local push passes9/9 on both labels and is byte-identical across five
+runs per label. Metadata is719/0 and catalog/validator/comparator self-tests pass. Generated
+coverage remains308/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes because
+the added namespaces are outside that inventory; both renderer columns now contain all719 catalog
+IDs. Evidence:`/tmp/checkpoint-1116-devices-phone-public-headers/*`. No physical sensor/haptic,
+Android, background notification, shell visual, screenshot or manual focus result is claimed.
