@@ -42,11 +42,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   pass; ten runs per demo and renderer label reproduce only the three documented assertions
   with empty stderr. No CNA source was modified and no upstream message was sent.
 
-### CNA-DEMOS-ISSUE-122 -- Vector2/3 component bounds differ at reversed ranges and signed-zero ties
+### CNA-DEMOS-ISSUE-122 -- Vector2/3/4 bounds differ at reversed ranges and signed-zero ties
 
-- **Area/API:** `Microsoft::Xna::Framework::Vector2` and `Vector3` `Clamp`, `Min` and `Max`,
+- **Area/API:** `Microsoft::Xna::Framework::Vector2`, `Vector3` and `Vector4` `Clamp`, `Min` and `Max`,
   including their output overloads.
-- **Demo/reproduction:** run `math.vector2.component_bounds` and `math.vector3.clamp_min_max`.
+- **Demo/reproduction:** run `math.vector2.component_bounds`, `math.vector3.clamp_min_max` and
+  `math.vector4.component_bounds`.
   Clamp a mixed value between per-component minimum10 and maximum0, then call Min and Max with
   all-positive/all-negative zero vectors in both orders. NaN bounds are adjacent controls;
   `math.vector3.arithmetic` and `math.vector3.reflect` separately retain the matching Vector3
@@ -54,7 +55,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Observed:** CNA resolves the reversed Clamp interval to its maximum `(0,0)` rather than its
   minimum `(10,10)`. CNA Min and Max also preserve their first operand when equal zeros differ only
   by sign, opposite XNA's second-operand result. These are the only expected failures on each
-  tested renderer label: two among seven controls in Vector2 and two among six in Vector3.
+  tested renderer label: two among seven controls in Vector2, two among six in Vector3 and two
+  among eight in Vector4.
 - **Expected/reference:** genuine Windows XNA 4.0 resolves both reversed components to the supplied
   minimum in value and output Clamp forms. Both Min and Max select their second operand when the
   comparison is equal: positive-then-negative order therefore returns negative zero, and reversing
@@ -69,8 +71,9 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Evidence/status:** open against pinned CNA
   `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
   XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1050-vector2-component-bounds/*` and
-  `/tmp/checkpoint-1052-vector3-identity-bounds/*`. Clean warning-free three-job builds, exact
-  known-issue CTests, metadata695/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer
+  `/tmp/checkpoint-1052-vector3-identity-bounds/*` and
+  `/tmp/checkpoint-1059-vector4-component-bounds/*`. Clean warning-free three-job builds, exact
+  known-issue CTests, metadata698/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer
   label reproduce only the documented assertions with empty stderr. No CNA source was modified and
   no upstream message was sent.
 

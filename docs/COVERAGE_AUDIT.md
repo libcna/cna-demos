@@ -171,9 +171,10 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 |---|---|
 | Constructors, constants, components, equality and hash | New focused `value_identity` covers the default, replicated scalar, Vector2-plus-ZW, Vector3-plus-W and four-scalar constructors; Zero, One and all four unit axes; and typed, boxed and operator identity for ordinary, wrong-type, empty and NaN cases. Genuine XNA preserves equal hashes across UnitX/origin pairs that differ only by a zero sign; CNA equality agrees but raw-bit hashing differs under ISSUE-120. Evidence:`/tmp/checkpoint-1058-vector4-value-identity/*`. |
 | Length, LengthSquared, Distance, DistanceSquared and Normalize | New focused `magnitude_range` covers ordinary and zero member/static/output normalization plus ordinary value/output Distance. Genuine Windows XNA keeps sole-X `1e20` and `1e-30` Length/Distance finite and normalizes both to UnitX even when the separately returned squared result is infinity or zero. CNA loses exactly those six observable results under ISSUE-118. Evidence:`/tmp/checkpoint-1057-vector4-magnitude-range/*`. |
+| Component bounds and arithmetic | New focused `component_bounds` covers ordinary/reversed/NaN Clamp, signed-zero Min/Max ties, component/scalar signed-zero division and all Add/Subtract/Multiply/Negate named, operator and output forms. CNA matches XNA except that reversed Clamp resolves to the maximum and equal-zero Min/Max preserve the first operand, extending ISSUE-122 with two failures. Evidence:`/tmp/checkpoint-1059-vector4-component-bounds/*`. |
 
-Component bounds and arithmetic, interpolation, Dot range and matrix/quaternion array transforms
-remain the next Vector4 audit rows; existing broad
+Interpolation, Dot range and matrix/quaternion array transforms remain the next Vector4 audit
+rows; existing broad
 `color_math` and `homogeneous_transform` coverage will be retained where it is already meaningful.
 
 ### BoundingBox, BoundingSphere and Ray value identity
@@ -6030,3 +6031,19 @@ Ten runs per renderer label are byte-identical with stdout SHA-256
 Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; Complete1056
 marks the two new Vector4 IDs absent. Evidence:`/tmp/checkpoint-1058-vector4-value-identity/*`.
 No renderer or visual claim was made. Continue with Vector4 component bounds and arithmetic.
+
+### Focused1059 Vector4 component bounds
+
+New focused console demo `math.vector4.component_bounds` raises the catalog to698 and math to83.
+Genuine Windows XNA 4.0 resolves reversed Clamp bounds to the minimum and selects the second
+operand for signed-zero Min/Max ties; CNA returns the reversed maximum and retains the first tied
+operand, extending ISSUE-122 with two failures among eight controls. Ordinary and three NaN Clamp
+cases, component/scalar signed-zero division and all Add/Subtract/Multiply/Negate named, operator
+and output forms match XNA.
+
+Ten runs per renderer label are byte-identical with stdout SHA-256
+`42edc4a61e232d797ba305b1f2a48089aa27fd002a96652644d972bb239e8674` and empty stderr. The clean
+`-j3` build, metadata698/0, exact known-issue SOFTWARE CTest and self-tests5/5 plus4/4 pass.
+Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; Complete1056
+marks the three new Vector4 IDs absent. Evidence:`/tmp/checkpoint-1059-vector4-component-bounds/*`.
+No renderer or visual claim was made. Continue with Vector4 Dot range and interpolation.

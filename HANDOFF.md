@@ -14,7 +14,7 @@ capability has a demo. See docs/PROJECT.md.
 
 Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMAP.md):
 
-* Complete: Phase 0-1 (research, infrastructure), 2 (math, 82 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
+* Complete: Phase 0-1 (research, infrastructure), 2 (math, 83 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
@@ -69,13 +69,13 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-697 project-built catalog demos in19 categories: math82, game33, graphics185, audio23, core6,
+698 project-built catalog demos in19 categories: math83, game33, graphics185, audio23, core6,
 content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are191 console,296 game and210
-standalone; 661 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are192 console,296 game and210
+standalone; 662 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete1056's full runtime reports; they include all695
-baseline catalog IDs in both renderer suites. New `math.vector4.magnitude_range` and
-`math.vector4.value_identity` are explicitly absent until the next complete checkpoint.
+baseline catalog IDs in both renderer suites. The three new `math.vector4.*` focused IDs are
+explicitly absent until the next complete checkpoint.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
 3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1056's
 full runtime reports are the baseline inputs for the695-ID checkpoint catalog. Selected semantic
@@ -10831,3 +10831,22 @@ Complete1056 marks the two post-baseline Vector4 IDs absent. Genuine-XNA stdout 
 display-cookie warning. Evidence:`/tmp/checkpoint-1058-vector4-value-identity/*`. No renderer or
 visual claim was made. Continue with Vector4 component bounds/arithmetic, then Dot range,
 interpolation and transform arrays.
+
+## Focused1059-Vector4-component-bounds
+
+New focused console demo `math.vector4.component_bounds` raises the catalog to698 and math to83.
+Genuine Windows XNA 4.0 resolves reversed Clamp bounds to the minimum and makes Min/Max select
+their second operand on signed-zero ties. CNA instead returns the reversed maximum and keeps the
+first tied operand, extending ISSUE-122 with exactly two failures among eight controls. Ordinary
+and three NaN Clamp cases, component/scalar signed-zero division and all Add/Subtract/Multiply/
+Negate named, operator and output forms match.
+
+The configure-only vendored-Draco CMP0148 warning is unchanged; the clean follow-up `-j3` build is
+warning-free. Metadata is698/0, the exact known-issue SOFTWARE CTest and validator/comparator
+self-tests5/5 plus4/4 pass. Ten SOFTWARE and ten OPENGLES3-labelled runs are byte-identical with
+stdout SHA-256 `42edc4a61e232d797ba305b1f2a48089aa27fd002a96652644d972bb239e8674` and empty stderr.
+Generated coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes;
+Complete1056 marks the three post-baseline Vector4 IDs absent. Genuine-XNA stdout SHA-256 is
+`611936a0439541a87a83675756d3832212b36a08b7651f2072e285efd300a05e`; its stderr is only the host
+display-cookie warning. Evidence:`/tmp/checkpoint-1059-vector4-component-bounds/*`. No renderer or
+visual claim was made. Continue with Vector4 Dot product range and interpolation, then transforms.

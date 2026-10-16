@@ -11608,3 +11608,16 @@ label are byte-stable with empty stderr. The clean `-j3` build, metadata697/0, e
 CTest and both self-test suites pass. Coverage totals remain unchanged and Complete1056 marks the
 two new Vector4 IDs absent. Evidence:`/tmp/checkpoint-1058-vector4-value-identity/*`. Continue with
 Vector4 component-bound and arithmetic behavior.
+
+## Focused1059 Vector4 component bounds
+
+New `math.vector4.component_bounds` raises the catalog to698 and math to83. Genuine Windows XNA
+4.0 resolves reversed Clamp bounds to the minimum and selects the second operand on signed-zero
+Min/Max ties; CNA returns the reversed maximum and retains the first tied operand, extending
+ISSUE-122 with two failures among eight controls. Three NaN Clamp cases, signed-zero component and
+scalar division and every Add/Subtract/Multiply/Negate named, operator and output form match XNA.
+Ten runs per renderer label are byte-stable with empty stderr. The clean `-j3` build,
+metadata698/0, exact known-issue CTest and both self-test suites pass. Coverage totals remain
+unchanged and Complete1056 marks the three new Vector4 IDs absent. Evidence:
+`/tmp/checkpoint-1059-vector4-component-bounds/*`. Continue with Vector4 Dot range and
+interpolation.
