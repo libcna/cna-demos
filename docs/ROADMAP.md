@@ -81,7 +81,8 @@ Console demos with checks; each shows one operation family.
   on both renderers; captures inspected).
 - ✅ (7 demos) `graphics.sprite_font.*`: build-time CNB font (generated font-texture sheet),
   `DrawString`, `MeasureString`, `LineSpacing`, `Spacing`, `DefaultCharacter`, `Characters`,
-  scaled/rotated/mirrored text, `StringBuilder`, the CNAEXT glyph constructor. Phase 8 now also
+  scaled/rotated/mirrored text, `StringBuilder`, the CNAEXT glyph constructor and its live atlas
+  value handle after explicit caller-wrapper disposal. Phase 8 now also
   covers XNB font loading and the complete build-time TrueType `.spritefont` source contract with
   a licensed, reproducible font fixture.
 - ✅ (10 demos) `graphics.texture2d.*`: `SetData`/`GetData` (whole, rectangle, mip level), mipmaps,
@@ -11098,3 +11099,13 @@ last clone is released. Both tested renderers pass14/14 in ten repeated runs wit
 and empty stderr; the exact SOFTWARE CTest, warning-free three-job build and metadata693/0 also
 pass. No new ID, coverage credit or CNA issue is introduced. Continue with the next deterministic
 gap outside the completed ownership/lifecycle slices.
+
+## Focused1016-SpriteFont-atlas-value-lifetime
+
+`graphics.sprite_font.glyph_constructor` now explicitly disposes the caller's atlas after the font
+has copied its Texture2D value handle. The caller wrapper becomes disposed while the font's wrapper
+remains live, retains every texel and still supplies the established exact DrawString pixel. This
+closes the deferred shared-storage lifecycle disposition without duplicating generic Texture2D copy
+tests or adding an ID. The warning-free three-job build, metadata693/0 and exact SOFTWARE CTest
+pass; ten runs per renderer pass9/9 with byte-identical stdout and empty stderr. No CNA issue was
+found. Continue with the next reachable deterministic gap.

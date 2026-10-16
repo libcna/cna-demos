@@ -3523,10 +3523,10 @@ ISSUE-112 and bound VertexDeclaration disposal. The complete warning-free three-
 
 Resume the deeper semantic behavior audit: reconcile explicit residual gaps in
 `docs/COVERAGE_AUDIT.md` against pinned CNA d23e139de and prioritize reachable deterministic behavior
-that strengthens an existing coherent demo. Focused1015 has now closed the explicit
-SkinnedEffect clone/raw-texture/disposal ownership gap in the existing clone workflow. Choose the
-next gap outside the completed ShaderEffect/OcclusionQuery/RenderTarget/VertexDeclaration and
-SkinnedEffect ownership slices. Revisit the126 intentionally
+that strengthens an existing coherent demo. Focused1015 closes the explicit SkinnedEffect
+clone/raw-texture/disposal ownership gap, and Focused1016 closes SpriteFont's caller-atlas disposal
+boundary. Choose the next gap outside the completed ShaderEffect/OcclusionQuery/RenderTarget/
+VertexDeclaration/SkinnedEffect ownership and SpriteFont atlas slices. Revisit the126 intentionally
 uncredited C routes only if public headers or reachable environment capabilities change. Do not add
 metadata merely to raise a count.
 Focused957 closes the strict public build-configuration parser;
@@ -10038,3 +10038,18 @@ remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. 
 `/tmp/checkpoint-1015-skinned-ownership/*`. Pixel validation is the existing programmatic first-frame
 readback; no screenshot or manual visual inspection was performed. No CNA issue was found. Continue
 with the next reachable deterministic gap outside the completed ownership/lifecycle slices.
+
+## Focused1016-SpriteFont-atlas-value-lifetime
+
+`graphics.sprite_font.glyph_constructor` now explicitly disposes the caller's Texture2D atlas after
+SpriteFont construction. The caller wrapper reports disposed while the font's copied value wrapper
+remains live; exact GetData proves all30x5 texels survive and the existing first-frame DrawString
+sample still proves their renderer-backed use. This closes the deferred value-handle lifecycle
+decision without another demo or generic Texture2D-copy repetition.
+
+The warning-free `-j3` build and metadata693/0 pass, as does the exact SOFTWARE CTest. Ten SOFTWARE
+and ten OPENGLES3/Xvfb runs pass9/9 with byte-identical stdout SHA-256
+`aebc805e6c0f244af7c9aa300bcfa4544816d24de61aeae9fe7b5896525f85a7` and empty stderr. Counts
+remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1016-sprite-font-atlas/*`. Pixel validation is programmatic; no screenshot or manual
+visual inspection was performed. No CNA issue was found. Continue with the next deterministic gap.

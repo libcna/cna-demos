@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Proved that SpriteFont keeps an independent live Texture2D value handle after explicit disposal
+  of the caller's atlas, including exact retained texels and rendered glyph placement.
 - Extended the SkinnedEffect clone-ownership workflow through non-owning raw texture aliases,
   shared explicit-disposal identity, disposed-texture Apply refusal and final wrapper release.
 - Refreshed the complete 693-demo behavior baseline: all 706 enabled CTests and both renderer smoke

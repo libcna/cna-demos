@@ -85,12 +85,15 @@ namespace
             cropping[0] = Rectangle(99, 99, 99, 99);
             characters[0] = u'X';
             kerning[0] = Vector3(99.0f);
+            atlas.Dispose();
+            Context().Check(atlas.getIsDisposedProperty() && !font_->getTextureEXT().getIsDisposedProperty(),
+                            "disposing the caller atlas leaves the font's value handle live");
             std::vector<Color> retainedPixels(pixels.size());
             font_->getTextureEXT().GetData(retainedPixels.data(), static_cast<int>(retainedPixels.size()));
             Context().Check(font_->getTextureEXT().getWidthProperty() == atlasWidth &&
                                 font_->getTextureEXT().getHeightProperty() == GlyphHeight &&
                                 retainedPixels == pixels,
-                            "the inspected atlas retains its exact dimensions and texels");
+                            "the font atlas retains exact dimensions and texels after caller disposal");
             Context().Check(font_->getGlyphBoundsEXT() == expectedBounds &&
                                 font_->getCharactersProperty() == expectedCharacters,
                             "glyph bounds and characters preserve their common order");
@@ -144,7 +147,8 @@ CNA_DEMOS_GAME(GlyphConstructorDemo, {
     .id = "graphics.sprite_font.glyph_constructor",
     .title = "Build a font in code",
     .description = "Creates a SpriteFont without the content pipeline through CNA's public SpriteFont constructor "
-                   "(CNAEXT): an atlas texture plus glyph bounds, cropping, characters and kerning.",
+                   "(CNAEXT): copies an atlas value handle plus glyph bounds, cropping, characters and kerning, "
+                   "then draws after the caller atlas is disposed.",
     .apis = {"SpriteFont::SpriteFont", "SpriteFont::Characters", "SpriteFont::MeasureString",
              "SpriteFont::getTextureEXT", "SpriteFont::getGlyphBoundsEXT", "SpriteFont::getCroppingEXT",
              "SpriteFont::getKerningEXT", "SpriteBatch::DrawString"},
