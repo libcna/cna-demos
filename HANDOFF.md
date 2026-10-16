@@ -3526,8 +3526,10 @@ Resume the deeper semantic behavior audit: reconcile explicit residual gaps in
 that strengthens an existing coherent demo. Focused1023 closes Texture3D's explicit non-Color
 sampling gap with signed/HDR Vector4 values on both GLSL dialects, and Focused1024 closes exact
 PNG/JPEG resize mapping. Focused1025 closes the explicit SpriteBatch crop-origin and signed-scale/
-flip composition gap, including default winding culling. Choose the next gap outside the
-Focused1015-1025 ownership, audio-transport, texture-format and sprite-transform slices. Revisit the126 intentionally
+flip composition gap, including default winding culling. Focused1026 closes bounded post-mix
+visualization and relative FFT localization with authored 440/660 Hz tones. Choose the next gap
+outside the Focused1015-1026 ownership, audio-transport, texture-format, sprite-transform and
+visualization slices. Revisit the126 intentionally
 uncredited C routes only if public headers or reachable environment capabilities change. Do not add
 metadata merely to raise a count.
 Focused957 closes the strict public build-configuration parser;
@@ -10224,3 +10226,20 @@ totals remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C r
 `3210d1627c81a121ac61ffa4f0e679c3280800d2dba4e449beaf94070d50a42d`. Final controls use
 programmatic readback; no visual-quality claim is made. Continue with the next deterministic gap
 outside the completed SpriteBatch transform slice.
+
+## Focused1026-MediaPlayer-authored-tone-visualization
+
+`media.media_player.visualization` now connects its public buffers to known decoded signals. It
+retains zero/disabled behavior, then captures existing generated 440 Hz and 660 Hz tones with an
+explicit callback/ring reset between phases. Every magnitude remains finite in [0,1], every sample
+remains finite in [-1,1] and reaches both polarities, and the dominant band moves from5 to8 on both
+tested renderer labels. This is decode/resample/mix/post-mix/FFT evidence without listening.
+
+The warning-free `-j3` build, metadata693/0, exact SOFTWARE CTest and validator/comparator self-
+tests5/5 plus4/4 pass. Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass6/6 with byte-identical stdout
+SHA-256 `474e21e223b75703e7a8349d92e4b30cbc2f2393a3a121be4b9a61eb4d314abf` and empty stderr.
+Generated totals remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes.
+Evidence:`/tmp/checkpoint-1026-media-visualization-tones/*`; source SHA-256
+`8834dea3a387d0d087f17bee5764ef348a18d24c8585132f5b62018dfac09f6c`. No listening,
+audible-quality, screenshot or manual visual claim is made, and no CNA issue was found. Continue
+with the next deterministic gap outside MediaPlayer visualization.

@@ -11250,3 +11250,18 @@ remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. 
 `/tmp/checkpoint-1025-sprite-effects-composition/*`. Final evidence is programmatic pixel readback;
 no visual-quality claim is made. Continue the deterministic behavior audit outside the completed
 SpriteBatch transform interaction.
+
+## Focused1026-MediaPlayer-authored-tone-visualization
+
+The existing visualization workflow grows from three to six controls. Existing generated 440 Hz
+and 660 Hz mono tones replace the general melody, with public capture explicitly reset between
+them. All reported magnitudes stay finite in [0,1], all waveform samples stay finite in [-1,1] and
+reach both polarities, and the dominant FFT band moves deterministically from5 to8. This connects
+the public arrays to known decoded signals without an acoustic assertion or another demo ID.
+
+The warning-free three-job build, metadata693/0 and exact SOFTWARE CTest pass. Ten SOFTWARE and ten
+OPENGLES3/Xvfb runs pass6/6 with byte-identical stdout and empty stderr; validator/comparator self-
+tests pass5/5 and4/4. Counts remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205
+C routes. Evidence:`/tmp/checkpoint-1026-media-visualization-tones/*`. No listening, audible-
+quality, screenshot or manual visual claim is made, and no CNA issue was found. Continue the
+deterministic behavior audit outside the completed MediaPlayer visualization slice.

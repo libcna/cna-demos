@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended MediaPlayer visualization with repeating 440 Hz and 660 Hz fixtures, bounded bipolar
+  waveform data and deterministic dominant-band ordering through the public post-mix capture path.
 - Extended the SpriteBatch flip workflow with a nonzero source crop, crop-relative origin,
   negative per-axis scales, default winding culling and the cancellation of geometry mirrors by
   matching texture-coordinate effects.

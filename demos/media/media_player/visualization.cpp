@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MS-PL
 // MediaPlayer visualization: the playing music's spectrum and waveform, every frame.
 #include <algorithm>
+#include <array>
+#include <cmath>
 #include <memory>
 #include <optional>
 
@@ -61,11 +63,12 @@ namespace
             const Color white = Color::White;
             pixel_->SetData(&white, 1);
 
-            song_.reset(Song::FromUri("Rising", TitleLocation::Path() + "/assets/music/rising.wav"));
+            tone440_.reset(Song::FromUri("440 Hz", TitleLocation::Path() + "/assets/sounds/tone_440.wav"));
+            tone660_.reset(Song::FromUri("660 Hz", TitleLocation::Path() + "/assets/sounds/tone_660.wav"));
             // Visualization data is captured only while enabled.
             MediaPlayer::setIsVisualizationEnabledProperty(true);
             MediaPlayer::setIsRepeatingProperty(true);
-            MediaPlayer::Play(song_.get());
+            MediaPlayer::Play(tone440_.get());
         }
 
         void UnloadContent() override
@@ -80,16 +83,51 @@ namespace
             // 256 frequency bands (0..1, low to high) and 256 samples of the waveform (-1..1).
             MediaPlayer::GetVisualizationData(data_);
             float energy = 0.0f;
-            for (const float band : data_.getFrequenciesProperty())
+            const auto& frequencies = data_.getFrequenciesProperty();
+            for (std::size_t i = 0; i < frequencies.size(); ++i)
             {
+                const float band = frequencies[i];
                 energy += band;
                 loudestBand_ = std::max(loudestBand_, band);
+                rangesValid_ = rangesValid_ && std::isfinite(band) && band >= 0.0f && band <= 1.0f;
+                if (i > 0 && band > strongestMagnitude_[phase_])
+                {
+                    strongestMagnitude_[phase_] = band;
+                    strongestBand_[phase_] = i;
+                }
+            }
+            for (const float sample : data_.getSamplesProperty())
+            {
+                rangesValid_ = rangesValid_ && std::isfinite(sample) && sample >= -1.0f && sample <= 1.0f;
+                sawPositiveSample_ = sawPositiveSample_ || sample > 0.1f;
+                sawNegativeSample_ = sawNegativeSample_ || sample < -0.1f;
             }
             peak_ = std::max(peak_, energy);
-            if (!checked_ && gameTime.getTotalGameTimeProperty().getTotalSecondsProperty() > 1.0)
+
+            const double totalSeconds = gameTime.getTotalGameTimeProperty().getTotalSecondsProperty();
+            if (phase_ == 0 && totalSeconds > 0.75)
+            {
+                Context().Check(strongestMagnitude_[0] > 0.0f,
+                                "the first playing tone produces a nonzero spectrum");
+                MediaPlayer::Stop();
+                MediaPlayer::setIsVisualizationEnabledProperty(false);
+                MediaPlayer::Play(tone660_.get());
+                MediaPlayer::setIsVisualizationEnabledProperty(true);
+                phase_ = 1;
+                phaseStartSeconds_ = totalSeconds;
+            }
+            else if (!checked_ && phase_ == 1 && totalSeconds - phaseStartSeconds_ > 0.75)
             {
                 Context().Print("strongest spectrum so far: {:.2f} (sum of the 256 bands)", peak_);
-                Context().Check(peak_ > 0.0f, "the spectrum shows the playing music");
+                Context().Print("dominant tone bands: 440 Hz -> {}, 660 Hz -> {}",
+                                strongestBand_[0], strongestBand_[1]);
+                Context().Check(peak_ > 0.0f && strongestMagnitude_[1] > 0.0f,
+                                "both playing tones produce spectrum energy");
+                Context().Check(rangesValid_ && sawPositiveSample_ && sawNegativeSample_,
+                                "frequency magnitudes and bipolar waveform samples stay in their documented ranges");
+                Context().Check(strongestBand_[0] > 0 && strongestBand_[1] > strongestBand_[0] &&
+                                    strongestBand_[1] <= strongestBand_[0] * 2 + 1,
+                                "the 660 Hz tone peaks in a predictably higher band than the 440 Hz tone");
                 checked_ = true;
                 if (Context().Automated())
                     Exit();
@@ -120,10 +158,18 @@ namespace
         }
 
     private:
-        std::unique_ptr<Song> song_;
+        std::unique_ptr<Song> tone440_;
+        std::unique_ptr<Song> tone660_;
         VisualizationData data_;
         float peak_ = 0.0f;
         float loudestBand_ = 0.0f;
+        std::array<float, 2> strongestMagnitude_{};
+        std::array<std::size_t, 2> strongestBand_{};
+        bool rangesValid_ = true;
+        bool sawPositiveSample_ = false;
+        bool sawNegativeSample_ = false;
+        int phase_ = 0;
+        double phaseStartSeconds_ = 0.0;
         bool checked_ = false;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
@@ -134,14 +180,14 @@ namespace
 CNA_DEMOS_GAME(VisualizationDemo, {
     .id = "media.media_player.visualization",
     .title = "Music visualization",
-    .description = "Checks VisualizationData's two zero-initialized 256-value buffers, proves disabled capture clears "
-                   "caller data, then enables MediaPlayer visualization while a tune repeats and draws its spectrum "
-                   "and waveform.",
+    .description = "Checks VisualizationData's zero and disabled states, then captures repeating 440 Hz and 660 Hz "
+                   "tones, verifies bounded bipolar samples and ordered dominant spectrum bands, and draws the live "
+                   "spectrum and waveform.",
     .apis = {"MediaPlayer::IsVisualizationEnabled", "MediaPlayer::GetVisualizationData",
              "VisualizationData::VisualizationData", "VisualizationData::Frequencies",
              "VisualizationData::Samples", "MediaPlayer::IsRepeating"},
     .tags = {"media", "music", "spectrum", "visualizer", "fft"},
     .needs = CnaDemos::Need::Audio,
     .frames = 120,
-    .assets = {"fonts/pixel_font.cnb", "music/rising.wav"},
+    .assets = {"fonts/pixel_font.cnb", "sounds/tone_440.wav", "sounds/tone_660.wav"},
 })
