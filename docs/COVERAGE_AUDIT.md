@@ -217,6 +217,17 @@ The meaningful Rectangle public-member/behavior audit is complete at pinned d23.
 | Ray frustum intersection | New focused `math.ray.frustum_intersection` covers an outside entry, parallel offset miss and interior start. CNA passes the latter two but rejects every outside origin instead of calculating the entry parameter; its delegated frustum implementation leaves the clipping branch unimplemented. The sole failure is ISSUE-131. Evidence:`/tmp/checkpoint-1068-ray-members/*`. |
 | BoundingSphere CreateFromFrustum | `math.bounding_sphere.create` builds from an identity frustum and numerically encloses all eight actual corners within 1e-5 without asserting an unspecified minimum sphere. The earlier strict-Contains assumption remains correctly replaced by the geometric tolerance because Ritter construction plus float rounding can put a boundary corner just outside strict classification. |
 
+### Plane and PlaneIntersectionType
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Construction, fields, dot products and value identity | Focused1069 grows `math.plane.classify_points` from ten to twelve controls. Default, normal-distance, Vector4, four-scalar and both three-point winding forms expose Normal/D directly; a collinear input produces XNA's four NaNs. Dot, DotCoordinate and DotNormal value/output forms use deliberately distinct W/D behavior. Typed/boxed/operator equality, changed fields, equal hashing and exact text complete the value contract. Exact platform-native hash values remain intentionally unasserted beyond equal values. |
+| Box, sphere and frustum classification | New `math.plane.intersections` has six controls. PlaneIntersectionType's exact Front/Back/Intersecting values are visible. Box and sphere value/output forms cover both separated half-spaces, crossings and exact tangency; an identity frustum covers a crossing and both separated sides. CNA matches genuine XNA throughout. |
+| Normalize and Transform | Focused1069 grows `math.plane.transform` from three to seven controls. Member/value/output/aliased normalization agree, preserve the source where required and produce XNA's four NaNs for a zero plane. Matrix value/output/alias forms cover translation and inverse-transpose behavior under nonuniform scale. Quaternion value/output/alias forms rotate the normal while preserving D. CNA matches genuine XNA throughout. Evidence:`/tmp/checkpoint-1069-plane-members/*`. |
+
+The meaningful Plane and PlaneIntersectionType public-member/behavior audit is complete at pinned
+d23.
+
 Focused651 adds twelve member credits without new IDs, moving temporary coverage1545->1557/2326.
 All three IDs have byte-identical renderer outputs and empty stderr; all focused CTests pass.
 Evidence:`/tmp/checkpoint-651-*` and `/tmp/checkpoint-651-coverage.md`. No rendering, screenshot or
@@ -6278,3 +6289,30 @@ Ray IDs absent. Genuine-XNA stdout SHA-256 is
 display-cookie warning. Evidence:`/tmp/checkpoint-1068-ray-members/*`. No renderer or visual claim
 was made. The meaningful Ray audit is complete; continue with the next deterministic public value
 family.
+
+### Focused1069 Plane members and boundaries
+
+New focused console demo `math.plane.intersections` raises the catalog to705, math to90, console
+to199 and automated to669. `math.plane.classify_points` is reorganized and grows from ten to twelve
+controls, intersections has six and `math.plane.transform` grows from three to seven. Together they
+cover all public construction forms and fields, three-point winding and degeneracy, dot
+value/output families, identity/hash/text, enum ordinals, box/sphere/frustum classifications and
+tangency, every normalization form plus matrix/quaternion value/output/alias transformations.
+
+Genuine Windows XNA 4.0 matches CNA for all25 controls. It confirms four NaNs for collinear point
+construction and zero-plane normalization, exact tangency as Intersecting, identity-frustum
+Front/Back/Intersecting results, nonuniform inverse-transpose matrix behavior and legal input/output
+aliasing. No new CNA issue was found.
+
+Ten runs per demo and renderer label are byte-stable with empty stderr. Stdout SHA-256 values are
+`8a3fdad0e4ddbb1682e006d8410d7f0b369c686b8464e9384c655ac2ec82bd27` for construction/products,
+`75e00da26f8c6cf857c18a7231fae09a18cc4be073141140329ad8e465b2a56c` for intersections and
+`dddb37c58626bba7ff0e401780133b4cd9bf2c63386e6751645861e91581b045` for transforms. After the
+configure-only vendored-Draco warning, the clean `-j3` build, metadata705/0, all three exact
+SOFTWARE CTests and self-tests5/5 plus4/4 pass. Coverage remains307/329 types,2128/2326 members,
+674/753 fields and3079/3205 C routes; Complete1056 marks the new Plane ID absent. Genuine-XNA
+stdout SHA-256 is `c308975f479e8ba9a2b999e35706c03db0d8c0df57c0bd04c5719910af902928`;
+its stderr is only the host display-cookie warning. Evidence:
+`/tmp/checkpoint-1069-plane-members/*`. No renderer or visual claim was made. The meaningful Plane
+and PlaneIntersectionType audit is complete; continue with Color value construction, packing,
+conversion and arithmetic behavior.

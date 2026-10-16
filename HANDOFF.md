@@ -69,17 +69,19 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-704 project-built catalog demos in19 categories: math89, game33, graphics185, audio23, core6,
+705 project-built catalog demos in19 categories: math90, game33, graphics185, audio23, core6,
 content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are198 console,296 game and210
-standalone; 668 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are199 console,296 game and210
+standalone; 669 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete1056's full runtime reports; they include all695
 baseline catalog IDs in both renderer suites. The six new `math.vector4.*` IDs and new
-`math.bounding_sphere.containment_boundaries`, `math.ray.value_identity` and
-`math.ray.frustum_intersection` are explicitly absent until the next complete checkpoint. The
+`math.bounding_sphere.containment_boundaries`, `math.ray.value_identity`,
+`math.ray.frustum_intersection` and `math.plane.intersections` are explicitly absent until the next
+complete checkpoint. The
 baseline results for `math.point.basics`, all four `math.rectangle.*`, all four
-`math.bounding_box.*`, the three older `math.bounding_sphere.*` IDs and `math.ray.intersects`
-predate Focused1063-1068's new assertions under ISSUE-124 through ISSUE-131.
+`math.bounding_box.*`, the three older `math.bounding_sphere.*` IDs, `math.ray.intersects` and the
+two older `math.plane.*` IDs predate Focused1063-1069's deeper member assertions and ISSUE-124
+through ISSUE-131 where applicable.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
 3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1056's
 full runtime reports are the baseline inputs for the695-ID checkpoint catalog. Selected semantic
@@ -11072,3 +11074,30 @@ marks both new Ray IDs absent. Genuine-XNA stdout SHA-256 is
 display-cookie warning. Evidence:`/tmp/checkpoint-1068-ray-members/*`. No renderer or visual claim
 was made. The meaningful Ray audit is complete; continue with the next deterministic public value
 family.
+
+## Focused1069-Plane-members-and-boundaries
+
+New focused console demo `math.plane.intersections` raises the catalog to705, math to90, console
+to199 and automated to669. `math.plane.classify_points` is reorganized and grows10->12 controls,
+intersections has six and `math.plane.transform` grows3->7. Together they cover all public
+construction forms and fields, three-point winding/degeneracy, dot value/output families,
+identity/hash/text, enum ordinals, box/sphere/frustum classifications and tangency, every
+normalization form plus matrix/quaternion value/output/alias transformations.
+
+Genuine Windows XNA 4.0 matches CNA for all25 controls. It confirms four NaNs for collinear point
+construction and zero-plane normalization, exact tangency as Intersecting, identity-frustum
+Front/Back/Intersecting results, nonuniform inverse-transpose matrix behavior and legal
+input/output aliasing. No new CNA issue was found.
+
+The configure-only vendored-Draco warning is unchanged; the clean follow-up `-j3` build is
+warning-free. Metadata is705/0, all three exact SOFTWARE CTests and validator/comparator
+self-tests5/5 plus4/4 pass. Ten runs per demo and renderer label are byte-stable with empty stderr.
+Stdout SHA-256 values are `8a3fdad0e4ddbb1682e006d8410d7f0b369c686b8464e9384c655ac2ec82bd27`
+for construction/products, `75e00da26f8c6cf857c18a7231fae09a18cc4be073141140329ad8e465b2a56c`
+for intersections and `dddb37c58626bba7ff0e401780133b4cd9bf2c63386e6751645861e91581b045`
+for transforms. Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C
+routes; Complete1056 marks the new Plane ID absent. Genuine-XNA stdout SHA-256 is
+`c308975f479e8ba9a2b999e35706c03db0d8c0df57c0bd04c5719910af902928`; its stderr is only the host
+display-cookie warning. Evidence:`/tmp/checkpoint-1069-plane-members/*`. No renderer or visual
+claim was made. The meaningful Plane and PlaneIntersectionType audit is complete; continue with
+Color value construction, packing, conversion and arithmetic behavior.

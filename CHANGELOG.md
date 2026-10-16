@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed Plane and PlaneIntersectionType member/behavior coverage with XNA-referenced
+  construction, dot-output, volume classification, normalization, transform and alias boundaries.
 - Completed Ray value/intersection coverage, extended ISSUE-126 to Ray text and recorded ISSUE-130
   for stationary box hits plus ISSUE-131 for outside-frustum entry.
 - Completed BoundingSphere member/behavior coverage, adding focused containment boundaries and

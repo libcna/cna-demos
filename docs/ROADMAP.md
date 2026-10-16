@@ -11736,3 +11736,16 @@ renderer label are byte-stable with empty stderr. After the configure-only warni
 remain unchanged and Complete1056 marks both new IDs absent. Evidence:
 `/tmp/checkpoint-1068-ray-members/*`. The meaningful Ray audit is complete; continue with the next
 deterministic public value family.
+
+## Focused1069 Plane members and boundaries
+
+New `math.plane.intersections` raises the catalog to705 and math to90. Existing construction/dot
+coverage grows10->12 controls, the new bounding-volume classification workflow has six and
+transform/normalization grows3->7. Genuine XNA anchors every constructor, point winding and
+degenerate NaNs, all dot and intersection value/output forms, enum values, tangency, frustum
+half-spaces, normalization forms and matrix/quaternion output aliasing. CNA matches all25 controls.
+Ten runs per demo and renderer label are byte-stable with empty stderr. After the configure-only
+warning, the clean `-j3` build, metadata705/0, all three exact CTests and both self-test suites pass.
+Coverage totals remain unchanged and Complete1056 marks the new ID absent. Evidence:
+`/tmp/checkpoint-1069-plane-members/*`. The meaningful Plane audit is complete; continue with
+Color value construction, packing, conversion and arithmetic behavior.
