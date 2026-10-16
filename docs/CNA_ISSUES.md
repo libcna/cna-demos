@@ -15,26 +15,32 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
-### CNA-DEMOS-ISSUE-119 -- Quaternion inverse loses extreme finite magnitudes
+### CNA-DEMOS-ISSUE-119 -- Quaternion inverse and division lose extreme finite magnitudes
 
-- **Area/API:** `Microsoft::Xna::Framework::Quaternion::Inverse`, value and output overloads.
-- **Demo/reproduction:** run `math.quaternion.inverse_and_conjugate`. Invert quaternions with a
-  sole X component of `1e20` and `1e-20`. Ordinary unit/nonunit, output-overload and zero controls
-  distinguish the extreme-range defect from the formula's normal behavior.
-- **Observed:** CNA maps the huge input to signed zero instead of `-1e-20`. For the tiny input it
-  returns `-infinity` in X and NaN in the three zero components instead of finite `-1e20` and zeros.
-  These are exactly two expected failures among eleven controls on ten runs per renderer label.
+- **Area/API:** `Microsoft::Xna::Framework::Quaternion::Inverse` and `Quaternion::Divide`, value
+  and output overloads.
+- **Demo/reproduction:** run `math.quaternion.inverse_and_conjugate` and
+  `math.quaternion.double_cover`. Invert quaternions with a sole X component of `1e20` and `1e-20`,
+  then divide Identity by the same values. Ordinary unit/nonunit, output-overload, identity and
+  zero controls distinguish the extreme-range defect from each formula's normal behavior.
+- **Observed:** Inverse maps the huge input to signed zero instead of `-1e-20`; for the tiny input
+  it returns `-infinity` in X and NaN in the three zero components instead of finite `-1e20` and
+  zeros. Divide likewise loses the huge quotient and produces nonfinite components for the tiny
+  divisor. Each demo retains exactly two expected failures: eleven Inverse controls and24 Divide
+  controls on ten runs per renderer label.
 - **Expected/reference:** genuine Windows XNA 4.0 returns `(-1e-20,0,0,0)` and
-  `(-1e20,0,0,0)` respectively. It agrees with CNA for the ordinary nonunit inverse, both output
-  forms and four-NaN zero inverse.
-- **Cause/suggested repair:** CNA accumulates squared length in float. The huge square overflows,
-  making the reciprocal zero; the tiny square underflows enough that its reciprocal overflows.
-  A scaled norm or sufficient intermediate range should preserve finite reciprocal magnitudes.
+  `(-1e20,0,0,0)` respectively for both Inverse and Identity/Divide, including their output forms.
+  It agrees with CNA for ordinary nonunit values, identity behavior and zero inverse/divisor
+  classifications.
+- **Cause/suggested repair:** Both CNA implementations independently accumulate squared length in
+  float. The huge square overflows, making the reciprocal zero; the tiny square underflows enough
+  that its reciprocal overflows. A shared scaled norm or sufficient intermediate range should
+  preserve finite reciprocal magnitudes in both APIs.
 - **Evidence/status:** open against pinned CNA
   `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1037-quaternion-inverse-boundaries/*`.
-  Exact known-issue CTest, metadata693/0 and self-tests5/5 plus4/4 pass. No CNA source was modified
-  and no upstream message was sent.
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1037-quaternion-inverse-boundaries/*` and
+  `/tmp/checkpoint-1042-quaternion-divide-boundaries/*`. Exact known-issue CTests, metadata693/0 and
+  self-tests5/5 plus4/4 pass. No CNA source was modified and no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-118 -- Quaternion normalization overflows on large finite components
 

@@ -139,7 +139,7 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 | Normalize, Length, LengthSquared | Existing `normalize` demonstrates accumulated drift and both normalization forms. LengthSquared is a trivial squared norm; can be named and checked there if extended. |
 | Lerp, Slerp | Existing `slerp` checks constant versus uneven angular speed. Negative-dot inputs and antipodal representations deserve the `double_cover` demo. |
 | Negate, unary negation, Dot, Add, operator addition, equality / inequality | Demonstrated in `double_cover`: distinguish component equality from orientation equality; negate all four components, choose a common hemisphere before normalized blending, and show that adding antipodes gives zero and cannot be normalized meaningfully. |
-| Divide, operator division | Demonstrated in `double_cover`: check `Divide(target, start)` as the additional rotation after start, including different axes so an order error cannot pass accidentally. |
+| Divide, operator division | `double_cover` checks `Divide(target, start)` as the additional rotation after start, including different axes so an order error cannot pass accidentally. Focused1042 adds an exact nonunit quotient, value/output/operator and multiply-by-inverse relations, identity, zero numerator/divisor and extreme finite divisors. The latter extend ISSUE-119 through Divide's duplicated reciprocal-norm path. Evidence: `/tmp/checkpoint-1042-quaternion-divide-boundaries/*`. |
 | Subtract, operator subtraction | Trivial component arithmetic; does not compute the relative orientation. Explain that distinction with Divide; no independent demo. |
 | Equals, GetHashCode, ToString | Exact value equality and formatting follow the existing math value-type demos; hashing needs no independent demo. Quaternion text is already printed in `inverse_and_conjugate`. |
 | Output-reference overloads | Existing `math.vector3.by_reference_overloads` explains the C++ calling convention. Audit quaternion aliasing only if an actual defect or distinct behavior emerges; do not duplicate every return-value demo. |
@@ -5769,3 +5769,14 @@ component scaling and zero operands. Genuine Windows XNA 4.0 supplies exact bit-
 values and CNA matches all ten controls. Ten runs per renderer label are byte-stable with empty
 stderr; the clean `-j3` build, metadata, exact CTest and both self-test suites pass. Coverage totals
 remain unchanged. Evidence:`/tmp/checkpoint-1041-quaternion-concatenate-algebra/*`.
+
+### Focused1042 Quaternion division boundaries
+
+`math.quaternion.double_cover` now covers a general nonunit quotient, value/output/operator parity,
+the multiply-by-inverse relation, both identity forms, a zero numerator and four-NaN zero divisor.
+Genuine Windows XNA 4.0 also keeps Identity divided by sole-X `1e20` and `1e-20` finite in both
+overloads; CNA loses both through the same float norm overflow/underflow as Inverse, so ISSUE-119
+now covers this second public route. Ten runs per renderer label retain exactly those two expected
+failures among24 controls with byte-stable stdout and empty stderr; the warning-free `-j3` build,
+metadata, exact known-issue CTest and both self-test suites pass. Coverage totals remain unchanged.
+Evidence:`/tmp/checkpoint-1042-quaternion-divide-boundaries/*`.

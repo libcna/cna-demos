@@ -229,33 +229,30 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete **1022-693-demo-behavior-checkpoint** is the current full-build and full-runtime baseline.
-It tests cna-demos `219f8b3391c6122d12a7d90480489015693862e1` against the isolated CNA worktree
+Complete **1034-693-demo-behavior-checkpoint** is the current full-build and full-runtime baseline.
+It tests cna-demos `96a2f84` against the isolated CNA worktree
 `/tmp/cna-demos-cna-d23`, exact commit `d23e139de9e5c15511b6be745de290896a69ee37`; do not silently
 reconfigure it to the moving sibling. Every build/test invocation used at most three jobs. The
-build is warning-free, metadata is693/0 and all706 enabled CTests pass in246.34s; three manual tests
+build is warning-free, metadata is693/0 and all706 enabled CTests pass in307.60s; three manual tests
 remain disabled.
 
-SOFTWARE reports586 pass/56 expected fail/48 skip/3 manual. OPENGLES3/private-Xvfb reports
-625/58/7/3. Both reports contain all693 unique catalog IDs with zero unexpected failures or
-unexpected passes. Compared with Complete1014, only ISSUE-114 changes a status and adds one failed
-assertion per renderer; the six positive focused extensions have their intended check-count
-increases. OPENGLES3 also schedules one extra successful `game.window.title` Update, an existing
-fixed-timestep variance already present in Complete717; twenty isolated reruns all execute ten
-checks. Normalized stderr is byte-identical to Complete1014. Validator and checkpoint-comparison
+SOFTWARE reports583 pass/59 expected fail/48 skip/3 manual. OPENGLES3/private-Xvfb reports
+622/61/7/3. Both reports contain all693 unique catalog IDs with zero unexpected results. Compared
+with Complete1022, the eleven edited workflows have only their intended check-count increases;
+ISSUE-115/116/117 account for exactly three pass-to-expected-failure changes and five new failed
+assertions per renderer. OPENGLES3 executes ten rather than eleven successful
+`game.window.title` checks; twenty isolated reruns reproduce the known10/11 fixed-timestep
+variance. Normalized stderr is byte-identical to Complete1022. Validator and checkpoint-comparison
 self-tests pass5/5 and4/4.
 
 Generated coverage is307/329 types,2128/2326 non-field members,674/753 fields and3079/3205 C
-routes. Tested SHA-256: `cna-demos`
-`4fbadc6974f04234ec970607b100124ad71720c4e4b97812d09a1e9431481801`, `libcna.so`
-`624de5687262040f91736857226b38392f5a5375099c92a0d221b6236b8aa25d`, and `libcna_c_api.so`
-`813bf0a2095524183bbaca66f6fbcc1fbdfcfcd5ddd8148c8ec6ce3138ebee24`. Report hashes are SOFTWARE
-`8ce257fffc8781c7f3651cb604536c41d6480d07ca5ef4bff8b8b3dce2aa9b57` and OPENGLES3
-`178f5eecb6295359832b135fdb58f7e1ac8cda557058548c167663610aab0026`; catalog hash is
-`976c558c4d1d447c1e7ec8484d07b9c12ed9c4a3e76935694cc7d365ea487173` and generated coverage hash
-is `ac32dba9c2bbfc1bb49510a3b291083ebf694585f64047f0bc3436eefa9fc43f`. Immutable evidence is
-`build/linux-full/reports/checkpoint-1022-complete-*`. No screenshot, listening test, physical
-input, external service session or manual visual-quality inspection was performed.
+routes. Result hashes are SOFTWARE
+`d8112479f735d9200de7fda1b4867e7c8362b92534b7094ec4589c303d88a5ed` and OPENGLES3
+`abf15ddb02909f182aaf937cc089a9b4d11caf776fdbdd1962535ff006b19b3a`; the generated checkpoint
+coverage hash is `20e8958ed11ab0ce8f09f191142fb6bae2708fdeb42d4529209fa2f5b2db4b3f`. Immutable evidence is
+`build/linux-full/reports/checkpoint-1034-complete-*`. Focused1035-1042 are validated after this
+complete baseline and remain to be absorbed by the next full checkpoint. No screenshot, listening
+test, physical input, external service session or manual visual-quality inspection was performed.
 
 Focused **939-native-logger-general-and-experiment** extends the stable
 `core.logger.minimum_level` workflow from four to seven controls. It proves that TRACE admits the
@@ -10476,3 +10473,21 @@ totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C route
 `/tmp/checkpoint-1041-quaternion-concatenate-algebra/*`. No rendering or visual claim was made and
 no CNA issue was found. Next audit `Quaternion::Divide` on zero and extreme finite divisors, where
 its duplicated reciprocal-norm implementation may extend ISSUE-119.
+
+## Focused1042-Quaternion-division-boundaries
+
+`math.quaternion.double_cover` grows from sixteen to twenty-four controls without a new ID. A
+genuine Windows XNA 4.0 reference anchors a general nonunit ordered quotient, the one-ULP-tolerant
+value/output relation, operator and multiply-by-inverse relations, both identity forms, a zero
+numerator and a four-NaN zero divisor. Identity divided by sole-X `1e20` and `1e-20` remains finite
+in XNA's value and output overloads. CNA loses both through the same duplicated float squared-norm
+overflow/underflow as Inverse, so `CNA-DEMOS-ISSUE-119` now covers Divide as a second public path.
+
+The warning-free three-job build and metadata693/0 pass. The exact known-issue SOFTWARE CTest and
+self-tests5/5 plus4/4 pass. Ten SOFTWARE and ten OPENGLES3-labelled runs retain exactly the two
+expected ISSUE-119 assertions among24 controls, with byte-identical stdout SHA-256
+`cc149b0c6c5691b52415d86d4baf7ef350fc977dc7d9798602d66758b0eb49a9` and empty stderr. Coverage
+totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1042-quaternion-divide-boundaries/*`. No rendering or visual claim was made. Next
+audit the remaining Quaternion value/output arithmetic and length/dot boundaries, avoiding
+duplicate extreme-norm assertions already isolated by ISSUE-118/119.

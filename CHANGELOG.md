@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended Quaternion division through nonunit, identity and zero behavior and added its extreme
+  finite divisor failures to CNA-DEMOS-ISSUE-119.
 - Extended Quaternion concatenation and multiplication through an exact nonunit reversed Hamilton
   product, both identity directions, output overloads, scalar component scaling and zero operands
   against Windows XNA 4.0.
