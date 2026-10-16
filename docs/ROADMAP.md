@@ -751,16 +751,18 @@ routes, write/read/delete a save, no game object), ✅ `c_api.input.gamepad` (on
 derived bits, dead-zone modes, live polling), ✅ `c_api.game.components` (a component is a callback
 table; draw order, visibility, enabled, collection and component events), ✅
 `c_api.media.media_player` (song collection keeps its songs, queue view, transport, process-wide
-events). Remaining: the diagnostics/handle/content table in COVERAGE_AUDIT.md identifies
-ABI-specific gaps (additional diagnostic families, invalid release guards, borrowed handles
-and remaining dispatch/shutdown behaviors). The existing dispatch demo now reproduces ISSUE-050 on RunFrameEXT/Destroy:
-owner-only operations incorrectly queue when dispatch is enabled. Its 40 child checks retain
-all thirty prior assertions and expose exactly two failures on both selections; permitted queued
-write cancellation and resumed dispatch add ten passing controls. The independent
-bounded diagnostic remains available; neither change raises the global C route count. The focused host_failure demo confirms
-terminal CALLBACK/false and cleanup but exposes suppressed C exit hooks despite the public
-promise (ISSUE-051), nine passes/one failure on both selections. Other callback failure locations remain untested. Extend the existing examples where practical; do not duplicate C++ scenes
-merely to increase the route count.
+events). The later diagnostics/handle/content audits close or explicitly disposition the earlier
+ABI-specific gaps: diagnostic families, invalid release guards, borrowed handles and dispatch/
+shutdown behavior. The dispatch demo reproduces ISSUE-050 on RunFrameEXT/Destroy while preserving
+its permitted queued-write cancellation and resumed-dispatch controls. The bounded diagnostic
+remains available; none of those refinements inflates the global C route count. The existing
+host_failure demo now fails every startup, frame, completion and unload callback position. Both
+renderers produce 65 passes and exactly eight ISSUE-051 failures out of 73 checks: callback
+failures through EndDraw suppress both promised exit hooks and an Exiting failure suppresses
+EndRun, while EndRun and UnloadContent failures preserve `XE`; all result, diagnostic, terminal,
+handle-release and exactly-once-unload controls pass. Browser scheduling remains an explicit
+platform boundary. Extend existing examples where practical; do not duplicate C++ scenes merely
+to increase the route count.
 C#/.NET demos belong with the separate `cna-dotnet` binding; decide later whether to reference or
 host them.
 

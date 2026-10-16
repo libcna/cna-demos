@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the existing C host-failure workflow across all ten public lifecycle callback positions.
+  Both renderers retain exact result/diagnostic/terminal/release/unload behavior and expose eight
+  coherent ISSUE-051 completion failures out of73 checks; five runs per renderer are byte-identical.
 - Closed the CNA-native Phase15 campaign with an exact reconciliation of923 CNA-owned headers
   across22 module trees plus every generated residual:21 XNA types,198 members,79 fields and123 C
   routes all have explicit evidence-backed dispositions, with no unclassified caller-facing API.

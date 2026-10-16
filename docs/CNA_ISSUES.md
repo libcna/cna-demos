@@ -4135,11 +4135,15 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `CnaCApiRuntime.cpp`. This concerns C callback tables, not whether native Game::EndRun executes.
 - **Contract:** cna_game_run_frame_ext explicitly says an exit through a failed callback completes
   the run with `exiting`, then `end_run`, returns CALLBACK and reports out_running=false.
-- **Observed:** after an ordinary successful variable-time frame, the second Update returns IO
-  with a supplied message. RunFrameEXT returns CALLBACK (9) and false, but neither C exit hook
-  runs. A later host call returns CALLBACK/false without replay, and destruction returns CALLBACK
-  and invokes UnloadContent exactly once. Terminal state and cleanup work; the promised C hook
-  sequence is the discrepancy. No rendered-content or error-message preservation claim is made.
+- **Observed:** the original probe fails the second Update after one successful variable-time
+  frame. RunFrameEXT returns CALLBACK (9) and false, but neither C exit hook runs. The catalog
+  matrix now also fails Initialize, LoadContent, BeginRun, BeginDraw, Draw, EndDraw, Exiting,
+  EndRun and UnloadContent independently. Failures through EndDraw suppress both completion hooks;
+  a failure in Exiting suppresses EndRun. EndRun and UnloadContent failures do retain the complete
+  `XE` sequence. Every scenario reaches the documented result, preserves its supplied diagnostic,
+  becomes terminal without replay, releases its handle and invokes UnloadContent exactly once.
+  The missing promised completion sequence is the only discrepancy. No rendered-content claim is
+  made.
 - **Reproducer:** tools/repro_c_api_host_failure.c records independent counters and an ordered
   trace. Exit 0 means the promised ILBUDUXEZ sequence; exit 1 confirms ILBUDUZ with both exit
   counters zero; exit 2 is a different/inconclusive result. Build in the existing tree:
@@ -4166,7 +4170,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   suppressing ordinary callbacks after failure is intended, document that exception explicitly;
   otherwise provide the promised completion hooks while retaining the original failure and
   exactly-once cleanup. This probe does not establish genuine XNA behavior or recommend changing
-  the native Game lifecycle. Other failing callback locations and browser scheduling are untested.
+  the native Game lifecycle. Browser/WebAssembly host scheduling remains untested.
 - **Environment/status:** confirmed contract/implementation mismatch on Linux, CNA observed clean
   at 4ee1e0b553667b6e999248fcefdea729654ee497 before/after reproduction. Selected evidence is not an
   atomic dependency snapshot. Open; no CNA edits or upstream message.
@@ -4181,6 +4185,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   comparisons add only this ID/assertion (34/35 ->35/36), retaining all older statuses/counts/
   failures and C/custom-content child lists. Selected 33 binary/four asset hashes and normalized
   stderr match. Full archives/reviews: reports/checkpoint-447-*. The minimal reproducer remains available.
+- **Complete callback-matrix evidence:** Focused1127 extends the same ID without adding a route or
+  issue marker. SOFTWARE and OPENGLES3 each produce 65 passes and exactly eight ISSUE-051 failures
+  out of 73 checks. The failing traces are Update `ILBUDUZ`, Initialize `IZ`, LoadContent `ILZ`,
+  BeginRun `ILBZ`, BeginDraw `ILBUPZ`, Draw `ILBUPDZ`, EndDraw `ILBUPDAZ` and Exiting `ILBUXZ`;
+  EndRun and UnloadContent both pass with `ILBUXEZ`. Five runs per renderer are byte-identical to
+  one another and across renderers (`3e8459c4...`), with empty stderr. The exact private-X11 CTest,
+  all 16 tool tests and 719/0 metadata validation pass. Evidence: `/tmp/focused-1127/`.
 
 
 

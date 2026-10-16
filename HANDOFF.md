@@ -12,15 +12,15 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
-The CNA-native campaign is complete for pinned CNA `d23e139de`: Phases0-15 have meaningful
-behavior coverage or an explicit evidence-backed residual disposition. The catalog has719 IDs;
-the final public-surface reconciliation covers923 CNA-owned module headers and every generated
-XNA/C residual. See docs/ROADMAP.md and docs/COVERAGE_AUDIT.md for the exact boundaries.
+The CNA-native public-surface campaign is fully dispositioned for pinned CNA `d23e139de`, but the
+current source is ahead of Complete1125: Focused1127 extends the host-driven C lifecycle error-path
+matrix across every public callback position. The catalog remains719 IDs and the exact923-header
+plus generated-residual reconciliation is unchanged. A fresh complete checkpoint of this source is
+required before restoring the campaign-complete claim.
 
-Future work is maintenance rather than an open coverage campaign: rerun Complete1125-style
-validation when CNA or project source changes, remove known-issue markers when upstream defects are
-fixed, and expand renderer/platform/manual or visual-reference evidence only when the environment
-can observe it honestly. `cna-examples` remains deliberately outside this completed campaign.
+After that checkpoint, future work is maintenance: remove known-issue markers when upstream
+defects are fixed, and expand renderer/platform/manual or visual-reference evidence only when the
+environment can observe it honestly. `cna-examples` remains deliberately outside this campaign.
 
 ## 3. Architecture in 10 lines
 
@@ -244,6 +244,11 @@ failed assertions. SOFTWARE retains197 failed assertions; its only status delta 
 pointer. The exact CTest passes too, so this is reviewed environment coverage rather than a source
 regression. No screenshot, listening test, physical input, external service session or new manual
 visual result was claimed.
+
+Focused1127 changes runtime source after Complete1125 by extending
+`c_api.game.host_failure` through all ten callback failure positions. Its focused evidence is
+clean, but it is not a replacement for a full checkpoint; treat Complete1125 as the comparison
+baseline rather than the current-source validation claim until Complete1128 is recorded below.
 
 Focused **939-native-logger-general-and-experiment** extends the stable
 `core.logger.minimum_level` workflow from four to seven controls. It proves that TRACE admits the
@@ -3502,13 +3507,13 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-The CNA-native campaign is complete at Complete1125 plus Focused1126. There is no unfinished
-caller-facing public family in the pinned source and no unclassified generated residual. On a CNA
-or cna-demos source change, first run `JOBS=3 VISUAL_REGRESSION=1 tools/validate.sh linux-full`
-under the documented private-X11 environment, compare failed assertions with Complete1125, and
-reconcile any new header/inventory delta before adding demos. Do not reopen the intentional
-residual classifications merely to increase percentages. Do not involve `cna-examples`; that is a
-separate future campaign.
+Establish Complete1128 for the current Focused1127 source under pinned CNA `d23e139de`: warning-free
+`-j3` build, 719/0 metadata, all enabled CTests, complete category-partitioned SOFTWARE and
+OPENGLES3 reports, exact comparison with Complete1125, regenerated coverage and the six-image
+visual-regression suite. The only expected semantic deltas are seven additional labeled ISSUE-051
+failures per renderer within the unchanged known-issue host_failure ID. Then run one final stale-
+summary/residual audit and restore the campaign-complete claim only if no meaningful gap remains.
+Do not reopen intentional residuals to increase percentages and do not involve `cna-examples`.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -12696,3 +12701,25 @@ references and documentation. Comparator evidence is under
 was added. Phase15 and the CNA-native campaign are complete for pinned CNA `d23e139de`; future work
 is maintenance against CNA/source changes or new observable platform/hardware/service evidence.
 Do not involve `cna-examples` in this completed campaign.
+
+## Focused1127-complete-C-host-callback-failure-matrix
+
+The existing `c_api.game.host_failure` standalone now fails every public C runtime callback
+position independently: Initialize, LoadContent, BeginRun, Update, BeginDraw, Draw, EndDraw,
+Exiting, EndRun and UnloadContent. It keeps the original ten-check second-Update probe intact and
+adds nine table-driven scenarios. Every scenario verifies the documented run result, exact callback
+diagnostic, terminal no-replay behavior, promised `XE` completion, handle release and exactly-once
+UnloadContent cleanup.
+
+SOFTWARE and OPENGLES3 each produce 65 passes and exactly eight failures out of 73 checks. The
+existing ISSUE-051 mechanism coherently explains all eight: failures through EndDraw suppress both
+completion hooks and an Exiting failure suppresses EndRun. EndRun and UnloadContent failure retain
+the complete `ILBUXEZ` trace. Five real private-X11 runs per renderer are byte-identical within and
+across renderers (`3e8459c4...`) with empty stderr. The exact SOFTWARE CTest passes; all16 tool
+tests pass and metadata validates719/0. A sandboxed OPENGLES3 setup failure was explicitly rejected
+as evidence because the expected-failure CTest policy can mask unrelated early failures.
+
+This is a deeper semantic/error-path audit of an existing ID, not count inflation and not a new CNA
+issue. No browser scheduling or rendered-pixel claim is made. Evidence:`/tmp/focused-1127/`.
+Complete1125 remains the comparison baseline; run Complete1128 before reclaiming a fully validated
+current-source baseline.
