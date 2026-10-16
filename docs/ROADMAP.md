@@ -11290,3 +11290,11 @@ constrained parallel-axis/objectForward controls established against genuine Win
 CNA matches all nine checks. The warning-free `-j3` build, metadata693/0, exact CTest, ten runs per
 renderer label and both self-test suites pass with byte-identical stdout and empty stderr. Coverage
 is unchanged. Evidence:`/tmp/checkpoint-1029-matrix-billboard-fallbacks/*`.
+
+## Focused1030 Matrix perspective boundaries
+
+`math.matrix.perspective` adds XNA-referenced angle/depth refusals and accepted IEEE-754 aspect,
+dimension, collapsed-span and NaN behavior. CNA differs only at exact `MathHelper::Pi`, retained as
+CNA-DEMOS-ISSUE-117. The warning-free `-j3` build, metadata693/0, exact known-issue CTest, ten runs
+per renderer label and both self-test suites pass with stable stdout and empty stderr. Coverage is
+unchanged. Evidence:`/tmp/checkpoint-1030-matrix-perspective-boundaries/*`.

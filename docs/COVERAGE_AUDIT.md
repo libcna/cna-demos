@@ -5659,3 +5659,12 @@ the rotation axis with absent, parallel and usable objectForward values. Genuine
 anchors each exact basis. CNA passes all nine checks in ten runs per renderer label with stable
 stdout and empty stderr; build, metadata, exact CTest and both self-test suites pass. Coverage
 totals are unchanged. Evidence:`/tmp/checkpoint-1029-matrix-billboard-fallbacks/*`.
+
+### Focused1030 Matrix perspective boundaries
+
+`math.matrix.perspective` now distinguishes XNA's rejected zero/Pi FOV and depth-plane cases from
+accepted zero/negative aspect, zero size, collapsed off-centre spans and NaN FOV. CNA's exact-Pi
+acceptance is the only difference and remains under CNA-DEMOS-ISSUE-117. Ten runs per renderer
+label are byte-stable with empty stderr; build, metadata, exact known-issue CTest and both self-test
+suites pass. Coverage totals are unchanged. Evidence:
+`/tmp/checkpoint-1030-matrix-perspective-boundaries/*`.

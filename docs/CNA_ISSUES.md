@@ -15,6 +15,27 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-117 -- Perspective accepts Pi despite XNA's strict field-of-view bound
+
+- **Area/API:** `Microsoft::Xna::Framework::Matrix::CreatePerspectiveFieldOfView`.
+- **Demo/reproduction:** run `math.matrix.perspective`. Alongside valid equivalent-frustum and
+  depth controls, call the value overload with `fieldOfView = MathHelper::Pi`, aspect1 and positive
+  ordered near/far planes. Zero FOV and all depth-plane refusal controls remain positive controls.
+- **Observed:** CNA accepts Pi and returns a matrix. This is the sole expected failure among twelve
+  checks on ten SOFTWARE and ten OPENGLES3-labelled runs; stdout is stable and stderr empty.
+- **Expected/reference:** genuine Windows XNA 4.0 throws `ArgumentOutOfRangeException` with
+  `ParamName=fieldOfView` for both zero and exactly `MathHelper.Pi`. It accepts zero/negative
+  aspect, zero width/height and collapsed off-centre spans as IEEE-754 inputs, and propagates NaN
+  FOV; CNA matches all those adjacent distinctions and all near/far refusals.
+- **Cause observed:** CNA checks `fieldOfView >= 3.141593f`. That rounded literal is greater than
+  the public float `MathHelper::Pi`, leaving the exact documented/XNA upper endpoint accepted.
+  Comparing against the public Pi value would close the observed one-float gap.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1030-matrix-perspective-boundaries/*`.
+  Exact known-issue CTest, metadata693/0 and self-tests5/5 plus4/4 pass. No CNA source was modified
+  and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-116 -- Singular affine Matrix inversion loses XNA's finite components
 
 - **Area/API:** `Microsoft::Xna::Framework::Matrix::Invert`, value and by-reference overloads.

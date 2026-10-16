@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: MS-PL
 // Perspective projection matrices: field of view, width/height, off-centre.
+#include <cmath>
+#include <limits>
+#include <stdexcept>
+
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/MathChecks.hpp"
 #include "Microsoft/Xna/Framework/MathHelper.hpp"
@@ -11,6 +15,14 @@ using namespace Microsoft::Xna::Framework;
 
 namespace
 {
+    template<typename F>
+    bool ThrowsInvalidArgument(F&& action)
+    {
+        try { action(); }
+        catch (const std::invalid_argument&) { return true; }
+        return false;
+    }
+
     Vector3 Project(Vector3 point, const Matrix& projection)
     {
         const Vector4 clip = Vector4::Transform(Vector4(point, 1.0f), projection);
@@ -41,14 +53,50 @@ namespace
                                                                     -height / 2.0f, height / 2.0f, nearPlane, farPlane);
         ctx.CheckNear(CnaDemos::MaxDifference(byFieldOfView, offCentre), 0.0, 1e-5,
                       "a symmetric off-centre frustum equals the field-of-view one");
+
+        // XNA validates angular and depth ordering, while leaving width/aspect degeneracy to
+        // ordinary IEEE-754 division. Keep both halves visible: they are easy to over-normalize.
+        ctx.Check(ThrowsInvalidArgument([] { (void) Matrix::CreatePerspectiveFieldOfView(0.0f, 1.0f, 1.0f, 10.0f); }),
+                  "a zero field of view is refused");
+        ctx.Check(ThrowsInvalidArgument([] { (void) Matrix::CreatePerspectiveFieldOfView(MathHelper::Pi, 1.0f, 1.0f, 10.0f); }),
+                  "a field of view equal to Pi is refused");
+        ctx.Check(ThrowsInvalidArgument([] { (void) Matrix::CreatePerspectiveFieldOfView(1.0f, 1.0f, 0.0f, 10.0f); }) &&
+                      ThrowsInvalidArgument([] { (void) Matrix::CreatePerspectiveFieldOfView(1.0f, 1.0f, 1.0f, 0.0f); }) &&
+                      ThrowsInvalidArgument([] { (void) Matrix::CreatePerspectiveFieldOfView(1.0f, 1.0f, 10.0f, 10.0f); }),
+                  "field-of-view projection refuses nonpositive or unordered depth planes");
+        ctx.Check(ThrowsInvalidArgument([] { (void) Matrix::CreatePerspective(2.0f, 2.0f, -1.0f, 10.0f); }) &&
+                      ThrowsInvalidArgument([] { (void) Matrix::CreatePerspectiveOffCenter(-1.0f, 1.0f, -1.0f, 1.0f, 10.0f, 1.0f); }),
+                  "size and off-centre projections enforce the same depth-plane contract");
+
+        const Matrix zeroAspect = Matrix::CreatePerspectiveFieldOfView(1.0f, 0.0f, 1.0f, 10.0f);
+        const Matrix negativeAspect = Matrix::CreatePerspectiveFieldOfView(1.0f, -1.0f, 1.0f, 10.0f);
+        ctx.Check(std::isinf(zeroAspect.M11) && zeroAspect.M11 > 0.0f && negativeAspect.M11 < 0.0f,
+                  "zero and negative aspect ratios remain raw XNA floating-point inputs");
+
+        const Matrix zeroWidth = Matrix::CreatePerspective(0.0f, 1.0f, 1.0f, 10.0f);
+        const Matrix zeroHeight = Matrix::CreatePerspective(1.0f, 0.0f, 1.0f, 10.0f);
+        ctx.Check(std::isinf(zeroWidth.M11) && std::isinf(zeroHeight.M22),
+                  "zero perspective dimensions expose positive infinity");
+
+        const Matrix zeroOffWidth = Matrix::CreatePerspectiveOffCenter(1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 10.0f);
+        const Matrix zeroOffHeight = Matrix::CreatePerspectiveOffCenter(-1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 10.0f);
+        ctx.Check(std::isinf(zeroOffWidth.M11) && std::isinf(zeroOffHeight.M22),
+                  "collapsed off-centre spans expose positive infinity");
+
+        const Matrix nanFieldOfView = Matrix::CreatePerspectiveFieldOfView(
+            std::numeric_limits<float>::quiet_NaN(), 1.0f, 1.0f, 10.0f);
+        ctx.Check(std::isnan(nanFieldOfView.M11) && std::isnan(nanFieldOfView.M22),
+                  "a NaN field of view propagates through the XNA formula");
     }
 }
 
 CNA_DEMOS_CONSOLE(MatrixPerspective, {
     .id = "math.matrix.perspective",
     .title = "Perspective projection",
-    .description = "Builds the same perspective frustum with CreatePerspectiveFieldOfView, CreatePerspective and "
-                   "CreatePerspectiveOffCenter, and shows depth mapping the near plane to 0 and the far plane to 1.",
+    .description = "Builds equivalent perspective frustums, verifies depth mapping and demonstrates XNA's "
+                   "validated depth/angle boundaries versus IEEE-754 dimension and aspect behavior.",
     .apis = {"Matrix::CreatePerspectiveFieldOfView", "Matrix::CreatePerspective", "Matrix::CreatePerspectiveOffCenter"},
     .tags = {"matrix", "projection", "camera", "frustum"},
+    .restrictions = "CNA-DEMOS-ISSUE-117 records acceptance of MathHelper::Pi as a field of view.",
+    .knownIssue = "CNA-DEMOS-ISSUE-117",
 })

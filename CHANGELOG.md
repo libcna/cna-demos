@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended perspective matrices through XNA's angle/depth refusal and IEEE-754 dimension/aspect
+  boundaries, recording CNA-DEMOS-ISSUE-117 for accepting an exact Pi field of view.
 - Extended Matrix billboard coverage through coincident camera/object positions, explicit camera
   forward fallback, constrained-axis parallelism and object-forward fallback selection.
 - Extended Matrix inversion through zero, singular affine and tiny nonzero scales, and recorded

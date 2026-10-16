@@ -10288,3 +10288,17 @@ pass. Ten SOFTWARE and ten OPENGLES3-labelled runs pass9/9 with byte-identical s
 totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1029-matrix-billboard-fallbacks/*`. No rendering or visual claim was made and no
 CNA issue was found. Continue with the next deterministic behavior gap outside billboard fallback.
+
+## Focused1030-Matrix-perspective-boundaries
+
+`math.matrix.perspective` grows from four to twelve controls without a new ID. Genuine Windows XNA
+4.0 establishes the full distinction: zero/Pi FOV and invalid depth planes are refused, while
+zero/negative aspect, zero dimensions, collapsed off-centre spans and NaN FOV flow through the
+IEEE-754 formulas. CNA matches every case except exact `MathHelper::Pi`, because its upper-bound
+literal rounds one float step higher; the sole failure remains visible as `CNA-DEMOS-ISSUE-117`.
+
+The warning-free three-job build, metadata693/0, exact known-issue SOFTWARE CTest and self-tests
+5/5 plus4/4 pass. Ten SOFTWARE and ten OPENGLES3-labelled runs have byte-identical stdout SHA-256
+`0a28b1089ff31658ff6853c29650dc8c65fa0df060ab48d43689026ef3304890` and empty stderr. Coverage
+totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1030-matrix-perspective-boundaries/*`. Continue with the next deterministic gap.
