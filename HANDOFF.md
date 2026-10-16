@@ -73,31 +73,25 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content73, input40, storage7, media17, gamer services20, net14, devices6, phone2, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are207 console,297 game and215
 standalone; 685 are automated,31 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md merges Focused1116 results into Complete1099's full reports;
-the semantic public-header audit is current through Focused1116 and includes all719 catalog IDs in
-both renderer columns. It incorporates every
-focused assertion through the complete
-Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
-Curve and Matrix audits in Focused1063-1074 and the root Framework audits in Focused1076-1078,
-including ISSUE-124 through ISSUE-145.
-The surface totals are308/329 XNA types,2128/2326 XNA members,674/753 fields and
-3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1099
-plus the focused updates are the current baseline inputs. Selected semantic
+Coverage: generated docs/COVERAGE.md uses Complete1120's full719-demo renderer reports plus the
+Focused1121 and Focused1123 metadata additions. The public-header disposition and residual C-route
+audits are current through Focused1124. The surface totals are308/329 XNA types,2128/2326 XNA
+members,674/753 fields and3082/3205 public C ABI routes. GamerServices field coverage is160/223.
+Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
 `render_target.h`12/12, `graphics.h`25/27, `graphics_resource.h`12/12 and
-`index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`80/84, `effects.h`290/290,
+`index_resources.h`8/10, `graphics_state.h`14/14, `graphics_device.h`81/84, `effects.h`290/290,
 `content.h`32/32, `media_player.h`41/41, `net.h`51/51, `net_gamers.h`33/33, `net_sessions.h`104/104,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
-`texture.h`19/21,
+`texture.h`21/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete1099 exercises all3079 credited C routes and all716 catalog IDs in both full smoke suites;
-it subsumes the separately validated Focused1085-1098 changes.
-Its focused lineage adds the compressed-texture ID, extends OcclusionQuery with the XNA-matching
-Reach refusal and closes SpriteBatch transformed clipping with exact CNA/XNA pixels.
-Its lineage includes the completed field, build-time-pipeline and generated XNA member audits
-through Focused1002, including the production StorageDeviceNotConnectedException path.
+Complete1120 exercises all3079 then-credited C routes and all719 catalog IDs in both renderer
+suites. Focused1121 and1123 add three route credits with focused two-renderer validation. The exact
+remaining123 C declarations are fully dispositioned:82 constant type-name routes and21 explicit
+test hooks are intentionally uncredited, while20 production routes remain hardware, service,
+platform or external-observer work.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
 Complete744 has37 known-issue demos after focused660 adds
 `game.graphics_device_manager.back_buffer_size` for CNA-DEMOS-ISSUE-083; the baseline35 are
@@ -236,33 +230,23 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete **1045-694-demo-behavior-checkpoint** is the current full-build and full-runtime baseline.
-It tests cna-demos `8c8e3c1` against the isolated CNA worktree
+Complete **1120-719-demo-behavior-checkpoint** is the current full-build and full-runtime baseline.
+It tests cna-demos `ffb08d1` against the isolated CNA worktree
 `/tmp/cna-demos-cna-d23`, exact commit `d23e139de9e5c15511b6be745de290896a69ee37`; do not silently
 reconfigure it to the moving sibling. Every build/test invocation used at most three jobs. The
-build is warning-free, metadata is694/0 and all707 enabled CTests pass; three manual tests
+build is warning-free, metadata is719/0 and all732 enabled CTests pass; three manual tests
 remain disabled.
 
-SOFTWARE reports580 pass/63 expected fail/48 skip/3 manual. OPENGLES3/private-Xvfb reports
-619/65/7/3. Both reports contain all694 unique catalog IDs with zero unexpected results. Compared
-with Complete1034, all693 old IDs remain, `math.quaternion.value_identity` is the sole new ID and
-the seven edited Quaternion workflows have only their reviewed check-count increases.
-ISSUE-118/119/120 account for the four intended expected-failure statuses and exactly eight new
-failed assertions per renderer; every older failed assertion and status remains. Both renderers
-execute ten successful `game.window.title` checks, matching the comparison baseline. Normalized
-stderr is byte-identical to Complete1034. Validator and checkpoint-comparison self-tests pass5/5
-and4/4.
+SOFTWARE reports554 pass/113 expected fail/49 skip/3 manual. OPENGLES3/private-Xvfb reports
+594/115/7/3. The category-partitioned reports contain all719 unique catalog IDs per renderer with
+zero unexpected results. Validator and checkpoint-comparison self-tests pass5/5 and4/4.
 
-Generated coverage is307/329 types,2128/2326 non-field members,674/753 fields and3079/3205 C
-routes. Result hashes are SOFTWARE
-`e33973b9d3bddf241106f73208dda808c2a74bf4ffb49e5faf5bd64ca748d496` and OPENGLES3
-`6363dd992123142ca7b912ae7484e38631c75b9dc489d088fa9dcf524fb9547a`; the generated checkpoint
-coverage hash is `c91cd475656f133b033a97bb900481de0aca2f8fc68b972e82217085699eed83`. Immutable evidence is
-`build/linux-full/reports/checkpoint-1045-complete-*`. Two earlier attempts were manually stopped
-after redirected stdout paused at a block-buffer boundary; stderr and isolated reruns showed the
-suite was still progressing, and the uninterrupted final run passed. This was a monitoring error,
-not a demo or CNA defect. No screenshot, listening test, physical input, external service session
-or manual visual-quality inspection was performed.
+Immutable evidence is `build/linux-full/reports/checkpoint-1120-complete-*` and
+`checkpoint-1120-parts/*`. Focused1121 and Focused1123 subsequently changed two stable C demos and
+raised generated C coverage to3082/3205; both changes have exact SOFTWARE CTests and direct
+SOFTWARE/OPENGLES3 evidence, but no post-change full719-demo checkpoint yet. Focused1124 is
+documentation-only and closes the residual route classification. No screenshot, listening test,
+physical input, external service session or new manual visual result was claimed.
 
 Focused **939-native-logger-general-and-experiment** extends the stable
 `core.logger.minimum_level` workflow from four to seven controls. It proves that TRACE admits the
@@ -3521,13 +3505,14 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Focused1117 completes the public Design header audit at719 demos against pinned
-CNA `d23e139de`. Commit and push its source/documentation changes, then audit the public
-Diagnostics, Inspector and CNAEXT surfaces, adding a new demo only for a coherent, reachable
-behavior gap. Complete1099 remains the latest full two-renderer
-smoke baseline; the focused result merge supplies every later catalog ID to both coverage columns.
-Keep every compilation at three jobs or fewer and run another full checkpoint after a meaningful
-set of focused batches.
+HIGHEST PRIORITY: run a fresh complete719-demo checkpoint from the current branch against pinned
+CNA `d23e139de`. Focused1121 and Focused1123 changed runtime code after Complete1120; their focused
+tests pass, but the complete suite has not yet exercised the combined final source. Use `JOBS=3`,
+archive exact CTest and category-partitioned SOFTWARE/OPENGLES3 reports, compare them with
+Complete1120, regenerate docs/COVERAGE.md and update this handoff. Then resume the deeper public
+member/behavior audit from the explicit header dispositions. The residual C declaration audit is
+complete; do not spend another batch merely recounting its intentionally uncredited82 reflection
+routes,21 test hooks or20 manual/environment-dependent production routes.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -9838,8 +9823,9 @@ and publish the consolidated remaining-member dispositions.
   record the observed state and exercised binary hashes, and keep runtime checkpoints immutable.
 * Running windowed renderers needs `xvfb-run`; audio needs a device or `SDL_AUDIO_DRIVER=dummy`.
 
-Current complete baseline is1022-693-demo-behavior-checkpoint; exact results, hashes and
-evidence are in section7. Use its693-demo reports as the comparison baseline.
+Current complete baseline is1120-719-demo-behavior-checkpoint; exact results and evidence are in
+section7. Use its719-demo reports as the comparison baseline until the current source receives its
+new complete checkpoint.
 All earlier drafts are APPLIED AND STALE. The gamepad, host-device, clipboard, text-input, joystick,
 haptics, sensor-value, sensor-lifecycle, host-info, vibration, dialogs, system-tray, camera-frame,
 clipboard-acceptance, display-value and adapter-snapshot batches are all included in that complete
@@ -9852,8 +9838,8 @@ complete502. The complete504 checkpoint binary was built with clean CNA `f37f8d1
 externally during smoke to clean `fbd8e64a3` through CI/CMake-test/docs/tooling-only changes, while
 both production library hashes stayed unchanged. Complete504, complete524, complete719,
 Complete926, Complete933 and Complete938 remain immutable historical comparison evidence;
-Complete981, Complete990, Complete998, Complete1003 and Complete1014 remain immutable historical
-comparison evidence; Complete1022 is the current full-runtime baseline.
+Complete981, Complete990, Complete998, Complete1003, Complete1014 and Complete1022 remain immutable
+historical comparison evidence; Complete1120 is the current full-runtime baseline.
 Preserve refusal evidence and source/fixture observations, including ISSUE-062. Retain
 architecture/stable IDs.
 
@@ -12623,8 +12609,40 @@ Complete1120 remains the runtime-status baseline. No context loss, debugger capt
 transition, screenshot or manual result is claimed; no CNA issue was found. Evidence:
 `/tmp/focused-1123/*`.
 
-Commit and push this batch. Next revalidate the82 fixed type-name routes, starting with the two
-GraphicsDevice and four GraphicsDeviceManager/GraphicsDeviceInformation helpers. Add them to an
-existing workflow only if the exact identity contributes to that workflow; otherwise preserve the
-intentional trivial disposition. Then audit the21 explicit test hooks. Keep every compilation at
-three jobs or fewer.
+## Focused1124-residual-C-route-audit-closure
+
+The current catalog and exact pinned headers leave123 uncredited declarations. The final audit
+reconciles every one:82 fixed type-name routes,21 explicit test hooks and20 production routes whose
+positive effect requires hardware, service delivery, a native platform transition or an external
+observer. There is no unclassified residual C declaration.
+
+The82 reflection routes are41 fixed size/copy pairs across13 headers. Existing live workflows
+already cover the objects' real behavior, and representative identity workflows cover the shared
+exact-size, unterminated-copy and atomic short-buffer contract. The indexed MediaSource pair also
+returns a fixed identity for CNA's only constructible production source. Adding all pairs would be
+meaningless count inflation, so they remain intentionally uncredited unless a future concept makes
+one exact identity relevant.
+
+The21 test routes are `cna_graphics_renderer_reset_selection_for_tests_ext` and ten mirrored hooks
+for each of Accelerometer and Gyroscope. CNA's installed header explicitly says the renderer reset
+is for suites and games should not call it. The sensor hooks inspect or mutate subsystem holds,
+started-instance registries, synthetic dispatch, injected event-watch failure, swallowed-exception
+diagnostics and disposal cleanup. Every one appears in CNA's pure-C tests. Keep them out of
+application demos.
+
+The warning-free no-op build uses `-j3`, and metadata validates719/0. Twenty-five representative
+SOFTWARE CTests spanning live workflows associated with every reflection header and the production
+sensor workflow pass in25.91s. The first run had one environmental storage failure because
+sandboxed `~/.local/share` was read-only;
+the same test and then the whole set passed with `XDG_DATA_HOME=/tmp/focused-1124/xdg`. Validator
+and checkpoint-comparator self-tests pass5/5 and4/4. Coverage remains308/329 XNA types,
+2128/2326 members,674/753 fields and3082/3205 C routes. Evidence:`/tmp/focused-1124/*`. No new ID,
+metadata credit or CNA issue was added.
+
+This closes the residual C/API audit. The next agent must start with a complete719-demo checkpoint
+of the final source, because Focused1121 and Focused1123 changed runtime code after Complete1120.
+Use at most three compile/test jobs, pinned CNA `/tmp/cna-demos-cna-d23` at
+`d23e139de9e5c15511b6be745de290896a69ee37`, and a writable `XDG_DATA_HOME`. Archive and compare
+both renderer reports, regenerate coverage, update this handoff, then continue the deeper public
+member/behavior audit. Do not reopen the123-route classification without new CNA API or concrete
+contradictory evidence.

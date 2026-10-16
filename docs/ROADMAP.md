@@ -12888,3 +12888,29 @@ warning-free `-j3` build, metadata719/0 and both tool self-test suites pass. C c
 3082/3205 and `graphics_device.h`81/84. Continue with the82 fixed type-name routes, starting with
 the two graphics-device and four graphics-manager/information helpers, then the21 explicit test
 hooks. Add reflection credit only where identity is material to an existing concept.
+
+## Focused1124 residual C-route audit closure
+
+The exact post-Focused1123 residual inventory contains123 declarations:82 fixed type-name routes,
+21 explicit test hooks and20 hardware/service/platform/external-observer production routes. All
+are now source-checked and dispositioned; there is no unclassified public C route.
+
+The82 routes are41 constant size/copy pairs across13 headers. Live workflows already establish the
+objects' useful behavior, and representative type-name workflows establish the shared exact-size,
+unterminated-copy and atomic short-buffer contract. Their fixed identities do not justify41 more
+metadata controls. The21 remaining hooks are the documented renderer-selection test reset and ten
+mirrored Accelerometer/Gyroscope unit-test seams. All appear in CNA's pure-C tests and expose or
+mutate testing state, so application demos must not claim them.
+
+The warning-free `-j3` build validates719/0 metadata. Twenty-five representative SOFTWARE CTests
+covering live workflows associated with every reflection header and the production sensor workflow
+pass; an initial storage-only failure was reproduced as the sandbox's read-only default home and
+passed with an isolated writable
+`XDG_DATA_HOME`. Validator/comparator self-tests pass5/5 and4/4. Coverage stays308/329 XNA types,
+2128/2326 members,674/753 fields and3082/3205 C routes. Evidence:`/tmp/focused-1124/*`.
+
+The route-inventory audit is complete. Run a fresh complete719-demo checkpoint from the current
+source because Focused1121 and Focused1123 changed runtime code after Complete1120. Keep builds and
+tests at three jobs, archive exact two-renderer reports, regenerate coverage, then resume the deeper
+public member/behavior audit from the explicit header dispositions rather than chasing intentionally
+uncredited route count.

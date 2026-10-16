@@ -3494,6 +3494,39 @@ This closes the route-inventory decision pass, not CNA behavioral coverage. Hard
 service delivery, platform transitions, external-tool observation and many overload/error/renderer
 combinations remain valid manual or future-environment work.
 
+### Focused1124 residual C route closure
+
+The final residual inventory was regenerated from the719-demo catalog and the exact pinned CNA
+`d23e139de` headers. It contains123 declarations and reconciles exactly with the table above:
+82 fixed type-name routes,21 explicit test hooks and20 production routes requiring hardware,
+service delivery, a native platform transition or an external observer. No declaration is left
+without a disposition.
+
+The82 reflection routes are41 size/copy pairs across13 headers. Their implementations return a
+fixed canonical identity rather than caller-dependent runtime type information. Existing live
+object, resource and collection workflows already establish the objects' meaningful behavior, and
+representative identity workflows establish the common exact-size, unterminated-copy and atomic
+short-buffer contract. The indexed MediaSource pair likewise identifies the only production source
+kind CNA currently constructs. Adding all41 spellings would duplicate the same behavior, so these
+routes remain intentionally uncredited unless a future workflow makes one identity material.
+
+The21 test routes are the renderer-selection reset plus ten mirrored Accelerometer and ten
+Gyroscope hooks. Installed documentation calls the renderer reset a test route that games should
+not invoke. The sensor routes expose or mutate subsystem holds, started-instance registries,
+synthetic dispatch, injected event-watch failure, swallowed-exception diagnostics and disposal
+hooks. Every one is exercised by CNA's own pure-C tests; none is ordinary application behavior.
+They remain intentionally outside demo metadata rather than turning a CNA unit-test seam into a
+product demonstration.
+
+The warning-free no-op build uses `-j3`; metadata validates719/0. Twenty-five representative
+SOFTWARE CTests covering the live workflows associated with all13 reflection headers plus the
+production sensor lifecycle pass after placing storage data in an isolated writable XDG directory.
+The first storage run alone failed
+because the execution sandbox made the default home data directory read-only; the identical test
+then passed with `XDG_DATA_HOME` under `/tmp`. Validator and checkpoint-comparator self-tests pass
+5/5 and4/4. Coverage remains308/329 XNA types,2128/2326 members,674/753 fields and3082/3205 C
+routes. Evidence:`/tmp/focused-1124/*`. No new demo, metadata credit or CNA issue is warranted.
+
 ### PbrEffect image-based-lighting sampling
 
 New `graphics.pbr_effect.image_based_lighting` supplies a complete `ImageBasedLightEXT` through the
