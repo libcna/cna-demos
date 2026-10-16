@@ -687,7 +687,8 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
   optional module is enabled only by `linux-full`.
 - ✅ `cnaext.*` (4): AsciiPostProcessEffect (every renderer, both modes and Draw overloads),
   CRTEffect (complete parameter/clamp/clone contract), DepthEffect (every depth/dither choice and
-  clone contract on shader renderers), and DebugDraw (C++ scene plus exact C geometry/lifecycle).
+  clone contract on shader renderers), DebugDraw (C++ scene plus exact C geometry/lifecycle), and
+  the ShaderCodeEXT/ShaderPackageEXT value, validation and live-selection contracts.
 - `platform.*`: ✅ renderer selection with fallback chain (standalone), ✅
   `platform.window.native_handle` (GameWindow::Handle, every typed NativeWindowHandle decoder,
   presence/description and malformed/windowless boundaries); renderer
@@ -760,9 +761,8 @@ Walk COVERAGE.md's backlog and the CNA-specific headers; for each remaining type
 part of another demo, or not independently meaningful (record why). ✅ First passes: the
 decisions for every XNA type without a demo are in [COVERAGE_AUDIT.md](COVERAGE_AUDIT.md), demos
 that already showed a type now name it, and new demos cover the effect interfaces and the
-graphics device service. The CNA-specific Devices and Platform headers now have explicit
-member/behavior dispositions; the graphics-ext effect classes are complete and its shader-package
-value boundary is next. Other CNA-specific headers remain. Member/behavior audit covers
+graphics device service. The CNA-specific Devices, Platform and graphics-ext headers now have
+explicit member/behavior dispositions. Other CNA-specific headers remain. Member/behavior audit covers
 initial reviews of Quaternion, EffectParameter, Curve,
 ContentManager, Texture2D, audio/XACT and CNA binary-content writer/document/cursor APIs
 (including overload, ownership and output-observation limitations); this is not a comprehensive member audit. Add screenshot references for

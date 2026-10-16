@@ -7071,3 +7071,34 @@ or manual visual inspection was performed.
 
 Continue by closing that ShaderCodeEXT/ShaderPackageEXT value boundary without adding a catalog ID,
 then move to the next CNA-specific public module.
+
+### Focused1103 ShaderCodeEXT and ShaderPackageEXT value contracts
+
+`graphics.shader_effect.portable_package` grows8->14 controls while retaining its live package
+selection and exact RGB-to-GBR pixels. Its four textual variants now prove entry-point and payload
+metadata, form predicates, byte size and wrong-accessor refusal after caller buffers are replaced.
+An independent SPIR-V value proves exact owned bytes, language/stage/label identity and symmetric
+text-accessor refusal after its caller vector changes. Representative mismatched payload forms,
+empty entry/source, partial SPIR-V words and invalid language/stage identities are refused.
+
+The package now exposes its independent ordered variant copy, exact required stages, stage queries
+and the complete sampled-2D binding record. Binding construction refuses empty name, negative
+index, sentinel type and unknown stage. Package construction refuses duplicate required stages,
+bindings for undeclared stages and same-stage binding collisions. Successful and failed selections
+also prove absent-stage lookup returns null.
+
+The warning-free `-j3` build, metadata716/0, exact SOFTWARE CTest, catalog parser and validator/
+comparator self-tests pass; SOFTWARE retains its declared CustomEffects skip. Five OPENGLES3/Xvfb
+runs pass14/14 with stable stdout SHA-256
+`003477c3a8c03ce5e054f419af1e172a3b973a3f8a7f626c251b4fd5f7004ff1` and empty stderr. Merged
+coverage contains all716 IDs and remains307/329 XNA types,2128/2326 members,674/753 fields and
+3079/3205 C routes. Evidence:`/tmp/checkpoint-1103-shader-package-values/*`. Existing programmatic
+back-buffer checks validate the selected GL program; no screenshot or manual visual inspection was
+performed.
+
+This closes the public graphics-ext header audit. Textual-language permutations reuse the same
+owned payload contract; arbitrary binary contents need a matching renderer/compiler. DXIL,
+HLSL/MSL/WGSL and SPIR-V execution, binary preference and Texture3D binding capability require
+their respective renderer builds. Binding enum ordinals and additional combinations are trivial
+data permutations; internal ASCII headers remain excluded. Move to the next CNA-specific public
+module with undispositioned caller-facing behavior.

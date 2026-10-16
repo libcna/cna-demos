@@ -12078,3 +12078,33 @@ the same C++ implementation through the remaining geometry/lifecycle accessors. 
 graphics-ext with the existing `graphics.shader_effect.portable_package` workflow: close the
 ShaderCodeEXT binary/text ownership, accessor and validation boundary plus the package/binding value
 accessors, without adding a new ID. Keep every compile at three jobs or fewer.
+
+## Focused1103-CNA-Graphics-shader-package-value-contracts
+
+The existing `graphics.shader_effect.portable_package` workflow grows8->14 controls. Text values
+now expose their owned entry points, form, payload sizes and wrong-accessor refusal after caller
+strings change. A SPIR-V value independently owns exact bytes and identity after caller mutation
+and refuses the text accessor. Representative payload-form, empty identity/source, partial-word,
+unknown language and unknown stage inputs are refused.
+
+The package proves an independent ordered variant copy, exact required stages, positive/negative
+stage queries and all four fields of its sampled-2D binding. Binding values reject empty names,
+negative indices and invalid types/stages; package construction rejects duplicate required stages,
+undeclared binding stages and same-stage collisions. Successful and failed selection both prove
+absent-stage lookup returns null. The pre-existing live selection, deterministic order, incomplete/
+ambiguous refusal, owned diagnostics and checked RGB-to-GBR draw remain intact.
+
+The warning-free incremental build uses `-j3`; metadata remains716/0. The exact SOFTWARE CTest and
+catalog parser pass with the declared CustomEffects skip; validator/comparator self-tests pass5/5
+and4/4. Five OPENGLES3/Xvfb runs pass14/14 with stable stdout SHA-256
+`003477c3a8c03ce5e054f419af1e172a3b973a3f8a7f626c251b4fd5f7004ff1` and empty stderr. Merged
+coverage contains all716 IDs and stays307/329 XNA types,2128/2326 members,674/753 fields and
+3079/3205 C routes. Evidence:`/tmp/checkpoint-1103-shader-package-values/*`. Programmatic pixels
+validate the GL shader; no screenshot or manual visual inspection was performed. No CNA issue was
+found.
+
+The public graphics-ext headers are now dispositioned. Non-GL shader languages, binary execution/
+preference and Texture3D binding capability require their renderer builds; enum permutations and
+internal ASCII helpers do not justify demos. Commit and push this batch, then select the next
+CNA-specific public module with undispositioned caller-facing behavior. Keep every compile at three
+jobs or fewer.

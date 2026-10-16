@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the public `graphics-ext` value audit with owned text/binary ShaderCode payloads,
+  accessor mismatch and constructor refusals, package/binding accessors and structural validation.
 - Deepened the three CNA retro-effect workflows with ASCII overload/mode and cell validation,
   complete CRT parameter/clamp/clone contracts, and every DepthEffect mode plus clone semantics.
 - Completed the caller-facing `CNA::Platform` header audit and deepened the native-window workflow

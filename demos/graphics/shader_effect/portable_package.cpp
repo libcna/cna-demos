@@ -2,8 +2,10 @@
 // Select an owned portable shader package, then execute its selected pair.
 #include <algorithm>
 #include <array>
+#include <cstdint>
 #include <memory>
 #include <optional>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -25,6 +27,8 @@
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
 using CNA::Graphics::ShaderCodeEXT;
+using CNA::Graphics::ShaderBindingRequirementEXT;
+using CNA::Graphics::ShaderBindingTypeEXT;
 using CNA::Graphics::ShaderPackageEXT;
 using CNA::ShaderLanguageEXT;
 using CNA::ShaderStageEXT;
@@ -60,6 +64,12 @@ void main() {
         void LoadContent() override
         {
             auto& device = getGraphicsDeviceProperty();
+            const auto rejectsArgument = [](const auto& action) {
+                try { action(); }
+                catch (const std::invalid_argument&) { return true; }
+                catch (...) { return false; }
+                return false;
+            };
             std::vector<ShaderCodeEXT> variants;
             for (const auto language : {ShaderLanguageEXT::GlslEs, ShaderLanguageEXT::GlslDesktop})
             {
@@ -71,8 +81,84 @@ void main() {
                 // Code values own the source; overwriting the author's buffers cannot alter them.
                 vertexSource.assign("overwritten"); fragmentSource.assign("overwritten");
             }
+            bool textAccessorMismatchRejected = false;
+            try { (void)variants.front().getBytes(); }
+            catch (const std::logic_error&) { textAccessorMismatchRejected = true; }
+            Context().Check(std::all_of(variants.begin(), variants.end(), [](const ShaderCodeEXT& code) {
+                                return code.getEntryPoint() == "main" && code.isText() && !code.isBinary() &&
+                                       code.getPayloadByteSize() == code.getText().size() && !code.getText().empty();
+                            }) && textAccessorMismatchRejected,
+                            "text code owns its entry point and payload metadata and rejects the binary accessor");
+
+            std::vector<std::uint8_t> authoredBinary{0x03, 0x02, 0x23, 0x07};
+            const ShaderCodeEXT binary(ShaderLanguageEXT::SpirV, ShaderStageEXT::Fragment,
+                                       "main", "probe.frag.spv", authoredBinary);
+            authoredBinary[0] = 0;
+            bool binaryAccessorMismatchRejected = false;
+            try { (void)binary.getText(); }
+            catch (const std::logic_error&) { binaryAccessorMismatchRejected = true; }
+            Context().Check(binary.getLanguage() == ShaderLanguageEXT::SpirV &&
+                                binary.getStage() == ShaderStageEXT::Fragment &&
+                                binary.getEntryPoint() == "main" && binary.getSourceLabel() == "probe.frag.spv" &&
+                                !binary.isText() && binary.isBinary() && binary.getPayloadByteSize() == 4 &&
+                                binary.getBytes() == std::vector<std::uint8_t>({0x03, 0x02, 0x23, 0x07}) &&
+                                binaryAccessorMismatchRejected,
+                            "binary code owns exact bytes and metadata and rejects the text accessor");
+
+            Context().Check(
+                rejectsArgument([] { ShaderCodeEXT(ShaderLanguageEXT::SpirV, ShaderStageEXT::Vertex,
+                                                    "main", "wrong.spv", std::string("source")); }) &&
+                rejectsArgument([] { ShaderCodeEXT(ShaderLanguageEXT::GlslEs, ShaderStageEXT::Vertex,
+                                                    "main", "wrong.vert", std::vector<std::uint8_t>{1}); }) &&
+                rejectsArgument([] { ShaderCodeEXT(ShaderLanguageEXT::GlslEs, ShaderStageEXT::Vertex,
+                                                    "", "empty-entry.vert", std::string("source")); }) &&
+                rejectsArgument([] { ShaderCodeEXT(ShaderLanguageEXT::GlslEs, ShaderStageEXT::Vertex,
+                                                    "main", "empty.vert", std::string()); }) &&
+                rejectsArgument([] { ShaderCodeEXT(ShaderLanguageEXT::SpirV, ShaderStageEXT::Vertex,
+                                                    "main", "partial.spv", std::vector<std::uint8_t>{1, 2, 3}); }) &&
+                rejectsArgument([] { ShaderCodeEXT(ShaderLanguageEXT::Unknown, ShaderStageEXT::Vertex,
+                                                    "main", "unknown", std::string("source")); }) &&
+                rejectsArgument([] { ShaderCodeEXT(ShaderLanguageEXT::GlslEs, ShaderStageEXT::Unknown,
+                                                    "main", "unknown-stage", std::string("source")); }),
+                "code construction refuses mismatched forms, empty identities and invalid language or stage values");
+
             const ShaderPackageEXT package(variants, {ShaderStageEXT::Vertex, ShaderStageEXT::Fragment},
-                {{"texture1", 0, CNA::Graphics::ShaderBindingTypeEXT::SampledTexture2D, ShaderStageEXT::Fragment}});
+                {{"texture1", 0, ShaderBindingTypeEXT::SampledTexture2D, ShaderStageEXT::Fragment}});
+            const auto& bindings = package.getBindingRequirements();
+            Context().Check(package.getVariants().size() == 4 && package.getVariants().data() != variants.data() &&
+                                package.getRequiredStages() ==
+                                    std::vector<ShaderStageEXT>({ShaderStageEXT::Vertex, ShaderStageEXT::Fragment}) &&
+                                package.requiresStage(ShaderStageEXT::Vertex) &&
+                                package.requiresStage(ShaderStageEXT::Fragment) &&
+                                !package.requiresStage(ShaderStageEXT::Unknown) &&
+                                bindings.size() == 1 && bindings[0].getName() == "texture1" &&
+                                bindings[0].getBinding() == 0 &&
+                                bindings[0].getType() == ShaderBindingTypeEXT::SampledTexture2D &&
+                                bindings[0].getStage() == ShaderStageEXT::Fragment,
+                            "the package owns its ordered variants, required stages and exact portable binding contract");
+
+            Context().Check(
+                rejectsArgument([] { ShaderBindingRequirementEXT(
+                    "", 0, ShaderBindingTypeEXT::SampledTexture2D, ShaderStageEXT::Fragment); }) &&
+                rejectsArgument([] { ShaderBindingRequirementEXT(
+                    "texture", -1, ShaderBindingTypeEXT::SampledTexture2D, ShaderStageEXT::Fragment); }) &&
+                rejectsArgument([] { ShaderBindingRequirementEXT(
+                    "texture", 0, ShaderBindingTypeEXT::Count, ShaderStageEXT::Fragment); }) &&
+                rejectsArgument([] { ShaderBindingRequirementEXT(
+                    "texture", 0, ShaderBindingTypeEXT::SampledTexture2D, ShaderStageEXT::Unknown); }),
+                "binding requirements reject empty names, negative indices and invalid type or stage values");
+
+            Context().Check(
+                rejectsArgument([&] { ShaderPackageEXT(
+                    variants, {ShaderStageEXT::Vertex, ShaderStageEXT::Vertex}); }) &&
+                rejectsArgument([&] { ShaderPackageEXT(
+                    {variants[0]}, {ShaderStageEXT::Vertex},
+                    {{"texture1", 0, ShaderBindingTypeEXT::SampledTexture2D, ShaderStageEXT::Fragment}}); }) &&
+                rejectsArgument([&] { ShaderPackageEXT(
+                    variants, {ShaderStageEXT::Vertex, ShaderStageEXT::Fragment},
+                    {{"texture1", 0, ShaderBindingTypeEXT::SampledTexture2D, ShaderStageEXT::Fragment},
+                     {"other", 0, ShaderBindingTypeEXT::SampledTexture2D, ShaderStageEXT::Fragment}}); }),
+                "packages reject duplicate stages, undeclared binding stages and colliding stage bindings");
             selection_.emplace(package.selectFor(device));
             Context().Print("Package selection: {}", selection_->getDiagnostic());
             if (!selection_->isUsable()) Context().Skip("the live renderer cannot execute either supplied GLSL language");
@@ -81,7 +167,8 @@ void main() {
             Context().Check(selection_->getCode().size() == 2 && vertex && fragment &&
                             vertex->getLanguage() == fragment->getLanguage() &&
                             vertex->getText().find("gl_Position") != std::string::npos &&
-                            fragment->getSourceLabel() == "channel-cycle.frag",
+                            fragment->getSourceLabel() == "channel-cycle.frag" &&
+                            selection_->findStage(ShaderStageEXT::Unknown) == nullptr,
                             "selection owns one labeled stage pair in a single supported language after caller buffers change");
             if (!vertex || !fragment) return;
             std::reverse(variants.begin(), variants.end());
@@ -98,7 +185,9 @@ void main() {
             const ShaderPackageEXT incompletePackage({*vertex, *otherFragment}, package.getRequiredStages());
             const auto incomplete = incompletePackage.selectFor(device);
             Context().Check(!incomplete.isUsable() && incomplete.getCode().empty() &&
-                            incomplete.getLanguage() == ShaderLanguageEXT::Unknown && !incomplete.getDiagnostic().empty(),
+                            incomplete.getLanguage() == ShaderLanguageEXT::Unknown &&
+                            incomplete.findStage(ShaderStageEXT::Vertex) == nullptr &&
+                            !incomplete.getDiagnostic().empty(),
                             "incomplete per-language pairs cannot be mixed into a usable program");
             std::vector<CNA::ShaderDiagnosticEXT> refusal;
             try { ShaderEffect unusable(device, incompletePackage); }
@@ -171,8 +260,16 @@ CNA_DEMOS_GAME(PortablePackageDemo, {
     .title = "Portable shader package selection",
     .description = "Selects an owned GLSL stage pair for the live renderer, rejects incomplete or ambiguous variants, "
                    "and draws a color-channel comparison through the package-created ShaderEffect.",
-    .apis = {"CNA::Graphics::ShaderCodeEXT", "CNA::Graphics::ShaderPackageEXT::selectFor",
-             "CNA::Graphics::ShaderPackageSelectionEXT", "ShaderEffect::ShaderEffect",
+    .apis = {"CNA::Graphics::ShaderCodeEXT", "CNA::Graphics::ShaderCodeEXT::getLanguage",
+             "CNA::Graphics::ShaderCodeEXT::getStage", "CNA::Graphics::ShaderCodeEXT::getEntryPoint",
+             "CNA::Graphics::ShaderCodeEXT::getSourceLabel", "CNA::Graphics::ShaderCodeEXT::isText",
+             "CNA::Graphics::ShaderCodeEXT::isBinary", "CNA::Graphics::ShaderCodeEXT::getPayloadByteSize",
+             "CNA::Graphics::ShaderCodeEXT::getText", "CNA::Graphics::ShaderCodeEXT::getBytes",
+             "CNA::Graphics::ShaderBindingRequirementEXT", "CNA::Graphics::ShaderBindingTypeEXT",
+             "CNA::Graphics::ShaderPackageEXT::getVariants", "CNA::Graphics::ShaderPackageEXT::getRequiredStages",
+             "CNA::Graphics::ShaderPackageEXT::getBindingRequirements", "CNA::Graphics::ShaderPackageEXT::requiresStage",
+             "CNA::Graphics::ShaderPackageEXT::selectFor", "CNA::Graphics::ShaderPackageSelectionEXT",
+             "ShaderEffect::ShaderEffect",
              "ShaderEffect::GetSelectedShaderLanguageEXT", "ShaderEffect::GetShaderDiagnosticsEXT",
              "CNA::ShaderCompilationExceptionEXT::getDiagnostics"},
     .tags = {"shader", "package", "glsl", "selection", "cnaext"},
