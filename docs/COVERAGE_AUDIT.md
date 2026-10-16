@@ -169,10 +169,11 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 
 | Members / behavior | Decision and evidence |
 |---|---|
+| Constructors, constants, components, equality and hash | New focused `value_identity` covers the default, replicated scalar, Vector2-plus-ZW, Vector3-plus-W and four-scalar constructors; Zero, One and all four unit axes; and typed, boxed and operator identity for ordinary, wrong-type, empty and NaN cases. Genuine XNA preserves equal hashes across UnitX/origin pairs that differ only by a zero sign; CNA equality agrees but raw-bit hashing differs under ISSUE-120. Evidence:`/tmp/checkpoint-1058-vector4-value-identity/*`. |
 | Length, LengthSquared, Distance, DistanceSquared and Normalize | New focused `magnitude_range` covers ordinary and zero member/static/output normalization plus ordinary value/output Distance. Genuine Windows XNA keeps sole-X `1e20` and `1e-30` Length/Distance finite and normalizes both to UnitX even when the separately returned squared result is infinity or zero. CNA loses exactly those six observable results under ISSUE-118. Evidence:`/tmp/checkpoint-1057-vector4-magnitude-range/*`. |
 
-Constructor/constant identity, equality/hash, component bounds and arithmetic, interpolation, Dot
-range and matrix/quaternion array transforms remain the next Vector4 audit rows; existing broad
+Component bounds and arithmetic, interpolation, Dot range and matrix/quaternion array transforms
+remain the next Vector4 audit rows; existing broad
 `color_math` and `homogeneous_transform` coverage will be retained where it is already meaningful.
 
 ### BoundingBox, BoundingSphere and Ray value identity
@@ -6013,3 +6014,19 @@ self-tests5/5 plus4/4 pass. Coverage remains307/329 types,2128/2326 members,674/
 the host display-cookie warning. Evidence:`/tmp/checkpoint-1057-vector4-magnitude-range/*`. No
 renderer or visual claim was made. Continue with Vector4 construction/identity and component
 bounds.
+
+### Focused1058 Vector4 value identity
+
+New focused console demo `math.vector4.value_identity` raises the catalog to697 and math to82.
+Every public constructor, Zero/One/four axes and direct components match genuine Windows XNA 4.0.
+Typed, boxed and operator equality plus ordinary hashes, wrong/empty boxed values and NaN identity
+also match. XNA gives equal hashes to UnitX/origin pairs differing only in a zero sign; CNA accepts
+both pairs as equal but hashes the raw sign bits, extending ISSUE-120 with the sole failure among
+seven controls.
+
+Ten runs per renderer label are byte-identical with stdout SHA-256
+`d59314d285c8c1d8711cee363f7157105d09912ff811b6015e0151f2a270c67c` and empty stderr. The clean
+`-j3` build, metadata697/0, exact known-issue SOFTWARE CTest and self-tests5/5 plus4/4 pass.
+Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; Complete1056
+marks the two new Vector4 IDs absent. Evidence:`/tmp/checkpoint-1058-vector4-value-identity/*`.
+No renderer or visual claim was made. Continue with Vector4 component bounds and arithmetic.

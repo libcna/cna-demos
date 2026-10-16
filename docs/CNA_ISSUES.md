@@ -103,21 +103,23 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   reproduce only the one grouped assertion with empty stderr. No CNA source was modified and no
   upstream message was sent.
 
-### CNA-DEMOS-ISSUE-120 -- Equal signed-zero Vector2/3 and Quaternion values have unequal hashes
+### CNA-DEMOS-ISSUE-120 -- Equal signed-zero vector and Quaternion values have unequal hashes
 
-- **Area/API:** `Microsoft::Xna::Framework::Vector2`, `Vector3` and `Quaternion` typed/boxed/operator
-  equality and `GetHashCode`.
+- **Area/API:** `Microsoft::Xna::Framework::Vector2`, `Vector3`, `Vector4` and `Quaternion`
+  typed/boxed/operator equality and `GetHashCode`.
 - **Demo/reproduction:** run `math.vector2.toolbox_2d`, `math.vector3.equality_and_string` and
-  `math.quaternion.value_identity`. Compare UnitX/Identity with otherwise identical values
-  containing `-0.0f`, then compare each all-positive-zero value with a negative-zero component.
-  Ordinary construction and equality/hash pairs are adjacent positive controls.
+  `math.vector4.value_identity` plus `math.quaternion.value_identity`. Compare UnitX/Identity with
+  otherwise identical values containing `-0.0f`, then compare each all-positive-zero value with a
+  negative-zero component. Ordinary construction and equality/hash pairs are adjacent positive
+  controls.
 - **Observed:** CNA correctly treats positive and negative zero as equal through every tested
   equality form, but hashes their raw IEEE-754 bits. Quaternion Identity hashes to `1065353216`
   while its signed-X-zero equal hashes to `-1082130432`; zero hashes to0 while its signed-W-zero
   equal hashes to `-2147483648`. Vector2 exhibits the equivalent UnitX/Y-zero and origin/X-zero
-  mismatches, and Vector3 does the same for UnitX/Y-zero and origin/X-zero. Each demo retains exactly
-  one expected hash failure, among five Quaternion, fourteen Vector2 and seven Vector3 controls.
-- **Expected/reference:** genuine Windows XNA 4.0 treats all six pairs as equal and gives each pair
+  mismatches, and Vector3 and Vector4 do the same for their tested UnitX and origin zero signs.
+  Each demo retains exactly one expected hash failure, among five Quaternion, fourteen Vector2,
+  seven Vector3 and seven Vector4 controls.
+- **Expected/reference:** genuine Windows XNA 4.0 treats all eight pairs as equal and gives each pair
   equal hashes: `1065353216` for both tested unit values and0 for both zero values in every family.
   The equality/hash invariant therefore holds regardless of zero's sign bit.
 - **Cause/suggested repair:** CNA's repeated `FloatHash` helpers copy each float's raw bits, while
@@ -127,8 +129,9 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
   XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1044-quaternion-signed-zero-hash/*` and
   `/tmp/checkpoint-1047-vector2-signed-zero-hash/*` and
-  `/tmp/checkpoint-1052-vector3-identity-bounds/*`. Warning-free three-job builds, exact known-issue
-  CTests, metadata695/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer label
+  `/tmp/checkpoint-1052-vector3-identity-bounds/*` and
+  `/tmp/checkpoint-1058-vector4-value-identity/*`. Warning-free three-job builds, exact known-issue
+  CTests, metadata697/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer label
   reproduce only each demo's one hash assertion with empty stderr. No CNA source was modified and
   no upstream message was sent.
 

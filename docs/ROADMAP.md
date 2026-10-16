@@ -11596,3 +11596,15 @@ the exact known-issue CTest and both self-test suites pass. Coverage totals rema
 Complete1056 marks only this new ID absent. Evidence:
 `/tmp/checkpoint-1057-vector4-magnitude-range/*`. Continue with Vector4 construction/identity and
 component-bound behavior.
+
+## Focused1058 Vector4 value identity
+
+New `math.vector4.value_identity` raises the catalog to697 and math to82. Every constructor,
+Zero/One/four axes and direct components match genuine Windows XNA 4.0, as do ordinary typed,
+boxed and operator equality/hash, wrong/empty boxed values and NaN identity. XNA gives equal hashes
+to UnitX/origin pairs that differ only in a zero sign; CNA equality agrees but raw-bit hashing
+differs, extending ISSUE-120 with the sole failure among seven controls. Ten runs per renderer
+label are byte-stable with empty stderr. The clean `-j3` build, metadata697/0, exact known-issue
+CTest and both self-test suites pass. Coverage totals remain unchanged and Complete1056 marks the
+two new Vector4 IDs absent. Evidence:`/tmp/checkpoint-1058-vector4-value-identity/*`. Continue with
+Vector4 component-bound and arithmetic behavior.

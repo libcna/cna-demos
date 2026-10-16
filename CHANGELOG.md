@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a focused Vector4 value-identity demo and extended ISSUE-120 with its signed-zero hash
+  inconsistency against genuine XNA.
 - Added a focused Vector4 magnitude-range demo and extended ISSUE-118 with XNA-referenced extreme
   `Length`, `Distance` and normalization behavior.
 - Refreshed the complete checkpoint at 695 demos: all 708 enabled CTests and both full renderer
