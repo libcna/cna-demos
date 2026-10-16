@@ -71,8 +71,9 @@ Console demos with checks; each shows one operation family.
   properties and `Project`/`Unproject`, `ScissorRectangle`, `PresentationParameters`,
   `GetBackBufferData`, `SupportsCapability` and the capability report (CNAEXT), adapters and
   display modes, format queries, resource lifetime events, ✅ `Present` with source/destination/
-  window arguments and renderer-specific support, and ✅ `Reset` with new parameters. Remaining:
-  `DeviceLost` (never raised on desktop).
+  window arguments and renderer-specific support, and ✅ `Reset` with new parameters. `DeviceLost`
+  remains an explicit device-loss/platform disposition because neither tested desktop backend
+  produces it; its generated event shape is not an independently reachable demo here.
 - ✅ (19 demos) `graphics.sprite_batch.*`: every `Draw` overload family (position, destination rectangle,
   source rectangle, rotation+origin, scale float/vector, `SpriteEffects` flips, layer depth),
   tinting, `Begin` overloads: `SpriteSortMode` (Deferred, Immediate, Texture, BackToFront,
@@ -158,7 +159,7 @@ a check that all authored colors remain visible and that a blank texture row can
   GL checks pass; the earlier image was inspected and focused compressed-alpha stderr is empty.
   SOFTWARE capability skip. Full 462 passes 475 enabled CTests and
   both smokes while retaining every old 37/41 failed assertion.
-  🟨 `graphics.texture_cube.dds_streams`: full and prefixed RGB24 cubes/mips and ordinary
+  ✅ `graphics.texture_cube.dds_streams`: full and prefixed RGB24 cubes/mips and ordinary
   truncation pass; short-read completion and prefixed truncation expose ISSUE-054 on both
   selections. Five checks execute, with three passes/two failures and empty stderr.
 
@@ -177,7 +178,7 @@ a check that all authored colors remain visible and that a blank texture row can
   `DualTextureEffect` light map, `EnvironmentMapEffect` with a `TextureCube` and Fresnel,
   `SkinnedEffect` with two bones, mixed-weight joint pixels and palette read/write boundaries, ✅ `graphics.basic_effect.vertex_color_lighting` (vertex colour
   and lighting together).
-- 🟨 CNA effects: ✅ `PbrEffect` metallic/roughness, ✅ `ColorMatrixEffect` (SOFTWARE), ✅
+- ✅ CNA effects: `PbrEffect` metallic/roughness, `ColorMatrixEffect` (SOFTWARE),
   `graphics.pbr_effect.texture_maps` (normal map with a Vector4 vertex tangent, emissive map,
   occlusion map on ambient light), ✅ `graphics.pbr_effect.image_based_lighting` (real irradiance,
   BRDF lookup, intensity and roughness-selected specular mips on OPENGLES3), ✅ `SkinnedPbrEffect`
@@ -195,7 +196,7 @@ a check that all authored colors remain visible and that a blank texture row can
   `graphics.pbr_effect.fog_depth` samples exact start/midpoint/end fog through rigid World and a
   skinned bone. ✅ `graphics.pbr_effect.shadow_receivers` executes directional-shadow and
   punctual-point reception through both PBR renderer programs, completing the PBR family audit.
-- 🟨 `graphics.shader_effect.clone_state`: nine GL checks establish independently owned programs,
+- ✅ `graphics.shader_effect.clone_state`: nine GL checks establish independently owned programs,
   mutation isolation and clone survival after original disposal; three failures expose ISSUE-055
   (lost matrices, changed pixels and disposed-clone refusal). Both captures inspected; SOFTWARE
   capability skip. Full 461 passes 474 enabled CTests and both smokes; all old failures are retained.
@@ -212,11 +213,12 @@ a check that all authored colors remain visible and that a blank texture row can
   selection, incomplete/ambiguous refusals, owned exception diagnostics and actual RGB-to-GBR
   pixels (eight GL checks, SOFTWARE capability skip). GL capture inspected; desktop/binary
   package selection now also passes on OPENGL33; binary variants and additional compiler-stage/
-  link failures remain renderer-specific gaps.
-- 🟨 Custom shaders: ✅ `ShaderEffect` in 3D (toon shading), a heightmap read in the vertex shader
+  link failures have explicit renderer/build dispositions.
+- ✅ Custom shaders: `ShaderEffect` in 3D (toon shading), a heightmap read in the vertex shader
   (`graphics.shader_effect.vertex_displacement`) and in `SpriteBatch::Begin`
-  (grayscale), GLSL chosen from `GetShaderDialectEXT()`. Remaining: compiled XNA `.fx` effects
-  (needs a CNA build with `CNA_<RENDERER>_COMPILED_EFFECTS`), other dialects.
+  (grayscale), GLSL chosen from `GetShaderDialectEXT()`. Compiled XNA `.fx` execution requires a
+  CNA build with `CNA_<RENDERER>_COMPILED_EFFECTS`; non-GL dialect execution requires the matching
+  renderer build. Both are explicit build/renderer dispositions rather than open desktop work.
 - ✅ `graphics.skinned_effect.normal_lighting`: joint rotation/blended-normal normalization,
   nonuniform World inverse transpose and the lighting-disable refusal (five checks).
 - ✅ `graphics.skinned_effect.per_pixel_lighting`: actual vertex-lit constant color versus
@@ -238,8 +240,9 @@ a check that all authored colors remain visible and that a blank texture row can
   XNA effect bytecode (`Effect(GraphicsDevice&, bytes)`), `EffectParameter`/`EffectTechnique`/
   `EffectPass` reflection and parameter setting. The ShaderEffect member table in COVERAGE_AUDIT.md
   separates legacy source success from portable package selection, compiler diagnostics, uniform
-  arrays, cube/volume samplers, block layout and clone/lifetime behavior. These are semantic gaps,
-  not extra credit for the existing GLSL scenes. ≈ 8
+  arrays, cube/volume samplers, block layout and clone/lifetime behavior. The tested paths have
+  direct semantic evidence; other binary formats and dialects retain the build/renderer
+  dispositions above. ≈ 8
 
 - ✅ `graphics.effect.parameter_values`: typed values, matrix transpose and bone-array reflection;
   ISSUE-034/035 remain explicit expected failures.
@@ -315,8 +318,10 @@ a check that all authored colors remain visible and that a blank texture row can
   exclusion, unsupported GPU-instancing loss and determinant-aware culling pass on both renderers.
   Its extension also proves explicit nonzero and implicit-first scene selection, transformed
   no-scenes root traversal and identity-root fallback for files containing only bare meshes.
-- Remaining: other member decisions/evidence limits in COVERAGE_AUDIT.md. Runtime XNB custom graph fixups are covered separately
-  in Phase 8; built-in model loading does not demonstrate every ContentReader member.
+- Residual model members are explicitly dispositioned in COVERAGE_AUDIT.md as already represented,
+  forwarding/value behavior, malformed-input stress, or renderer/content-format boundaries.
+  Runtime XNB custom graph fixups are covered separately in Phase 8; generic ContentReader behavior
+  is owned by the content workflows rather than duplicated through built-in Model loading.
 
 ## Phase 8 -- content ✅ (73 demos; residual boundaries below)
 
@@ -641,7 +646,8 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
 - ✅ `gamer_services.configuration.resolution`: deployment defaults and every field, override and
   manifest precedence, version syntax, and secure endpoint validation without a connection.
 - ✅ `gamer_services.signed_in_gamer.signed_out` (manual: sign out through the Guide, Home key).
-- Remaining gamer services: `AvatarDescription::Changed` (manual at most: offline, only the Guide's
+- Explicit gamer-service/manual dispositions: `AvatarDescription::Changed` (manual at most:
+  offline, only the Guide's
   own avatar editor changes a profile's stored avatar); `Guide::DelayNotifications` is service-only
   (it delays the game-invitation prompts, which need the online service), like friends, messages,
   gamer cards, marketplace and the WriteLeaderboards events.
@@ -665,7 +671,8 @@ profile store and signs in "Demo Player"; every such demo runs in its own proces
 - ✅ `net.network_session.private_slots` (PrivateGamerSlots keep slots from players who just join),
   ✅ `net.network_session.join_refused` (standalone: NetworkSessionJoinException for a game in
   progress, then AllowJoinInProgress; expected failure, CNA-DEMOS-ISSUE-032 and -033).
-- Remaining net: voice (manual).
+- Voice remains a hardware/service/manual disposition; local and System Link session behavior is
+  covered by the automated workflows above.
 
 ## Phase 13 -- devices, phone, design, diagnostics, Inspector, platform, CNA extensions ✅ (28 demos)
 - ✅ `devices.*` (6): sensor availability (Accelerometer/Compass/Gyroscope/Motion, State,
@@ -773,10 +780,10 @@ decisions for every XNA type without a demo are in [COVERAGE_AUDIT.md](COVERAGE_
 that already showed a type now name it, and new demos cover the effect interfaces and the graphics
 device service. The systematic member audit, generated XNA residual review and CNA-specific
 public-header family audits are recorded through Focused1118; the residual C declaration audit is
-closed through Focused1124 with every uncredited route explicitly classified. Final work is the
-cross-document reconciliation of those completed inventories and the decision whether the optional
-visual-reference infrastructure is required for campaign closure; do not infer missing behavior
-from a raw coverage percentage.
+closed through Focused1124 with every uncredited route explicitly classified. Focused1126
+reconciles the exact923-header inventory and every generated residual, and implements the bounded
+six-image visual-regression pilot. Focused1127/Complete1128 close and fully validate the final C
+lifecycle error-path matrix. Raw coverage percentages are not treated as undispositioned work.
 
 ## Cross-cutting maintenance
 - Visual regression: implemented six-image SOFTWARE/OPENGLES3 pilot; expand only with reviewed,
@@ -12956,3 +12963,26 @@ All CNA-native phases are complete for pinned CNA `d23e139de`. Future work is ch
 maintenance when CNA/project source changes, removal of repaired known-issue markers, and honest
 additional platform/hardware/service or reviewed visual evidence. `cna-examples` is a separate
 future campaign.
+
+## Focused1127 and Complete1128 final lifecycle/error-path checkpoint
+
+The existing `c_api.game.host_failure` workflow now exercises all ten public C lifecycle callback
+positions. Its 73 controls prove result propagation, exact diagnostics, terminal no-replay state,
+handle release and exactly-once unload. Eight completion-sequence assertions expose the same
+documented ISSUE-051 mechanism; EndRun and UnloadContent failures preserve `ILBUXEZ`. No new ID,
+route credit or issue was created.
+
+Complete1128 validates cna-demos `042fea0` against pinned CNA `d23e139de`. The warning-free `-j3`
+build validates719/0 metadata, and all732 enabled CTests pass in351.10s with three manual tests
+disabled. Both renderer suites contain all719 IDs exactly once: SOFTWARE remains555/113/48/3 and
+OPENGLES3 remains594/115/7/3, with no unexpected failure or pass. Exact comparison with
+Complete1125 adds only the seven new labeled ISSUE-051 assertions per renderer, moving failed-
+assertion totals197->204 and202->209 without a status, known-issue or per-demo check-count change.
+Generated coverage remains308/329 types,2128/2326 members,674/753 fields and3082/3205 C routes.
+All16 tool tests pass, and the six reviewed visual references match exactly with zero differing
+pixels. Evidence:`build/linux-full/reports/checkpoint-1128-*` and `/tmp/focused-1127/`.
+
+This restores a complete current-source checkpoint. The stale-summary audit found no additional
+caller-facing gap; all remaining limits retain their explicit platform, renderer, hardware,
+service, manual, stress/fuzz, generated/CLR, forwarding/reflection, test-only or implementation-
+plumbing dispositions.

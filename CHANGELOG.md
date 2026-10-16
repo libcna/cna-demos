@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Established Complete1128 at cna-demos `042fea0` against pinned CNA `d23e139`: the warning-free
+  `-j3` build validates719/0 metadata, all732 enabled CTests pass, both719-ID renderer suites have
+  zero unexpected results, all16 tool tests pass, and all six visual references match exactly.
+  Complete1125 comparison adds only seven labeled ISSUE-051 assertions per renderer.
 - Extended the existing C host-failure workflow across all ten public lifecycle callback positions.
   Both renderers retain exact result/diagnostic/terminal/release/unload behavior and expose eight
   coherent ISSUE-051 completion failures out of73 checks; five runs per renderer are byte-identical.

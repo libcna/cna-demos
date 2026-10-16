@@ -7740,3 +7740,34 @@ No CNA defect was found and no demo/API credit changed. Together with Complete11
 CNA-native Phase15 campaign: all remaining limits are explicit platform, renderer, hardware,
 service, manual, stress/fuzz, generated/CLR, forwarding/reflection, test-only or implementation
 plumbing dispositions rather than unexamined public surface.
+
+### Focused1127 and Complete1128 final C lifecycle/error-path checkpoint
+
+The final stale-gap review found one real error-path omission behind an old audit sentence: only a
+second-Update failure had exercised the public host-driven C completion promise. The existing
+`c_api.game.host_failure` ID now fails Initialize, LoadContent, BeginRun, Update, BeginDraw, Draw,
+EndDraw, Exiting, EndRun and UnloadContent independently. Each scenario checks the documented run
+result, exact callback diagnostic, terminal no-replay behavior, promised `XE` completion, handle
+release and exactly-once unload.
+
+SOFTWARE and OPENGLES3 each produce65 passes and exactly eight ISSUE-051 failures out of73 checks.
+The failing traces are Update `ILBUDUZ`, Initialize `IZ`, LoadContent `ILZ`, BeginRun `ILBZ`,
+BeginDraw `ILBUPZ`, Draw `ILBUPDZ`, EndDraw `ILBUPDAZ` and Exiting `ILBUXZ`; EndRun and
+UnloadContent both retain `ILBUXEZ`. Five focused runs per renderer are byte-identical within and
+across renderers with empty stderr. This is one coherent extension of ISSUE-051, not a new defect,
+demo ID or route credit.
+
+Complete1128 at cna-demos `042fea0` and pinned CNA `d23e139de` is the authoritative current-source
+checkpoint. The warning-free `-j3` build validates719/0 metadata and all732 enabled CTests pass in
+351.10s; three manual tests remain disabled. Nineteen category partitions per renderer contain all
+719 catalog IDs exactly once. SOFTWARE is555 pass/113 expected failure/48 skip/3 manual;
+OPENGLES3 is594/115/7/3. Neither has an unexpected failure or pass, and no X11/setup error appears
+in the evidence. Complete1125 comparison adds exactly the seven new labeled ISSUE-051 assertions
+on each renderer, raising failed totals197->204 and202->209 with no status, known-issue or
+per-demo check-count change. Coverage remains308/329 XNA types,2128/2326 members,674/753 fields and
+3082/3205 C routes. All16 tool tests pass; all six reviewed visual references compare exactly with
+zero differing pixels. Evidence:`build/linux-full/reports/checkpoint-1128-*`.
+
+The final phase-summary and residual audit found no further meaningful caller-facing gap. The
+923-header reconciliation and exact21-type/198-member/79-field/123-route residual ledgers remain
+balanced; every residual has an explicit evidence boundary or non-independent disposition.

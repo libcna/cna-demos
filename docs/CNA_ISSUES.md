@@ -4191,7 +4191,9 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   BeginRun `ILBZ`, BeginDraw `ILBUPZ`, Draw `ILBUPDZ`, EndDraw `ILBUPDAZ` and Exiting `ILBUXZ`;
   EndRun and UnloadContent both pass with `ILBUXEZ`. Five runs per renderer are byte-identical to
   one another and across renderers (`3e8459c4...`), with empty stderr. The exact private-X11 CTest,
-  all 16 tool tests and 719/0 metadata validation pass. Evidence: `/tmp/focused-1127/`.
+  all 16 tool tests and 719/0 metadata validation pass. Complete1128 reproduces the exact seven
+  added failures in each full719-ID renderer suite with no other semantic delta. Evidence:
+  `/tmp/focused-1127/` and `build/linux-full/reports/checkpoint-1128-*`.
 
 
 

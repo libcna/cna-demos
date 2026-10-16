@@ -12,15 +12,15 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
-The CNA-native public-surface campaign is fully dispositioned for pinned CNA `d23e139de`, but the
-current source is ahead of Complete1125: Focused1127 extends the host-driven C lifecycle error-path
-matrix across every public callback position. The catalog remains719 IDs and the exact923-header
-plus generated-residual reconciliation is unchanged. A fresh complete checkpoint of this source is
-required before restoring the campaign-complete claim.
+The CNA-native campaign is complete for pinned CNA `d23e139de` at Complete1128. All meaningful
+caller-facing behavior is covered or has an explicit evidence-backed disposition, including the
+final all-callback C lifecycle error-path matrix. The catalog has719 IDs; the exact public-surface
+reconciliation covers923 CNA-owned module headers and every generated XNA/C residual.
 
-After that checkpoint, future work is maintenance: remove known-issue markers when upstream
-defects are fixed, and expand renderer/platform/manual or visual-reference evidence only when the
-environment can observe it honestly. `cna-examples` remains deliberately outside this campaign.
+Future work is maintenance: rerun a Complete1128-style checkpoint when CNA or project source
+changes, remove known-issue markers when upstream defects are fixed, and expand renderer/platform/
+manual or visual-reference evidence only when the environment can observe it honestly.
+`cna-examples` remains deliberately outside this completed campaign.
 
 ## 3. Architecture in 10 lines
 
@@ -69,7 +69,7 @@ environment can observe it honestly. `cna-examples` remains deliberately outside
 content73, input40, storage7, media17, gamer services20, net14, devices6, phone2, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are207 console,297 game and215
 standalone; 685 are automated,31 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1125's full719-demo renderer reports. The
+Coverage: generated docs/COVERAGE.md uses Complete1128's full719-demo renderer reports. The
 public-header disposition and residual C-route audits are current through Focused1124. The surface
 totals are308/329 XNA types,2128/2326 XNA
 members,674/753 fields and3082/3205 public C ABI routes. GamerServices field coverage is160/223.
@@ -83,7 +83,7 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`21/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete1125 exercises all3082 credited C routes and all719 catalog IDs in both renderer suites.
+Complete1128 exercises all3082 credited C routes and all719 catalog IDs in both renderer suites.
 The exact
 remaining123 C declarations are fully dispositioned:82 constant type-name routes and21 explicit
 test hooks are intentionally uncredited, while20 production routes remain hardware, service,
@@ -226,8 +226,8 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-Complete **1125-719-demo-final-C-route-checkpoint** is the current full-build and full-runtime
-baseline. It tests cna-demos `63bdb48` against the isolated CNA worktree
+Complete **1128-final-lifecycle-error-path-checkpoint** is the current full-build and full-runtime
+baseline. It tests cna-demos `042fea0` against the isolated CNA worktree
 `/tmp/cna-demos-cna-d23`, exact commit `d23e139de9e5c15511b6be745de290896a69ee37`; do not silently
 reconfigure it to the moving sibling. Every build/test invocation used at most three jobs. The
 build is warning-free, metadata is719/0 and all732 enabled CTests pass; three manual tests
@@ -235,20 +235,15 @@ remain disabled.
 
 SOFTWARE/private-Xvfb reports555 pass/113 expected fail/48 skip/3 manual. OPENGLES3/private-Xvfb reports
 594/115/7/3. The category-partitioned reports contain all719 unique catalog IDs per renderer with
-zero unexpected results. Validator and checkpoint-comparison self-tests pass5/5 and4/4.
+zero unexpected results. All16 tool tests pass.
 
-Immutable evidence is `build/linux-full/reports/checkpoint-1125-complete-*` and
-`checkpoint-1125-parts/*`. OPENGLES3 is semantically identical to Complete1120, including202
-failed assertions. SOFTWARE retains197 failed assertions; its only status delta is
-`c_api.input.keyboard_mouse` SKIPPED->PASSED because this private X11 server exposes a desktop
-pointer. The exact CTest passes too, so this is reviewed environment coverage rather than a source
-regression. No screenshot, listening test, physical input, external service session or new manual
-visual result was claimed.
-
-Focused1127 changes runtime source after Complete1125 by extending
-`c_api.game.host_failure` through all ten callback failure positions. Its focused evidence is
-clean, but it is not a replacement for a full checkpoint; treat Complete1125 as the comparison
-baseline rather than the current-source validation claim until Complete1128 is recorded below.
+Immutable evidence is `build/linux-full/reports/checkpoint-1128-complete-*`,
+`checkpoint-1128-parts/*` and `checkpoint-1128-visual-regression/*`. Exact comparison with
+Complete1125 adds only seven labeled ISSUE-051 assertions per renderer from the expanded existing
+host_failure workflow: SOFTWARE failed assertions197->204 and OPENGLES3202->209. No status,
+known-issue marker or per-demo check count changes. All six reviewed visual references match
+exactly with zero differing pixels. No listening test, physical input, external service session or
+new manual result was claimed.
 
 Focused **939-native-logger-general-and-experiment** extends the stable
 `core.logger.minimum_level` workflow from four to seven controls. It proves that TRACE admits the
@@ -3507,13 +3502,12 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-Establish Complete1128 for the current Focused1127 source under pinned CNA `d23e139de`: warning-free
-`-j3` build, 719/0 metadata, all enabled CTests, complete category-partitioned SOFTWARE and
-OPENGLES3 reports, exact comparison with Complete1125, regenerated coverage and the six-image
-visual-regression suite. The only expected semantic deltas are seven additional labeled ISSUE-051
-failures per renderer within the unchanged known-issue host_failure ID. Then run one final stale-
-summary/residual audit and restore the campaign-complete claim only if no meaningful gap remains.
-Do not reopen intentional residuals to increase percentages and do not involve `cna-examples`.
+The CNA-native campaign has no unfinished task for the pinned source. On any CNA or cna-demos
+source change, first establish a fresh warning-free `-j3` complete checkpoint with writable XDG
+storage and a real private X11 display; compare every status and failed assertion with Complete1128,
+regenerate coverage, and reconcile any public-header/inventory delta before adding demos. Do not
+reopen intentional residuals merely to increase percentages. Do not involve `cna-examples`; that
+is a separate future campaign.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -12721,5 +12715,31 @@ as evidence because the expected-failure CTest policy can mask unrelated early f
 
 This is a deeper semantic/error-path audit of an existing ID, not count inflation and not a new CNA
 issue. No browser scheduling or rendered-pixel claim is made. Evidence:`/tmp/focused-1127/`.
-Complete1125 remains the comparison baseline; run Complete1128 before reclaiming a fully validated
-current-source baseline.
+Complete1125 was the comparison baseline for this focused batch; Complete1128 below supersedes it
+as the fully validated current-source baseline.
+
+## Complete1128-final-lifecycle-error-path-checkpoint
+
+The authoritative source is cna-demos `042fea04f53cc051291b9585782ed71a1a724bda` against the
+isolated CNA worktree at exact commit `d23e139de9e5c15511b6be745de290896a69ee37`. The warning-free
+`-j3` build validates719/0 metadata. All732 enabled CTests pass in351.10s; the three manual tests
+remain disabled. Artifact SHA-256 values are `6440f91a...` for `cna-demos`, `3827917b...` for
+`libcna.so` and `813bf0a2...` for `libcna_c_api.so`.
+
+Both renderer suites use19 top-level-category processes with private X11, dummy audio and writable
+XDG storage. Schema, duplicate, extra and missing-ID checks prove every merged report contains all
+719 catalog IDs exactly once. SOFTWARE is555 pass/113 expected failure/48 skip/3 manual with204
+failed assertions. OPENGLES3 is594/115/7/3 with209. Neither suite has an unexpected failure or
+pass, and neither contains an X11/setup error.
+
+Exact comparison with Complete1125 adds only the seven new labeled ISSUE-051 completion assertions
+per renderer. No demo changes status, known-issue marker or reported check count. The C lifecycle
+matrix's focused65/8 result is therefore reproduced in both complete suites. Generated coverage
+remains308/329 XNA types,2128/2326 members,674/753 fields and3082/3205 C routes. All16 tool tests
+pass. The six reviewed visual references compare exactly on SOFTWARE and OPENGLES3 with zero
+differing pixels. Evidence:`build/linux-full/reports/checkpoint-1128-*`.
+
+The final stale-summary/residual review corrected historical phase wording but found no new public
+behavior gap. The exact923-header and21-type/198-member/79-field/123-route reconciliations remain
+balanced. The CNA-native campaign is complete for this pinned source; future work is maintenance
+or new honestly observable platform/hardware/service evidence.
