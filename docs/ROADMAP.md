@@ -86,10 +86,13 @@ Console demos with checks; each shows one operation family.
   value handle after explicit caller-wrapper disposal. Phase 8 now also
   covers XNB font loading and the complete build-time TrueType `.spritefont` source contract with
   a licensed, reproducible font fixture.
-- ✅ (10 demos) `graphics.texture2d.*`: `SetData`/`GetData` (whole, rectangle, mip level), mipmaps,
+- ✅ (12 demos) `graphics.texture2d.*`: `SetData`/`GetData` (whole, rectangle, mip level), mipmaps,
   `SurfaceFormat` variants, `FromStream`, `SaveAsPng`/`SaveAsJpeg` (including requested output
-  dimensions, transparent-RGB normalization and unchanged source), `LevelCount`. Remaining:
-  float/HDR formats and broader direct compressed-block updates.
+  dimensions, transparent-RGB normalization and unchanged source), `LevelCount`.
+  ✅ `floating_formats` and `normalized_formats` cover every classic uncompressed packed layout,
+  including exact float/half HDR values and actual sampled channel interpretation.
+  ✅ `compressed_blocks` covers direct DXT1/DXT3/DXT5 bytes, guarded block windows, padded 4x4,
+  2x2 and 1x1 mip payloads, decoded alpha sampling and XNA's multiple-of-four dimension rule.
   ✅ `graphics.texture2d.dds_stream`: packed offset/short reads, original DXT1 mip-chain block
   readback, fit/crop Color conversions, malformed-chain refusal and actual pixels (14 checks).
   ✅ `copy_ownership` checks partial shared edits versus full-upload detachment, Name/Tag isolation,
@@ -11989,3 +11992,24 @@ Runtime-backed coverage remains307/329 types,2128/2326 members,674/753 fields an
 routes. Evidence:`build/linux-full/reports/checkpoint-1080-complete-*`. Continue the deeper
 public-member/behavior audit with the highest-value deterministic family not yet semantically
 closed, preserving the three-job build limit.
+
+## Focused1081 Texture2D direct compressed blocks
+
+`graphics.texture2d.compressed_blocks` is the711th catalog ID and closes Phase4's stale direct
+compressed-transfer remainder without splitting DXT variants into count-only demos. An 8x8 DXT1
+texture round-trips four row-ordered blocks, patches one block through guarded source/destination
+windows and preserves the complete base level after an atomic seven-byte refusal. Its 4x4,2x2
+and1x1 mips each retain one padded eight-byte block. Separate DXT3/DXT5 textures round-trip exact
+sixteen-byte alpha/color payloads; programmatic point sampling returns exact DXT1 primaries and
+RGBA(0,255,0,136)/RGBA(0,0,255,64).
+
+Genuine Windows XNA4 under Wine independently confirms the multiple-of-four constructor refusal,
+32-byte base, guarded region, eight-byte small mips, short-write exception and exact DXT3/DXT5
+readback (stdout SHA-256 `e4c1250f4d47c546872d5b80d45514cd0c965bfa47634b9d55be5e2abae4cc08`,
+empty stderr). Both CNA renderers pass9/9 with byte-identical stdout across five repetitions and
+empty stderr. The warning-free three-job build, metadata711/0, exact SOFTWARE CTest, all15 CLI
+CTests and validator/comparator self-tests5/5 plus4/4 pass.
+Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; the new
+behavior is deeper evidence for already credited members. Evidence:
+`/tmp/checkpoint-1081-texture2d-compressed/*`. No screenshot, manual visual inspection or
+physical-GPU claim was made.

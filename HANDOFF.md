@@ -69,12 +69,13 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-710 project-built catalog demos in19 categories: math95, game33, graphics185, audio23, core6,
+711 project-built catalog demos in19 categories: math95, game33, graphics186, audio23, core6,
 content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,296 game and210
-standalone; 674 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1080's full runtime reports and includes all710
-catalog IDs in both renderer suites. It incorporates every focused assertion through the complete
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,297 game and210
+standalone; 675 are automated,33 smoke-only and3 manual. Every declared category has demos.
+Coverage: generated docs/COVERAGE.md uses Complete1080's full710-ID reports plus Focused1081's
+new result and includes all711 catalog IDs in both renderer columns. It incorporates every
+focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
 Curve and Matrix audits in Focused1063-1074 and the root Framework audits in Focused1076-1078,
 including ISSUE-124 through ISSUE-145.
@@ -90,8 +91,8 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete1080 exercises all3079 credited C routes and all710 catalog IDs in both full smoke
-suites.
+Complete1080 exercises all3079 credited C routes and its710 catalog IDs in both full smoke suites;
+Focused1081 executes the new ID separately on both renderers.
 Its lineage includes the completed field, build-time-pipeline and generated XNA member audits
 through Focused1002, including the production StorageDeviceNotConnectedException path.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
@@ -11463,3 +11464,31 @@ Next, select the highest-value deterministic public-member/behavior family not y
 closed in `docs/COVERAGE_AUDIT.md`. Start by reconciling the current CNA headers, existing demo
 controls and explicit dispositions; extend an existing coherent workflow before adding an ID.
 Keep every compile at three jobs or fewer.
+
+## Focused1081-Texture2D-direct-compressed-blocks
+
+The711th catalog ID, `graphics.texture2d.compressed_blocks`, closes the explicit Phase4 direct
+compressed-transfer remainder. It uses one coherent workflow for DXT1/DXT3/DXT5 rather than a
+format-per-demo series. Nine controls cover the 8x8 DXT1 base's four row-ordered blocks, guarded
+4x4 windows, atomic seven-byte refusal, padded 4x4/2x2/1x1 mip blocks, exact DXT3/DXT5 alpha/color
+bytes and actual point-sampled RGB/alpha output. SOFTWARE and OPENGLES3 pass9/9; five repetitions
+per renderer share stdout SHA-256
+`df0c47ab617ae8423c838e7acf28f88d7bec53b7d88c04c266053cf93554eba7` and empty stderr.
+
+Genuine Windows XNA4 under Wine confirms rejection of 10x6 DXT1, the valid 8x8 four-level shape,
+32-byte base, guarded block windows, eight-byte small mips, short-write ArgumentException and exact
+DXT3/DXT5 bytes. Its stdout SHA-256 is
+`e4c1250f4d47c546872d5b80d45514cd0c965bfa47634b9d55be5e2abae4cc08`; stderr is empty. Source
+review confirms CNA's `ValidateTexture2DCreationShapeEXT` already matches the XNA dimension rule,
+so no CNA issue was recorded. The warning-free `-j3` build, metadata711/0, exact SOFTWARE CTest,
+all15 CLI CTests and validator/comparator self-tests5/5 plus4/4 pass.
+
+Generated coverage is711 demos and remains307/329 types,2128/2326 members,674/753 fields and
+3079/3205 C routes. It uses Complete1080's full reports plus the focused new result, so no catalog
+ID is absent; this is not yet a complete711-ID checkpoint. Evidence:
+`/tmp/checkpoint-1081-texture2d-compressed/*`. No screenshot, manual visual inspection or
+physical-GPU claim was made.
+
+Next, commit/push this validated batch, then continue the deeper member/behavior audit from the
+next deterministic family whose existing disposition still names a concrete semantic gap. Keep
+every compile at three jobs or fewer.
