@@ -5686,3 +5686,12 @@ eight controls, including which basis/translation components remain finite and w
 Ten runs per renderer label are byte-stable with empty stderr; build, metadata, exact CTest and
 both self-test suites pass. Coverage totals are unchanged. Evidence:
 `/tmp/checkpoint-1032-matrix-look-at-degenerate/*`.
+
+### Focused1033 Matrix CreateWorld direction boundaries
+
+`math.matrix.create_world` now covers nonunit direction normalization, the output overload, zero
+forward, zero up and parallel forward/up. Genuine Windows XNA 4.0 establishes which direction rows
+become NaN while position and affine constants remain valid; CNA matches all eleven controls. Ten
+runs per renderer label are byte-stable with empty stderr; build, metadata, exact CTest and both
+self-test suites pass. Coverage totals are unchanged. Evidence:
+`/tmp/checkpoint-1033-matrix-create-world-boundaries/*`.

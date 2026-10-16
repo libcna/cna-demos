@@ -10332,3 +10332,17 @@ pass. Ten SOFTWARE and ten OPENGLES3-labelled runs pass8/8 with byte-identical s
 totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1032-matrix-look-at-degenerate/*`. No rendering or visual claim was made and no
 CNA issue was found. Continue with the next deterministic behavior gap outside look-at matrices.
+
+## Focused1033-Matrix-CreateWorld-direction-boundaries
+
+`math.matrix.create_world` grows from six to eleven controls without a new ID. Genuine Windows XNA
+4.0 anchors nonunit direction normalization, value/output parity and all degenerate branches: zero
+forward yields three NaN axes, while zero or parallel up retains normalized Forward and makes the
+lateral axes NaN; position and affine constants remain intact. CNA matches every exact result.
+
+The warning-free three-job build, metadata693/0, exact SOFTWARE CTest and self-tests5/5 plus4/4
+pass. Ten SOFTWARE and ten OPENGLES3-labelled runs pass11/11 with byte-identical stdout SHA-256
+`89138dabf11de2300d9a25bc4ae2a16cbf038bebd885cd425ce547a341724dcb` and empty stderr. Coverage
+totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1033-matrix-create-world-boundaries/*`. No rendering or visual claim was made and
+no CNA issue was found. Continue with the next deterministic behavior gap outside world matrices.

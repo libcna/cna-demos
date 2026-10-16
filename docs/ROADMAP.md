@@ -11314,3 +11314,11 @@ parallel-up and antiparallel-up controls. CNA matches all eight exact finite/NaN
 The warning-free `-j3` build, metadata693/0, exact CTest, ten runs per renderer label and both
 self-test suites pass with stable stdout and empty stderr. Coverage is unchanged. Evidence:
 `/tmp/checkpoint-1032-matrix-look-at-degenerate/*`.
+
+## Focused1033 Matrix CreateWorld direction boundaries
+
+`math.matrix.create_world` adds nonunit normalization, output-overload and zero/parallel direction
+controls established against genuine Windows XNA 4.0. CNA matches all eleven exact finite/NaN
+axis and translation results. The warning-free `-j3` build, metadata693/0, exact CTest, ten runs per
+renderer label and both self-test suites pass with stable stdout and empty stderr. Coverage remains
+unchanged. Evidence:`/tmp/checkpoint-1033-matrix-create-world-boundaries/*`.
