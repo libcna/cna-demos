@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended Quaternion axis-angle construction through scaled and zero axes, zero/NaN angles and
+  output-overload parity, showing that XNA consumes the axis without normalizing it.
 - Extended Quaternion inverse/conjugate through nonunit, zero and extreme finite magnitudes and
   recorded CNA-DEMOS-ISSUE-119 for overflow/underflow outside XNA's finite results.
 - Extended Quaternion normalization through zero and extreme finite magnitudes and recorded

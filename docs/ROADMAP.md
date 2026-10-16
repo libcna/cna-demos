@@ -11359,3 +11359,11 @@ loses both extreme finite reciprocal results, retained as CNA-DEMOS-ISSUE-119. T
 `-j3` build, metadata693/0, exact known-issue CTest, ten runs per renderer label and both self-test
 suites pass with stable stdout and empty stderr. Coverage remains unchanged. Evidence:
 `/tmp/checkpoint-1037-quaternion-inverse-boundaries/*`.
+
+## Focused1038 Quaternion axis-angle boundaries
+
+`math.quaternion.from_axis_angle` adds XNA-referenced scaled/zero axes, zero/NaN angles and the
+output overload. CNA matches all eleven exact component, magnitude and NaN results, including the
+fact that the API does not normalize its axis. The warning-free `-j3` build, metadata693/0, exact
+CTest, ten runs per renderer label and both self-test suites pass with stable stdout and empty
+stderr. Coverage remains unchanged. Evidence:`/tmp/checkpoint-1038-quaternion-axis-angle-boundaries/*`.

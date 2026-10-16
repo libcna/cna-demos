@@ -5733,3 +5733,12 @@ results finite; CNA returns zero or infinity/NaNs, retained as CNA-DEMOS-ISSUE-1
 renderer label reproduce exactly two failures with stable stdout and empty stderr; build, metadata,
 exact known-issue CTest and both self-test suites pass. Coverage totals are unchanged. Evidence:
 `/tmp/checkpoint-1037-quaternion-inverse-boundaries/*`.
+
+### Focused1038 Quaternion axis-angle boundaries
+
+`math.quaternion.from_axis_angle` now covers scaled and zero axes, zero and NaN angles and the
+output overload. Genuine Windows XNA 4.0 establishes that the axis is not normalized and supplies
+the exact component/magnitude classifications; CNA matches all eleven controls. Ten runs per
+renderer label are byte-stable with empty stderr; build, metadata, exact CTest and both self-test
+suites pass. Coverage totals are unchanged. Evidence:
+`/tmp/checkpoint-1038-quaternion-axis-angle-boundaries/*`.

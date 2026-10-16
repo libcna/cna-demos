@@ -10412,3 +10412,17 @@ The warning-free three-job build, metadata693/0, exact known-issue SOFTWARE CTes
 `1f0b0b34596445f20e45e8fcbc02bc5a57c99614e64837913559b53f124feca2` and empty stderr. Coverage
 totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1037-quaternion-inverse-boundaries/*`. Continue with the next deterministic gap.
+
+## Focused1038-Quaternion-axis-angle-boundaries
+
+`math.quaternion.from_axis_angle` grows from five to eleven controls without a new ID. Genuine
+Windows XNA 4.0 proves the axis is consumed verbatim: doubling Up doubles only the sine-weighted Y
+and produces a nonunit value, zero axis retains cosine W, zero angle is Identity regardless of axis
+magnitude, NaN angle reaches all components, and the output overload matches. CNA matches exactly.
+
+The warning-free three-job build, metadata693/0, exact SOFTWARE CTest and self-tests5/5 plus4/4
+pass. Ten SOFTWARE and ten OPENGLES3-labelled runs pass11/11 with byte-identical stdout SHA-256
+`bc15382d70291b76be58310e458473ec6eec8794778f90b430cd8442d241b39e` and empty stderr. Coverage
+totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1038-quaternion-axis-angle-boundaries/*`. No rendering or visual claim was made
+and no CNA issue was found. Continue with the next deterministic behavior gap outside axis-angle.
