@@ -11282,3 +11282,11 @@ XNA 4.0 preserves finite `M22=8` and `M42=-8` for the singular affine case; CNA 
 infinities, retained as CNA-DEMOS-ISSUE-116. The warning-free `-j3` build, metadata693/0, exact
 known-issue CTest, ten runs per renderer label and both self-test suites pass. Output is stable,
 stderr empty and coverage unchanged. Evidence:`/tmp/checkpoint-1028-matrix-invert-xna/*`.
+
+## Focused1029 Matrix billboard fallbacks
+
+`math.matrix.billboard` adds exact coincident-position, optional cameraForward, by-reference and
+constrained parallel-axis/objectForward controls established against genuine Windows XNA 4.0.
+CNA matches all nine checks. The warning-free `-j3` build, metadata693/0, exact CTest, ten runs per
+renderer label and both self-test suites pass with byte-identical stdout and empty stderr. Coverage
+is unchanged. Evidence:`/tmp/checkpoint-1029-matrix-billboard-fallbacks/*`.

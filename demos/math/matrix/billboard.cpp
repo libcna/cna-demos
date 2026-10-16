@@ -29,14 +29,56 @@ namespace
         ctx.Print("constrained Up     = {}", tree.getUpProperty().ToString());
         ctx.CheckNear(Vector3::Distance(tree.getUpProperty(), Vector3::Up), 0.0, 1e-5, "it stays upright");
         ctx.CheckNear(tree.getBackwardProperty().Y, 0.0, 1e-5, "it only turns in the horizontal plane");
+
+        // When camera and object coincide, XNA cannot derive a viewing direction from positions.
+        // It uses Forward by default or the negated optional camera-forward direction.
+        const Vector3 coincident(2.0f, 3.0f, 4.0f);
+        const Matrix defaultFacing = Matrix::CreateBillboard(
+            coincident, coincident, Vector3::Up, std::nullopt);
+        ctx.Check(defaultFacing.getRightProperty() == Vector3::Left &&
+                      defaultFacing.getUpProperty() == Vector3::Up &&
+                      defaultFacing.getBackwardProperty() == Vector3::Forward &&
+                      defaultFacing.getTranslationProperty() == coincident,
+                  "a coincident camera uses XNA's default Forward fallback");
+
+        const Matrix cameraFacing = Matrix::CreateBillboard(
+            coincident, coincident, Vector3::Up, Vector3::Right);
+        ctx.Check(cameraFacing.getRightProperty() == Vector3::Backward &&
+                      cameraFacing.getUpProperty() == Vector3::Up &&
+                      cameraFacing.getBackwardProperty() == Vector3::Left,
+                  "an explicit camera-forward vector controls coincident fallback orientation");
+
+        Matrix byReference;
+        Matrix::CreateBillboard(coincident, coincident, Vector3::Up, std::nullopt, byReference);
+        ctx.Check(byReference == defaultFacing,
+                  "the by-reference billboard overload preserves the coincident fallback");
+
+        // A constrained billboard looking exactly along its rotation axis instead falls back to
+        // objectForward. A missing or still-parallel object direction selects Forward.
+        const Matrix parallelDefault = Matrix::CreateConstrainedBillboard(
+            Vector3::Zero, Vector3(0.0f, 5.0f, 0.0f), Vector3::Up, std::nullopt, std::nullopt);
+        const Matrix parallelObjectUp = Matrix::CreateConstrainedBillboard(
+            Vector3::Zero, Vector3(0.0f, 5.0f, 0.0f), Vector3::Up, std::nullopt, Vector3::Up);
+        ctx.Check(parallelDefault.getRightProperty() == Vector3::Left &&
+                      parallelDefault.getUpProperty() == Vector3::Up &&
+                      parallelDefault.getBackwardProperty() == Vector3::Forward &&
+                      parallelObjectUp == parallelDefault,
+                  "parallel constrained views use Forward when objectForward is absent or parallel");
+
+        const Matrix parallelObjectRight = Matrix::CreateConstrainedBillboard(
+            Vector3::Zero, Vector3(0.0f, 5.0f, 0.0f), Vector3::Up, std::nullopt, Vector3::Right);
+        ctx.Check(parallelObjectRight.getRightProperty() == Vector3::Forward &&
+                      parallelObjectRight.getUpProperty() == Vector3::Up &&
+                      parallelObjectRight.getBackwardProperty() == Vector3::Right,
+                  "a usable objectForward vector controls the parallel constrained fallback");
     }
 }
 
 CNA_DEMOS_CONSOLE(MatrixBillboard, {
     .id = "math.matrix.billboard",
     .title = "Billboard matrices",
-    .description = "Turns an object towards the camera with Matrix::CreateBillboard, and about the up axis only "
-                   "with Matrix::CreateConstrainedBillboard.",
+    .description = "Turns an object towards the camera with Matrix::CreateBillboard, constrains rotation to one "
+                   "axis and demonstrates XNA's coincident and parallel-direction fallbacks.",
     .apis = {"Matrix::CreateBillboard", "Matrix::CreateConstrainedBillboard"},
     .tags = {"matrix", "billboard", "particles"},
 })

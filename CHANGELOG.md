@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended Matrix billboard coverage through coincident camera/object positions, explicit camera
+  forward fallback, constrained-axis parallelism and object-forward fallback selection.
 - Extended Matrix inversion through zero, singular affine and tiny nonzero scales, and recorded
   CNA-DEMOS-ISSUE-116 for singular components that differ from genuine Windows XNA 4.0.
 - Extended Matrix decomposition through axis quarter turns, reflected recomposition and zero-scale

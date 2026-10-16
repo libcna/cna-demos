@@ -5650,3 +5650,12 @@ components differ from CNA's signed infinities, retained as CNA-DEMOS-ISSUE-116.
 renderer label are byte-stable with empty stderr; the exact known-issue CTest, metadata693/0 and
 both self-test suites pass. Coverage totals remain unchanged. Evidence:
 `/tmp/checkpoint-1028-matrix-invert-xna/*`.
+
+### Focused1029 Matrix billboard fallbacks
+
+`math.matrix.billboard` now covers coincident camera/object positions with default and explicit
+cameraForward, the output overload, and constrained billboards whose view direction is parallel to
+the rotation axis with absent, parallel and usable objectForward values. Genuine Windows XNA 4.0
+anchors each exact basis. CNA passes all nine checks in ten runs per renderer label with stable
+stdout and empty stderr; build, metadata, exact CTest and both self-test suites pass. Coverage
+totals are unchanged. Evidence:`/tmp/checkpoint-1029-matrix-billboard-fallbacks/*`.

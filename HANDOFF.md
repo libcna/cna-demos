@@ -10273,3 +10273,18 @@ The warning-free three-job build, metadata693/0, exact known-issue SOFTWARE CTes
 `6195054ce0dd7585e77a62f81bb9b87b26a6f2ac7f4599fe21d8066e4ec55b89` and empty stderr. Coverage
 totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1028-matrix-invert-xna/*`. Continue with the next deterministic behavior gap.
+
+## Focused1029-Matrix-billboard-fallbacks
+
+`math.matrix.billboard` grows from four to nine controls without a new ID. Genuine Windows XNA 4.0
+reference output anchors the otherwise easy-to-miss degenerate branches: coincident object/camera
+positions select default Forward or the negated explicit cameraForward, the by-reference overload
+agrees, and a view parallel to the constrained axis selects usable objectForward or the Forward
+fallback when it is absent or parallel too. CNA matches every exact basis/translation result.
+
+The warning-free three-job build, metadata693/0, exact SOFTWARE CTest and self-tests5/5 plus4/4
+pass. Ten SOFTWARE and ten OPENGLES3-labelled runs pass9/9 with byte-identical stdout SHA-256
+`ae7f77887c5a6b17e508c20009e1c625c17aaa375b1956fd18bf849eaa6b2ca1` and empty stderr. Coverage
+totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1029-matrix-billboard-fallbacks/*`. No rendering or visual claim was made and no
+CNA issue was found. Continue with the next deterministic behavior gap outside billboard fallback.
