@@ -528,6 +528,7 @@ a check that all authored colors remain visible and that a blank texture row can
   points and nonterminal `Stop(false)` release; ISSUE-114 drops the authored tail),
   ✅ `audio.sound_effect.from_stream` (loose WAV; ISSUE-029).
 - ✅ `audio.sound_effect_instance.*`: playback state, looping, volume/pitch/pan, Apply3D
+  and dynamic integer/float buffer format transitions, including both live-playing refusals
   (smoke-only: hearing is the check).
   ✅ `audio.sound_effect_instance.lifetime`: temporary-wrapper data retention, moving a playing
   voice, explicit idempotent disposal, rejected replay and parent disposal of moved/idle children.
@@ -11120,3 +11121,13 @@ all post-loop frames. Ten runs per renderer label reproduce exactly this failure
 the exact SOFTWARE expected-failure CTest, metadata693/0 and warning-free three-job build pass. The
 first invalid-range failure was a corrected fixture boundary after lengthening the sound, not a CNA
 defect. No listening or audible-quality claim is made. Continue the deterministic behavior audit.
+
+## Focused1018-DynamicSoundEffect-live-format-refusals
+
+The existing buffer-format demo adds the two missing live-playing guards with independent
+two-second stereo queues. Integer-to-float and float-to-integer submissions each throw
+InvalidOperationException while preserving Playing and the pending count. Ten runs per renderer
+label pass25/25 with identical stdout and empty stderr; the exact SOFTWARE CTest, metadata693/0 and
+warning-free three-job build pass. Partial stereo float-frame output remains intentionally
+unclaimed because no public output-sample observation exists and the input contract accepts it.
+Continue the deterministic behavior audit.

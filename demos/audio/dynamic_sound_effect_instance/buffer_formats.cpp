@@ -132,6 +132,38 @@ namespace
         ctx.Check(voice.getStateProperty() == SoundState::Playing,
                   "the same instance plays integer PCM again after the stopped format transition");
         voice.Stop();
+
+        // Use long independent buffers so the real playing-state guard is observed without a
+        // race against the short format-transition fixtures reaching their natural end.
+        constexpr int liveFrames = sampleRate * 2;
+        const std::vector<SharpRuntime::bytecs> livePcm(liveFrames * 2 * 2, 0);
+        const std::vector<float> liveFloats(liveFrames * 2, 0.0f);
+        {
+            DynamicSoundEffectInstance liveInteger(sampleRate, AudioChannels::Stereo);
+            liveInteger.SubmitBuffer(livePcm);
+            liveInteger.Play();
+            const int pending = liveInteger.getPendingBufferCountProperty();
+            refused = false;
+            try { liveInteger.SubmitFloatBufferEXT(liveFloats); }
+            catch (const System::InvalidOperationException&) { refused = true; }
+            ctx.Check(refused && liveInteger.getStateProperty() == SoundState::Playing &&
+                          liveInteger.getPendingBufferCountProperty() == pending,
+                      "a playing integer stream refuses float data without changing its queue");
+            liveInteger.Stop();
+        }
+        {
+            DynamicSoundEffectInstance liveFloat(sampleRate, AudioChannels::Stereo);
+            liveFloat.SubmitFloatBufferEXT(liveFloats);
+            liveFloat.Play();
+            const int pending = liveFloat.getPendingBufferCountProperty();
+            refused = false;
+            try { liveFloat.SubmitBuffer(livePcm); }
+            catch (const System::InvalidOperationException&) { refused = true; }
+            ctx.Check(refused && liveFloat.getStateProperty() == SoundState::Playing &&
+                          liveFloat.getPendingBufferCountProperty() == pending,
+                      "a playing float stream refuses integer data without changing its queue");
+            liveFloat.Stop();
+        }
         ctx.Print("Buffer units and stream state checked; silent fixtures do not measure output samples or audio quality.");
     }
 }
@@ -140,7 +172,7 @@ CNA_DEMOS_CONSOLE(BufferFormats, {
     .id = "audio.dynamic_sound_effect_instance.buffer_formats",
     .title = "Stereo buffers and stopped format transitions",
     .description = "Submits stereo PCM byte ranges and float sample ranges, rejects partial integer frames and out-of-bounds float ranges, "
-                   "clears and refills a paused queue, and demonstrates stopping before changing its sample format.",
+                   "refuses live format changes, clears and refills a paused queue, and demonstrates stopping before changing format.",
     .apis = {"DynamicSoundEffectInstance::DynamicSoundEffectInstance", "DynamicSoundEffectInstance::SubmitBuffer",
              "Microsoft::Xna::Framework::Audio::DynamicSoundEffectInstance::SubmitFloatBufferEXT",
              "Microsoft::Xna::Framework::Audio::DynamicSoundEffectInstance::ClearBuffers",
@@ -152,7 +184,7 @@ CNA_DEMOS_CONSOLE(BufferFormats, {
     .tags = {"audio", "streaming", "stereo", "pcm", "cnaext"},
     .needs = CnaDemos::Need::Audio,
     .restrictions = "Silent stereo fixtures establish accepted ranges, refusal preservation and playback states. "
-                    "No sample readback, audible quality, live-playing format-switch refusal, partial-float-frame output behavior "
+                    "No sample readback, audible quality, partial-float-frame output behavior "
                     "or concurrent producer behavior is inferred. Pending counts combine staged and submitted buffers; "
                     "unchanged counts do not independently prove native transfer.",
 })

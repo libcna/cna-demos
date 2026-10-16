@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added both live-playing DynamicSoundEffectInstance format-switch refusals with long queued
+  integer/float streams and preserved pending-buffer state.
 - Extended the authored SoundEffect loop workflow through `Stop(false)` at a nonterminal region
   and recorded CNA-DEMOS-ISSUE-114 for dropping the remaining buffer tail.
 - Proved that SpriteFont keeps an independent live Texture2D value handle after explicit disposal

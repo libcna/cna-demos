@@ -3525,8 +3525,9 @@ Resume the deeper semantic behavior audit: reconcile explicit residual gaps in
 `docs/COVERAGE_AUDIT.md` against pinned CNA d23e139de and prioritize reachable deterministic behavior
 that strengthens an existing coherent demo. Focused1015 closes the explicit SkinnedEffect
 clone/raw-texture/disposal ownership gap, Focused1016 closes SpriteFont's caller-atlas disposal
-boundary and Focused1017 closes the nonterminal SoundEffect release audit while recording
-ISSUE-114. Choose the next gap outside those completed slices. Revisit the126 intentionally
+boundary, Focused1017 closes the nonterminal SoundEffect release audit while recording ISSUE-114,
+and Focused1018 closes both live dynamic-audio format-switch refusals. Choose the next gap outside
+those completed slices. Revisit the126 intentionally
 uncredited C routes only if public headers or reachable environment capabilities change. Do not add
 metadata merely to raise a count.
 Focused957 closes the strict public build-configuration parser;
@@ -10073,3 +10074,20 @@ remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. 
 `/tmp/checkpoint-1017-loop-tail-*`; source-audit SHA-256
 `555186469793313cdce5f5c501a3058e516227b4a09a43fc7cd66cf70da97232`. No listening or audible-
 quality claim was made. Continue with the next deterministic behavior gap.
+
+## Focused1018-DynamicSoundEffect-live-format-refusals
+
+`audio.dynamic_sound_effect_instance.buffer_formats` now closes the explicit live-playing format
+gap in both directions. Independent two-second stereo queues keep each voice observably Playing:
+an integer stream refuses float samples and a float stream refuses integer bytes, preserving both
+state and pending-buffer count. The original stopped transitions, paused refusals, bounds, clear/
+refill and duration controls remain unchanged. Partial stereo float-frame output remains a distinct
+unobservable output question; the public contract and pinned CNA tests deliberately accept such a
+sample count, so no refusal is invented.
+
+The warning-free `-j3` build, metadata693/0 and exact SOFTWARE CTest pass. Ten SOFTWARE and ten
+OPENGLES3-labelled dummy-audio runs pass25/25 with byte-identical stdout SHA-256
+`ff1d67cbc24e68c856001bae8ce22af345b6f54fdaaba8d35a255ab473edeb96` and empty stderr. Counts
+remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1018-dynamic-live-format/*`. No listening, output-sample or audible-quality claim
+was made, and no CNA issue was found. Continue with the next deterministic behavior gap.
