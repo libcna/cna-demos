@@ -10596,3 +10596,20 @@ remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; reg
 Complete1045 inputs is byte-identical. Evidence:`/tmp/checkpoint-1047-vector2-signed-zero-hash/*`.
 No renderer or visual claim was made. Continue Vector2 interpolation/extrapolation and then
 matrix/quaternion transform-array boundaries.
+
+## Focused1048-Vector2-interpolation-boundaries
+
+`math.vector2.toolbox_2d` grows from fourteen to twenty controls without a new ID. Genuine Windows
+XNA 4.0 establishes that Lerp, Barycentric, CatmullRom and Hermite extrapolate for negative and
+above-one amounts, whereas SmoothStep clamps to its endpoints. Lerp and SmoothStep propagate NaN
+to both components, and meaningful output overloads match the value forms. CNA matches all six new
+controls; the only failure remains the prior ISSUE-120 signed-zero hash assertion.
+
+The clean three-job build, metadata694/0, exact known-issue SOFTWARE CTest and self-tests5/5 plus4/4
+pass. Ten SOFTWARE and ten OPENGLES3-labelled runs retain one expected failure among20 controls,
+with byte-identical stdout SHA-256
+`e30724d862cadd59f977f583f201486c878647cdf50ebb428d9f151deff77bb2` and empty stderr. Coverage
+remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; regenerating it against
+Complete1045 inputs is byte-identical. Evidence:`/tmp/checkpoint-1048-vector2-interpolation/*`.
+No renderer or visual claim was made. Continue with Vector2 matrix/quaternion transform output,
+array, overlap and refusal boundaries.

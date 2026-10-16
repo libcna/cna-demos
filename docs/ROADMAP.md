@@ -11467,3 +11467,14 @@ byte-identical stdout and empty stderr; the clean `-j3` build, metadata694/0, ex
 CTest and both self-test suites pass. Coverage totals remain unchanged and the Complete1045-backed
 report is byte-identical. Evidence:`/tmp/checkpoint-1047-vector2-signed-zero-hash/*`. Continue with
 Vector2 interpolation/extrapolation and transform-array boundaries.
+
+## Focused1048 Vector2 interpolation boundaries
+
+`math.vector2.toolbox_2d` grows14->20 controls. Genuine Windows XNA 4.0 establishes that Lerp,
+Barycentric, CatmullRom and Hermite extrapolate outside `[0,1]`, SmoothStep clamps to its endpoints,
+and Lerp/SmoothStep propagate NaN to both components. Meaningful output overloads agree and CNA
+matches all six additions, leaving only the prior ISSUE-120 failure. Ten runs per renderer label
+are byte-stable with empty stderr; the clean `-j3` build, metadata694/0, exact known-issue CTest and
+both self-test suites pass. Coverage totals remain unchanged and the Complete1045-backed report is
+byte-identical. Evidence:`/tmp/checkpoint-1048-vector2-interpolation/*`. Continue with Vector2
+matrix/quaternion transform output, array, overlap and refusal boundaries.

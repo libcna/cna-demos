@@ -46,6 +46,24 @@ namespace
         ctx.Print("10% of the way: Lerp {}, SmoothStep {}", linear.ToString(), eased.ToString());
         ctx.Check(eased.X < linear.X, "SmoothStep has moved less than Lerp at 10 %");
 
+        const Vector2 interpolationA(2.0f, -4.0f), interpolationB(10.0f, 8.0f);
+        Vector2 interpolationOutput;
+        Vector2::Lerp(interpolationA, interpolationB, 1.5f, interpolationOutput);
+        ctx.Check(Vector2::Lerp(interpolationA, interpolationB, -0.5f) == Vector2(-2.0f, -10.0f) &&
+                      Vector2::Lerp(interpolationA, interpolationB, 1.5f) == Vector2(14.0f, 14.0f) &&
+                      interpolationOutput == Vector2(14.0f, 14.0f),
+                  "Lerp extrapolates below zero and above one, including its output form");
+        Vector2::SmoothStep(interpolationA, interpolationB, -0.5f, interpolationOutput);
+        ctx.Check(Vector2::SmoothStep(interpolationA, interpolationB, -0.5f) == interpolationA &&
+                      Vector2::SmoothStep(interpolationA, interpolationB, 1.5f) == interpolationB &&
+                      interpolationOutput == interpolationA,
+                  "SmoothStep clamps amounts outside zero to one, including its output form");
+        const Vector2 nanLerp = Vector2::Lerp(interpolationA, interpolationB, NAN);
+        const Vector2 nanSmooth = Vector2::SmoothStep(interpolationA, interpolationB, NAN);
+        ctx.Check(std::isnan(nanLerp.X) && std::isnan(nanLerp.Y) &&
+                      std::isnan(nanSmooth.X) && std::isnan(nanSmooth.Y),
+                  "Lerp and SmoothStep propagate a NaN amount to both components");
+
         // A path through waypoints: CatmullRom passes through the middle two points.
         const Vector2 p0(0.0f, 0.0f), p1(100.0f, 0.0f), p2(200.0f, 100.0f), p3(300.0f, 100.0f);
         ctx.Check(Near(Vector2::CatmullRom(p0, p1, p2, p3, 0.0f), p1) && Near(Vector2::CatmullRom(p0, p1, p2, p3, 1.0f), p2),
@@ -59,6 +77,36 @@ namespace
         const Vector2 a(0.0f, 0.0f), b(100.0f, 0.0f), c(0.0f, 100.0f);
         const Vector2 inside = Vector2::Barycentric(a, b, c, 0.25f, 0.25f);
         ctx.Check(Near(inside, Vector2(25.0f, 25.0f)), "Barycentric(a, b, c, 0.25, 0.25) = (25, 25), inside the triangle");
+
+        const Vector2 interpolationC(-6.0f, 12.0f), interpolationD(14.0f, -20.0f);
+        const Vector2 barycentricOutside =
+            Vector2::Barycentric(interpolationA, interpolationB, interpolationC, -0.5f, 1.5f);
+        Vector2::Barycentric(interpolationA, interpolationB, interpolationC, -0.5f, 1.5f,
+                             interpolationOutput);
+        ctx.Check(barycentricOutside == Vector2(-14.0f, 14.0f) &&
+                      interpolationOutput == barycentricOutside,
+                  "Barycentric accepts weights outside the triangle and its output form agrees");
+
+        const Vector2 catmullBefore =
+            Vector2::CatmullRom(interpolationA, interpolationB, interpolationC, interpolationD, -0.5f);
+        const Vector2 catmullAfter =
+            Vector2::CatmullRom(interpolationA, interpolationB, interpolationC, interpolationD, 1.5f);
+        Vector2::CatmullRom(interpolationA, interpolationB, interpolationC, interpolationD, 1.5f,
+                            interpolationOutput);
+        ctx.Check(catmullBefore == Vector2(-2.25f, 8.25f) &&
+                      catmullAfter == Vector2(10.75f, -4.75f) && interpolationOutput == catmullAfter,
+                  "CatmullRom extrapolates before and after its middle segment");
+
+        const Vector2 tangentA(3.0f, -5.0f), tangentB(-7.0f, 11.0f);
+        const Vector2 hermiteBefore =
+            Vector2::Hermite(interpolationA, tangentA, interpolationB, tangentB, -0.5f);
+        const Vector2 hermiteAfter =
+            Vector2::Hermite(interpolationA, tangentA, interpolationB, tangentB, 1.5f);
+        Vector2::Hermite(interpolationA, tangentA, interpolationB, tangentB, 1.5f,
+                         interpolationOutput);
+        ctx.Check(hermiteBefore == Vector2(9.25f, 9.5f) &&
+                      hermiteAfter == Vector2(-4.75f, 6.5f) && interpolationOutput == hermiteAfter,
+                  "Hermite extrapolates with its endpoint tangents and its output form agrees");
 
         // The bounding box of some points: Min and Max per component.
         const Vector2 points[] = {Vector2(30.0f, 70.0f), Vector2(-10.0f, 20.0f), Vector2(50.0f, -5.0f)};
@@ -102,9 +150,8 @@ namespace
 CNA_DEMOS_CONSOLE(Toolbox2D, {
     .id = "math.vector2.toolbox_2d",
     .title = "Vector2 helpers for 2D games",
-    .description = "Vector2's static helpers on 2D game tasks: Reflect a bouncing ball, Clamp a sprite on screen, "
-                   "Distance/DistanceSquared range checks, Dot for in front or behind, Lerp vs SmoothStep easing, "
-                   "CatmullRom and Hermite paths, a Barycentric hit test and a Min/Max bounding box.",
+    .description = "Vector2's static helpers on 2D game tasks, including interpolation versus extrapolation, "
+                   "reflection, bounds, distance, paths, arithmetic and value identity.",
     .apis = {"Vector2::Reflect", "Vector2::Clamp", "Vector2::Distance", "Vector2::DistanceSquared", "Vector2::Dot",
              "Vector2::Normalize", "Vector2::Negate", "Vector2::Subtract", "Vector2::Lerp", "Vector2::SmoothStep",
              "Vector2::CatmullRom", "Vector2::Hermite", "Vector2::Barycentric", "Vector2::Min", "Vector2::Max",

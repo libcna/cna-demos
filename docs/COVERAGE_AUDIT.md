@@ -151,7 +151,7 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 | Constructors, constants and components | `length` covers the zero default, two-component and replicated-scalar constructors plus Zero, One, UnitX and UnitY with direct X/Y observation. |
 | Length, LengthSquared, Distance, DistanceSquared and Normalize | Focused1046 extends `length` from5 to18 controls. Ordinary and zero member/static/output normalization matches XNA. Genuine Windows XNA keeps `1e20` and `1e-30` Length/Distance values finite and normalizes both to UnitX even when the squared result is infinity or zero. CNA's direct float squared sums lose all six observable results, extending ISSUE-118. Evidence:`/tmp/checkpoint-1046-vector2-magnitude-range/*`. |
 | Arithmetic, Reflect, Clamp and equality/hash | `toolbox_2d` demonstrates named/operator component arithmetic, an ordinary unit-normal reflection, component bounds and typed/boxed/operator equality with equal ordinary hashes. Focused1047 proves signed-zero values compare equal in every form but CNA's raw-bit hash differs from XNA under ISSUE-120. Output arithmetic forwards are component assignments and do not independently justify checks. Evidence:`/tmp/checkpoint-1047-vector2-signed-zero-hash/*`. |
-| Lerp, SmoothStep, Barycentric, CatmullRom and Hermite | `toolbox_2d` shows ordinary in-range gameplay uses, including spline endpoints. Amounts outside `[0,1]`, SmoothStep clamping and NaN propagation remain to be dispositioned against XNA. |
+| Lerp, SmoothStep, Barycentric, CatmullRom and Hermite | `toolbox_2d` shows ordinary in-range gameplay uses and spline endpoints. Focused1048 adds genuine-XNA negative and above-one amounts: Lerp and all three geometric forms extrapolate, SmoothStep clamps to its endpoints, and both Lerp/SmoothStep propagate NaN to both components. Meaningful output overloads agree. CNA matches all six new controls. Evidence:`/tmp/checkpoint-1048-vector2-interpolation/*`. |
 | Matrix/quaternion Transform, TransformNormal and arrays | `transform` distinguishes translated points from normals for one matrix value. Quaternion rotation, output forms, bounded arrays, overlap and refusal semantics remain to be audited; do not infer them from the C ABI Vector2 workflow. |
 
 ### BoundingBox, BoundingSphere and Ray value identity
@@ -5848,3 +5848,14 @@ only this one expected failure with byte-identical stdout and empty stderr. The 
 build, metadata694/0, exact known-issue CTest and self-tests5/5 plus4/4 pass. Generated coverage is
 unchanged and byte-identical against Complete1045 inputs. Evidence:
 `/tmp/checkpoint-1047-vector2-signed-zero-hash/*`. No renderer or visual claim was made.
+
+### Focused1048 Vector2 interpolation boundaries
+
+`math.vector2.toolbox_2d` grows14->20 controls without a new ID. Genuine Windows XNA 4.0 anchors
+negative and above-one amounts: Lerp, Barycentric, CatmullRom and Hermite extrapolate, while
+SmoothStep clamps to its endpoints. Lerp and SmoothStep propagate a NaN amount to both components;
+meaningful output forms match the value forms. CNA matches all six additions, so the demo retains
+only its prior ISSUE-120 hash failure. Ten runs per renderer label are byte-stable with empty
+stderr; the clean `-j3` build, metadata694/0, exact known-issue CTest and self-tests5/5 plus4/4
+pass. Generated coverage remains unchanged and byte-identical against Complete1045 inputs.
+Evidence:`/tmp/checkpoint-1048-vector2-interpolation/*`. No renderer or visual claim was made.
