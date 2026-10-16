@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the three-header Storage public audit with full synchronous selector/container result
+  state, the fourth selector overload, real disconnected-exception serialization and canonical
+  container identity; recorded CNA-DEMOS-ISSUE-151 for all post-dispose operations remaining usable
+  and ISSUE-152 for ignored FileShare policy.
 - Completed the 24-header public `CNA::Input` audit by extending stable device, joystick, modifier,
   haptic and text-input workflows with record ownership/equality, disconnected-device contracts,
   every closed haptic operation, flag algebra, typed text-input activation and explicit sensor-type

@@ -28,7 +28,7 @@ Generated 2026-10-16 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | net | 14 | 14 | 0 | 0 | 12 / 0 / 2 / 0 / 0 | 12 / 0 / 2 / 0 / 0 |
 | phone | 1 | 1 | 0 | 0 | 1 / 0 / 0 / 0 / 0 | 1 / 0 / 0 / 0 / 0 |
 | platform | 3 | 3 | 0 | 0 | 1 / 2 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
-| storage | 7 | 7 | 0 | 0 | 7 / 0 / 0 / 0 / 0 | 7 / 0 / 0 / 0 / 0 |
+| storage | 7 | 7 | 0 | 0 | 5 / 0 / 2 / 0 / 0 | 5 / 0 / 2 / 0 / 0 |
 
 "Not run" is an explicit report result (for example a manual demo excluded from smoke); "absent" means the supplied report has no result for that catalog ID. An older report cannot validate newly added demos.
 
@@ -1513,6 +1513,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `FileDropEventArgsEXT::FileDropEventArgsEXT` -- game.window.file_drop
 - `FileDropEventArgsEXT::Files` -- game.window.file_drop
 - `FileMode` -- storage.storage_container.file_modes
+- `FileShare` -- storage.storage_container.file_modes
 - `Game::GetPlatformCapabilitiesEXT` -- core.platform.capability_matrix
 - `Game::GetPlatformEXT` -- core.platform.capability_matrix
 - `Game::RunFrameEXT` -- game.lifecycle.host_driven_loop
@@ -1975,8 +1976,10 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `SpriteFont::getGlyphBoundsEXT` -- graphics.sprite_font.glyph_constructor
 - `SpriteFont::getKerningEXT` -- graphics.sprite_font.glyph_constructor
 - `SpriteFont::getTextureEXT` -- graphics.sprite_font.glyph_constructor
+- `StorageContainer::GetTypeName` -- storage.storage_container.lifetime
 - `StorageDevice::GetStorageRootEXT` -- storage.storage_device.storage_root
 - `StorageDevice::SetAppNameEXT` -- storage.storage_device.show_selector, storage.storage_device.storage_root
+- `StorageDeviceNotConnectedException::GetObjectData` -- storage.storage_device.show_selector
 - `TextDropEventArgsEXT::Text` -- game.window.file_drop
 - `TextDropEventArgsEXT::TextDropEventArgsEXT` -- game.window.file_drop
 - `TextInputEXT::INTERNAL_OnTextInput` -- gamer_services.guide.keyboard_input

@@ -10,6 +10,7 @@
 #include "System/IO/FileAccess.hpp"
 #include "System/IO/FileMode.hpp"
 #include "System/IO/FileNotFoundException.hpp"
+#include "System/IO/FileShare.hpp"
 #include "System/IO/IOException.hpp"
 #include "System/IO/Stream.hpp"
 #include "System/IO/StreamReader.hpp"
@@ -18,6 +19,7 @@
 using namespace Microsoft::Xna::Framework::Storage;
 using System::IO::FileAccess;
 using System::IO::FileMode;
+using System::IO::FileShare;
 
 namespace
 {
@@ -77,10 +79,34 @@ namespace
             Append(*container, "missing.txt", FileMode::OpenOrCreate, "made");
             ctx.Check(container->FileExists("missing.txt"), "OpenOrCreate creates it");
 
-            const std::unique_ptr<System::IO::Stream> readOnly =
-                container->OpenFile("log.txt", FileMode::Open, FileAccess::Read);
-            ctx.Check(readOnly->getCanReadProperty() && !readOnly->getCanWriteProperty(),
-                      "FileAccess::Read gives a stream that can read but not write");
+            {
+                const std::unique_ptr<System::IO::Stream> readOnly =
+                    container->OpenFile("log.txt", FileMode::Open, FileAccess::Read);
+                ctx.Check(readOnly->getCanReadProperty() && !readOnly->getCanWriteProperty(),
+                          "FileAccess::Read gives a stream that can read but not write");
+            }
+
+            std::unique_ptr<System::IO::Stream> exclusive =
+                container->OpenFile("log.txt", FileMode::Open, FileAccess::Read, FileShare::None);
+            bool exclusiveRefusedSecondOpen = false;
+            try
+            {
+                (void)container->OpenFile("log.txt", FileMode::Open, FileAccess::Read, FileShare::Read);
+            }
+            catch (const System::IO::IOException&)
+            {
+                exclusiveRefusedSecondOpen = true;
+            }
+            ctx.Check(exclusiveRefusedSecondOpen,
+                      "FileShare::None refuses a second handle while the exclusive stream is open");
+            exclusive.reset();
+
+            const std::unique_ptr<System::IO::Stream> shared =
+                container->OpenFile("log.txt", FileMode::Open, FileAccess::Read, FileShare::Read);
+            const std::unique_ptr<System::IO::Stream> secondReader =
+                container->OpenFile("log.txt", FileMode::Open, FileAccess::Read, FileShare::Read);
+            ctx.Check(shared->getCanReadProperty() && secondReader->getCanReadProperty(),
+                      "FileShare::Read permits a second read-only handle");
         }
         device->DeleteContainer("cna-demos file modes");
     }
@@ -89,9 +115,11 @@ namespace
 CNA_DEMOS_CONSOLE(FileModes, {
     .id = "storage.storage_container.file_modes",
     .title = "File modes and access",
-    .description = "Opens one file in a StorageContainer with each FileMode -- Create, Append, CreateNew (refused for "
-                   "an existing file), Truncate, Open (missing file), OpenOrCreate -- and with FileAccess::Read.",
+    .description = "Opens one file in a StorageContainer with every FileMode, read-only access and explicit "
+                   "FileShare::None/Read policies, including the exclusive-open boundary.",
     .apis = {"StorageContainer::OpenFile", "StorageContainer::FileExists", "StorageDevice::DeleteContainer",
-             "FileMode", "FileAccess", "StorageDevice::BeginOpenContainer", "StorageDevice::EndOpenContainer"},
+             "FileMode", "FileAccess", "FileShare", "StorageDevice::BeginOpenContainer",
+             "StorageDevice::EndOpenContainer"},
     .tags = {"storage", "file", "append", "truncate", "text"},
+    .knownIssue = "CNA-DEMOS-ISSUE-152",
 })

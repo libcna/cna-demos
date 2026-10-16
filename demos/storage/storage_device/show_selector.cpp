@@ -14,6 +14,9 @@
 #include "Microsoft/Xna/Framework/Storage/StorageDevice.hpp"
 #include "Microsoft/Xna/Framework/Storage/StorageDeviceNotConnectedException.hpp"
 #include "System/IAsyncResult.hpp"
+#include "System/Runtime/Serialization/SerializationInfo.hpp"
+#include "System/Runtime/Serialization/StreamingContext.hpp"
+#include "System/Threading/WaitHandle.hpp"
 
 using Microsoft::Xna::Framework::Storage::StorageDevice;
 using Microsoft::Xna::Framework::Storage::StorageDeviceNotConnectedException;
@@ -46,6 +49,7 @@ namespace
         }
 
         bool unavailableRootReported = false;
+        bool unavailableRootSerialized = false;
         std::exception_ptr unexpected;
         try
         {
@@ -55,6 +59,12 @@ namespace
         {
             unavailableRootReported = std::string(error.what()) == "Unable to create the storage directory." &&
                 error.getInnerExceptionProperty() != nullptr;
+            System::Runtime::Serialization::SerializationInfo info;
+            const System::Runtime::Serialization::StreamingContext context;
+            error.GetObjectData(info, context);
+            unavailableRootSerialized = info.getMemberCountProperty() == 2 &&
+                info.GetString("Message") == "Unable to create the storage directory." &&
+                info.GetValue<std::exception_ptr>("InnerException") != nullptr;
         }
         catch (...)
         {
@@ -73,6 +83,8 @@ namespace
         }
         ctx.Check(unavailableRootReported,
                   "an unusable storage root raises StorageDeviceNotConnectedException with its filesystem cause");
+        ctx.Check(unavailableRootSerialized,
+                  "GetObjectData preserves the real disconnected exception's message and inner cause");
 #else
         // CNAEXT: the folder this program's saves live in (the default is "game").
         StorageDevice::SetAppNameEXT("cna-demos");
@@ -82,13 +94,25 @@ namespace
         // API is asynchronous: Begin..., a callback or polling IsCompleted, then End....
         // On PC there is one device and the call completes at once -- the pattern stays.
         // The size and directory count say how much room the game will need.
+        int selectorState = 91;
         bool callbackRan = false;
+        bool callbackSawState = false;
         const std::unique_ptr<System::IAsyncResult> result = StorageDevice::BeginShowSelector(
-            64 * 1024, 1, [&callbackRan](System::IAsyncResult*) { callbackRan = true; }, nullptr);
+            64 * 1024, 1,
+            [&callbackRan, &callbackSawState, &selectorState](System::IAsyncResult* callbackResult) {
+                callbackRan = true;
+                callbackSawState =
+                    std::any_cast<void*>(callbackResult->getAsyncStateProperty()) == &selectorState;
+            },
+            &selectorState);
         ctx.Print("IsCompleted {}, CompletedSynchronously {}", result->getIsCompletedProperty(),
                   result->getCompletedSynchronouslyProperty());
         ctx.Check(result->getIsCompletedProperty() && callbackRan,
                   "on this platform the selector completes at once and calls back");
+        ctx.Check(result->getCompletedSynchronouslyProperty() && callbackSawState &&
+                      std::any_cast<void*>(result->getAsyncStateProperty()) == &selectorState &&
+                      result->getAsyncWaitHandleProperty().WaitOne(0),
+                  "the selector preserves AsyncState and exposes a signalled completion handle");
 
         const std::unique_ptr<StorageDevice> device = StorageDevice::EndShowSelector(result.get());
         ctx.Check(device != nullptr && device->getIsConnectedProperty(), "EndShowSelector returns a connected device");
@@ -108,7 +132,8 @@ CNA_DEMOS_CONSOLE(ShowSelector, {
                    "failure reported for an unusable storage root.",
     .apis = {"StorageDevice::BeginShowSelector", "StorageDevice::EndShowSelector", "StorageDevice::IsConnected",
              "StorageDevice::FreeSpace", "StorageDevice::TotalSpace", "StorageDevice::SetAppNameEXT",
-             "StorageDeviceNotConnectedException::StorageDeviceNotConnectedException"},
+             "StorageDeviceNotConnectedException::StorageDeviceNotConnectedException",
+             "StorageDeviceNotConnectedException::GetObjectData"},
     .tags = {"storage", "save", "device", "async", "selector"},
     .ownProcess = true,
 })

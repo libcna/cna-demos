@@ -12532,3 +12532,22 @@ joystick/sensor values, power-state variants and mobile IME layout remain correc
 platform-specific. Test-only reset hooks and trivial enum permutations do not justify catalog
 entries. Evidence:`/tmp/checkpoint-1108-input-public-headers/*`. Continue with the next public CNA
 module containing caller-visible gaps, preferring storage before the broader net surface.
+
+## Focused1109 Storage public-header audit
+
+All three public storage headers are dispositioned. Existing stable workflows now exercise the
+complete synchronous async-result state for selectors/container opening, the player-plus-space
+selector overload, canonical container identity and serialization of the real disconnected-device
+exception. The file-mode workflow adds explicit exclusive/read sharing, and the lifetime workflow
+calls all15 XNA-guarded members after disposal.
+
+Two genuine CNA gaps remain visible. CNA-DEMOS-ISSUE-151 records that zero of15 post-dispose calls
+throws ObjectDisposedException; ISSUE-152 records that the four-argument OpenFile discards
+FileShare and permits a second handle during an exclusive open. Five repeated runs per renderer
+label retain exactly seven grouped ISSUE-151 failures and one ISSUE-152 failure while every
+positive control passes with empty stderr. The warning-free `-j3` build, metadata717/0 and four
+exact SOFTWARE CTests pass their expected contracts. Generated coverage stays307/329 XNA types,
+2128/2326 members,674/753 fields and3079/3205 C routes across all717 IDs. DeviceChanged has no
+production raiser and remains manual/platform-specific. Evidence:
+`/tmp/checkpoint-1109-storage-public-headers/*`. Continue with the public Net module surface,
+starting from CNA-specific headers and existing session/packet workflows.

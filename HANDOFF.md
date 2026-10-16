@@ -12233,3 +12233,34 @@ hot-plug, joystick, sensor, power-state, mobile-layout, screenshot or manual vis
 Commit and push this batch. Then audit the public `CNA::Storage` headers before the broader net
 surface, extending stable storage workflows only for concrete caller-visible gaps. Keep every
 compile at three jobs or fewer.
+
+## Focused1109-Storage-public-header-audit
+
+The storage module has three public headers, all in the XNA namespace, and each is now explicitly
+dispositioned. Existing workflows now cover callback and returned AsyncState, synchronous
+completion and signalled wait handles for selector/container opening; all four selector overload
+shapes including player plus capacity requirements; canonical container type identity; and
+`GetObjectData` on the real filesystem-caused `StorageDeviceNotConnectedException`. The existing
+file/directory, path, layout, mode, access, save and cleanup behavior remains intact.
+
+Two new CNA defects are retained visibly. `storage.storage_container.lifetime` proves its seven
+positive lifecycle controls, then zero of15 post-Dispose properties/file/directory calls throws
+XNA's required ObjectDisposedException; seven grouped assertions record CNA-DEMOS-ISSUE-151.
+`storage.storage_container.file_modes` proves seven existing/new positives but an exclusive
+FileShare::None stream admits a second handle, recording CNA-DEMOS-ISSUE-152. Source shows CNA
+discards the FileShare parameter because Sharp Runtime FileStream exposes no matching constructor.
+`StorageDevice::DeviceChanged` still has no production raiser and remains platform/manual.
+
+The warning-free incremental build uses `-j3`; metadata remains717/0. Four exact SOFTWARE CTests
+pass their expected-failure contracts. Five runs per renderer label give lifetime7 pass/7 expected
+fail at hash `57248a0cb473179ce23eb8fece9fe9fefd792fa9bb7a3d9bbe1a9dc04a577f9f`, file modes7/1 at
+`5a08d9908c6c806f20618bea5e3eaf3bec7892e64e759a85f9a80c205fddc388`, selector6/6 at normalized
+hash `e9b087fa8fa97950d8f48ea35da078aaa60314ad7c0c109e6204757289eea39a`, and storage root5/5 at
+`b47b5b59c95eb3cd3484e16168e648a05bf5c96e7b962fdc32fc18649697d375`; stderr is empty. Merged
+coverage contains all717 IDs and remains307/329 XNA types,2128/2326 members,674/753 fields and
+3079/3205 C routes. Evidence:`/tmp/checkpoint-1109-storage-public-headers/*`. No removable-device,
+renderer, screenshot or manual claim is made.
+
+Commit and push this batch. Then audit the public Net module surface, beginning with CNA-specific
+headers and mapping each caller-facing declaration to existing session/packet workflows before
+adding behavior. Keep every compile at three jobs or fewer.

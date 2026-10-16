@@ -18,11 +18,15 @@ using namespace Microsoft::Xna::Framework::Storage;
 
 namespace
 {
-    std::unique_ptr<StorageDevice> Device(std::optional<PlayerIndex> player)
+    std::unique_ptr<StorageDevice> Device(std::optional<PlayerIndex> player, bool withRequirements = false)
     {
-        const std::unique_ptr<System::IAsyncResult> result =
-            player ? StorageDevice::BeginShowSelector(*player, nullptr, nullptr)
-                   : StorageDevice::BeginShowSelector(nullptr, nullptr);
+        std::unique_ptr<System::IAsyncResult> result;
+        if (player && withRequirements)
+            result = StorageDevice::BeginShowSelector(*player, 1024, 1, nullptr, nullptr);
+        else if (player)
+            result = StorageDevice::BeginShowSelector(*player, nullptr, nullptr);
+        else
+            result = StorageDevice::BeginShowSelector(nullptr, nullptr);
         return StorageDevice::EndShowSelector(result.get());
     }
 
@@ -45,8 +49,10 @@ namespace
         // A device chosen for a player keeps that player's saves apart from the shared ones.
         const std::unique_ptr<StorageDevice> shared = Device(std::nullopt);
         const std::unique_ptr<StorageDevice> playerTwo = Device(PlayerIndex::Two);
+        const std::unique_ptr<StorageDevice> playerFour = Device(PlayerIndex::Four, true);
         Touch(*shared, "cna-demos layout", "options.cfg");
         Touch(*playerTwo, "cna-demos layout", "profile.sav");
+        Touch(*playerFour, "cna-demos layout", "checkpoint.sav");
 
         const std::filesystem::path container = root / "cna-demos layout";
         for (const auto& entry : std::filesystem::recursive_directory_iterator(container))
@@ -55,6 +61,8 @@ namespace
                   "shared saves are in <root>/<container>/AllPlayers");
         ctx.Check(std::filesystem::exists(container / "Player2" / "profile.sav"),
                   "player two's saves are in <root>/<container>/Player2");
+        ctx.Check(std::filesystem::exists(container / "Player4" / "checkpoint.sav"),
+                  "the player-and-space-requirements selector overload retains player four");
 
         shared->DeleteContainer("cna-demos layout");
         ctx.Check(!std::filesystem::exists(container), "DeleteContainer removes the container with every player's files");
@@ -65,8 +73,8 @@ CNA_DEMOS_CONSOLE(StorageRoot, {
     .id = "storage.storage_device.storage_root",
     .title = "Where saves are stored (CNAEXT)",
     .description = "Names the save folder with StorageDevice::SetAppNameEXT, prints GetStorageRootEXT, and shows the "
-                   "layout below it: a container per display name, with AllPlayers and Player2 folders for a shared "
-                   "device and one selected for player two.",
+                   "layout below it: a container per display name, with AllPlayers and per-player folders through "
+                   "both player selector overloads.",
     .apis = {"StorageDevice::SetAppNameEXT", "StorageDevice::GetStorageRootEXT", "StorageDevice::BeginShowSelector",
              "StorageDevice::EndShowSelector", "StorageDevice::DeleteContainer", "PlayerIndex",
              "StorageDevice::BeginOpenContainer", "StorageDevice::EndOpenContainer"},

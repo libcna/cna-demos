@@ -7215,3 +7215,27 @@ Validator/comparator self-tests pass5/5 and4/4. Merged coverage contains all717 
 are CNA extensions. Evidence:`/tmp/checkpoint-1108-input-public-headers/*`. No force-feedback
 actuation, hot-plug action, physical joystick/sensor/power-state coverage, mobile IME-layout
 inspection, screenshot or manual visual result is claimed.
+
+### Focused1109 Storage public-header audit
+
+The storage module installs three caller-facing headers, all in the XNA namespace. Their public
+surface now has a declaration-level and behavior disposition:
+
+| Public family | Coverage decision |
+|---|---|
+| `StorageDevice` | Existing workflows cover connection/capacity, all four `BeginShowSelector` overload shapes, `EndShowSelector`, player/all-player layout, all-player deletion, root naming, and Begin/End container opening. The selector now also proves callback-time and returned AsyncState, synchronous completion and its signalled wait handle. `DeviceChanged` still has no production raiser on any current CNA platform, so synthetic event invocation remains intentionally uncredited. |
+| `StorageContainer` | The seven stable workflows cover canonical type/display/owner state, BeginOpenContainer callback/state/completion/wait handle, one-shot disposal, every directory/file/list method and overload, all FileMode values, access, sharing, path containment, save round trips and cleanup. A new complete post-dispose probe records ISSUE-151: all15 XNA-guarded calls remain usable. A new exclusive/shared read pair records ISSUE-152: CNA ignores FileShare. |
+| `StorageDeviceNotConnectedException` | The selector retains its real filesystem-root failure rather than synthetic construction. Its public `GetObjectData` now serializes that exact caught message and inner filesystem cause. The protected reconstruction and mechanically equivalent constructor overloads remain CNA unit-test/support territory. |
+
+The warning-free incremental build uses `-j3`; metadata remains717/0. The four exact SOFTWARE
+CTests pass with both new issues handled by their expected-failure metadata. Five repeated runs on
+each renderer label produce: lifetime14 controls (seven positive, seven ISSUE-151 failures), hash
+`57248a0cb473179ce23eb8fece9fe9fefd792fa9bb7a3d9bbe1a9dc04a577f9f`; file modes8 controls
+(seven positive, one ISSUE-152 failure), hash
+`5a08d9908c6c806f20618bea5e3eaf3bec7892e64e759a85f9a80c205fddc388`; selector6/6,
+host-capacity-normalized hash `e9b087fa8fa97950d8f48ea35da078aaa60314ad7c0c109e6204757289eea39a`;
+and storage-root5/5, hash `b47b5b59c95eb3cd3484e16168e648a05bf5c96e7b962fdc32fc18649697d375`.
+Every stderr is empty. Merged coverage contains all717 IDs and remains307/329 XNA types,
+2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1109-storage-public-headers/*`. No removable-device event, renderer, screenshot or
+manual result is claimed.

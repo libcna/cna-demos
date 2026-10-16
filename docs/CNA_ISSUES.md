@@ -15,6 +15,56 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-152 -- StorageContainer ignores the requested FileShare policy
+
+- **Area/API:** `StorageContainer::OpenFile(file, mode, access, fileShare)` in
+  `modules/storage/src/StorageContainer.cpp`; the C `cna_storage_container_open_file_share` route
+  inherits the same implementation.
+- **Demo/reproduction:** run `storage.storage_container.file_modes`. After the existing file-mode
+  and access checks, it opens `log.txt` for read with `FileShare::None`, then attempts a second
+  read handle before releasing the exclusive one. A positive control releases it and proves that
+  two handles opened with `FileShare::Read` can read concurrently.
+- **Observed:** the exclusive second open succeeds. The demo passes7/8 controls and fails only the
+  exclusivity assertion on both SOFTWARE and OPENGLES3 labels; five repeated runs per label are
+  byte-identical at stdout SHA-256
+  `5a08d9908c6c806f20618bea5e3eaf3bec7892e64e759a85f9a80c205fddc388` with empty stderr.
+- **Expected/reference:** the public header says the argument controls concurrent access. The
+  checked-in genuine-XNA implementation forwards all four arguments to
+  `File.Open(path, fileMode, fileAccess, fileShare)`, where `FileShare::None` refuses another
+  handle until the first closes.
+- **Cause:** CNA comments the parameter name out and constructs Sharp Runtime's three-argument
+  `FileStream`, which has no share-policy constructor. Every FileShare value therefore follows the
+  same path.
+- **Suggested repair/status:** implement and enforce FileShare in Sharp Runtime's FileStream and
+  pass this argument through CNA. Keep the three shorter overloads' documented ReadWrite default.
+  Open against pinned CNA `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA or Sharp Runtime
+  source was modified and no fresh XNA execution or upstream message is claimed. Evidence:
+  `/tmp/checkpoint-1109-storage-public-headers/*`.
+
+### CNA-DEMOS-ISSUE-151 -- disposed StorageContainer remains fully usable
+
+- **Area/API:** every `StorageContainer` property and file/directory operation other than
+  `IsDisposed`, in `modules/storage/src/StorageContainer.cpp`.
+- **Demo/reproduction:** run `storage.storage_container.lifetime`. It first proves the complete
+  synchronous BeginOpenContainer result, canonical type name, owner/display properties, one-shot
+  Disposing event and idempotent Dispose. It then invokes both guarded properties, all directory
+  operations/list overloads, all file operations/list overloads and all three OpenFile overloads
+  against valid fixtures after disposal.
+- **Observed:** zero of15 calls throws `System::ObjectDisposedException`; every operation proceeds,
+  including mutations. Seven grouped lifecycle assertions fail after seven positive controls.
+  Five repeated runs on each renderer label are byte-identical at stdout SHA-256
+  `57248a0cb473179ce23eb8fece9fe9fefd792fa9bb7a3d9bbe1a9dc04a577f9f` with empty stderr.
+- **Expected/reference:** genuine XNA's `DisplayName`/`StorageDevice` getters and shared
+  `ValidateArguments`/listing paths call `VerifyNotDisposed`, which throws ObjectDisposedException;
+  only `IsDisposed` remains readable. The checked-in decompilation provides the exact reference.
+- **Cause:** CNA's Dispose only sets `isDisposed_` and raises the event. No property or operation
+  checks the flag before using the retained owner/path state.
+- **Suggested repair/status:** add one shared disposed guard and call it from both properties and
+  every path/list entry point before other validation or filesystem effects. Open against pinned
+  CNA `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA source was modified and no fresh XNA
+  execution or upstream message is claimed. Evidence:
+  `/tmp/checkpoint-1109-storage-public-headers/*`.
+
 ### CNA-DEMOS-ISSUE-150 -- documented `CNA::Runtime` facade has no linkable implementation
 
 - **Area/API:** public `CNA/Misc.hpp`: `RuntimeOptions` and `Runtime::Initialize`, `Shutdown`,
