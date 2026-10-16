@@ -15,6 +15,24 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-155 -- MathTypeConverter comments contradict its conversion policy
+
+- **Area/API:** public `MathTypeConverter` documentation in
+  `modules/design/include/Microsoft/Xna/Framework/Design/MathTypeConverter.hpp`.
+- **Observed contract conflicts:** the `CanConvertTo` return comment says the base converter
+  reports true for `InstanceDescriptor`, but its implementation and CNA test report false; each
+  concrete converter adds that support in its own override. The protected `supportStringConvert`
+  comment says only BoundingBox/BoundingSphere/Ray clear the flag and that Matrix/Rectangle leave
+  it set. Production constructors also clear it for Rectangle, Matrix and Plane, matching their
+  tested XNA behavior and the four cna-demos workflows.
+- **Expected:** describe the base result separately from concrete overrides, and list the actual
+  parsing converters (Point, Vector2/3/4, Quaternion and Color) versus the six structural-text-only
+  converters.
+- **Evidence/status:** source-confirmed documentation defect at pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`; evidence is under
+  `/tmp/checkpoint-1117-design-public-headers/*`. Open; no CNA source was modified, no runtime
+  knownIssue marker is needed and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-154 -- AccelerometerReadingEventArgs says its event is never raised
 
 - **Area/API:** public `AccelerometerReadingEventArgs` documentation in

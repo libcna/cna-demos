@@ -3521,10 +3521,10 @@ process-level features; static CNA on CMake < 3.29.
 
 ## 14. Next task
 
-HIGHEST PRIORITY: Focused1116 completes the public Devices and Phone header audit at719 demos
-against pinned CNA `d23e139de`. Commit and push its source/documentation changes, then audit the
-public Design header surface. Continue with Diagnostics/Inspector/CNAEXT after Design, adding a new
-demo only for a coherent, reachable behavior gap. Complete1099 remains the latest full two-renderer
+HIGHEST PRIORITY: Focused1117 completes the public Design header audit at719 demos against pinned
+CNA `d23e139de`. Commit and push its source/documentation changes, then audit the public
+Diagnostics, Inspector and CNAEXT surfaces, adding a new demo only for a coherent, reachable
+behavior gap. Complete1099 remains the latest full two-renderer
 smoke baseline; the focused result merge supplies every later catalog ID to both coverage columns.
 Keep every compilation at three jobs or fewer and run another full checkpoint after a meaningful
 set of focused batches.
@@ -12455,6 +12455,24 @@ Coverage stays308/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C 
 catalog IDs in both renderer columns. Evidence:
 `/tmp/checkpoint-1116-devices-phone-public-headers/*`.
 
-Commit and push this batch. Next audit the public Design headers; then continue through
-Diagnostics/Inspector/CNAEXT. Add behavior only for concrete semantic gaps, and keep every compile
-at three jobs or fewer.
+## Focused1117-Design-public-header-audit
+
+The Design module's13 public converter type headers, public umbrella and two internal helper
+headers are fully dispositioned. Generated Design coverage remains complete at13/13 types,51/51
+members and2/2 protected fields. Four existing demos cover registry discovery, invariant/localized
+text and failures, constructor descriptors, ordered/mutable property descriptions, all concrete
+recreation shapes, Matrix's17 editor parts and subclass access to the protected base fields.
+
+`design.type_converter.string_round_trip` now obtains BoundingSphere from `TypeDescriptor` and
+prints its structural text, completing real registration reachability for all12 concrete
+converters. No new ID was needed. CNA-DEMOS-ISSUE-155 records incorrect public comments claiming
+that the base itself supports `InstanceDescriptor` and naming the wrong string-disabled set.
+
+The warning-free `-j3` build and metadata719/0 pass. All four SOFTWARE Design CTests pass, and the
+complete Design category passes30/30 checks under both SOFTWARE and OPENGLES3. Coverage stays
+308/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1117-design-public-headers/*`.
+
+Commit and push this batch. Next audit Diagnostics, Inspector and CNAEXT public headers, starting
+with an installed-header inventory and mapping each caller-facing behavior to the existing demos.
+Keep every compile at three jobs or fewer.

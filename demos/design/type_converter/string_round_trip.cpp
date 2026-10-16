@@ -6,6 +6,7 @@
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/BoundingBox.hpp"
+#include "Microsoft/Xna/Framework/BoundingSphere.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Design.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
@@ -124,6 +125,7 @@ namespace
         Show(ctx, "Color", Color::CornflowerBlue);
         Show(ctx, "Rectangle", Rectangle(1, 2, 30, 40));
         Show(ctx, "BoundingBox", BoundingBox(Vector3(-1.0f, -1.0f, -1.0f), Vector3::One));
+        Show(ctx, "BoundSphere", BoundingSphere(Vector3(1.0f, 2.0f, 3.0f), 4.5f));
         Show(ctx, "Matrix", Matrix::getIdentityProperty());
     }
 }

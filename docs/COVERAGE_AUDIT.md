@@ -7454,3 +7454,27 @@ coverage remains308/329 XNA types,2128/2326 members,674/753 fields and3079/3205 
 the added namespaces are outside that inventory; both renderer columns now contain all719 catalog
 IDs. Evidence:`/tmp/checkpoint-1116-devices-phone-public-headers/*`. No physical sensor/haptic,
 Android, background notification, shell visual, screenshot or manual focus result is claimed.
+
+### Focused1117 Design public-header audit
+
+The Design module installs13 public converter type headers, one public umbrella and two internal
+registration/property-descriptor headers. Generated coverage is complete at13/13 types,51/51
+members and2/2 protected fields. The four stable workflows demonstrate `TypeDescriptor`
+registration, invariant and localized text conversion, malformed/wrong-count refusal, all six
+parsing and six structural-text-only policies, `InstanceDescriptor` construction/invocation,
+ordered property descriptors, descriptor mutation, all twelve concrete `CreateInstance` shapes,
+the 17-part Matrix editor and both protected base fields through a real subclass.
+
+The audit found no missing behavior that warrants another ID. It adds the previously omitted
+BoundingSphere `TypeDescriptor` lookup/output to the existing text catalog, so registration is now
+reached for every concrete converter. Common context overloads and forwarded base failures share
+the demonstrated conversion paths; the internal registration and typed descriptor helpers remain
+implementation contracts with direct CNA unit coverage.
+
+Source review records CNA-DEMOS-ISSUE-155: `MathTypeConverter`'s public comments incorrectly say
+the base supports `InstanceDescriptor` and misidentify which concrete converters disable string
+parsing. The warning-free `-j3` build, metadata719/0 and all four SOFTWARE Design CTests pass. Both
+complete Design category runs pass30/30 checks under SOFTWARE and OPENGLES3. Coverage remains
+308/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1117-design-public-headers/*`. No IDE property grid, generated source compilation,
+screenshot or manual result is claimed.

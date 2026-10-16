@@ -12745,3 +12745,22 @@ focused demos and the enhanced keyboard path pass under SOFTWARE and OPENGLES3. 
 in both renderer columns. Evidence:`/tmp/checkpoint-1116-devices-phone-public-headers/*`. Continue
 with the public Design header surface, then Diagnostics/Inspector/CNAEXT, adding behavior only for
 a concrete semantic gap.
+
+## Focused1117 Design public-header audit
+
+All13 converter type headers plus the public umbrella now have a complete semantic disposition;
+the two `CNA/Internal/Design` headers remain implementation contracts. Generated Design coverage
+was already13/13 types,51/51 members and2/2 protected fields. The four demos collectively cover
+registration, culture-aware parsing/formatting and refusals, constructor descriptors, ordered
+editable properties, every concrete recreation shape and the protected subclass contract.
+
+The text workflow now also obtains and prints BoundingSphere through `TypeDescriptor`, closing the
+only concrete registration path omitted from its all-converter listing. No new ID is justified.
+CNA-DEMOS-ISSUE-155 records two inaccurate `MathTypeConverter` comments about base
+`InstanceDescriptor` support and the set of structural-text-only converters.
+
+The warning-free `-j3` build and metadata719/0 pass. All four SOFTWARE CTests pass, and both full
+Design category runs pass30/30 checks under SOFTWARE and OPENGLES3. Coverage remains308/329 XNA
+types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1117-design-public-headers/*`. Continue with the public Diagnostics, Inspector and
+CNAEXT surfaces, keeping implementation-only instrumentation distinct from caller APIs.
