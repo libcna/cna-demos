@@ -11265,3 +11265,12 @@ tests pass5/5 and4/4. Counts remain307/329 XNA types,2128/2326 members,674/753 f
 C routes. Evidence:`/tmp/checkpoint-1026-media-visualization-tones/*`. No listening, audible-
 quality, screenshot or manual visual claim is made, and no CNA issue was found. Continue the
 deterministic behavior audit outside the completed MediaPlayer visualization slice.
+
+## Focused1027 Matrix decomposition XNA boundaries
+
+`math.matrix.decompose` adds quarter-turn, reflection/recomposition and zero-scale controls. A
+genuine Windows XNA 4.0 probe proves signed-Z reflection output and its unusual successful NaN
+rotation for a flattened transform. CNA differs in exactly three assertions, retained as
+CNA-DEMOS-ISSUE-115. The warning-free `-j3` build, metadata693/0, exact known-issue CTest, ten runs
+per renderer label and both self-test suites pass; output is byte-identical and stderr empty.
+Coverage totals are unchanged. Evidence:`/tmp/checkpoint-1027-matrix-decompose-xna/*`.

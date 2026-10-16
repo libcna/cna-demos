@@ -10243,3 +10243,19 @@ Evidence:`/tmp/checkpoint-1026-media-visualization-tones/*`; source SHA-256
 `8834dea3a387d0d087f17bee5764ef348a18d24c8585132f5b62018dfac09f6c`. No listening,
 audible-quality, screenshot or manual visual claim is made, and no CNA issue was found. Continue
 with the next deterministic gap outside MediaPlayer visualization.
+
+## Focused1027-Matrix-Decompose-XNA-boundaries
+
+`math.matrix.decompose` grows from five to nine controls without a new ID. Ordinary affine and
+axis-aligned quarter-turn cases pass. A genuine Windows XNA 4.0 reference establishes that the
+tested reflection decomposes to `(2,3,-4)` and recomposes exactly, while a zero scale axis returns
+success with a four-NaN quaternion. CNA instead loses the reflection sign, cannot recompose it and
+returns failure plus identity for zero scale; the three discrepancies remain visible under
+`CNA-DEMOS-ISSUE-115` rather than being hidden by a workaround.
+
+The warning-free three-job build, metadata693/0, exact known-issue SOFTWARE CTest and self-tests
+5/5 plus4/4 pass. Ten SOFTWARE and ten OPENGLES3-labelled runs have byte-identical stdout SHA-256
+`c2343ba236de70619500bb610b142c129e7916bacd20cf2e49be5431402ef379` and empty stderr. Generated
+coverage totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes.
+Evidence:`/tmp/checkpoint-1027-matrix-decompose-xna/*`. No rendering or visual claim is involved.
+Continue with the next deterministic public-member behavior gap outside Matrix decomposition.

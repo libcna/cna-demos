@@ -5631,3 +5631,13 @@ totals remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C r
 `/tmp/checkpoint-1026-media-visualization-tones/*`; source SHA-256
 `8834dea3a387d0d087f17bee5764ef348a18d24c8585132f5b62018dfac09f6c`. No listening,
 audible-quality, screenshot or manual visual claim is made, and no CNA issue was found.
+
+### Focused1027 Matrix decomposition XNA boundaries
+
+`math.matrix.decompose` now covers ordinary affine transforms, exact axis quarter turns, a
+reflection with recomposition, determinant sign and a zero scale axis. Genuine Windows XNA 4.0
+returns signed scale `(2,3,-4)` for the reflection and success with a NaN quaternion for zero
+scale. CNA's three differing assertions remain under CNA-DEMOS-ISSUE-115. Ten runs per renderer
+label are byte-stable with empty stderr; the exact known-issue CTest, metadata693/0 and both tool
+self-test suites pass. Coverage totals remain307/329 types,2128/2326 members,674/753 fields and
+3079/3205 C routes. Evidence:`/tmp/checkpoint-1027-matrix-decompose-xna/*`.

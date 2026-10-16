@@ -15,6 +15,29 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-115 -- Matrix decomposition loses XNA reflection and zero-scale results
+
+- **Area/API:** `Microsoft::Xna::Framework::Matrix::Decompose`.
+- **Demo/reproduction:** run `math.matrix.decompose`. It retains the ordinary affine control and
+  axis-aligned quarter turns, then decomposes `Scale(-2,3,4) * RotationY(0.7) * Translation(7,8,9)`
+  and `Scale(1,0,1) * Translation(7,8,9)`. The reflected result is also recomposed.
+- **Observed in CNA:** the reflection reports positive scale `(2,3,4)` and a rotation that cannot
+  rebuild the source matrix (maximum component difference `3.5296845`). The flattened transform
+  reports failure and identity rotation. These are exactly the demo's three expected failures on
+  ten SOFTWARE and ten OPENGLES3-labelled runs; the other six controls pass and stderr is empty.
+- **Expected/reference:** a genuine Windows XNA 4.0 probe reports success with scale `(2,3,-4)`
+  for the reflection and recomposes it exactly. The flattened transform also reports success,
+  preserves scale `(1,0,1)` and translation `(7,8,9)`, and returns a quaternion with four NaN
+  components. The ordinary and all three quarter-turn controls agree.
+- **Cause/scope:** CNA follows FNA's row-product sign heuristic, whose affine zero entries prevent
+  it from retaining this reflection, and explicitly returns false when any extracted scale is
+  near zero. This is an inherited compatibility difference, not a demo oracle error. Open against
+  clean pinned CNA `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. The XNA reference ran
+  under Wine from the installed Windows XNA 4.0 assembly; no renderer or visual claim is involved.
+- **Evidence/status:** `/tmp/checkpoint-1027-matrix-decompose-xna/*` contains the C# probe, assembly
+  hash, XNA output, repeated CNA outputs and hashes. The exact known-issue CTest, metadata693/0 and
+  both tool self-test suites pass. No CNA source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-114 -- Releasing a nonterminal SoundEffect loop drops its authored tail
 
 - **Area/API:** `Microsoft::Xna::Framework::Audio::SoundEffectInstance::Stop(false)`, authored
