@@ -6,14 +6,14 @@ Generated 2026-10-16 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**711 demos** in 19 categories. Kinds: console 204, game 297, standalone 210. Automation: automated 675, manual 3, smoke-only 33.
+**712 demos** in 19 categories. Kinds: console 204, game 297, standalone 211. Automation: automated 676, manual 3, smoke-only 33.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
 | audio | 23 | 20 | 2 | 1 | 20 / 0 / 2 / 1 / 0 | 20 / 0 / 2 / 1 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 165 / 1 / 11 / 0 / 0 | 167 / 0 / 10 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| content | 68 | 68 | 0 | 0 | 54 / 0 / 14 / 0 / 0 | 54 / 0 / 14 / 0 / 0 |
+| content | 69 | 69 | 0 | 0 | 54 / 0 / 15 / 0 / 0 | 54 / 0 / 15 / 0 / 0 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | devices | 5 | 5 | 0 | 0 | 4 / 1 / 0 / 0 / 0 | 5 / 0 / 0 / 0 / 0 |
@@ -1638,7 +1638,13 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Content::Pipeline::ContentProcessorContext::TargetProfile` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::ExternalReference::ExternalReference` -- content.custom.intermediate_external_references, content.custom.nested_builds
 - `Microsoft::Xna::Framework::Content::Pipeline::ExternalReference::Filename` -- content.custom.intermediate_external_references
-- `Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::SetValue` -- content.custom.xna_pipeline_components
+- `Microsoft::Xna::Framework::Content::Pipeline::NamedValueDictionary::Add` -- content.custom.opaque_data_dictionary
+- `Microsoft::Xna::Framework::Content::Pipeline::NamedValueDictionary::Count` -- content.custom.opaque_data_dictionary
+- `Microsoft::Xna::Framework::Content::Pipeline::NamedValueDictionary::Keys` -- content.custom.opaque_data_dictionary
+- `Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::GetContentAsXml` -- content.custom.opaque_data_dictionary
+- `Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::GetValue` -- content.custom.opaque_data_dictionary
+- `Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::OpaqueDataDictionary` -- content.custom.opaque_data_dictionary
+- `Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::SetValue` -- content.custom.opaque_data_dictionary, content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::Errors` -- content.custom.xna_pipeline_components
 - `Microsoft::Xna::Framework::Content::Pipeline::PipelineComponentScanner::ImporterAttributes` -- content.custom.xna_pipeline_components
@@ -1698,7 +1704,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateReader::Serializer` -- content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateReader::Xml` -- content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::AddTypeSerializer` -- content.custom.intermediate_existing_instances, content.custom.intermediate_type_serializer
-- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Deserialize` -- content.custom.intermediate_external_references, content.custom.intermediate_polymorphism, content.custom.intermediate_properties, content.custom.intermediate_serializer, content.custom.intermediate_shared_resources, content.custom.intermediate_type_serializer
+- `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Deserialize` -- content.custom.intermediate_external_references, content.custom.intermediate_polymorphism, content.custom.intermediate_properties, content.custom.intermediate_serializer, content.custom.intermediate_shared_resources, content.custom.intermediate_type_serializer, content.custom.opaque_data_dictionary
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::GetTypeSerializer` -- content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Serialize` -- content.custom.intermediate_external_references, content.custom.intermediate_polymorphism, content.custom.intermediate_properties, content.custom.intermediate_serializer, content.custom.intermediate_shared_resources, content.custom.intermediate_type_serializer
 - `Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::TypeSerializerFor` -- content.custom.intermediate_polymorphism, content.custom.xml_xnb_pipeline

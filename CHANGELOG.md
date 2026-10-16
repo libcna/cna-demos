@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a build-time `OpaqueDataDictionary` workflow for heterogeneous typed lookup, exact
+  XNA-measured intermediate XML, ordered round trip and invalid key/type boundaries; it records
+  CNA-DEMOS-ISSUE-146 for CNA's broader null-value exception.
 - Completed the full 711-demo checkpoint after the compressed-texture, OcclusionQuery and
   transformed-clipping batches; all 724 enabled CTests and both renderer smoke suites pass their
   expected-status contracts with no unrelated assertion or normalized-stderr change.

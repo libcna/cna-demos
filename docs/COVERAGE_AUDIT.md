@@ -6667,3 +6667,26 @@ Runtime-backed coverage remains307/329 XNA types,2128/2326 members,674/753 field
 routes. Evidence:`build/linux-full/reports/checkpoint-1084-complete-*`. Continue Phase8 with the
 heterogeneous `OpaqueDataDictionary` intermediate-XML behavior missing from the existing processor-
 parameter and serializer workflows.
+
+### Focused1085 OpaqueDataDictionary intermediate XML
+
+New `content.custom.opaque_data_dictionary` gives the processor-parameter dictionary its own
+coherent build-time workflow. It verifies heterogeneous `int`/`string`/`Vector3` lookup and missing
+defaults, wrong-type `InvalidCastException`, insertion order, replacement without reordering, the
+exact compact XNA-corpus document and a type/order-preserving deserialize/serialize round trip.
+Missing, duplicate and empty keys plus an unknown dynamic `Type` are rejected without changing the
+source dictionary.
+
+Fourteen controls pass and one records ISSUE-146: an empty `ContentObject` is refused atomically,
+but CNA throws `ArgumentException` where the measured XNA contract is
+`ArgumentNullException`. Five runs per renderer label have common normalized stdout SHA-256
+`a5ef2235eeff14702d9e0cefc960ef50e0c800cc87623b4a068fafa779b113e4` and empty stderr. The
+warning-free three-job build, metadata712/0, eight related intermediate-XML CTests, catalog parser
+and self-tests5/5 plus4/4 pass. Generated coverage contains all712 IDs through a focused merge and
+keeps307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1085-opaque-data/*`. No fresh XNA execution or rendered result is claimed.
+
+The next serializer audit target is built-in collection shape rather than another dictionary API
+variant: packed scalar/vector sequences, element-per-item reference values, dictionary key/value
+order, jagged collections and malformed-shape rejection are present in CNA's measured XNA corpus
+but absent from the project intermediate-XML demos.

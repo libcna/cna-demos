@@ -441,6 +441,10 @@ a check that all authored colors remain visible and that a blank texture row can
   shortcut exposes the partial-registration failure recorded as ISSUE-088 (9/10 child checks).
   ✅ `content.custom.intermediate_properties`: inherited-member ordering, validated setter
   dispatch, get-only collections appending constructor defaults and flattened spawn coordinates.
+  ✅ `content.custom.opaque_data_dictionary`: one heterogeneous processor-parameter sheet covers
+  typed/default lookup, stable insertion order and replacement, exact XNA-measured compact XML,
+  dynamic type attributes, round trip and invalid key/type/value boundaries. ISSUE-146 records
+  CNA's broader null-value exception.
   ✅ `content.custom.xna_pipeline_components`: actual XNA importer/processor adapters, default
   processor selection, typed parameter conversion/isolation, source sidecar dependency and
   nested Convert producing compiled route bounds. The extension reads a processor label dependency
@@ -12074,3 +12078,27 @@ byte-identical on both renderers; self-tests pass5/5 and4/4. Runtime-backed surf
 The next deterministic Phase8 gap is the heterogeneous `OpaqueDataDictionary` intermediate-XML
 contract. Cover exact dynamic type spelling, stable entry order, round trip and invalid key/type
 boundaries in one coherent build-time workflow rather than adding dictionary-operation variants.
+
+## Focused1085 heterogeneous OpaqueDataDictionary XML
+
+The new `content.custom.opaque_data_dictionary` standalone builds an ordered `int`/`string`/
+`Vector3` processor-parameter sheet. Fourteen passing controls cover empty output, typed/default
+lookup, wrong-type refusal, insertion and replacement order, the exact genuine-XNA-corpus compact
+document, a type/order-preserving round trip, missing and duplicate keys, an unknown dynamic type
+and mutation-atomic key/value refusals. The sole expected failure is ISSUE-146: CNA rejects an
+empty `ContentObject` with `ArgumentException`, while the measured XNA contract is
+`ArgumentNullException`.
+
+The warning-free `-j3` build validates metadata712/0. All eight related SOFTWARE intermediate-XML
+CTests plus the catalog parser pass; validator/comparator self-tests pass5/5 and4/4. Five focused
+runs under each renderer label retain exactly14 passing lines and one ISSUE-146 failure, with common
+normalized stdout SHA-256 `a5ef2235eeff14702d9e0cefc960ef50e0c800cc87623b4a068fafa779b113e4`
+and empty stderr. Generated coverage uses Complete1084 plus the focused result, contains all712 IDs
+and remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1085-opaque-data/*`. No fresh XNA execution, rendering, screenshot or manual visual
+claim was made.
+
+Continue the Phase8 serializer audit with the still-undemonstrated built-in collection grammar:
+packed scalar/vector lists versus element-per-item strings/objects, dictionary key/value ordering,
+jagged collections and representative malformed-shape refusals. First reconcile the existing
+intermediate demos and XNA corpus so this remains one coherent workflow rather than type variants.

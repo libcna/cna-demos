@@ -69,12 +69,12 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-711 project-built catalog demos in19 categories: math95, game33, graphics186, audio23, core6,
-content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,297 game and210
-standalone; 675 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports and includes all711
-catalog IDs in both renderer columns. It incorporates every
+712 project-built catalog demos in19 categories: math95, game33, graphics186, audio23, core6,
+content69, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,297 game and211
+standalone; 676 are automated,33 smoke-only and3 manual. Every declared category has demos.
+Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085's new
+result and includes all712 catalog IDs in both renderer columns. It incorporates every
 focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
 Curve and Matrix audits in Focused1063-1074 and the root Framework audits in Focused1076-1078,
@@ -91,7 +91,8 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete1084 exercises all3079 credited C routes and all711 catalog IDs in both full smoke suites.
+Complete1084 exercises all3079 credited C routes and its711 catalog IDs in both full smoke suites;
+Focused1085 executes the new ID separately under both renderer labels.
 Its focused lineage adds the compressed-texture ID, extends OcclusionQuery with the XNA-matching
 Reach refusal and closes SpriteBatch transformed clipping with exact CNA/XNA pixels.
 Its lineage includes the completed field, build-time-pipeline and generated XNA member audits
@@ -11583,3 +11584,33 @@ listening, physical-device or external-service claim was made.
 Next, commit and push this checkpoint documentation, then continue Phase8 with the uncovered
 heterogeneous `OpaqueDataDictionary` intermediate-XML contract: dynamic `Type` attributes, ordered
 round trip and invalid key/type boundaries. Keep every compile at three jobs or fewer.
+
+## Focused1085-OpaqueDataDictionary-intermediate-XML
+
+The712th catalog ID, `content.custom.opaque_data_dictionary`, closes the processor-parameter XML
+gap with one ordered heterogeneous `int`/`string`/`Vector3` sheet. Fourteen passing controls cover
+empty output, typed/default lookup, wrong-type refusal, stable insertion and replacement order, the
+exact genuine-XNA-corpus compact XML, type/order-preserving round trip, missing/duplicate/empty
+keys, unknown dynamic types and atomic refusal. The final unchanged-document control proves no
+rejected operation corrupts the sheet.
+
+The sole expected failure records new CNA-DEMOS-ISSUE-146. CNA rejects an empty `ContentObject`
+before mutation but throws `ArgumentException`; the measured XNA contract and CNA's own format
+documentation specify `ArgumentNullException`. Source inspection locates the broader explicit throw
+in `OpaqueDataDictionary::AddItem`/`SetItem`. No CNA source was changed and no fresh genuine-XNA
+execution or upstream message is claimed.
+
+The warning-free `-j3` build validates metadata712/0. All eight SOFTWARE intermediate-XML CTests
+plus the catalog parser pass, as do validator/comparator self-tests5/5 and4/4. Five runs under each
+renderer label retain exactly14 passing lines and one ISSUE-146 failure; normalized stdout is
+byte-identical at SHA-256
+`a5ef2235eeff14702d9e0cefc960ef50e0c800cc87623b4a068fafa779b113e4`, and stderr is empty.
+Generated coverage merges the focused result into Complete1084, contains all712 IDs and remains
+307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1085-opaque-data/*`. No rendering, screenshot or manual visual claim was made.
+
+Next, commit and push this validated batch, then continue the Phase8 serializer audit with the
+still-undemonstrated built-in collection grammar: packed scalar/vector lists versus element-per-
+item strings/objects, dictionary key/value order, jagged collections and representative malformed-
+shape refusals. Reconcile the existing intermediate demos and measured XNA corpus first; keep it a
+single coherent workflow rather than per-type variants. Keep every compile at three jobs or fewer.

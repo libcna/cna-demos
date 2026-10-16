@@ -15,6 +15,30 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-146 -- OpaqueDataDictionary reports the wrong null-value exception
+
+- **Area/API:** `Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::Add`
+  through its inherited `NamedValueDictionary<ContentObject>` surface.
+- **Demo/reproduction:** run `content.custom.opaque_data_dictionary`. After building an ordered
+  `int`/`string`/`Vector3` processor-parameter sheet and verifying its exact intermediate XML,
+  call `Add("Empty", ContentObject{})`. The surrounding controls cover typed/default lookup,
+  replacement order, XML round trip, invalid keys, duplicate keys and unknown dynamic types.
+- **Observed:** CNA refuses the empty box without modifying the dictionary, but throws
+  `System::ArgumentException` with `value` as the parameter. This is the sole expected failure
+  among fifteen checks; the final XML remains byte-identical to the original document.
+- **Expected/reference:** XNA's measured intermediate-serialization corpus records
+  `OpaqueDataDictionary.Add(key, null)` as `System.ArgumentNullException`. CNA's own
+  `docs/xna-intermediate-xml-format.md` section 10 preserves that result, while the implementation
+  and public header currently promise and throw the broader base exception.
+- **Cause/suggested repair:** `OpaqueDataDictionary::AddItem` and `SetItem` explicitly throw
+  `System::ArgumentException` when `ContentObject::Empty()` is true. Throw
+  `System::ArgumentNullException("value")` at both entry points and update the header contract;
+  retain the existing pre-mutation check.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Focused evidence is under
+  `/tmp/checkpoint-1085-opaque-data/*`. The XML oracle is CNA's checked-in genuine-XNA corpus;
+  no fresh XNA execution, CNA source modification or upstream message is claimed.
+
 ### CNA-DEMOS-ISSUE-145 -- TitleContainer accepts rooted names and reports non-XNA path exceptions
 
 - **Area/API:** `Microsoft::Xna::Framework::TitleContainer::OpenStream`.
