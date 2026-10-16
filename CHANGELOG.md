@@ -6,6 +6,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the full 711-demo checkpoint after the compressed-texture, OcclusionQuery and
+  transformed-clipping batches; all 724 enabled CTests and both renderer smoke suites pass their
+  expected-status contracts with no unrelated assertion or normalized-stderr change.
+- Made the Guide notification position deadline start after its asynchronous sign-in precondition,
+  and raised the dependency-free CMake catalog parser's timeout for three-job validation load.
 - Added exact back-buffer checks for SpriteBatch world transforms intersecting a framebuffer-space
   scissor, confirmed against genuine XNA's geometry and exclusive clip-edge pixels.
 - Extended the existing occlusion-query lifecycle workflow with the genuine-XNA Reach-profile

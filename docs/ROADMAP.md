@@ -12056,3 +12056,21 @@ warning-free three-job build, metadata711/0, exact SOFTWARE CTest and validator/
 self-tests5/5 plus4/4 pass. Evidence:
 `/tmp/checkpoint-1083-transformed-clipping/*`. No screenshot or whole-animation visual validation
 is claimed.
+
+## Complete1084 711-demo behavior checkpoint
+
+Source `1cf8486` against pinned CNA `d23e139` builds warning-free with `-j3`, validates711/0 and
+passes all724 enabled CTests; three manual tests remain disabled. SOFTWARE is551 pass/108 expected
+fail/49 skip/3 not run and OPENGLES3 is591/110/7/3. Both full reports contain every711 ID with no
+unexpected result.
+
+Complete1080 comparison identifies only the expected Focused1081-1083 changes: one passing ID and
+five added checks in two existing IDs, for14 more checks per renderer. All710 earlier statuses,
+known-issue pairs and failed assertion multiplicities remain unchanged. Normalized stderr is
+byte-identical on both renderers; self-tests pass5/5 and4/4. Runtime-backed surface counts remain
+307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`build/linux-full/reports/checkpoint-1084-complete-*`.
+
+The next deterministic Phase8 gap is the heterogeneous `OpaqueDataDictionary` intermediate-XML
+contract. Cover exact dynamic type spelling, stable entry order, round trip and invalid key/type
+boundaries in one coherent build-time workflow rather than adding dictionary-operation variants.

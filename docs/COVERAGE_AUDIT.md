@@ -6649,3 +6649,21 @@ Genuine XNA4 produces the same red/DarkSlateGray values at all six coordinates (
 the audit's explicit transformed-clipping candidate while preserving later time-dependent camera
 frames. Counts stay unchanged. Evidence:`/tmp/checkpoint-1083-transformed-clipping/*`. Pixel checks
 were programmatic; no screenshot or whole-animation visual validation was performed.
+
+### Complete1084 711-demo behavior checkpoint
+
+The complete checkpoint at source `1cf8486` and pinned CNA `d23e139` passes a warning-free `-j3`
+build, metadata711/0 and all724 enabled CTests in536.50s; three manual tests remain disabled.
+SOFTWARE is551 pass/108 expected fail/49 skip/3 not run and OPENGLES3 is591/110/7/3. Both reports
+contain every711 ID and no unexpected result.
+
+Relative to Complete1080, `graphics.texture2d.compressed_blocks` is the sole new ID and passes nine
+checks. Existing OcclusionQuery and SpriteBatch transform workflows gain one and four checks. Total
+checks rise by14 on each renderer, while every prior status/knownIssue pair and all failed-assertion
+messages/multiplicities remain unchanged. Normalized stderr is byte-identical to Complete1080 and
+self-tests pass5/5 plus4/4.
+
+Runtime-backed coverage remains307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C
+routes. Evidence:`build/linux-full/reports/checkpoint-1084-complete-*`. Continue Phase8 with the
+heterogeneous `OpaqueDataDictionary` intermediate-XML behavior missing from the existing processor-
+parameter and serializer workflows.

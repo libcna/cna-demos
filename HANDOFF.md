@@ -73,15 +73,15 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,297 game and210
 standalone; 675 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1080's full710-ID reports plus Focused1081's
-new result and includes all711 catalog IDs in both renderer columns. It incorporates every
+Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports and includes all711
+catalog IDs in both renderer columns. It incorporates every
 focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
 Curve and Matrix audits in Focused1063-1074 and the root Framework audits in Focused1076-1078,
 including ISSUE-124 through ISSUE-145.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
-3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1080's
-full runtime reports are the baseline inputs for the710-ID checkpoint catalog. Selected semantic
+3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1084's
+full runtime reports are the baseline inputs for the711-ID checkpoint catalog. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
@@ -91,12 +91,9 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `gamer_services.h`237/239, `media_library.h`122/148, `cnb.h`272/272, `models.h`216/216,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
-Complete1080 exercises all3079 credited C routes and its710 catalog IDs in both full smoke suites;
-Focused1081 executes the new ID separately on both renderers.
-Focused1082 then extends the existing OcclusionQuery ID with the XNA-matching Reach constructor
-refusal; catalog and surface counts stay unchanged.
-Focused1083 closes the SpriteBatch transformed-clipping candidate with exact CNA/XNA pixels;
-catalog and surface counts again stay unchanged.
+Complete1084 exercises all3079 credited C routes and all711 catalog IDs in both full smoke suites.
+Its focused lineage adds the compressed-texture ID, extends OcclusionQuery with the XNA-matching
+Reach refusal and closes SpriteBatch transformed clipping with exact CNA/XNA pixels.
 Its lineage includes the completed field, build-time-pipeline and generated XNA member audits
 through Focused1002, including the production StorageDeviceNotConnectedException path.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
@@ -11540,3 +11537,49 @@ Counts remain711 demos,307/329 XNA types,2128/2326 members,674/753 fields and307
 Evidence:`/tmp/checkpoint-1083-transformed-clipping/*`. Pixel checks were programmatic; no
 screenshot or whole-animation visual validation occurred. Next, commit and push this validated
 batch, then continue the audit. Keep every compile at three jobs or fewer.
+
+## Attempt1084-complete-checkpoint-test-scaling
+
+The first complete711-demo checkpoint attempt at `8bc9a2b` built warning-free with `-j3` and
+validated metadata711/0, but stopped in CTest before either smoke suite. Of724 enabled tests,722
+passed and two exposed project-side timing/scaling defects. The underlying CNA behaviors were
+reproduced separately and no CNA issue is indicated.
+
+`gamer_services.guide.notification_position` began its two-second rendered-toast deadline before
+the asynchronous offline sign-in had reached the public gamer collection. It failed twice in that
+state, while direct reruns rendered and programmatically verified all nine positions. The demo now
+starts that deadline only after `Gamer::SignedInGamers` proves the sign-in notification has been
+queued. `cna_demos.cli.catalog_json_parses` generated the current one-megabyte JSON immediately,
+but CMake's repeated `string(JSON)` parsing timed out at30 seconds beside other tests; the same
+complete check passes alone in16.5 seconds. Its CTest timeout is raised to90 seconds without
+weakening any catalog assertion.
+
+The fixes are commit `1cf8486`. Ten exact SOFTWARE repetitions of each repaired test pass; five
+OPENGLES3/Xvfb Guide runs pass14/14 with byte-identical stdout SHA-256
+`d83a41213cdd8e7ebe803af450b30f6d8ccbc1a62dc5bdb22e3d9303d758c232` and empty stderr. The
+complete rerun is recorded below.
+
+## Complete1084-711-demo-behavior-checkpoint
+
+The complete checkpoint at source `1cf8486` against pinned CNA `d23e139` builds warning-free with
+`-j3`, validates metadata711/0 and passes all724 enabled CTests in536.50s; three manual tests remain
+disabled. SOFTWARE is551 pass/108 expected fail/49 skip/3 not run and OPENGLES3 is591/110/7/3.
+Both reports cover all711 IDs with no unexpected result.
+
+Against Complete1080, the new `graphics.texture2d.compressed_blocks` ID passes9 checks, the existing
+OcclusionQuery ID moves13->14 checks and SpriteBatch transform_matrix moves0->4. Total checks rise
+3559->3573 on SOFTWARE and3793->3807 on OPENGLES3. All710 prior status/knownIssue pairs and failed
+assertion messages/multiplicities are unchanged (181 SOFTWARE,186 OPENGLES3). After the established
+temporary-path, blank-line and host GTK/X-protocol filtering, stderr is byte-identical to
+Complete1080 on each renderer. Validator and comparator self-tests pass5/5 and4/4.
+
+Generated coverage remains307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C
+routes. Result SHA-256 values are
+`c427946dfdf0e9665513be532fb6c3528b9ece7cf8e7ba207a1abaa32a235307` (SOFTWARE) and
+`559565086b26734f1242c12179136befd76e0352f625de180a942c30809c6c6d` (OPENGLES3). Evidence is
+under `build/linux-full/reports/checkpoint-1084-complete-*`. No screenshot, manual visual,
+listening, physical-device or external-service claim was made.
+
+Next, commit and push this checkpoint documentation, then continue Phase8 with the uncovered
+heterogeneous `OpaqueDataDictionary` intermediate-XML contract: dynamic `Type` attributes, ordered
+round trip and invalid key/type boundaries. Keep every compile at three jobs or fewer.
