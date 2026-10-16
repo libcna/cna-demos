@@ -12849,3 +12849,23 @@ Continue with the hardware/service/platform residual set in `gamer_services.h`, 
 `input_haptics.h`, `input_joystick.h` and `input_devices.h`. Recheck each positive path against the
 current host and existing workflows before retaining a manual disposition; do not credit a call
 whose success cannot be observed.
+
+## Focused1122 hardware/service/platform C-route revalidation
+
+All17 residual routes across `gamer_services.h`, `devices.h`, `input_haptics.h`,
+`input_joystick.h` and `input_devices.h` retain explicit manual positive-path dispositions. The
+three input demos already execute positive descriptor/name branches when hardware is enumerated and
+always check the upper bound. This host exposes zero haptic, joystick, touch and sensor devices, so
+crediting those names would prove only empty-host rejection. Headset classification likewise needs
+a real capture device, and Guide delay has no public readback or deterministic service invitation.
+
+The Devices production implementations launch an external URL handler, create a native tray icon,
+or enumerate and open the first camera. Existing workflows cover support decisions and the CNA-owned
+tray/camera state, callback, frame and lifetime behavior through deterministic test backends. They
+do not perform those external side effects during automation.
+
+Seven adjacent SOFTWARE CTests pass, as do171 direct controls with empty stderr. The warning-free
+`-j3` build, metadata719/0 and both tool self-test suites pass. Coverage remains3081/3205 C routes;
+no CNA issue or new ID is warranted. Continue with the last three externally observed production
+routes in `graphics_device.h` and `runtime_graphics_manager.h`, then revalidate the remaining fixed
+type-name and sensor test-hook groups.

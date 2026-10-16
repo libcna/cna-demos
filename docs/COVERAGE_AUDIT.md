@@ -7582,3 +7582,34 @@ passes, and direct SOFTWARE plus OPENGLES3/Xvfb runs pass33/33 controls. Validat
 self-tests pass5/5 and4/4. Runtime-backed renderer statuses still use the complete1120 reports;
 only catalog API credit changes. No frame pixels, audible output, screenshot or manual result is
 claimed, and no CNA issue was found. Evidence:`/tmp/focused-1121-*`.
+
+### Focused1122 hardware/service/platform C-route revalidation
+
+Seventeen production routes across five residual headers retain manual positive-path dispositions
+after a fresh declaration, implementation, demo and host audit. `c_api.input.haptics`,
+`c_api.input.joystick` and `c_api.input.devices` already call their descriptor and name triples for
+every enumerated device and check the equal-to-count refusal. This host reports zero haptic devices,
+joysticks, touch devices and sensors, so only the empty/bounds branches run; adding their names to
+metadata would misrepresent positive enumeration. Physical devices remain the honest completion
+condition.
+
+The signed-in-gamer headset route validates a real microphone index and delegates to the gamer's
+hardware classification. This host has no capture device. Guide notification delay mutates the
+internal service-invitation quiet interval, capped at120 seconds, but the C API exposes neither a
+readback nor a deterministic invitation fixture. A successful setter return therefore cannot
+demonstrate delayed delivery.
+
+The three Devices routes deliberately cross process or host boundaries. URL launch forwards to the
+platform handler. A production SystemTray constructor asks the native tray service to create an
+icon; current support reports true, while the stable demo intentionally uses its in-memory backend
+for deterministic menu/callback behavior. A production Camera constructor enumerates and opens the
+first physical camera immediately; current enumeration is empty while the synthetic backend covers
+states, exact frames and ownership. Automated external launch, tray UI and camera/permission side
+effects remain inappropriate substitutes for observed positive behavior.
+
+All seven adjacent SOFTWARE CTests pass. Their direct runs pass171 total controls with empty
+stderr and record zero devices in every relevant positive enumeration. The no-op `-j3` build is
+warning-free, metadata validates719/0, and validator/comparator self-tests pass5/5 and4/4.
+Generated coverage remains308/329 types,2128/2326 members,674/753 fields and3081/3205 C routes.
+No hardware, service invitation, external URL handler, tray icon, camera permission/frame,
+screenshot or manual result is claimed; no CNA issue was found. Evidence:`/tmp/focused-1122/*`.

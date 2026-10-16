@@ -12574,3 +12574,29 @@ Commit and push this batch. Next audit the remaining hardware/service/platform p
 `input_devices.h`6. Verify the pinned implementation, host capabilities and existing focused demos
 before retaining manual dispositions. Then continue with the remaining graphics/runtime fixed-name
 and externally observed routes. Keep every compilation at three jobs or fewer.
+
+## Focused1122-hardware-service-platform-C-route-revalidation
+
+The17 production routes in `gamer_services.h`, `devices.h`, `input_haptics.h`,
+`input_joystick.h` and `input_devices.h` have current source/host/demo dispositions. The input demos
+already call descriptor/name triples for each enumerated device and check the upper bound; this host
+reports zero haptic devices, joysticks, touch devices and sensors. The gamer headset route needs a
+real enumerated microphone, while Guide delay has no public readback or deterministic service
+invitation. None receives misleading empty-host metadata credit.
+
+URL launch delegates to an external handler. Production SystemTray creates a native icon, and
+production Camera enumerates and opens the first physical camera in its constructor. Current tray
+support is true and camera enumeration is zero. Stable demos retain deterministic support,
+in-memory tray and synthetic camera coverage without triggering those host side effects.
+
+All seven adjacent SOFTWARE CTests pass. Direct runs pass171 controls with empty stderr. The no-op
+build is warning-free at `-j3`, metadata is719/0 and validator/comparator self-tests pass5/5 and4/4.
+Coverage remains308/329 types,2128/2326 members,674/753 fields and3081/3205 C routes. No physical
+device, invitation delivery, URL handler, native tray icon, camera, screenshot or manual result is
+claimed; no CNA issue was found. Evidence:`/tmp/focused-1122/*`.
+
+Commit and push this documentation-only audit. Next verify the final three externally observed
+production routes: context recovery and string markers in `graphics_device.h`, then the real
+fullscreen transition in `runtime_graphics_manager.h`. Continue afterward with the82 fixed
+type-name routes and21 explicit test hooks, starting with the four-route graphics/runtime headers.
+Keep every compilation at three jobs or fewer.
