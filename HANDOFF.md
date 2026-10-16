@@ -12600,3 +12600,31 @@ production routes: context recovery and string markers in `graphics_device.h`, t
 fullscreen transition in `runtime_graphics_manager.h`. Continue afterward with the82 fixed
 type-name routes and21 explicit test hooks, starting with the four-route graphics/runtime headers.
 Keep every compilation at three jobs or fewer.
+
+## Focused1123-context-recovery-storage-policy-and-external-graphics-routes
+
+The old context-recovery/manual disposition was too broad. Existing
+`c_api.graphics.texture2d_io` now rejects a non-Boolean, disables recovery, creates a live
+renderer-backed texture and observes its missing CPU shadow. Re-enabling recovery leaves that
+texture unchanged but makes the next identical texture retain its shadow. This credits
+`cna_graphics_device_set_context_recovery_enabled` for its deterministic forward-only storage
+behavior without claiming actual device-loss restoration.
+
+The remaining graphics marker is still external-tool-only: SOFTWARE and EasyGL inherit the no-op,
+and the implementing SDL GPU/FNA3D/WebGPU paths are outside this build. The full-screen C route also
+stays platform/manual; the established C++ manual workflow exists, and the earlier Xvfb attempt
+accepted the call before SDL timed out and reverted the mode switch.
+
+The exact SOFTWARE CTest and direct SOFTWARE/OPENGLES3 runs pass30/30 byte-identically at
+`e7416d95021db314343342ac1ef2fa7bf32b995d1eb22e5f6973bf90d43070e5`, with empty stderr. The
+warning-free build uses `-j3`; metadata is719/0 and self-tests pass5/5 plus4/4. Generated coverage
+is308/329 types,2128/2326 members,674/753 fields and3082/3205 C routes; `graphics_device.h` is81/84.
+Complete1120 remains the runtime-status baseline. No context loss, debugger capture, full-screen
+transition, screenshot or manual result is claimed; no CNA issue was found. Evidence:
+`/tmp/focused-1123/*`.
+
+Commit and push this batch. Next revalidate the82 fixed type-name routes, starting with the two
+GraphicsDevice and four GraphicsDeviceManager/GraphicsDeviceInformation helpers. Add them to an
+existing workflow only if the exact identity contributes to that workflow; otherwise preserve the
+intentional trivial disposition. Then audit the21 explicit test hooks. Keep every compilation at
+three jobs or fewer.

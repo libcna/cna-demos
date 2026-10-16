@@ -3467,22 +3467,23 @@ clean `d23e139de` CNA headers. Its original difference was127 routes. Focused100
 inventory against the current693-demo catalog and the same pinned headers, and corrects one
 classification: `cna_content_manager_create_resource` was already executed meaningfully by the CNB
 loader-registry workflow. Focused1121 credits the two Texture2D reflection routes only after the
-decoded-video workflow starts checking their exact value and buffer behavior. The remaining124
-routes retain explicit decisions below; only executed, meaningful behavior is credited, so
-generated coverage is3081/3205.
+decoded-video workflow starts checking their exact value and buffer behavior. Focused1123 moves
+context recovery from external/manual to demonstrated after proving its forward-only CPU-shadow
+policy. The remaining123 routes retain explicit decisions below; only executed, meaningful
+behavior is credited, so generated coverage is3082/3205.
 
 | Class | Count | Exact disposition |
 |---|---:|---|
 | Fixed type-name reflection | 82 | Thirteen headers contain size/copy pairs returning constant canonical names: `audio.h`8, `graphics.h`2, `graphics_device.h`2, `index_resources.h`2, `media.h`8, `media_library.h`26, `runtime_components.h`4, `runtime_graphics_manager.h`4, `sensors.h`8, `storage.h`2, `texture_volume.h`4, `vertex_resources.h`4 and `xact.h`8. Representative value and handle workflows already prove exact sizing, zero-capacity queries, atomic short-buffer refusal and unterminated exact copies. Add one to an existing workflow only when its text is material to that concept; independent controls for all pairs would be count inflation. |
 | Explicit test-only hooks | 21 | `core_ext.h` contributes `cna_graphics_renderer_reset_selection_for_tests_ext`. `sensors.h` contributes ten Accelerometer and ten Gyroscope hooks for subsystem-held/connected probes, started-instance registration, forced dispatch, event-watch failure injection, swallowed-exception inspection and disposal cleanup. They support CNA's own unit tests and are not application behavior. |
-| Already meaningfully demonstrated | 3 | `cna_content_manager_create_resource` successfully creates the resource-backed manager used by `c_api.content.cnb_loader_registry`, which passes it through repeated custom and built-in loader invocations, observes a live callback-scoped manager and destroys the owner. Focused1007 adds its previously missing metadata credit. Focused1121 adds `cna_texture2d_get_type_name_byte_count` and `cna_texture2d_copy_type_name` to the decoded-video workflow: the borrowed frame must identify itself as `Texture2D`, exact-copy without a terminator, reject a short buffer atomically and become invalid after the next player call. |
-| Manual/platform/service or externally observable production behavior | 21 | These remain real API, but the current automated environment cannot establish their positive behavior honestly. Exact decisions follow below. |
+| Already meaningfully demonstrated | 4 | `cna_content_manager_create_resource` successfully creates the resource-backed manager used by `c_api.content.cnb_loader_registry`, which passes it through repeated custom and built-in loader invocations, observes a live callback-scoped manager and destroys the owner. Focused1007 adds its previously missing metadata credit. Focused1121 adds `cna_texture2d_get_type_name_byte_count` and `cna_texture2d_copy_type_name` to the decoded-video workflow: the borrowed frame must identify itself as `Texture2D`, exact-copy without a terminator, reject a short buffer atomically and become invalid after the next player call. Focused1123 demonstrates `cna_graphics_device_set_context_recovery_enabled` through the observable CPU-shadow policy on textures created before and after re-enabling it. |
+| Manual/platform/service or externally observable production behavior | 20 | These remain real API, but the current automated environment cannot establish their positive behavior honestly. Exact decisions follow below. |
 
 | Header and routes | Decision |
 |---|---|
 | `devices.h`: `cna_url_launcher_open_ext`, `cna_system_tray_create`, `cna_camera_create` | Success crosses into an external application, native tray UI or physical camera/permission flow. Existing demos cover availability plus in-memory/synthetic tray and camera behavior. Keep real creation/opening manual. |
 | `gamer_services.h`: `cna_signed_in_gamer_is_headset`, `cna_guide_delay_notifications` | Headset classification needs a service gamer plus hardware state. Notification delay affects invitations delivered by the online service. Offline calls cannot distinguish the behaviors. |
-| `graphics_device.h`: `cna_graphics_device_set_context_recovery_enabled`, `cna_graphics_device_set_string_marker_ext` | Recovery needs an actual renderer-context loss. A string marker is consumed by an external graphics debugger and has no public readback. Calling either without the observer would prove only that the call returned. |
+| `graphics_device.h`: `cna_graphics_device_set_string_marker_ext` | A string marker is consumed by an external graphics debugger and has no public readback. SOFTWARE and EasyGL use the renderer-interface no-op; the implementing SDL GPU, FNA3D and WebGPU backends are outside this build. Calling it here would prove only that the call returned. |
 | `input.h`: `cna_gamepad_get_state_with_dead_zone` | A disconnected neutral controller produces the same state for None, IndependentAxes and Circular. The pure analog route already proves all three algorithms; the live overload remains a physical-controller check. |
 | `input_devices.h`: the `get_info_at`/name-size/name-copy triples for Sensors and TouchDevices | Bounds and empty-host behavior are already exercised. Positive descriptor evidence requires a host exposing those device classes; no deterministic public fixture exists. |
 | `input_joystick.h`: `cna_joysticks_get_info_at` and its name-size/name-copy pair | Positive enumeration and identity need attached joystick hardware. The existing workflow covers descriptor values, disconnected raw state and deterministic connection events without pretending to enumerate a host device. |
@@ -7613,3 +7614,27 @@ warning-free, metadata validates719/0, and validator/comparator self-tests pass5
 Generated coverage remains308/329 types,2128/2326 members,674/753 fields and3081/3205 C routes.
 No hardware, service invitation, external URL handler, tray icon, camera permission/frame,
 screenshot or manual result is claimed; no CNA issue was found. Evidence:`/tmp/focused-1122/*`.
+
+### Focused1123 context-recovery storage policy and external graphics routes
+
+The context-recovery setter has deterministic production behavior without inducing a real device
+loss, correcting its older all-manual disposition. `c_api.graphics.texture2d_io` now rejects a
+non-Boolean setting, disables recovery before creating a renderer-backed Texture2D and observes
+that its CPU shadow is released. Re-enabling recovery does not repopulate that existing texture,
+while the next otherwise-identical texture retains its shadow. This directly proves the documented
+forward-only storage policy and adds `cna_graphics_device_set_context_recovery_enabled` to metadata.
+Actual loss/reconstruction remains renderer/manual scope.
+
+The other two external routes retain their dispositions. `cna_graphics_device_set_string_marker_ext`
+has no public readback and is consumed by an external GPU debugger only on implementing backends;
+SOFTWARE and EasyGL inherit the no-op. `cna_graphics_device_manager_toggle_full_screen` already has
+a manual C++ workflow, while its earlier Xvfb automation returned success before SDL timed out and
+reverted the asynchronous mode change. A returned setter result is not evidence for either effect.
+
+The exact SOFTWARE CTest and direct SOFTWARE plus OPENGLES3/Xvfb runs pass30/30 controls. Both
+direct outputs are byte-identical at SHA-256
+`e7416d95021db314343342ac1ef2fa7bf32b995d1eb22e5f6973bf90d43070e5`; stderr is empty. The
+warning-free incremental build uses `-j3`, metadata validates719/0 and tool self-tests pass5/5 and
+4/4. Generated C coverage reaches3082/3205 and `graphics_device.h`81/84. Runtime status columns
+remain based on Complete1120. No context loss, GPU-debugger capture, full-screen transition,
+screenshot or manual result is claimed; no CNA issue was found. Evidence:`/tmp/focused-1123/*`.

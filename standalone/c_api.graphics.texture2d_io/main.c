@@ -67,6 +67,8 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
     CNA_Handle rgba_texture = CNA_INVALID_HANDLE;
     CNA_Handle decoded = CNA_INVALID_HANDLE;
     CNA_Handle cropped = CNA_INVALID_HANDLE;
+    CNA_Handle no_recovery_texture = CNA_INVALID_HANDLE;
+    CNA_Handle recovery_texture = CNA_INVALID_HANDLE;
     CNA_Texture2DInfo info;
     CNA_TextureInfo common;
     CNA_Texture2DStorageInfo storage;
@@ -185,6 +187,43 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
                            rgba_release == CNA_RESULT_SUCCESS && file_release == CNA_RESULT_SUCCESS,
                        "release every device-owned Texture2D before leaving the callback");
     }
+
+    memset(&storage, 0, sizeof(storage));
+    storage.struct_size = (uint32_t)sizeof(storage);
+    storage.struct_version = UINT32_C(1);
+    cna_demo_check(
+        state->demo,
+        cna_graphics_device_set_context_recovery_enabled(device, UINT8_C(2)) ==
+                CNA_RESULT_INVALID_ARGUMENT &&
+            cna_graphics_device_set_context_recovery_enabled(device, CNA_FALSE) ==
+                CNA_RESULT_SUCCESS &&
+            cna_texture2d_create_from_rgba8(
+                device, 2U, 2U, initial, 4U, &no_recovery_texture) == CNA_RESULT_SUCCESS &&
+            cna_texture2d_get_storage_info(no_recovery_texture, &storage) == CNA_RESULT_SUCCESS &&
+            storage.has_renderer == CNA_TRUE && storage.has_cpu_shadow == CNA_FALSE,
+        "disabling context recovery rejects a non-Boolean and drops the next texture's CPU shadow");
+
+    memset(&storage, 0, sizeof(storage));
+    storage.struct_size = (uint32_t)sizeof(storage);
+    storage.struct_version = UINT32_C(1);
+    cna_demo_check(
+        state->demo,
+        cna_graphics_device_set_context_recovery_enabled(device, CNA_TRUE) ==
+                CNA_RESULT_SUCCESS &&
+            cna_texture2d_get_storage_info(no_recovery_texture, &storage) == CNA_RESULT_SUCCESS &&
+            storage.has_cpu_shadow == CNA_FALSE &&
+            cna_texture2d_create_from_rgba8(
+                device, 2U, 2U, initial, 4U, &recovery_texture) == CNA_RESULT_SUCCESS &&
+            cna_texture2d_get_storage_info(recovery_texture, &storage) == CNA_RESULT_SUCCESS &&
+            storage.has_renderer == CNA_TRUE && storage.has_cpu_shadow == CNA_TRUE,
+        "re-enabling recovery keeps existing storage unchanged and retains future CPU shadows");
+    cna_demo_check(
+        state->demo,
+        (recovery_texture == CNA_INVALID_HANDLE ||
+         cna_texture2d_destroy(recovery_texture) == CNA_RESULT_SUCCESS) &&
+            (no_recovery_texture == CNA_INVALID_HANDLE ||
+             cna_texture2d_destroy(no_recovery_texture) == CNA_RESULT_SUCCESS),
+        "release both context-recovery comparison textures");
     return CNA_RESULT_SUCCESS;
 }
 

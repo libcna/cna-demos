@@ -12869,3 +12869,22 @@ Seven adjacent SOFTWARE CTests pass, as do171 direct controls with empty stderr.
 no CNA issue or new ID is warranted. Continue with the last three externally observed production
 routes in `graphics_device.h` and `runtime_graphics_manager.h`, then revalidate the remaining fixed
 type-name and sensor test-hook groups.
+
+## Focused1123 context-recovery storage policy and external graphics routes
+
+`c_api.graphics.texture2d_io` now proves an observable production effect of
+`cna_graphics_device_set_context_recovery_enabled`: false releases the CPU shadow of the next
+renderer-backed texture, true affects only future textures, and the earlier texture remains
+unchanged. A non-Boolean is refused atomically. This corrects the prior all-manual classification;
+real context-loss restoration remains outside the claim.
+
+The graphics marker still requires an external GPU debugger and implementing renderer, while the
+full-screen toggle still requires a completed native asynchronous transition. SOFTWARE/EasyGL have
+no marker observer, and the earlier Xvfb full-screen attempt timed out and reverted after accepting
+the request. Neither route receives return-only metadata credit.
+
+The exact CTest and both renderer runs pass30/30 with byte-identical stdout and empty stderr. The
+warning-free `-j3` build, metadata719/0 and both tool self-test suites pass. C coverage reaches
+3082/3205 and `graphics_device.h`81/84. Continue with the82 fixed type-name routes, starting with
+the two graphics-device and four graphics-manager/information helpers, then the21 explicit test
+hooks. Add reflection credit only where identity is material to an existing concept.
