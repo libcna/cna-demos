@@ -3526,7 +3526,8 @@ Resume the deeper semantic behavior audit: reconcile explicit residual gaps in
 that strengthens an existing coherent demo. Focused1015 closes the explicit SkinnedEffect
 clone/raw-texture/disposal ownership gap, Focused1016 closes SpriteFont's caller-atlas disposal
 boundary, Focused1017 closes the nonterminal SoundEffect release audit while recording ISSUE-114,
-and Focused1018 closes both live dynamic-audio format-switch refusals. Choose the next gap outside
+Focused1018 closes both live dynamic-audio format-switch refusals, and Focused1019 closes the
+explicit SkinnedEffect vertex/material/texture-alpha interaction gap. Choose the next gap outside
 those completed slices. Revisit the126 intentionally
 uncredited C routes only if public headers or reachable environment capabilities change. Do not add
 metadata merely to raise a count.
@@ -10091,3 +10092,20 @@ OPENGLES3-labelled dummy-audio runs pass25/25 with byte-identical stdout SHA-256
 remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1018-dynamic-live-format/*`. No listening, output-sample or audible-quality claim
 was made, and no CNA issue was found. Continue with the next deterministic behavior gap.
+
+## Focused1019-SkinnedEffect-composed-alpha
+
+`graphics.skinned_effect.vertex_colors` now closes its explicit vertex-alpha interaction gap. The
+original packed red-to-blue RGB control remains, while a second packed vertex set carries black RGB
+and alpha128. Three AlphaBlend panels make only destination attenuation visible over MidnightBlue:
+vertex alpha alone, vertex times material alpha, and vertex times material times texture alpha.
+Their exact expected colors distinguish each additional factor without depending on lighting RGB.
+
+The warning-free `-j3` build, metadata693/0, exact SOFTWARE CTest and validator/comparator self-
+tests5/5 plus4/4 pass. Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass6/6 with byte-identical stdout
+SHA-256 `46d9df45d185c209b2c71b1997e6ae59f4432732aab2e640bfd811fd9231db25` and empty stderr.
+Generated totals remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes.
+Evidence:`/tmp/checkpoint-1019-skinned-alpha/*`; source SHA-256
+`02789565df2131e7b58d148debb2f0d50ecb53c7093047e3821ad940e7460766`. Pixel validation was
+programmatic; no screenshot or manual visual inspection was performed, and no CNA issue was found.
+Continue with the next deterministic behavior gap outside the completed SkinnedEffect alpha slice.

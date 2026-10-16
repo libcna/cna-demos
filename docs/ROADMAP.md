@@ -155,8 +155,9 @@ a check that all authored colors remain visible and that a blank texture row can
   specular_lights now has eight on both renderers with inspected labeled comparisons.
 
 - ✅ `graphics.skinned_effect.vertex_colors`: a plain packed-color skinned vertex contrasts the
-  disabled channel with actual material/texture/tint multiplication and interpolation. Three
-  rendered checks pass on both selections; inspected images agree within one blue level.
+  disabled channel with actual material/texture/tint multiplication and interpolation, then
+  isolates vertex alpha and its multiplication by material and texture alpha. Six rendered checks
+  pass on both selections; the original three-check images agree within one blue level.
 
 - ✅ Stock effects (12): `BasicEffect` (texture, default lighting, three directional lights,
   per-pixel lighting, material colours, fog, alpha), `AlphaTestEffect` cut-outs,
@@ -11131,3 +11132,18 @@ label pass25/25 with identical stdout and empty stderr; the exact SOFTWARE CTest
 warning-free three-job build pass. Partial stereo float-frame output remains intentionally
 unclaimed because no public output-sample observation exists and the input contract accepts it.
 Continue the deterministic behavior audit.
+
+## Focused1019-SkinnedEffect-composed-alpha
+
+The existing vertex-color demo grows from three to six framebuffer controls. Its original packed
+red-to-blue RGB interpolation remains intact. A second packed vertex set uses premultiplied black
+with alpha128, and three AlphaBlend panels isolate half vertex alpha, its multiplication by half
+material Alpha, and then by a half-alpha texture. Exact MidnightBlue destination values distinguish
+all three products without depending on the lit source RGB.
+
+The warning-free three-job build, metadata693/0 and exact SOFTWARE CTest pass. Ten SOFTWARE and ten
+OPENGLES3/Xvfb runs pass6/6 with byte-identical stdout and empty stderr; validator/comparator self-
+tests pass5/5 and4/4. Counts remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205
+C routes. Evidence:`/tmp/checkpoint-1019-skinned-alpha/*`. Pixel validation was programmatic; no
+screenshot or manual visual inspection was performed, and no CNA issue was found. Continue the
+deterministic behavior audit outside this completed alpha interaction.

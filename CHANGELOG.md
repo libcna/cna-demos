@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the SkinnedEffect vertex-color scene with exact framebuffer controls for vertex alpha
+  alone and its multiplication by material and texture alpha.
 - Added both live-playing DynamicSoundEffectInstance format-switch refusals with long queued
   integer/float streams and preserved pending-buffer state.
 - Extended the authored SoundEffect loop workflow through `Stop(false)` at a nonterminal region
