@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the custom-vertex workflow through disposal of the declaration behind an actively bound
+  vertex buffer, including shared resource identity and separate exact buffered/user-draw pixels.
 - Added the distinct-active OcclusionQuery discriminator and recorded CNA-DEMOS-ISSUE-113 for the
   missing documented InvalidOperationException on both tested renderers.
 - Proved that representative zero-count ShaderEffect array updates and a missing uniform name

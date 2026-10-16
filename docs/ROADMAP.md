@@ -11046,3 +11046,21 @@ stdout and empty stderr. The GL batch runner reports one expected failure and no
 Counts remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1012-occlusion-distinct-begin/*`. No screenshot or manual visual inspection was
 performed. Continue with the next deterministic explicit lifetime/behavior gap.
+
+## Focused1013-bound-VertexDeclaration-disposal
+
+`graphics.vertex_declaration.custom_vertex` now binds a real custom-layout `VertexBuffer`, disposes
+the source declaration while the buffer is active and verifies that the retained declaration
+shares the disposed identity without disposing or unbinding the buffer. Its own first-frame pixel
+readback proves that the active buffered fan still draws; a clear and second readback preserve the
+original explicit-declaration user-draw proof independently. This matches FNA's retained object and
+pinned-layout behavior and closes the explicit lifecycle gap without a new demo or CNA issue.
+
+The warning-free `-j3` build, metadata693/0, exact SOFTWARE CTest and validator/comparator self-
+tests5/5 plus4/4 pass. Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass16/16 with byte-identical
+stdout SHA-256 `3c15ae72d23e0b03dbddfacdb632a2e17cee50924ff79781ca77fbd0204826ec`
+and empty stderr. Counts remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C
+routes. Evidence:`/tmp/checkpoint-1013-vertex-declaration-active-dispose/*`; source-audit SHA-256
+`3b57be6da20550cd67b0d9a9e45dad808bed9e9d74e15db26907e2d0f64d30db`. Both pixel checks were
+programmatic; no screenshot or manual visual inspection was performed. Run the next complete 693-
+demo checkpoint before selecting another behavior gap.

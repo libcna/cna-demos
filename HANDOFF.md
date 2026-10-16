@@ -164,6 +164,9 @@ GLSL dialects. Negative raw C++ pointer lengths remain intentionally uninvoked.
 Focused1012 records CNA-DEMOS-ISSUE-113: a distinct OcclusionQuery Begin is accepted while another
 query is active despite the public InvalidOperationException contract. Both tested renderers retain
 exactly that expected failure while all twelve positive lifecycle/visibility controls pass.
+Focused1013 closes the bound VertexDeclaration disposal gap: the retained buffer declaration shares
+the disposed identity, the live buffer remains bound and both its buffered draw and the original
+explicit user-memory draw produce independently checked exact fan pixels on both tested renderers.
 Focused824 adds the actual `PbrEffect` image-based-lighting draw path: invalid fallback, diffuse
 irradiance, intensity scaling, BRDF lookup and roughness-selected prefiltered cube mips.
 Focused825 extends the existing skinned-PBR model with the parallel complete environment bundle and
@@ -3542,9 +3545,14 @@ concrete and base virtual accessors after caller storage and code objects expire
 the resource-lifetime table's bound RenderTargetCube destruction gap, including dangling-binding
 removal, explicit back-buffer recovery, same-address face rebinding and exact readback. Focused1007
 then revalidates the C ABI inventory, corrects the already executed resource-manager constructor
-and leaves126 intentional omissions. Audit deterministic `ShaderEffect::DeclareUniformBlockEXT`
-delivery next, using real layout and pixel evidence if the pinned GL backends support it. Do not add
-metadata merely to raise a count.
+and leaves126 intentional omissions. Focused1008 confirms that `ShaderEffect::DeclareUniformBlockEXT`
+is WebGPU-only and intentionally leaves it uncredited in this build. Focused1009 closes active-query
+disposal; Focused1010 closes RenderTarget2D cross-device move behavior and records ISSUE-112 for the
+secondary EasyGL context omission; Focused1011 closes ShaderEffect no-op uniform boundaries;
+Focused1012 records ISSUE-113 for accepted distinct overlapping queries; and Focused1013 closes
+bound VertexDeclaration disposal with independent buffered/user-draw pixels. Run a complete 693-
+demo validation checkpoint next, then continue with the next reachable deterministic behavior gap.
+Do not add metadata merely to raise a count.
 Focused957 closes the strict public build-configuration parser;
 Focused958 closes the remaining direct manifest mutation, serialization, hashing and fingerprint
 helpers while retaining compiler-produced manifest behavior in its existing workflows. Focused959
@@ -4084,6 +4092,26 @@ batch run reports one expected failure and no unexpected pass. Counts remain307/
 2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1012-occlusion-distinct-begin/*`. No screenshot or manual visual inspection was
 performed. Select the next deterministic explicit lifetime/behavior gap.
+
+## Focused1013 bound VertexDeclaration disposal
+
+`graphics.vertex_declaration.custom_vertex` now binds a real buffer using its20-byte application
+layout, disposes the caller declaration while that buffer is active and observes the shared
+disposed identity through `VertexBuffer::VertexDeclaration`. The buffer itself remains live and
+present in `GetVertexBuffers`. Its first draw receives an independent white-center/black-exterior
+readback; the scene then clears and repeats the original explicit-declaration user-memory draw with
+its own readback. This closes the active-binding gap without allowing either draw to hide a no-op in
+the other and matches FNA's retained declaration/pinned-layout path.
+
+The warning-free `-j3` build, metadata693/0, exact SOFTWARE CTest and validator/comparator self-
+tests5/5 plus4/4 pass. Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass16/16 with byte-identical
+stdout SHA-256 `3c15ae72d23e0b03dbddfacdb632a2e17cee50924ff79781ca77fbd0204826ec`
+and empty stderr. Counts remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C
+routes. Evidence:`/tmp/checkpoint-1013-vertex-declaration-active-dispose/*`; source-audit SHA-256
+`3b57be6da20550cd67b0d9a9e45dad808bed9e9d74e15db26907e2d0f64d30db`. Pixel validation was
+programmatic; no screenshot or manual visual inspection was performed. No CNA issue was found.
+**Next:** run a complete 693-demo checkpoint, then continue the deterministic behavior audit.
+
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

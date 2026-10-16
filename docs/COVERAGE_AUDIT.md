@@ -1745,18 +1745,19 @@ whole-image identity or fixed GPU completion-latency claim is made.
 
 ### VertexElement and custom vertex declarations
 
-Source review at CNA `cc547f5224`: public VertexElement/VertexDeclaration headers and the existing
-`graphics.vertex_declaration.custom_vertex` example. The example now has eight focused controls
-and passes all of them under SOFTWARE and OPENGLES3. Both runs have byte-identical stdout and empty
-stderr.
+Source review began at CNA `cc547f5224` and Focused1013 rechecked the public lifetime/draw paths at
+pinned CNA `d23e139de`: public VertexElement/VertexDeclaration headers, FNA's retained-declaration
+reference path and the existing `graphics.vertex_declaration.custom_vertex` example. The example
+now executes16 controls under SOFTWARE and OPENGLES3. Ten runs per renderer have byte-identical
+stdout and empty stderr.
 
 | Members / behavior | Decision and evidence |
 |---|---|
 | VertexDeclaration construction, VertexStride and GetVertexElements | custom_vertex keeps its plain20-byte Position/Glow/PackedTint structure and its original stride check. Three added controls compare every returned element against the actual `offsetof` values, storage formats and Position0/TextureCoordinate1/Color0 semantics. The layout is then passed directly to DrawUserPrimitives. |
 | VertexElement Offset, VertexElementFormat, VertexElementUsage and UsageIndex | The controls read all four public fields for all three descriptors. A separate mutable value is authored through all four setters and compared with the declaration's middle element, proving the property round trip without changing the declaration used for drawing. |
 | Equals, equality/inequality, GetHashCode and ToString | The declaration's complete element vector equals an independently authored value vector; the matching middle elements satisfy typed Equals and share a hash, while a distinct element compares unequal. The edited descriptor produces the exact readable text `{Offset:12 Format:Single Usage:TextureCoordinate UsageIndex:1}`. These operations belong together as value identity and diagnostics; they do not justify separate demos. |
-| Actual layout consumption | A first-frame readback finds a white center and black exterior on both renderers. This proves that Position and packed Color at the audited offsets drive the visible fan while the extra TextureCoordinate1 field remains legal and unused by BasicEffect. Pixels were read programmatically; no screenshot or visual inspection was performed. |
-| VertexDeclaration Dispose and inherited resource plumbing | A separate complete20-byte declaration is disposed twice, reports disposed and is refused with ObjectDisposedException when a VertexBuffer tries to bind it. The rendered declaration remains live and draws the established white-center fan. Protected hooks, type names, disposal while actively bound and teardown after device loss remain separate lifecycle decisions. |
+| Actual layout consumption | Focused1013 gives buffered and user-memory paths separate first-frame readbacks. Each finds a white center and black exterior on both renderers. Together they prove that Position and packed Color at the audited offsets drive the visible fan while the extra TextureCoordinate1 field remains legal and unused by BasicEffect. Pixels were read programmatically; no screenshot or visual inspection was performed. |
+| VertexDeclaration Dispose and inherited resource plumbing | A separate complete20-byte declaration is disposed twice, reports disposed and is refused with ObjectDisposedException when a VertexBuffer tries to bind it. Focused1013 also binds a live buffer first, disposes its source declaration and observes the shared disposed identity through the retained `VertexBuffer::VertexDeclaration` without disposing or unbinding the buffer. The active buffer still produces the exact fan pixels, matching FNA's retained pinned-layout path. Protected hooks, type names and teardown after device loss remain framework or destructive lifecycle decisions. |
 
 ### DirectionalLight construction defaults
 
@@ -5375,3 +5376,23 @@ The GL batch run reports one expected failure and no unexpected pass. Counts rem
 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1012-occlusion-distinct-begin/*`. No screenshot or manual visual inspection was
 performed. Audit the next deterministic explicit lifetime/behavior gap.
+
+### Focused1013 bound VertexDeclaration disposal
+
+`graphics.vertex_declaration.custom_vertex` now supplements its direct user-memory draw with a real
+buffer using the same20-byte application layout. It binds the buffer, disposes the caller's
+declaration and observes that CNA's buffer-owned wrapper shares the disposed resource identity while
+the buffer remains live and present in `GetVertexBuffers`. This is the lifetime-safe C++ mapping of
+FNA/XNA's retained declaration reference.
+
+The first draw uses that still-active buffer and receives an independent white-center/black-exterior
+readback. The demo then clears the frame and repeats the original explicit-declaration
+`DrawUserPrimitives` path with its own readback, so neither result can hide a no-op in the other.
+The warning-free `-j3` build, metadata693/0, exact SOFTWARE CTest and self-tests5/5 plus4/4 pass.
+Ten SOFTWARE and ten OPENGLES3/Xvfb runs pass16/16 with byte-identical stdout SHA-256
+`3c15ae72d23e0b03dbddfacdb632a2e17cee50924ff79781ca77fbd0204826ec` and empty stderr. Counts
+remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1013-vertex-declaration-active-dispose/*`; source-audit SHA-256
+`3b57be6da20550cd67b0d9a9e45dad808bed9e9d74e15db26907e2d0f64d30db`. No screenshot or manual
+visual inspection was performed, and no CNA issue was found. Run a complete checkpoint before the
+next behavior batch.

@@ -143,6 +143,23 @@ namespace
                                 elements[1].GetHashCode() == authored[1].GetHashCode(),
                             "equal element values compare equal and have the same hash");
 
+            // XNA's VertexBuffer retains the declaration object. CNA represents that reference
+            // with a lifetime-safe shared resource identity: disposing either wrapper marks both
+            // wrappers disposed, but an already bound buffer keeps the layout it needs to draw.
+            VertexDeclaration boundDeclaration(authored);
+            boundVertexBuffer_ = std::make_unique<VertexBuffer>(
+                device, boundDeclaration, static_cast<int>(vertices_.size()), BufferUsage::None);
+            boundVertexBuffer_->SetData(vertices_.data(), static_cast<int>(vertices_.size()));
+            device.SetVertexBuffer(boundVertexBuffer_.get());
+            boundDeclaration.Dispose();
+            const auto boundBuffers = device.GetVertexBuffers();
+            Context().Check(
+                boundDeclaration.getIsDisposedProperty() &&
+                    boundVertexBuffer_->getVertexDeclarationProperty().getIsDisposedProperty() &&
+                    !boundVertexBuffer_->getIsDisposedProperty() && boundBuffers.size() == 1 &&
+                    boundBuffers[0].getVertexBufferProperty() == boundVertexBuffer_.get(),
+                "disposing a bound declaration propagates identity without disposing or unbinding its buffer");
+
             VertexElement edited;
             edited.setOffsetProperty(12);
             edited.setVertexElementFormatProperty(VertexElementFormat::Single);
@@ -244,6 +261,25 @@ namespace
             GraphicsDevice& device = getGraphicsDeviceProperty();
             device.Clear(Color::Black);
             device.setRasterizerStateProperty(RasterizerState::CullNone);
+
+            // FNA retains the declaration's pinned layout after public Dispose. Exercise that
+            // active-binding rule before the separate user-memory draw below changes the pixels.
+            for (EffectPass& pass : effect_->getCurrentTechniqueProperty()->getPassesProperty())
+            {
+                pass.Apply();
+                device.DrawPrimitives(PrimitiveType::TriangleList, 0,
+                                      static_cast<int>(vertices_.size()) / 3);
+            }
+            if (FramesDrawn() == 0)
+            {
+                const CnaDemos::BackBufferPixels pixels(device);
+                const Color centre = pixels.At(400, 240);
+                Context().Check(centre.getRProperty() > 240 && centre.getGProperty() > 240 &&
+                                    centre.getBProperty() > 240 && pixels.At(10, 10) == Color::Black,
+                                "the bound buffer still draws through its disposed declaration identity");
+            }
+
+            device.Clear(Color::Black);
             for (EffectPass& pass : effect_->getCurrentTechniqueProperty()->getPassesProperty())
             {
                 pass.Apply();
@@ -265,6 +301,7 @@ namespace
 
     private:
         std::unique_ptr<BasicEffect> effect_;
+        std::unique_ptr<VertexBuffer> boundVertexBuffer_;
         std::vector<GlowVertex> vertices_;
     };
 }
@@ -288,6 +325,8 @@ CNA_DEMOS_GAME(CustomVertexDemo, {
              "VertexElementUsage::PointSize", "VertexElementUsage::Sample", "VertexElementUsage::TessellateFactor",
              "CNA::Graphics::VertexTypeRegistryEXT", "VertexTypeRegistryEXT::Register",
              "VertexTypeRegistryEXT::TryResolve", "VertexTypeRegistryEXT::Resolve", "VertexBuffer::VertexBuffer",
+             "VertexBuffer::VertexDeclaration", "GraphicsDevice::SetVertexBuffer",
+             "GraphicsDevice::GetVertexBuffers", "GraphicsDevice::DrawPrimitives",
              "DynamicVertexBuffer::DynamicVertexBuffer"},
     .tags = {"3d", "vertex", "layout", "declaration", "registry", "reflection", "cnaext"},
     .needs = CnaDemos::Need::ThreeD,
