@@ -27,6 +27,19 @@ namespace
         ctx.Check(Vector3::CatmullRom(p0, p1, p2, p3, 1.0f) == p2, "amount 1 is the third point");
         // The symmetric control points make the curve bulge above the straight segment.
         ctx.Check(Vector3::CatmullRom(p0, p1, p2, p3, 0.5f).Y > 2.0f, "the curve overshoots the chord between p1 and p2");
+
+        const Vector3 a(2.0f, -4.0f, 1.0f);
+        const Vector3 b(10.0f, 8.0f, -3.0f);
+        const Vector3 c(-6.0f, 12.0f, 5.0f);
+        const Vector3 d(14.0f, -20.0f, -7.0f);
+        ctx.Check(Vector3::CatmullRom(a, b, c, d, -0.5f) == Vector3(-2.25f, 8.25f, 3.5f),
+                  "a negative amount extrapolates before the middle segment");
+
+        Vector3 output;
+        Vector3::CatmullRom(a, b, c, d, 1.5f, output);
+        ctx.Check(output == Vector3(10.75f, -4.75f, -4.5f) &&
+                      output == Vector3::CatmullRom(a, b, c, d, 1.5f),
+                  "an above-one amount extrapolates and the output overload matches");
     }
 }
 

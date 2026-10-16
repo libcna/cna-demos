@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // Vector3::SmoothStep: interpolation that eases in and out.
+#include <cmath>
+
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
 
@@ -27,6 +29,18 @@ namespace
                   "it starts slower than Lerp");
         // Unlike Lerp, the amount is clamped to [0, 1].
         ctx.Check(Vector3::SmoothStep(start, end, 1.5f) == end, "amounts above 1 are clamped");
+
+        const Vector3 offsetStart(2.0f, -4.0f, 1.0f);
+        const Vector3 offsetEnd(10.0f, 8.0f, -3.0f);
+        Vector3 belowOutput;
+        Vector3::SmoothStep(offsetStart, offsetEnd, -0.5f, belowOutput);
+        ctx.Check(Vector3::SmoothStep(offsetStart, offsetEnd, -0.5f) == offsetStart &&
+                      belowOutput == offsetStart,
+                  "a negative amount clamps to the nonzero start in value and output forms");
+
+        const Vector3 nan = Vector3::SmoothStep(offsetStart, offsetEnd, NAN);
+        ctx.Check(std::isnan(nan.X) && std::isnan(nan.Y) && std::isnan(nan.Z),
+                  "a NaN amount propagates to every component");
     }
 }
 

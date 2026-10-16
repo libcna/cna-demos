@@ -11529,3 +11529,15 @@ build, metadata695/0, all four exact CTests and both self-test suites pass. Cove
 unchanged and the Complete1045-backed report is byte-identical. Evidence:
 `/tmp/checkpoint-1052-vector3-identity-bounds/*`. Continue with Vector3 interpolation and
 transform-array boundaries.
+
+## Focused1053 Vector3 interpolation boundaries
+
+The five existing Vector3 interpolation demos gain eleven genuine-XNA boundary controls: Lerp
+grows4->7, SmoothStep5->7, and Barycentric4->5, CatmullRom3->5 and Hermite3->5. Lerp plus the three
+geometric forms extrapolate outside `[0,1]`; SmoothStep clamps to the nonzero start/end, and Lerp/
+SmoothStep propagate NaN through all three components. Each meaningful output overload agrees with
+its value form. CNA matches Windows XNA 4.0 throughout. Ten runs per demo and renderer label are
+byte-stable with empty stderr; the clean `-j3` build, metadata695/0, all five exact CTests and both
+self-test suites pass. Coverage totals remain unchanged and the Complete1045-backed report is
+byte-identical. Evidence:`/tmp/checkpoint-1053-vector3-interpolation/*`. Continue with Vector3
+matrix/quaternion transform output, array, overlap and refusal boundaries.

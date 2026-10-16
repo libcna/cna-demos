@@ -24,6 +24,20 @@ namespace
         ctx.Check(Vector3::Hermite(start, startTangent, end, endTangent, 1.0f) == end, "amount 1 is the end");
         ctx.CheckNear(Vector3::Hermite(start, startTangent, end, endTangent, 0.5f).Y, 5.0, 1e-4,
                       "the midpoint is lifted by an eighth of the tangent difference");
+
+        const Vector3 a(2.0f, -4.0f, 1.0f);
+        const Vector3 b(10.0f, 8.0f, -3.0f);
+        const Vector3 tangentA(3.0f, -5.0f, 2.0f);
+        const Vector3 tangentB(-7.0f, 11.0f, -6.0f);
+        ctx.Check(Vector3::Hermite(a, tangentA, b, tangentB, -0.5f) ==
+                      Vector3(9.25f, 9.5f, -3.0f),
+                  "a negative amount extrapolates before the curve");
+
+        Vector3 output;
+        Vector3::Hermite(a, tangentA, b, tangentB, 1.5f, output);
+        ctx.Check(output == Vector3(-4.75f, 6.5f, -5.0f) &&
+                      output == Vector3::Hermite(a, tangentA, b, tangentB, 1.5f),
+                  "an above-one amount extrapolates and the output overload matches");
     }
 }
 

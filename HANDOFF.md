@@ -10693,3 +10693,23 @@ for reflection. Generated coverage stays307/329 types,2128/2326 members,674/753 
 3079/3205 C routes and is byte-identical to the Complete1045-backed report. Evidence:
 `/tmp/checkpoint-1052-vector3-identity-bounds/*`. No renderer or visual claim was made. Continue
 Vector3 interpolation and transform-array boundaries.
+
+## Focused1053-Vector3-interpolation-boundaries
+
+The five existing Vector3 interpolation demos gain eleven genuine-XNA boundary controls: Lerp
+grows4->7, SmoothStep5->7, and Barycentric4->5, CatmullRom3->5 and Hermite3->5. Lerp plus the three
+geometric forms extrapolate at negative and above-one amounts; SmoothStep clamps to the nonzero
+start/end, and Lerp/SmoothStep propagate NaN through all three components. Each meaningful output
+overload agrees with its value form. CNA matches Windows XNA 4.0 throughout, so no issue is added.
+
+The clean three-job build, metadata695/0, all five exact SOFTWARE CTests and self-tests5/5 plus4/4
+pass. Ten SOFTWARE and ten OPENGLES3-labelled runs per demo are byte-identical with empty stderr.
+Their stdout SHA-256 values are `1ade78a55b610674b583e2c88ca6d16e0ae97c670c4de7385c1b9780c9e9ee84`
+(Lerp), `1ab6dc8100aee269b98201a9ea9be449465a6e1017b2584d3020262e8568111e`
+(SmoothStep), `0e37d0cfeb6148b405484307a1714055e797c287bd1d6e5b985064e10d9b17e9`
+(Barycentric), `47059598ac217d260a8da36cd27817bf0794e6cb6faf72ac6998b5ae49bbe441`
+(CatmullRom) and `5dcaa5b2a29f01282edaa33b24da5812cf7387f0b777a3743efb19e1e190d37b`
+(Hermite). Generated coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205
+C routes and is byte-identical to the Complete1045-backed report. Evidence:
+`/tmp/checkpoint-1053-vector3-interpolation/*`. No renderer or visual claim was made. Continue with
+Vector3 matrix/quaternion transform output, array, overlap and refusal boundaries.

@@ -24,6 +24,15 @@ namespace
         ctx.Check(Vector3::Barycentric(a, b, c, 0.0f, 0.0f) == a, "weights (0, 0) give the first vertex");
         ctx.Check(Vector3::Barycentric(a, b, c, 1.0f, 0.0f) == b, "weights (1, 0) give the second vertex");
         ctx.Check(Vector3::Barycentric(a, b, c, 0.0f, 1.0f) == c, "weights (0, 1) give the third vertex");
+
+        const Vector3 offsetA(2.0f, -4.0f, 1.0f);
+        const Vector3 offsetB(10.0f, 8.0f, -3.0f);
+        const Vector3 offsetC(-6.0f, 12.0f, 5.0f);
+        Vector3 output;
+        Vector3::Barycentric(offsetA, offsetB, offsetC, -0.5f, 1.5f, output);
+        ctx.Check(output == Vector3(-14.0f, 14.0f, 9.0f) &&
+                      output == Vector3::Barycentric(offsetA, offsetB, offsetC, -0.5f, 1.5f),
+                  "outside weights extrapolate and the output overload matches");
     }
 }
 

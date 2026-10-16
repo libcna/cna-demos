@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended all five Vector3 interpolation families through extrapolation, clamping, NaN and
+  output-overload boundaries against genuine Windows XNA 4.0.
 - Extended Vector3 identity, component bounds, division and reflection through signed-zero,
   reversed/NaN range and nonunit-normal behavior, expanding CNA-DEMOS-ISSUE-120 and -122.
 - Extended Vector3 Length, Distance and normalization through ordinary, zero and extreme finite

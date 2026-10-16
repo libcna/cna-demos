@@ -162,7 +162,7 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 | Length, LengthSquared, Distance, DistanceSquared and Normalize | Focused1051 grows `normalize`5->14 and `distance`3->8 controls. Ordinary, zero, `1e-20`, output and squared results match. Genuine Windows XNA retains finite `1e20`/`1e-30` Length and Distance and normalizes both to UnitX; CNA loses exactly four normalization-workflow and two distance-workflow results under ISSUE-118. Evidence:`/tmp/checkpoint-1051-vector3-magnitude-range/*`. |
 | Equality, hash and component bounds | Focused1052 grows `equality_and_string` to seven controls and `clamp_min_max` to six. Typed, boxed and operator equality accept signed-zero UnitX and origin pairs, but CNA raw-bit hashing violates equal-value hash consistency under ISSUE-120. Genuine XNA resolves reversed Clamp ranges to the minimum and chooses the second operand for signed-zero Min/Max ties; CNA differs in both cases under ISSUE-122. Three NaN placements and ordinary identity/text/bounds match. Evidence:`/tmp/checkpoint-1052-vector3-identity-bounds/*`. |
 | Arithmetic, Dot, Cross and Reflect | Focused1052 grows `arithmetic` to ten controls and `reflect` to five. Component and scalar signed-zero division retain XNA's infinity signs and zero-over-zero NaN through value/output forms. Reflection leaves the incident vector unchanged for a zero normal, does not normalize a scaled normal, and permits its output to alias the normal. Separate demos already cover ordinary named/operator arithmetic, orthogonal/parallel Dot/Cross and unit-normal reflection. Trivial output forwards do not justify duplicate controls; extreme Dot/Cross cancellation remains to be dispositioned. Evidence:`/tmp/checkpoint-1052-vector3-identity-bounds/*`. |
-| Interpolation | Separate Lerp, SmoothStep, Barycentric, CatmullRom and Hermite demos cover ordinary in-range geometry. Outside-range, NaN and output behavior remain to be reconciled without creating one demo per spelling. |
+| Interpolation | Focused1053 extends the five existing Lerp, SmoothStep, Barycentric, CatmullRom and Hermite IDs. Genuine XNA and CNA agree that Lerp and the three geometric forms extrapolate outside `[0,1]`, while SmoothStep clamps to its endpoints; Lerp/SmoothStep propagate NaN to all components and every meaningful output overload matches. Evidence:`/tmp/checkpoint-1053-vector3-interpolation/*`. |
 | Matrix/quaternion Transform, TransformNormal and arrays | Existing focused IDs cover ordinary point, normal, quaternion and array paths. Output aliasing, overlap, invalid windows and the shared negative-length check remain to be audited. |
 
 ### BoundingBox, BoundingSphere and Ray value identity
@@ -5923,3 +5923,17 @@ build, metadata695/0, all four exact CTests and self-tests5/5 plus4/4 pass. Gene
 307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes and is byte-identical to the
 Complete1045-backed report. Evidence:`/tmp/checkpoint-1052-vector3-identity-bounds/*`. No renderer
 or visual claim was made. Continue Vector3 interpolation and transform-array boundaries.
+
+### Focused1053 Vector3 interpolation boundaries
+
+The five existing Vector3 interpolation demos gain eleven genuine-XNA boundary controls: Lerp
+grows4->7, SmoothStep5->7, and Barycentric4->5, CatmullRom3->5 and Hermite3->5. Lerp plus the three
+geometric forms extrapolate at negative and above-one amounts; SmoothStep clamps to the nonzero
+start/end, and Lerp/SmoothStep propagate NaN through all three components. Each meaningful output
+overload agrees with its value form. CNA matches Windows XNA 4.0 throughout, so no issue is added.
+Ten SOFTWARE and ten OPENGLES3-labelled runs per demo are byte-identical with empty stderr. The
+clean `-j3` build, metadata695/0, all five exact CTests and self-tests5/5 plus4/4 pass. Generated
+coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes and is
+byte-identical to the Complete1045-backed report. Evidence:
+`/tmp/checkpoint-1053-vector3-interpolation/*`. No renderer or visual claim was made. Continue with
+Vector3 matrix/quaternion transform output, array, overlap and refusal boundaries.
