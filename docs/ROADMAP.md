@@ -11515,3 +11515,17 @@ with stable stdout and empty stderr; the clean `-j3` build, metadata695/0, both 
 CTests and both self-test suites pass. Coverage totals remain unchanged and the Complete1045-backed
 report is byte-identical. Evidence:`/tmp/checkpoint-1051-vector3-magnitude-range/*`. Continue with
 Vector3 signed-zero identity and component-bound behavior.
+
+## Focused1052 Vector3 identity and component boundaries
+
+`math.vector3.equality_and_string` grows to seven controls, `clamp_min_max` to six, `arithmetic` to
+ten and `reflect` to five. Genuine Windows XNA 4.0 preserves equal hashes across signed-zero UnitX
+and origin pairs, resolves reversed Clamp bounds to the minimum and chooses the second operand on
+signed-zero Min/Max ties. CNA differs only in the hash assertion under ISSUE-120 and the two grouped
+component-bound assertions under ISSUE-122. Typed/boxed/operator equality, three NaN placements,
+signed-zero component/scalar division and zero/scaled-normal reflection with output aliasing all
+match. Ten runs per demo and renderer label are byte-stable with empty stderr; the clean `-j3`
+build, metadata695/0, all four exact CTests and both self-test suites pass. Coverage totals remain
+unchanged and the Complete1045-backed report is byte-identical. Evidence:
+`/tmp/checkpoint-1052-vector3-identity-bounds/*`. Continue with Vector3 interpolation and
+transform-array boundaries.

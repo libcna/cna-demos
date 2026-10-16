@@ -14,7 +14,7 @@ capability has a demo. See docs/PROJECT.md.
 
 Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMAP.md):
 
-* Complete: Phase 0-1 (research, infrastructure), 2 (math, 79 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
+* Complete: Phase 0-1 (research, infrastructure), 2 (math, 80 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
@@ -10672,3 +10672,24 @@ remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; reg
 Complete1045 inputs is byte-identical. Evidence:`/tmp/checkpoint-1051-vector3-magnitude-range/*`.
 No renderer or visual claim was made. Continue Vector3 signed-zero identity and component-bound
 behavior, then interpolation and transform arrays.
+
+## Focused1052-Vector3-identity-component-boundaries
+
+`math.vector3.equality_and_string` grows to seven controls, `clamp_min_max` to six, `arithmetic` to
+ten and `reflect` to five. Genuine Windows XNA 4.0 preserves equal hashes across signed-zero UnitX
+and origin pairs, resolves reversed Clamp bounds to the minimum and chooses the second operand on
+signed-zero Min/Max ties. CNA differs only in the hash assertion under ISSUE-120 and the two grouped
+component-bound assertions under ISSUE-122. Typed/boxed/operator equality, three NaN placements,
+signed-zero component/scalar division and zero/scaled-normal reflection with output aliasing all
+match.
+
+The clean three-job build, metadata695/0, all four exact SOFTWARE CTests and self-tests5/5 plus4/4
+pass. Ten SOFTWARE and ten OPENGLES3-labelled runs per demo are byte-identical with empty stderr:
+stdout SHA-256 values are `6bec067958331b759720b9353adcf27f72f8cf90e3fca5c3003b1cce5f2c7c20`
+for equality, `d124f1ec019526fcff50e9783ba54e6a11d8edfe225e2d77702914aed1b3337b` for
+component bounds, `56954cb61c0fe4c4ce10a34b2bc4e9f33b6a739786c83c4226feee099ee1f380`
+for arithmetic and `6764e47c7eb9120ce1428d68f124b2e992b2df1464c4a692fb2dd9a187aa3da9`
+for reflection. Generated coverage stays307/329 types,2128/2326 members,674/753 fields and
+3079/3205 C routes and is byte-identical to the Complete1045-backed report. Evidence:
+`/tmp/checkpoint-1052-vector3-identity-bounds/*`. No renderer or visual claim was made. Continue
+Vector3 interpolation and transform-array boundaries.

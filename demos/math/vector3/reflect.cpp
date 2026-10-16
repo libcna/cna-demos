@@ -23,6 +23,20 @@ namespace
         const Vector3 offWall = Vector3::Reflect(Vector3::UnitX, wallNormal);
         ctx.Print("Reflect(UnitX, normalize(-1, 1, 0)) = {}", offWall.ToString());
         ctx.CheckNear(Vector3::Distance(offWall, Vector3::UnitY), 0.0, 1e-6, "a 45-degree wall turns +X into +Y");
+
+        const Vector3 incident(3.0f, 4.0f, 5.0f);
+        ctx.Check(Vector3::Reflect(incident, Vector3::Zero) == incident,
+                  "a zero normal leaves the reflected vector unchanged");
+
+        const Vector3 scaledNormal(0.0f, -2.0f, 0.0f);
+        const Vector3 scaledReflection = Vector3::Reflect(incident, scaledNormal);
+        Vector3 reflectionOutput;
+        Vector3::Reflect(incident, scaledNormal, reflectionOutput);
+        Vector3 reflectionAlias = scaledNormal;
+        Vector3::Reflect(incident, reflectionAlias, reflectionAlias);
+        ctx.Check(scaledReflection == Vector3(3.0f, -28.0f, 5.0f) &&
+                      reflectionOutput == scaledReflection && reflectionAlias == scaledReflection,
+                  "Reflect does not normalize its normal and its output may alias that normal");
     }
 }
 

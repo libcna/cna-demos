@@ -15,34 +15,37 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
-### CNA-DEMOS-ISSUE-122 -- Vector2 component bounds differ at reversed ranges and signed-zero ties
+### CNA-DEMOS-ISSUE-122 -- Vector2/3 component bounds differ at reversed ranges and signed-zero ties
 
-- **Area/API:** `Microsoft::Xna::Framework::Vector2::Clamp`, `Vector2::Min` and `Vector2::Max`,
+- **Area/API:** `Microsoft::Xna::Framework::Vector2` and `Vector3` `Clamp`, `Min` and `Max`,
   including their output overloads.
-- **Demo/reproduction:** run `math.vector2.component_bounds`. Clamp `(5,-5)` between per-component
-  minimum `(10,10)` and maximum `(0,0)`, then call Min and Max with `(+0,+0)`/`(-0,-0)` in both
-  orders. NaN bounds, component/scalar zero division and unit/zero/scaled-normal reflection are
-  adjacent controls.
+- **Demo/reproduction:** run `math.vector2.component_bounds` and `math.vector3.clamp_min_max`.
+  Clamp a mixed value between per-component minimum10 and maximum0, then call Min and Max with
+  all-positive/all-negative zero vectors in both orders. NaN bounds are adjacent controls;
+  `math.vector3.arithmetic` and `math.vector3.reflect` separately retain the matching Vector3
+  division and reflection boundaries.
 - **Observed:** CNA resolves the reversed Clamp interval to its maximum `(0,0)` rather than its
   minimum `(10,10)`. CNA Min and Max also preserve their first operand when equal zeros differ only
-  by sign, opposite XNA's second-operand result. These are exactly two expected failures among seven
-  controls on each tested renderer label.
+  by sign, opposite XNA's second-operand result. These are the only expected failures on each
+  tested renderer label: two among seven controls in Vector2 and two among six in Vector3.
 - **Expected/reference:** genuine Windows XNA 4.0 resolves both reversed components to the supplied
   minimum in value and output Clamp forms. Both Min and Max select their second operand when the
   comparison is equal: positive-then-negative order therefore returns negative zero, and reversing
   the operands returns positive zero. Value and output forms agree. XNA and CNA match on the three
   distinct NaN Clamp placements and every division/reflection control.
-- **Cause/suggested repair:** CNA's `ClampScalar` composes `std::max(value,min)` then
+- **Cause/suggested repair:** CNA's shared `ClampScalar` composes `std::max(value,min)` then
   `std::min(...,max)`, which returns the maximum for reversed bounds; XNA caps against maximum first
   and then floors against minimum. CNA's direct `std::min`/`std::max` preserve the first operand on
   equality, whereas XNA's ordered comparisons fall through to the second. Preserve those orders
-  explicitly rather than relying on the standard algorithms' tie policy.
+  explicitly rather than relying on the standard algorithms' tie policy. The duplicated vector
+  implementations expose the same behavior and should be repaired consistently.
 - **Evidence/status:** open against pinned CNA
   `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1050-vector2-component-bounds/*`. The clean
-  warning-free three-job build, exact known-issue CTest, metadata695/0 and self-tests5/5 plus4/4
-  pass; ten runs per renderer label reproduce only the two documented assertions with empty stderr.
-  No CNA source was modified and no upstream message was sent.
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1050-vector2-component-bounds/*` and
+  `/tmp/checkpoint-1052-vector3-identity-bounds/*`. Clean warning-free three-job builds, exact
+  known-issue CTests, metadata695/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer
+  label reproduce only the documented assertions with empty stderr. No CNA source was modified and
+  no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-121 -- Vector2 range transforms reject XNA's negative-length no-op
 
@@ -71,33 +74,34 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   pass; ten runs per renderer label reproduce only the one grouped assertion with empty stderr. No
   CNA source was modified and no upstream message was sent.
 
-### CNA-DEMOS-ISSUE-120 -- Equal signed-zero Vector2 and Quaternion values have unequal hashes
+### CNA-DEMOS-ISSUE-120 -- Equal signed-zero Vector2/3 and Quaternion values have unequal hashes
 
-- **Area/API:** `Microsoft::Xna::Framework::Vector2` and `Quaternion` typed/boxed/operator equality
-  and `GetHashCode`.
-- **Demo/reproduction:** run `math.vector2.toolbox_2d` and `math.quaternion.value_identity`.
-  Compare UnitX/Identity with otherwise identical values containing `-0.0f`, then compare each
-  all-positive-zero value with a negative-zero component. Ordinary construction and equality/hash
-  pairs are adjacent positive controls.
+- **Area/API:** `Microsoft::Xna::Framework::Vector2`, `Vector3` and `Quaternion` typed/boxed/operator
+  equality and `GetHashCode`.
+- **Demo/reproduction:** run `math.vector2.toolbox_2d`, `math.vector3.equality_and_string` and
+  `math.quaternion.value_identity`. Compare UnitX/Identity with otherwise identical values
+  containing `-0.0f`, then compare each all-positive-zero value with a negative-zero component.
+  Ordinary construction and equality/hash pairs are adjacent positive controls.
 - **Observed:** CNA correctly treats positive and negative zero as equal through every tested
   equality form, but hashes their raw IEEE-754 bits. Quaternion Identity hashes to `1065353216`
   while its signed-X-zero equal hashes to `-1082130432`; zero hashes to0 while its signed-W-zero
   equal hashes to `-2147483648`. Vector2 exhibits the equivalent UnitX/Y-zero and origin/X-zero
-  mismatches. Each demo retains exactly one expected hash failure, among five Quaternion and
-  fourteen Vector2 controls.
-- **Expected/reference:** genuine Windows XNA 4.0 treats all four pairs as equal and gives each pair
-  equal hashes: `1065353216` for both unit values and0 for both zero values. The equality/hash
-  invariant therefore holds regardless of zero's sign bit.
+  mismatches, and Vector3 does the same for UnitX/Y-zero and origin/X-zero. Each demo retains exactly
+  one expected hash failure, among five Quaternion, fourteen Vector2 and seven Vector3 controls.
+- **Expected/reference:** genuine Windows XNA 4.0 treats all six pairs as equal and gives each pair
+  equal hashes: `1065353216` for both tested unit values and0 for both zero values in every family.
+  The equality/hash invariant therefore holds regardless of zero's sign bit.
 - **Cause/suggested repair:** CNA's repeated `FloatHash` helpers copy each float's raw bits, while
   float equality equates both zeros. Canonicalize either zero sign to the same hash before combining
   components and apply the rule consistently to every affected value type.
 - **Evidence/status:** open against pinned CNA
   `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
   XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1044-quaternion-signed-zero-hash/*` and
-  `/tmp/checkpoint-1047-vector2-signed-zero-hash/*`. Warning-free three-job builds, exact known-
-  issue CTests, metadata694/0 and self-tests5/5 plus4/4 pass; ten runs per renderer label reproduce
-  only each demo's one hash assertion with empty stderr. No CNA source was modified and no upstream
-  message was sent.
+  `/tmp/checkpoint-1047-vector2-signed-zero-hash/*` and
+  `/tmp/checkpoint-1052-vector3-identity-bounds/*`. Warning-free three-job builds, exact known-issue
+  CTests, metadata695/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer label
+  reproduce only each demo's one hash assertion with empty stderr. No CNA source was modified and
+  no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-119 -- Quaternion inverse and division lose extreme finite magnitudes
 

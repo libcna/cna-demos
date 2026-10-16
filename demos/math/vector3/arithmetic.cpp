@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // Component-wise Vector3 arithmetic: operators and the equivalent static methods.
+#include <cmath>
+
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
 
@@ -28,6 +30,26 @@ namespace
         ctx.Check(Vector3::Divide(b, 2.0f) == Vector3(2.0f, 2.5f, 3.0f), "Divide(Vector3, float) divides each component");
         ctx.Check(Vector3::Divide(b, a) == Vector3(4.0f, 2.5f, 2.0f), "Divide(Vector3, Vector3) is component-wise");
         ctx.Check(Vector3::Negate(a) == -a, "Negate equals unary minus");
+
+        const Vector3 numerator(1.0f, -1.0f, 0.0f);
+        const Vector3 divisors(+0.0f, -0.0f, +0.0f);
+        const Vector3 componentQuotient = Vector3::Divide(numerator, divisors);
+        Vector3 componentOutput;
+        Vector3::Divide(numerator, divisors, componentOutput);
+        ctx.Check(std::isinf(componentQuotient.X) && !std::signbit(componentQuotient.X) &&
+                      std::isinf(componentQuotient.Y) && !std::signbit(componentQuotient.Y) &&
+                      std::isnan(componentQuotient.Z) && componentOutput.X == componentQuotient.X &&
+                      componentOutput.Y == componentQuotient.Y && std::isnan(componentOutput.Z),
+                  "component division preserves IEEE infinity signs and zero-over-zero NaN");
+
+        const Vector3 scalarQuotient = Vector3::Divide(numerator, -0.0f);
+        Vector3 scalarOutput;
+        Vector3::Divide(numerator, -0.0f, scalarOutput);
+        ctx.Check(std::isinf(scalarQuotient.X) && std::signbit(scalarQuotient.X) &&
+                      std::isinf(scalarQuotient.Y) && !std::signbit(scalarQuotient.Y) &&
+                      std::isnan(scalarQuotient.Z) && scalarOutput.X == scalarQuotient.X &&
+                      scalarOutput.Y == scalarQuotient.Y && std::isnan(scalarOutput.Z),
+                  "negative-zero scalar division gives opposite infinities and a zero-over-zero NaN");
     }
 }
 
