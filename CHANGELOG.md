@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added the distinct-active OcclusionQuery discriminator and recorded CNA-DEMOS-ISSUE-113 for the
+  missing documented InvalidOperationException on both tested renderers.
 - Proved that representative zero-count ShaderEffect array updates and a missing uniform name
   preserve previously uploaded state on both GLSL dialects.
 - Covered cross-device RenderTarget2D move ownership, binding and payload behavior, and recorded

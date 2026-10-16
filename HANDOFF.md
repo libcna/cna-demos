@@ -161,6 +161,9 @@ reach the target. SOFTWARE passes17/17; OPENGLES3 retains exactly that expected 
 Focused1011 closes the reachable ShaderEffect no-op boundary: representative zero-count vec3/mat4
 updates and a missing scalar name preserve the previously uploaded state and exact pixels on both
 GLSL dialects. Negative raw C++ pointer lengths remain intentionally uninvoked.
+Focused1012 records CNA-DEMOS-ISSUE-113: a distinct OcclusionQuery Begin is accepted while another
+query is active despite the public InvalidOperationException contract. Both tested renderers retain
+exactly that expected failure while all twelve positive lifecycle/visibility controls pass.
 Focused824 adds the actual `PbrEffect` image-based-lighting draw path: invalid fallback, diffuse
 irradiance, intensity scaling, BRDF lookup and roughness-selected prefiltered cube mips.
 Focused825 extends the existing skinned-PBR model with the parallel complete environment bundle and
@@ -4061,6 +4064,26 @@ remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. 
 `/tmp/checkpoint-1011-shader-noop-uniforms/*`. Pixel validation was programmatic; no screenshot or
 manual visual inspection was performed. No CNA issue was found. Select the next explicit reachable
 member/behavior gap outside ShaderEffect.
+
+## Focused1012 distinct active OcclusionQuery refusal
+
+`graphics.occlusion_query.visible_pixels` now begins one owner query and attempts Begin on a second
+object before ending the first. Both SOFTWARE and EasyGL accept the second call instead of throwing
+the public header's promised InvalidOperationException. The contender is disposed before ending the
+owner; later hidden/open queries still complete, proving safe cleanup and isolating the mismatch.
+CNA-DEMOS-ISSUE-113 records the genuine CNA defect.
+
+Source review shows that the wrapper owns only per-object active state and its renderer Begin method
+returns void. Software detects but cannot propagate an occupied native slot; EasyGL attempts the GL
+begin before preserving the existing per-context owner. The warning-free `-j3` build and
+metadata693/0 pass, and the exact SOFTWARE CTest accepts the marker. Ten direct runs per renderer
+execute13 controls with twelve passes and exactly ISSUE-113. Stable stdout SHA-256 values are
+`bef68001cfccc181ebac7885a8a94ba60cbeb08c69fc5a49df7bdf3b75caa189` and
+`0cce5baf79513f1ad419aa37fca901bd99ab7221cb2ffbdc15b16a2272407fb4`; stderr is empty. The GL
+batch run reports one expected failure and no unexpected pass. Counts remain307/329 XNA types,
+2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1012-occlusion-distinct-begin/*`. No screenshot or manual visual inspection was
+performed. Select the next deterministic explicit lifetime/behavior gap.
 runtime `CNA/Content` header pass.
 The earlier native
 renderer identity/category/maturity,

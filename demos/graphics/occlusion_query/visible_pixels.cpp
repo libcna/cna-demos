@@ -92,6 +92,20 @@ namespace
             Context().Check(active.getIsDisposedProperty() && !active.HasRenderer(),
                             "disposing an active query releases its renderer");
 
+            OcclusionQuery owner(device);
+            OcclusionQuery contender(device);
+            owner.Begin();
+            bool distinctBeginRefused = false;
+            try { contender.Begin(); }
+            catch (const System::InvalidOperationException&) { distinctBeginRefused = true; }
+            // If the invalid Begin was accepted, disposing its native object must not end the
+            // owner's query. If it was correctly refused, this is ordinary unused cleanup.
+            contender.Dispose();
+            owner.End();
+            owner.Dispose();
+            Context().Check(distinctBeginRefused,
+                            "Begin refuses a second query while another query is active");
+
             spriteBatch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
             effect_ = std::make_unique<BasicEffect>(device);
@@ -221,7 +235,7 @@ CNA_DEMOS_GAME(OcclusionDemo, {
                    "for one hidden completely, many for one in the open, and a live count for one passing behind "
                    "the wall, read when IsComplete says the answer has arrived; isPixelCountPreciseEXT tells a real "
                    "tally from the 0/1 flag OpenGL ES 3.0 can only give. Scratch queries demonstrate ordering, "
-                   "ordinary disposal and disposal while a Begin/End pair is active.",
+                   "ordinary disposal, active disposal and the distinct-query active Begin contract.",
     .apis = {"OcclusionQuery::OcclusionQuery", "OcclusionQuery::Begin", "OcclusionQuery::End",
              "OcclusionQuery::IsComplete", "OcclusionQuery::PixelCount", "OcclusionQuery::isPixelCountPreciseEXT",
              "OcclusionQuery::Dispose", "GraphicsResource::Dispose", "GraphicsResource::IsDisposed",
@@ -230,4 +244,7 @@ CNA_DEMOS_GAME(OcclusionDemo, {
     .needs = CnaDemos::Need::ThreeD | CnaDemos::Need::OcclusionQuery,
     .frames = 30,
     .assets = {"fonts/pixel_font.cnb"},
+    .restrictions = "CNA-DEMOS-ISSUE-113: Begin accepts a distinct query while another query is active instead "
+                    "of throwing the documented InvalidOperationException.",
+    .knownIssue = "CNA-DEMOS-ISSUE-113",
 })

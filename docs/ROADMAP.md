@@ -11031,3 +11031,18 @@ OPENGLES3 and ten OPENGL33/Xvfb runs pass6/6 with byte-identical stdout SHA-256
 remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1011-shader-noop-uniforms/*`. No screenshot or manual visual inspection was
 performed. Move to the next explicit reachable member/behavior gap outside ShaderEffect.
+
+## Focused1012-distinct-active-OcclusionQuery-refusal
+
+The existing visibility scene now begins an owner query, attempts Begin on a distinct contender,
+disposes the contender and then ends the owner before running its normal measured queries. Both
+SOFTWARE and EasyGL accept the second Begin even though the public header promises
+InvalidOperationException whenever a query is already active. Later queries still complete, so the
+failure is isolated and cleanup is safe. CNA-DEMOS-ISSUE-113 records the mismatch.
+
+The warning-free `-j3` build and metadata693/0 pass, and the exact SOFTWARE CTest accepts the marked
+failure. Ten runs per renderer execute13 controls with twelve passes plus exactly ISSUE-113, stable
+stdout and empty stderr. The GL batch runner reports one expected failure and no unexpected pass.
+Counts remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1012-occlusion-distinct-begin/*`. No screenshot or manual visual inspection was
+performed. Continue with the next deterministic explicit lifetime/behavior gap.

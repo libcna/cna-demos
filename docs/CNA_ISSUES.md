@@ -15,6 +15,34 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-113 -- A second OcclusionQuery Begin ignores the active-query contract
+
+- **Area/API:** `Microsoft::Xna::Framework::Graphics::OcclusionQuery::Begin`, its shared public
+  lifecycle state and the Software/EasyGL native query implementations.
+- **Demo/reproduction:** run `graphics.occlusion_query.visible_pixels`. Create two queries on the
+  same HiDef device, call `Begin` on the owner, then call `Begin` on the contender before ending the
+  owner. Dispose the contender before ending and disposing the owner, so an incorrectly accepted
+  native attempt cannot end or leak into the later visibility queries.
+- **Observed:** the contender's `Begin` returns normally on both SOFTWARE and OPENGLES3. The demo's
+  new assertion is the sole failure; its other12 controls pass, including safe cleanup, active-query
+  disposal and completion of later hidden/open measurements. OPENGLES3 stderr remains empty even
+  though the second GL begin targets an already active occlusion-query target.
+- **Expected/contract:** the public header says `Begin` throws `System::InvalidOperationException`
+  when a query is already active. The second object's call should be refused before its wrapper or
+  native renderer enters a Begin/End pair, while the owner's pair remains usable.
+- **Cause observed in source:** `OcclusionQuery` tracks `isInBeginEndPair_` only on each object and
+  unconditionally records a successful begin after calling the renderer. The renderer method
+  returns `void`, so Software's failed `TryActivateOcclusionQuery` result cannot reach the wrapper.
+  EasyGL invokes the native begin before `try_emplace` leaves the existing per-context owner in its
+  map; neither path raises the documented public exception.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`, reproduced on SOFTWARE and Mesa/X11/Xvfb OPENGLES3.
+  No OPENGL33, physical-GPU, WebGPU or cross-device claim is made. Evidence:
+  `/tmp/checkpoint-1012-occlusion-distinct-begin/*`; the unmarked demo and exact source audit have
+  SHA-256 `4e8a962f85f555bacd6abf384fdc3ca37f906c44b82e73d55917ca54c9a2eced` and
+  `4ce838aaffa7b5622e9401cdf260f13969347768123ba7e6ac6a8f5770848761`. No CNA source was modified
+  and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-112 -- Secondary EasyGL SetRenderTarget runs without its device context
 
 - **Area/API:** `GraphicsDevice::SetRenderTarget`/`SetRenderTargets`, EasyGL renderer-context
