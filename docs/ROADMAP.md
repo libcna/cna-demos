@@ -11708,3 +11708,17 @@ exact CTests and both self-test suites pass. Coverage totals remain unchanged an
 Complete1056-backed report is byte-identical. Evidence:`/tmp/checkpoint-1066-bounding-box-members/*`.
 The meaningful BoundingBox audit is complete; continue with BoundingSphere, beginning with the
 measured negative-radius constructor refusal, then output/intersection/transform boundaries.
+
+## Focused1067 BoundingSphere members and boundaries
+
+New `math.bounding_sphere.containment_boundaries` raises the catalog to702 and math to87. Existing
+creation grows12->16 controls, intersections4->10 and transforms2->5; containment has six.
+Genuine XNA establishes argument validation, creation/merge output and alias forms, complete
+containment/intersection families and transform boundaries. CNA differs by accepting negative
+radii and using the wrong empty-point exception family (new ISSUE-128), plus four point/sphere/
+frustum boundary classifications (new ISSUE-129). Ten runs per demo and renderer label are
+byte-stable with empty stderr. After the configure-only warning, the clean `-j3` build,
+metadata702/0, all four exact CTests and both self-test suites pass. Coverage totals remain
+unchanged and Complete1056 marks the new ID absent. Evidence:
+`/tmp/checkpoint-1067-bounding-sphere-members/*`. The meaningful BoundingSphere audit is complete;
+continue with Ray value, text, output-intersection and direction-boundary behavior.

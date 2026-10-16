@@ -208,9 +208,12 @@ The meaningful Rectangle public-member/behavior audit is complete at pinned d23.
 | BoundingBox containment | Focused1066 grows `math.bounding_box.contains` from four to eight controls. Point, box and sphere value/output forms cover inclusive faces, contained/crossing/disjoint values and inside/outside tangency. Identity-frustum containment distinguishes an enclosing, clipping and distant box in XNA; CNA misclassifies the distant frustum as Intersects because its corner loop never establishes separation, recorded as ISSUE-127. |
 | BoundingBox intersections | Focused1066 grows `math.bounding_box.intersects` from eleven to sixteen controls. Box and sphere value/output paths include overlap, exact contact and a gap; ray output overwrites both hit and miss state; plane output covers Front/Intersecting/Back; frustum intersection covers enclosing, clipped and distant boxes. CNA matches genuine XNA throughout. |
 | BoundingBox creation/merge output and alias behavior | Focused1066 grows `math.bounding_box.merge` from two to four controls. CreateFromSphere value/output forms agree. CreateMerged value/output results agree and its output may alias either input without corrupting Min/Max. CNA matches genuine XNA. Evidence:`/tmp/checkpoint-1066-bounding-box-members/*`. |
-| BoundingSphere equality, operators and hash | `math.bounding_sphere.create` compares the actual CreateFromBoundingBox result with an independently constructed copy through typed/boxed equality, both operators and equal hashes, rejects wrong/empty boxes and distinguishes an expanded radius. Its existing point/box/merge construction remains intact; totals are9 controls on both selections. |
+| BoundingSphere construction, creation and value identity | Focused1067 grows `math.bounding_sphere.create` from twelve to sixteen controls after moving containment into its own workflow. Default/zero/positive-radius construction, signed text, singleton/multiple point sets, box/frustum creation, merged/enclosing spheres, output and both merge aliases all match XNA. Typed/boxed/operator equality and equal hashing remain. CNA accepts a negative radius and throws `std::invalid_argument` rather than the framework ArgumentException for an empty point set, grouped under ISSUE-128. Exact platform-native hash values are intentionally not asserted beyond the equal-value contract. |
+| BoundingSphere containment | New focused `containment_boundaries` has six controls spanning point/sphere/box value/output forms and frustum values. Ordinary interiors, crossings and gaps match. CNA differs at three XNA boundaries under ISSUE-129: an exact surface point is Intersects rather than Disjoint, a larger concentric sphere is Contains rather than Intersects, and a distant frustum is Intersects rather than Disjoint. |
+| BoundingSphere intersections | Focused1067 grows `math.bounding_sphere.intersects` from four to ten controls. Box, sphere, frustum, ray and plane paths cover value/output overlap, contact, miss and all plane classifications. CNA matches except exact external sphere tangency, which XNA excludes and CNA includes under ISSUE-129. |
+| BoundingSphere Transform | Focused1067 grows `math.bounding_sphere.transform` from two to five controls. Uniform placement, signed nonuniform scale using the largest absolute axis, value/output/source-alias parity and zero-scale collapse all match XNA. Evidence:`/tmp/checkpoint-1067-bounding-sphere-members/*`. |
 | Ray equality, operators and hash | `math.ray.intersects` compares the real +X casting ray with an independent copy through typed/boxed equality, both operators and equal hashes, rejects wrong/empty boxes and distinguishes a +Y direction. Its box/sphere/plane hit distances remain intact; totals are8 controls on both selections. |
-| BoundingSphere.Contains and CreateFromFrustum | `math.bounding_sphere.create` now distinguishes Contains/Intersects/Disjoint for points and spheres, and verifies unambiguous box/frustum containment. CreateFromFrustum builds from an identity frustum and numerically encloses all eight actual corners within 1e-5 without asserting an unspecified minimum sphere. The first focused check incorrectly required strict `Contains` for each boundary corner; Ritter construction plus float rounding can put a corner just outside strict classification, so that was a demo assumption and was replaced by the geometric tolerance check already used by the C audit. |
+| BoundingSphere CreateFromFrustum | `math.bounding_sphere.create` builds from an identity frustum and numerically encloses all eight actual corners within 1e-5 without asserting an unspecified minimum sphere. The earlier strict-Contains assumption remains correctly replaced by the geometric tolerance because Ritter construction plus float rounding can put a boundary corner just outside strict classification. |
 
 Focused651 adds twelve member credits without new IDs, moving temporary coverage1545->1557/2326.
 All three IDs have byte-identical renderer outputs and empty stderr; all focused CTests pass.
@@ -225,6 +228,9 @@ with empty stderr and the focused CTest passes. Evidence:`/tmp/checkpoint-652-*`
 The meaningful BoundingBox public-member/behavior audit is complete at pinned d23. Continue with
 BoundingSphere, beginning with constructor refusal and then output/intersection/transform
 boundaries, followed by Ray.
+
+The meaningful BoundingSphere public-member/behavior audit is complete at pinned d23. Continue
+with Ray value, text, output-intersection and direction-boundary behavior.
 
 ### EffectParameter
 
@@ -6207,3 +6213,34 @@ display-cookie warning. Evidence:`/tmp/checkpoint-1066-bounding-box-members/*`. 
 visual claim was made. The meaningful BoundingBox audit is complete. Continue with BoundingSphere,
 beginning with the measured negative-radius constructor refusal, then output/intersection/transform
 boundaries, followed by Ray.
+
+### Focused1067 BoundingSphere members and boundaries
+
+New focused console demo `math.bounding_sphere.containment_boundaries` raises the catalog to702,
+math to87, console to196 and automated to666. Existing `create` is reorganized and grows12->16
+controls, `intersects` grows4->10 and `transform`2->5; the new containment workflow has six.
+Together they cover default/zero/negative construction, empty/single/multiple point sets,
+box/frustum creation, merge output/alias/enclosure, complete point/sphere/box/frustum containment,
+all intersection value/output families and uniform/nonuniform/zero transform output/alias behavior.
+
+Genuine Windows XNA 4.0 exposes two issue groups. CNA accepts a negative radius and throws
+`std::invalid_argument` rather than framework ArgumentException for an empty point set (ISSUE-128,
+one grouped failure among16). Under ISSUE-129, a surface point is Intersects rather than Disjoint,
+a larger concentric sphere is Contains rather than Intersects, a distant frustum is Intersects
+rather than Disjoint, and exact external sphere tangency intersects rather than returning false.
+Containment retains three failures among six and intersections one among10; all five transform
+controls pass.
+
+Ten runs per demo and renderer label are byte-stable with empty stderr. Stdout SHA-256 values are
+`b84104c7d11acf6abe223742e845c9add635f58c2da0a289cb0b09624deddc0d` for creation,
+`2993e6e0ab84fa2ed51caa73455c31335215ba98a8864a1941732de21bca0513` for containment,
+`2f65e0a2ae7ad1d7c67d2db3d2fc3b88c1a2a6e99b71b63af23298c0f0b4f208` for intersections and
+`fefe198f7b6ecc421fe936ae48cbb6a0eeef29d80742ca0df7703164e2623928` for transforms. After the
+configure-only vendored-Draco warning, the clean `-j3` build, metadata702/0, all four exact
+SOFTWARE CTests and self-tests5/5 plus4/4 pass. Coverage remains307/329 types,2128/2326 members,
+674/753 fields and3079/3205 C routes; Complete1056 marks the new containment ID absent.
+Genuine-XNA stdout SHA-256 is `297f4ffe273627b4c146aebc8e2df713d3af0717a184ecdeb41e6be8cb8c5786`;
+its stderr is only the host display-cookie warning. Evidence:
+`/tmp/checkpoint-1067-bounding-sphere-members/*`. No renderer or visual claim was made. The
+meaningful BoundingSphere audit is complete; continue with Ray value, text, output-intersection
+and direction-boundary behavior.

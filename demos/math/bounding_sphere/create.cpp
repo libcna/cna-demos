@@ -12,6 +12,7 @@
 #include "Microsoft/Xna/Framework/ContainmentType.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
+#include "System/ArgumentException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 
@@ -44,20 +45,6 @@ namespace
                   "changing the radius makes two bounding spheres unequal");
 
         const BoundingFrustum identityFrustum(Matrix::getIdentityProperty());
-        const BoundingSphere outer(Vector3::Zero, 5.0f);
-        ctx.Check(outer.Contains(Vector3::Zero) == ContainmentType::Contains &&
-                      outer.Contains(Vector3(5.0f, 0.0f, 0.0f)) == ContainmentType::Intersects &&
-                      outer.Contains(Vector3(6.0f, 0.0f, 0.0f)) == ContainmentType::Disjoint,
-                  "point containment distinguishes the interior, boundary and exterior");
-        ctx.Check(outer.Contains(BoundingSphere(Vector3::Zero, 1.0f)) == ContainmentType::Contains &&
-                      outer.Contains(BoundingSphere(Vector3(4.5f, 0.0f, 0.0f), 1.0f)) ==
-                          ContainmentType::Intersects &&
-                      outer.Contains(BoundingSphere(Vector3(7.0f, 0.0f, 0.0f), 1.0f)) ==
-                          ContainmentType::Disjoint &&
-                      outer.Contains(BoundingBox(-Vector3::One, Vector3::One)) == ContainmentType::Contains &&
-                      outer.Contains(identityFrustum) == ContainmentType::Contains,
-                  "sphere, box and frustum containment preserve the expected classifications");
-
         const BoundingSphere fromFrustum = BoundingSphere::CreateFromFrustum(identityFrustum);
         float farthestCorner = 0.0f;
         for (const Vector3& corner : identityFrustum.GetCorners())
@@ -74,17 +61,64 @@ namespace
         ctx.Print("CreateMerged           = {}", merged.ToString());
         ctx.CheckNear(merged.Radius, 6.0, 1e-5, "two unit spheres 10 apart merge into radius 6");
         ctx.CheckNear(merged.Center.Length(), 0.0, 1e-5, "centred between them");
+
+        ctx.Check(BoundingSphere().Center == Vector3::Zero && BoundingSphere().Radius == 0.0f &&
+                      BoundingSphere(Vector3(1.0f, 2.0f, 3.0f), 0.0f).Radius == 0.0f &&
+                      BoundingSphere(Vector3(-1.0f, 2.0f, -3.0f), 4.0f).ToString() ==
+                          "{Center:{X:-1 Y:2 Z:-3} Radius:4}",
+                  "default and zero-radius construction plus signed text match XNA");
+
+        bool negativeRadiusRejected = false;
+        try { (void)BoundingSphere(Vector3(1.0f, 2.0f, 3.0f), -1.0f); }
+        catch (const System::ArgumentException&) { negativeRadiusRejected = true; }
+        bool emptyPointsUseXnaException = false;
+        try { (void)BoundingSphere::CreateFromPoints({}); }
+        catch (const System::ArgumentException&) { emptyPointsUseXnaException = true; }
+        catch (...) {}
+        ctx.Check(negativeRadiusRejected && emptyPointsUseXnaException,
+                  "XNA rejects a negative radius and an empty point set with ArgumentException");
+
+        const Vector3 lonePoint(-2.0f, 3.0f, -4.0f);
+        ctx.Check(BoundingSphere::CreateFromPoints({lonePoint}) == BoundingSphere(lonePoint, 0.0f),
+                  "one point produces a zero-radius sphere at that point");
+
+        BoundingSphere fromBoxOutput;
+        BoundingSphere::CreateFromBoundingBox(box, fromBoxOutput);
+        ctx.Check(fromBoxOutput == fromBox,
+                  "the CreateFromBoundingBox output form agrees with the value form");
+
+        BoundingSphere mergedOutput;
+        const BoundingSphere left(Vector3(-5.0f, 0.0f, 0.0f), 1.0f);
+        const BoundingSphere right(Vector3(5.0f, 0.0f, 0.0f), 1.0f);
+        BoundingSphere::CreateMerged(left, right, mergedOutput);
+        BoundingSphere aliasLeft = left;
+        BoundingSphere otherLeft = right;
+        BoundingSphere::CreateMerged(aliasLeft, otherLeft, aliasLeft);
+        BoundingSphere otherRight = left;
+        BoundingSphere aliasRight = right;
+        BoundingSphere::CreateMerged(otherRight, aliasRight, aliasRight);
+        ctx.Check(mergedOutput == merged && aliasLeft == merged && aliasRight == merged,
+                  "CreateMerged output may safely alias either input");
+
+        const BoundingSphere enclosing(Vector3::Zero, 10.0f);
+        const BoundingSphere enclosed(Vector3::One, 1.0f);
+        ctx.Check(BoundingSphere::CreateMerged(enclosing, enclosed) == enclosing &&
+                      BoundingSphere::CreateMerged(enclosed, enclosing) == enclosing,
+                  "merging returns an enclosing sphere in either argument order");
     }
 }
 
 CNA_DEMOS_CONSOLE(BoundingSphereCreate, {
     .id = "math.bounding_sphere.create",
     .title = "Create bounding spheres",
-    .description = "Builds BoundingSphere values with CreateFromPoints, CreateFromBoundingBox and CreateMerged.",
+    .description = "Builds BoundingSphere values from points, boxes, a frustum and merged spheres through value, "
+                   "output and alias forms, including constructor and collection refusal boundaries.",
     .apis = {"BoundingSphere::CreateFromPoints", "BoundingSphere::CreateFromBoundingBox",
              "BoundingSphere::CreateMerged", "BoundingSphere::Center", "BoundingSphere::Radius",
-             "BoundingSphere::CreateFromFrustum", "BoundingSphere::Contains",
+             "BoundingSphere::CreateFromFrustum", "BoundingSphere::BoundingSphere", "BoundingSphere::ToString",
              "BoundingSphere::Equals", "BoundingSphere::GetHashCode", "BoundingSphere::op_Equality",
              "BoundingSphere::op_Inequality"},
     .tags = {"bounds", "sphere"},
+    .restrictions = "CNA-DEMOS-ISSUE-128 records BoundingSphere argument-validation differences.",
+    .knownIssue = "CNA-DEMOS-ISSUE-128",
 })

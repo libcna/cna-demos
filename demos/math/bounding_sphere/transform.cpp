@@ -23,14 +23,34 @@ namespace
         ctx.CheckNear(Vector3::Distance(placed.Center, Vector3::Transform(local.Center, world)), 0.0, 1e-5,
                       "the centre moves like a point");
         ctx.CheckNear(placed.Radius, 4.5, 1e-5, "the radius scales with the matrix");
+
+        const BoundingSphere signedLocal(Vector3(1.0f, 2.0f, 3.0f), 2.0f);
+        const Matrix signedNonuniform = Matrix::CreateScale(2.0f, -3.0f, 4.0f) *
+                                        Matrix::CreateTranslation(5.0f, -7.0f, 11.0f);
+        const BoundingSphere signedPlaced = signedLocal.Transform(signedNonuniform);
+        ctx.Check(signedPlaced.Center == Vector3(7.0f, -13.0f, 23.0f) && signedPlaced.Radius == 8.0f,
+                  "nonuniform signed scale uses the largest absolute axis for the radius");
+
+        BoundingSphere output;
+        signedLocal.Transform(signedNonuniform, output);
+        BoundingSphere alias = signedLocal;
+        alias.Transform(signedNonuniform, alias);
+        ctx.Check(output == signedPlaced && alias == signedPlaced,
+                  "the Transform output form agrees and may alias its source");
+
+        const Matrix zeroScale = Matrix::CreateScale(0.0f) *
+                                 Matrix::CreateTranslation(5.0f, -7.0f, 11.0f);
+        const BoundingSphere collapsed = signedLocal.Transform(zeroScale);
+        ctx.Check(collapsed.Center == Vector3(5.0f, -7.0f, 11.0f) && collapsed.Radius == 0.0f,
+                  "zero scale collapses the radius while retaining translation");
     }
 }
 
 CNA_DEMOS_CONSOLE(BoundingSphereTransform, {
     .id = "math.bounding_sphere.transform",
     .title = "Transform a bounding sphere",
-    .description = "Moves a model-space BoundingSphere into world space with BoundingSphere::Transform; the "
-                   "centre is transformed and the radius scaled.",
+    .description = "Transforms BoundingSphere values through uniform, signed nonuniform and zero scale using "
+                   "value, output and source-alias forms.",
     .apis = {"BoundingSphere::Transform"},
     .tags = {"bounds", "sphere", "world"},
 })

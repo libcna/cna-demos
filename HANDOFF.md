@@ -69,16 +69,16 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-701 project-built catalog demos in19 categories: math86, game33, graphics185, audio23, core6,
+702 project-built catalog demos in19 categories: math87, game33, graphics185, audio23, core6,
 content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are195 console,296 game and210
-standalone; 665 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are196 console,296 game and210
+standalone; 666 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete1056's full runtime reports; they include all695
-baseline catalog IDs in both renderer suites. The six new `math.vector4.*` focused IDs are
-explicitly absent until the next complete checkpoint; its `math.point.basics` result also predates
-the new ISSUE-124 assertion, while all four `math.rectangle.*` results predate the Focused1064-1065
-assertions under ISSUE-124/125. Its four `math.bounding_box.*` results likewise predate the
-Focused1066 assertions under ISSUE-126/127.
+baseline catalog IDs in both renderer suites. The six new `math.vector4.*` IDs and new
+`math.bounding_sphere.containment_boundaries` are explicitly absent until the next complete
+checkpoint. The baseline results for `math.point.basics`, all four `math.rectangle.*`, all four
+`math.bounding_box.*` and the three older `math.bounding_sphere.*` IDs predate Focused1063-1067's
+new assertions under ISSUE-124 through ISSUE-129.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
 3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1056's
 full runtime reports are the baseline inputs for the695-ID checkpoint catalog. Selected semantic
@@ -11010,3 +11010,34 @@ The same genuine-XNA probe establishes the next exact priority: a negative Bound
 throws ArgumentException, while pinned CNA's constructor stores it without validation. Continue
 with BoundingSphere constructor refusal, output forms, intersections and transform boundaries,
 then Ray.
+
+## Focused1067-BoundingSphere-members-and-boundaries
+
+New focused console demo `math.bounding_sphere.containment_boundaries` raises the catalog to702,
+math to87, console to196 and automated to666. Existing `create` is reorganized and grows12->16
+controls, `intersects` grows4->10 and `transform`2->5; the new containment workflow has six.
+Together they cover default/zero/negative construction, empty/single/multiple point sets,
+box/frustum creation, merge output/alias/enclosure, complete point/sphere/box/frustum containment,
+all intersection value/output families and uniform/nonuniform/zero transform output/alias behavior.
+
+Genuine Windows XNA 4.0 exposes two issue groups. CNA accepts a negative radius and throws
+`std::invalid_argument` rather than framework ArgumentException for an empty point set (ISSUE-128,
+one grouped failure among16). CNA also differs at four classification boundaries (ISSUE-129): a
+surface point is Intersects rather than Disjoint, a larger concentric sphere is Contains rather
+than Intersects, a distant frustum is Intersects rather than Disjoint, and exact external sphere
+tangency intersects rather than returning false. The containment demo retains three failures among
+six and intersections one among10; all five transform controls pass.
+
+The configure-only vendored-Draco warning is unchanged; the clean follow-up `-j3` build is
+warning-free. Metadata is702/0, all four exact SOFTWARE CTests and validator/comparator
+self-tests5/5 plus4/4 pass. Ten runs per demo and renderer label are byte-stable with empty stderr.
+Stdout SHA-256 values are `b84104c7d11acf6abe223742e845c9add635f58c2da0a289cb0b09624deddc0d`
+for creation, `2993e6e0ab84fa2ed51caa73455c31335215ba98a8864a1941732de21bca0513`
+for containment, `2f65e0a2ae7ad1d7c67d2db3d2fc3b88c1a2a6e99b71b63af23298c0f0b4f208`
+for intersections and `fefe198f7b6ecc421fe936ae48cbb6a0eeef29d80742ca0df7703164e2623928`
+for transforms. Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C
+routes; Complete1056 marks the new containment ID absent. Genuine-XNA stdout SHA-256 is
+`297f4ffe273627b4c146aebc8e2df713d3af0717a184ecdeb41e6be8cb8c5786`; its stderr is only the
+host display-cookie warning. Evidence:`/tmp/checkpoint-1067-bounding-sphere-members/*`. No
+renderer or visual claim was made. The meaningful BoundingSphere audit is complete; continue with
+Ray value, text, output-intersection and direction-boundary behavior.

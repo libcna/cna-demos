@@ -15,6 +15,55 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-129 -- BoundingSphere boundary classifications differ from XNA
+
+- **Area/API:** `Microsoft::Xna::Framework::BoundingSphere::Contains` for points, spheres and
+  frusta, plus `BoundingSphere::Intersects(BoundingSphere)` value/output forms.
+- **Demo/reproduction:** run `math.bounding_sphere.containment_boundaries` and
+  `math.bounding_sphere.intersects`. Test a point exactly on a radius-five surface, a larger
+  concentric sphere, an identity frustum against a distant sphere, and two externally tangent
+  spheres. Adjacent controls cover interiors, crossings, gaps, boxes, rays and planes.
+- **Observed:** CNA calls the surface point Intersects, says the larger concentric sphere is
+  Contains, calls the distant frustum Intersects and reports exact external sphere tangency as an
+  intersection. The containment workflow retains three expected failures among six controls and
+  the intersection workflow one among ten.
+- **Expected/reference:** genuine Windows XNA 4.0 classifies those cases as Disjoint, Intersects,
+  Disjoint and false respectively. Its corresponding output forms agree with the value forms.
+- **Cause/suggested repair:** point containment needs XNA's inclusive exterior comparison; sphere
+  containment must require the outer radius to cover the inner radius before applying the squared
+  difference; frustum containment needs a real separation test instead of its constant-zero
+  distance placeholder; sphere intersection uses strict distance below the summed radii.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1067-bounding-sphere-members/*`. After the
+  configure-only vendored-Draco warning, the clean warning-free three-job build, all four exact
+  SOFTWARE CTests, metadata702/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer
+  label reproduce only the four containment/intersection assertions with empty stderr. No CNA
+  source was modified and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-128 -- BoundingSphere argument validation differs from XNA
+
+- **Area/API:** `Microsoft::Xna::Framework::BoundingSphere` constructor and
+  `BoundingSphere::CreateFromPoints`.
+- **Demo/reproduction:** run `math.bounding_sphere.create`. Construct radius zero and negative one,
+  call CreateFromPoints with empty and singleton collections, and retain ordinary box/frustum/
+  multi-point/merge value and output controls.
+- **Observed:** CNA accepts and stores the negative radius. Its empty point set throws
+  `std::invalid_argument`, which is not CNA's `System::ArgumentException`. The grouped validation
+  control is the sole expected failure among sixteen checks.
+- **Expected/reference:** genuine Windows XNA 4.0 accepts radius zero, rejects a negative radius
+  with ArgumentException, and also uses ArgumentException for an empty point collection. A single
+  point produces a zero-radius sphere at that point.
+- **Cause/suggested repair:** reject `radius < 0` in the constructor and use the framework's
+  `System::ArgumentException` for the empty collection so callers can handle the XNA contract.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1067-bounding-sphere-members/*`. After the
+  configure-only vendored-Draco warning, the clean warning-free three-job build, all four exact
+  SOFTWARE CTests, metadata702/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer
+  label reproduce only the documented grouped assertion with empty stderr. No CNA source was
+  modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-127 -- BoundingBox Contains misclassifies a distant frustum as Intersects
 
 - **Area/API:** `Microsoft::Xna::Framework::BoundingBox::Contains(BoundingFrustum)`.
