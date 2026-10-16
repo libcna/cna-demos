@@ -5668,3 +5668,12 @@ acceptance is the only difference and remains under CNA-DEMOS-ISSUE-117. Ten run
 label are byte-stable with empty stderr; build, metadata, exact known-issue CTest and both self-test
 suites pass. Coverage totals are unchanged. Evidence:
 `/tmp/checkpoint-1030-matrix-perspective-boundaries/*`.
+
+### Focused1031 Matrix orthographic boundaries
+
+`math.matrix.orthographic` now covers zero dimensions, zero/nonzero equal-depth planes, negative
+dimensions, reversed depth, fully collapsed zero/nonzero off-centre bounds and the output overload.
+Genuine Windows XNA 4.0 establishes the exact finite/infinity/NaN classifications and CNA matches
+all ten controls. Ten runs per renderer label are byte-stable with empty stderr; build, metadata,
+exact CTest and both self-test suites pass. Coverage totals are unchanged. Evidence:
+`/tmp/checkpoint-1031-matrix-orthographic-boundaries/*`.

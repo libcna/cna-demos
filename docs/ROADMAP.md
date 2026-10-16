@@ -11298,3 +11298,11 @@ dimension, collapsed-span and NaN behavior. CNA differs only at exact `MathHelpe
 CNA-DEMOS-ISSUE-117. The warning-free `-j3` build, metadata693/0, exact known-issue CTest, ten runs
 per renderer label and both self-test suites pass with stable stdout and empty stderr. Coverage is
 unchanged. Evidence:`/tmp/checkpoint-1030-matrix-perspective-boundaries/*`.
+
+## Focused1031 Matrix orthographic boundaries
+
+`math.matrix.orthographic` adds XNA-referenced zero-dimension, equal-depth, collapsed off-centre,
+reversed-range and output-overload controls. CNA matches all ten exact finite/infinity/NaN results.
+The warning-free `-j3` build, metadata693/0, exact CTest, ten runs per renderer label and both
+self-test suites pass with stable stdout and empty stderr. Coverage is unchanged. Evidence:
+`/tmp/checkpoint-1031-matrix-orthographic-boundaries/*`.

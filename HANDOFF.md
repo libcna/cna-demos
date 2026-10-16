@@ -10302,3 +10302,18 @@ The warning-free three-job build, metadata693/0, exact known-issue SOFTWARE CTes
 `0a28b1089ff31658ff6853c29650dc8c65fa0df060ab48d43689026ef3304890` and empty stderr. Coverage
 totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1030-matrix-perspective-boundaries/*`. Continue with the next deterministic gap.
+
+## Focused1031-Matrix-orthographic-boundaries
+
+`math.matrix.orthographic` grows from five to ten controls without a new ID. Genuine Windows XNA
+4.0 proves that, unlike the perspective constructors, zero centred dimensions, equal depth planes
+and collapsed off-centre spans are not refused: their formula results remain signed infinity or
+NaN according to numerator, while negative dimensions and reversed depth preserve their signs.
+The output overload matches the value overload. CNA matches every exact classification and value.
+
+The warning-free three-job build, metadata693/0, exact SOFTWARE CTest and self-tests5/5 plus4/4
+pass. Ten SOFTWARE and ten OPENGLES3-labelled runs pass10/10 with byte-identical stdout SHA-256
+`8a78dce5023864685fd84ede73b73c5c33bd2b1dd96506fece8dfb95afad167e` and empty stderr. Coverage
+totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1031-matrix-orthographic-boundaries/*`. No rendering or visual claim was made and
+no CNA issue was found. Continue with the next deterministic behavior gap.

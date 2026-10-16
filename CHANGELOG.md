@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended orthographic matrices through zero dimensions, collapsed depth/off-centre spans,
+  reversed ranges and output-overload parity with exact Windows XNA IEEE-754 behavior.
 - Extended perspective matrices through XNA's angle/depth refusal and IEEE-754 dimension/aspect
   boundaries, recording CNA-DEMOS-ISSUE-117 for accepting an exact Pi field of view.
 - Extended Matrix billboard coverage through coincident camera/object positions, explicit camera
