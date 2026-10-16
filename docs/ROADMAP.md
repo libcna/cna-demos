@@ -11583,3 +11583,16 @@ and passes under OPENGLES3/Xvfb. Normalized stderr is unchanged and both self-te
 Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `build/linux-full/reports/checkpoint-1056-complete-*`. Continue with Vector4 magnitude/range,
 identity, component-bound, interpolation and transform-array behavior.
+
+## Focused1057 Vector4 magnitude range
+
+New `math.vector4.magnitude_range` raises the catalog to696 and math to81. Genuine Windows XNA
+4.0 keeps sole-X `1e20`/`1e-30` Length and Distance finite and normalizes both to UnitX through
+static, output and member forms even when squared results become infinity or zero. CNA loses
+exactly six results through direct float squared sums, extending ISSUE-118; ordinary, zero and
+subnormal-square controls match. Ten runs per renderer label retain only those expected failures
+among14 controls with byte-identical stdout and empty stderr. The clean `-j3` build, metadata696/0,
+the exact known-issue CTest and both self-test suites pass. Coverage totals remain unchanged and
+Complete1056 marks only this new ID absent. Evidence:
+`/tmp/checkpoint-1057-vector4-magnitude-range/*`. Continue with Vector4 construction/identity and
+component-bound behavior.

@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Added a focused Vector4 magnitude-range demo and extended ISSUE-118 with XNA-referenced extreme
+  `Length`, `Distance` and normalization behavior.
 - Refreshed the complete checkpoint at 695 demos: all 708 enabled CTests and both full renderer
   smoke suites pass their expected-status contracts, with Vector2/3 behavior changes reviewed.
 - Fixed the `--list-ids` CLI test fixture to expect the ISSUE-118 marker now carried by

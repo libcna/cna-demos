@@ -165,6 +165,16 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 | Interpolation | Focused1053 extends the five existing Lerp, SmoothStep, Barycentric, CatmullRom and Hermite IDs. Genuine XNA and CNA agree that Lerp and the three geometric forms extrapolate outside `[0,1]`, while SmoothStep clamps to its endpoints; Lerp/SmoothStep propagate NaN to all components and every meaningful output overload matches. Evidence:`/tmp/checkpoint-1053-vector3-interpolation/*`. |
 | Matrix/quaternion Transform, TransformNormal and arrays | Focused1054 extends the four existing transform IDs through matrix/normal/quaternion output aliasing, every full/range array family, guarded subranges, both same-array overlap directions, atomic invalid positive windows and zero length at one-past-end indices. CNA matches XNA except that its shared range check rejects the negative length XNA treats as an empty range, extending ISSUE-121. Evidence:`/tmp/checkpoint-1054-vector3-transform-arrays/*`. |
 
+### Vector4
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Length, LengthSquared, Distance, DistanceSquared and Normalize | New focused `magnitude_range` covers ordinary and zero member/static/output normalization plus ordinary value/output Distance. Genuine Windows XNA keeps sole-X `1e20` and `1e-30` Length/Distance finite and normalizes both to UnitX even when the separately returned squared result is infinity or zero. CNA loses exactly those six observable results under ISSUE-118. Evidence:`/tmp/checkpoint-1057-vector4-magnitude-range/*`. |
+
+Constructor/constant identity, equality/hash, component bounds and arithmetic, interpolation, Dot
+range and matrix/quaternion array transforms remain the next Vector4 audit rows; existing broad
+`color_math` and `homogeneous_transform` coverage will be retained where it is already meaningful.
+
 ### BoundingBox, BoundingSphere and Ray value identity
 
 | Members / behavior | Decision and evidence |
@@ -5986,3 +5996,20 @@ OPENGLES3/Xvfb run passes. Normalized stderr is unchanged and tool self-tests pa
 Generated coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes.
 Evidence:`build/linux-full/reports/checkpoint-1056-complete-*`. No visual, listening, physical-
 input or external-service validation was performed. Begin the Vector4 behavior table next.
+
+### Focused1057 Vector4 magnitude range
+
+New focused console demo `math.vector4.magnitude_range` raises the catalog to696 and math to81.
+Genuine Windows XNA 4.0 keeps sole-X `1e20` and `1e-30` Length/Distance finite and normalizes both
+to UnitX through static, output and member forms even when LengthSquared/DistanceSquared return
+infinity or zero. CNA's direct float squared sums lose exactly those six results, extending
+ISSUE-118. Ordinary, zero and `1e-20` subnormal-square controls match.
+
+Ten runs per renderer label retain exactly six expected failures among14 controls with byte-
+identical stdout SHA-256 `ca19e9677748f67139c4e641a8a5cf61350342fcdf2787f364edccfe18495c64`
+and empty stderr. The clean `-j3` build, metadata696/0, exact known-issue SOFTWARE CTest and
+self-tests5/5 plus4/4 pass. Coverage remains307/329 types,2128/2326 members,674/753 fields and
+3079/3205 C routes; Complete1056 marks only this new ID absent. Genuine-XNA stderr contains only
+the host display-cookie warning. Evidence:`/tmp/checkpoint-1057-vector4-magnitude-range/*`. No
+renderer or visual claim was made. Continue with Vector4 construction/identity and component
+bounds.

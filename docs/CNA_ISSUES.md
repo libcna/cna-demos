@@ -162,19 +162,21 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 ### CNA-DEMOS-ISSUE-118 -- Vector and Quaternion magnitude operations lose extreme finite ranges
 
 - **Area/API:** `Microsoft::Xna::Framework::Quaternion::Length`/`Normalize` and
-  `Vector2`/`Vector3::Length`/`Distance`/`Normalize`, including static/member/output forms.
+  `Vector2`/`Vector3`/`Vector4` `Length`/`Distance`/`Normalize`, including
+  static/member/output forms.
 - **Demo/reproduction:** run `math.quaternion.normalize`, `math.vector2.length`,
-  `math.vector3.normalize` and `math.vector3.distance`. Measure sole-component `1e20` and `1e-30`
-  values, normalize the same finite inputs and measure value/output Distance from zero. Ordinary
-  magnitude/normalization, zero and separately rounded squared-magnitude controls distinguish the
-  range defect from normal behavior.
+  `math.vector3.normalize`, `math.vector3.distance` and `math.vector4.magnitude_range`. Measure
+  sole-component `1e20` and `1e-30` values, normalize the same finite inputs and measure
+  value/output Distance from zero. Ordinary magnitude/normalization, zero and separately rounded
+  squared-magnitude controls distinguish the range defect from normal behavior.
 - **Observed:** CNA returns infinity for every tested `Length(1e20)` path and zero for every
-  `Length(1e-30)` path. Quaternion normalization loses the huge value. Every Vector2 and Vector3
-  normalization form loses both extremes, while both vector Distance paths likewise return
-  infinity or zero. Quaternion retains three expected failures among eleven controls; Vector2
-  retains six among eighteen; Vector3 normalization retains four among fourteen and distance two
-  among eight. The separately returned `LengthSquared` and `DistanceSquared` intentionally overflow
-  to infinity or underflow to zero and match XNA.
+  `Length(1e-30)` path. Quaternion normalization loses the huge value. Every Vector2, Vector3 and
+  Vector4 normalization form loses both extremes, while all three vector Distance paths likewise
+  return infinity or zero. Quaternion retains three expected failures among eleven controls;
+  Vector2 retains six among eighteen; Vector3 normalization retains four among fourteen and
+  distance two among eight; Vector4 retains six among fourteen. The separately returned
+  `LengthSquared` and `DistanceSquared` intentionally overflow to infinity or underflow to zero
+  and match XNA.
 - **Expected/reference:** genuine Windows XNA 4.0 returns the original finite magnitudes from
   Length and vector Distance even when their squared counterparts are infinity or zero. It
   normalizes each sole positive component to UnitX in every tested public form. XNA and CNA both
@@ -187,7 +189,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Evidence/status:** `/tmp/checkpoint-1036-quaternion-normalize-boundaries/*`,
   `/tmp/checkpoint-1043-quaternion-length-range/*` and
   `/tmp/checkpoint-1046-vector2-magnitude-range/*` and
-  `/tmp/checkpoint-1051-vector3-magnitude-range/*`; exact known-issue CTests, metadata695/0 and
+  `/tmp/checkpoint-1051-vector3-magnitude-range/*` and
+  `/tmp/checkpoint-1057-vector4-magnitude-range/*`; exact known-issue CTests, metadata696/0 and
   self-tests5/5 plus4/4 pass. The earlier Quaternion exact-equality tiny assertion was a corrected
   over-strict demo oracle, not a second CNA issue. No CNA source was modified and no upstream
   message was sent.

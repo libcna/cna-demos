@@ -14,7 +14,7 @@ capability has a demo. See docs/PROJECT.md.
 
 Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMAP.md):
 
-* Complete: Phase 0-1 (research, infrastructure), 2 (math, 80 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
+* Complete: Phase 0-1 (research, infrastructure), 2 (math, 81 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
   graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
@@ -69,12 +69,13 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-695 project-built catalog demos in19 categories: math80, game33, graphics185, audio23, core6,
+696 project-built catalog demos in19 categories: math81, game33, graphics185, audio23, core6,
 content68, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are189 console,296 game and210
-standalone; 659 are automated,33 smoke-only and3 manual. Every declared category has demos.
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are190 console,296 game and210
+standalone; 660 are automated,33 smoke-only and3 manual. Every declared category has demos.
 Coverage: generated docs/COVERAGE.md uses Complete1056's full runtime reports; they include all695
-current catalog IDs in both renderer suites.
+baseline catalog IDs in both renderer suites. New `math.vector4.magnitude_range` is explicitly
+absent until the next complete checkpoint.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
 3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1056's
 full runtime reports are the baseline inputs for the695-ID checkpoint catalog. Selected semantic
@@ -10788,3 +10789,25 @@ and `d3afdf8c54f379539128e00257b7301102627276167314dd95d8496ebfa11f46`. No visua
 physical-input or external-service validation was performed. Continue with the Vector4 public-
 member/behavior audit, beginning with magnitude/range behavior before identity, component bounds,
 interpolation and transform arrays.
+
+## Focused1057-Vector4-magnitude-range
+
+New focused console demo `math.vector4.magnitude_range` raises the catalog to696 and math to81.
+Genuine Windows XNA 4.0 keeps sole-X `1e20` and `1e-30` Length/Distance finite and normalizes both
+to UnitX in static, output and member forms even when LengthSquared/DistanceSquared respectively
+return infinity or zero. CNA's direct float squared sums lose exactly those six results, extending
+ISSUE-118. Ordinary magnitude/distance, zero normalization and a `1e-20` subnormal-square case all
+match.
+
+The configure step required the established unrestricted shared-SDL lock and emitted only the
+known vendored-Draco CMP0148 warning; the clean follow-up `-j3` build is warning-free. Metadata is
+696/0, the exact known-issue SOFTWARE CTest and validator/comparator self-tests5/5 plus4/4 pass.
+Ten SOFTWARE and ten OPENGLES3-labelled runs retain exactly six expected failures among14 controls
+with byte-identical stdout SHA-256
+`ca19e9677748f67139c4e641a8a5cf61350342fcdf2787f364edccfe18495c64` and empty stderr. Generated
+coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; Complete1056
+marks only this new ID absent. The genuine-XNA probe stdout SHA-256 is
+`298559dc6d9486dd14de5b38ffa3e4ebd9494daf9b7b906896b1cdbd829469fc`; its stderr is only the host
+display-cookie warning. Evidence:`/tmp/checkpoint-1057-vector4-magnitude-range/*`. No renderer or
+visual claim was made. Continue with Vector4 constructor/constant identity and signed-zero hash,
+then component bounds, arithmetic/Dot, interpolation and transform arrays.
