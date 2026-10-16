@@ -29,14 +29,34 @@ namespace
         ctx.Print("shadow of {} with light {}: {}", point.ToString(), lightDirection.ToString(), onGround.ToString());
         ctx.CheckNear(onGround.Y, 0.0, 1e-5, "the shadow lies on the ground plane");
         ctx.CheckNear(std::abs(onGround.X - point.X), point.Y, 1e-4, "a 45-degree light offsets it by the height");
+
+        // XNA normalizes either plane internally. Multiplying every coefficient by two still
+        // describes y = 2 and must produce the exact same reflection or shadow matrix.
+        const Plane elevated(Vector3::Up, -2.0f);
+        const Plane elevatedScaled(Vector3(0.0f, 2.0f, 0.0f), -4.0f);
+        const Matrix reflection = Matrix::CreateReflection(elevated);
+        Matrix reflectionOutput;
+        Matrix::CreateReflection(elevatedScaled, reflectionOutput);
+        ctx.Check(Matrix::CreateReflection(elevatedScaled) == reflection && reflectionOutput == reflection &&
+                      Vector3::Transform(point, reflection) == Vector3(2.0f, -1.0f, -1.0f),
+                  "reflection normalizes a scaled offset plane in value and output forms");
+
+        const Matrix elevatedShadow = Matrix::CreateShadow(lightDirection, elevated);
+        Matrix shadowOutput;
+        Matrix::CreateShadow(lightDirection, elevatedScaled, shadowOutput);
+        ctx.Check(Matrix::CreateShadow(lightDirection, elevatedScaled) == elevatedShadow &&
+                      shadowOutput == elevatedShadow,
+                  "shadow normalizes a scaled offset plane in value and output forms");
     }
 }
 
 CNA_DEMOS_CONSOLE(MatrixReflectionAndShadow, {
     .id = "math.matrix.reflection_and_shadow",
     .title = "Reflection and planar shadow matrices",
-    .description = "Mirrors a point in a plane with Matrix::CreateReflection and flattens it onto the plane along "
-                   "a light direction with Matrix::CreateShadow.",
+    .description = "Mirrors and projects points with reflection and shadow matrices, including XNA's normalization "
+                   "of scaled offset-plane coefficients and both output forms.",
     .apis = {"Matrix::CreateReflection", "Matrix::CreateShadow", "Plane::Plane"},
     .tags = {"matrix", "plane", "mirror", "shadow"},
+    .restrictions = "CNA-DEMOS-ISSUE-140 records missing plane normalization in CreateShadow.",
+    .knownIssue = "CNA-DEMOS-ISSUE-140",
 })

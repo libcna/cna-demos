@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // The identity matrix: the "do nothing" transform.
+#include <any>
+
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/MathChecks.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
@@ -28,20 +30,49 @@ namespace
                       ordered.M31 == 9 && ordered.M32 == 10 && ordered.M33 == 11 && ordered.M34 == 12 &&
                       ordered.M41 == 13 && ordered.M42 == 14 && ordered.M43 == 15 && ordered.M44 == 16,
                   "the 16-value constructor maps row-major arguments to all public fields");
+
+        float upload[16] = {};
+        ordered.ToColumnMajor(upload);
+        bool uploadMatchesFields = true;
+        for (int index = 0; index < 16; ++index)
+        {
+            uploadMatchesFields = uploadMatchesFields && upload[index] == static_cast<float>(index + 1);
+        }
+        ctx.Check(uploadMatchesFields,
+                  "the CNA shader-upload helper copies M11 through M44 in documented field order");
+
         // A default-constructed Matrix is all zeros, not the identity.
-        ctx.Check(Matrix() != identity, "Matrix() is the zero matrix");
+        const Matrix zero;
+        const Matrix explicitZero(
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0);
+        ctx.Check(zero == explicitZero && zero != identity, "Matrix() is the all-zero matrix");
+
+        Matrix signedZeroIdentity = identity;
+        signedZeroIdentity.M12 = -0.0f;
+        ctx.Check(identity == signedZeroIdentity && !(identity != signedZeroIdentity) &&
+                      identity.Equals(signedZeroIdentity) &&
+                      identity.Equals(std::any{signedZeroIdentity}) &&
+                      identity.GetHashCode() == signedZeroIdentity.GetHashCode(),
+                  "equal matrices keep equal hashes when a zero field changes sign");
     }
 }
 
 CNA_DEMOS_CONSOLE(MatrixIdentity, {
     .id = "math.matrix.identity",
     .title = "The identity matrix",
-    .description = "Gets the identity matrix and shows that multiplying or transforming by it changes nothing, "
-                   "while a default-constructed Matrix is all zeros.",
+    .description = "Gets the identity and zero matrices, maps all fields and the shader-upload layout, and checks "
+                   "value identity including signed-zero hashing.",
     .apis = {"Matrix::Matrix", "Matrix::Identity", "Matrix::op_Multiply", "Matrix::ToString",
+             "Matrix::Equals", "Matrix::GetHashCode", "Matrix::op_Equality", "Matrix::op_Inequality",
+             "Matrix::ToColumnMajor",
              "Matrix::M11", "Matrix::M12", "Matrix::M13", "Matrix::M14",
              "Matrix::M21", "Matrix::M22", "Matrix::M23", "Matrix::M24",
              "Matrix::M31", "Matrix::M32", "Matrix::M33", "Matrix::M34",
              "Matrix::M41", "Matrix::M42", "Matrix::M43", "Matrix::M44"},
     .tags = {"matrix", "identity"},
+    .restrictions = "CNA-DEMOS-ISSUE-120 records unequal hashes for equal matrices that differ only by a zero sign.",
+    .knownIssue = "CNA-DEMOS-ISSUE-120",
 })

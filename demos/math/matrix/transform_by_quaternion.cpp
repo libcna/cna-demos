@@ -24,14 +24,21 @@ namespace
                       "equals multiplying by the quaternion's matrix");
         ctx.CheckNear(Vector3::Distance(rotated.getTranslationProperty(), Vector3(0.0f, 0.0f, -5.0f)), 0.0, 1e-5,
                       "the offset swung from +X to -Z");
+
+        Matrix output;
+        Matrix::Transform(placed, turn, output);
+        Matrix aliased = placed;
+        Matrix::Transform(aliased, turn, aliased);
+        ctx.Check(output == rotated && aliased == rotated,
+                  "output and same-variable output forms match the value result");
     }
 }
 
 CNA_DEMOS_CONSOLE(MatrixTransformByQuaternion, {
     .id = "math.matrix.transform_by_quaternion",
     .title = "Rotate a matrix by a quaternion",
-    .description = "Applies a Quaternion rotation to an existing matrix with Matrix::Transform and shows it equals "
-                   "multiplying by Matrix::CreateFromQuaternion.",
+    .description = "Applies a Quaternion rotation through value, output and same-variable output forms and shows "
+                   "that it equals multiplying by Matrix::CreateFromQuaternion.",
     .apis = {"Matrix::Transform", "Matrix::CreateFromQuaternion", "Quaternion::CreateFromAxisAngle"},
     .tags = {"matrix", "quaternion", "rotation"},
 })

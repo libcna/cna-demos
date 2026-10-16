@@ -11817,3 +11817,38 @@ pass. Coverage totals remain unchanged; Complete1056 marks two new IDs absent an
 Curve results predate these assertions. Evidence:`/tmp/checkpoint-1073-curve-members/*`. The
 meaningful Curve family audit is complete; consolidate the Matrix public-member disposition next
 and add controls only for concrete residual behavior gaps.
+
+## Focused1074 Matrix public members and residual boundaries
+
+Seven existing Matrix demos deepen without a new ID. `identity` grows to seven controls,
+`create_world` to14, `element_operations` to16, `transpose` to four, `invert` to seven,
+`transform_by_quaternion` to three and `reflection_and_shadow` to five. The additions cover every
+direction-property setter, all-zero and16-field construction, signed-zero value identity, matrix
+component division, Lerp boundaries, scalar operand order, CNA compound multiplication and shader
+upload layout, scaled-plane reflection/shadow, and the meaningful output/alias forms. Together
+with Focused1027-1033 and the ten unchanged workflows, the public Matrix disposition is complete.
+
+Genuine Windows XNA 4.0 matches52 of56 focused controls. Matrix signed-zero hashing extends
+ISSUE-120 and singular inversion retains ISSUE-116. New ISSUE-139 records Transpose corrupting a
+same-variable output; new ISSUE-140 records CreateShadow omitting XNA's input-plane normalization.
+All property setters, component operations, Lerp, reflection, Invert/Transform aliases and CNA
+extensions pass. Three reference probes have stdout SHA-256
+`a57b251bd83c81cce54fda076196bf32e0d7841dc6ed72a41f77a876b0de7b85`,
+`9541e73b3fae5433cbdc18acb29c940c60986301c35901c1f1553f14bbf81389` and
+`5726695e88d03e971409650b674821a5c9b086147447e64556a9fdcef4a6e446`.
+
+The clean incremental `-j3` build is warning-free. Metadata is710/0, all17 Matrix SOFTWARE CTests
+and validator/comparator self-tests5/5 plus4/4 pass. Ten runs per changed demo and renderer label
+are byte-stable with empty stderr. Their stdout SHA-256 values are
+`82d8408520f426b3614c93d26db43da9cdf3b3ffbceba346dfde18a34574d1ad`,
+`89138dabf11de2300d9a25bc4ae2a16cbf038bebd885cd425ce547a341724dcb`,
+`7488946abbf39993c1984580ef71829b516f264973cb7804b880f7ca9d3c094a`,
+`15253d36346527614169d0825ea23c0f3b1469c505201a895821a16e839b64e2`,
+`6195054ce0dd7585e77a62f81bb9b87b26a6f2ac7f4599fe21d8066e4ec55b89`,
+`67346a451455754406102dff4d17a15d858d433ff93d1cdebd043a304b7b6f95` and
+`2d4e383f753804fff6229d18862143d22a8f64f3236a629fbb1b737f013082f8` in the order above. Generated
+coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; it now lists
+the two directly demonstrated CNA extensions. Complete1056's seven affected results predate these
+assertions. Evidence:`/tmp/checkpoint-1074-matrix-members/*`. No renderer or visual claim was made.
+Run a complete710-demo checkpoint next, then resume the highest-priority semantic member/behavior
+gap from the remaining public inventory.

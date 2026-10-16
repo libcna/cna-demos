@@ -15,6 +15,51 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-140 -- Matrix CreateShadow does not normalize its plane
+
+- **Area/API:** `Microsoft::Xna::Framework::Matrix::CreateShadow`, value and output overloads.
+- **Demo/reproduction:** run `math.matrix.reflection_and_shadow`. Construct the same offset plane
+  `y=2` once as `(0,1,0,-2)` and once with every coefficient doubled, then compare the exact
+  shadow matrices from both overloads. The adjacent reflection control performs the same scaled-
+  plane comparison and passes.
+- **Observed:** CNA uses the raw plane coefficients, so the scaled plane produces a shadow matrix
+  whose every nonzero element is doubled. The grouped normalization assertion is the sole expected
+  failure among five controls; the ordinary projected point still lands on the plane after a
+  homogeneous divide because the complete matrix has been scaled uniformly.
+- **Expected/reference:** genuine Windows XNA 4.0 normalizes the plane internally and returns
+  exactly equal matrices for both representations through value and ref/out forms. It likewise
+  normalizes the reflection plane.
+- **Cause/suggested repair:** `Matrix::CreateShadow` computes directly from `plane.Normal` and
+  `plane.D`, while `CreateReflection` first calls the existing `NormalizePlaneValue` helper. Apply
+  the same normalization before computing the shadow coefficients.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1074-matrix-members/*`. The focused build,
+  all17 Matrix SOFTWARE CTests, metadata710/0 and self-tests5/5 plus4/4 pass; ten runs per changed
+  demo and renderer label reproduce only the documented Matrix failures with empty stderr. No CNA
+  source was modified and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-139 -- Aliased Matrix Transpose corrupts off-diagonal elements
+
+- **Area/API:** `Microsoft::Xna::Framework::Matrix::Transpose` output overload.
+- **Demo/reproduction:** run `math.matrix.transpose`. Transpose one asymmetric matrix through the
+  value form, a separate output matrix and the same object as input and output.
+- **Observed:** the ordinary value and separate-output forms are correct. With
+  `Matrix::Transpose(aliased, aliased)`, CNA writes `M12` before it later reads that location for
+  `M21`, and similarly corrupts other off-diagonal pairs. The alias assertion is the sole expected
+  failure among four controls.
+- **Expected/reference:** genuine Windows XNA 4.0 accepts `Matrix.Transpose(ref m, out m)` and
+  returns the exact transpose, so using one variable for both arguments is part of the observable
+  ref/out behavior. Its ordinary result matches CNA.
+- **Cause/suggested repair:** the output implementation assigns directly across the diagonal from
+  its input reference. Cache all16 inputs or build a temporary result and assign it after every
+  read, as CNA already does for alias-safe Matrix multiplication.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1074-matrix-members/*`. The focused build
+  and stability evidence are shared with ISSUE-140. No CNA source was modified and no upstream
+  message was sent.
+
 ### CNA-DEMOS-ISSUE-138 -- Curve evaluation loses NaN and exact duplicate-position behavior
 
 - **Area/API:** `Microsoft::Xna::Framework::Curve::Evaluate` and its in-range segment selection.
@@ -457,10 +502,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-120 -- Equal signed-zero math values have unequal hashes
 
-- **Area/API:** `Microsoft::Xna::Framework::Vector2`, `Vector3`, `Vector4`, `Quaternion` and
-  `CurveKey` typed/boxed/operator equality and `GetHashCode`.
+- **Area/API:** `Microsoft::Xna::Framework::Vector2`, `Vector3`, `Vector4`, `Quaternion`, `Matrix`
+  and `CurveKey` typed/boxed/operator equality and `GetHashCode`.
 - **Demo/reproduction:** run `math.vector2.toolbox_2d`, `math.vector3.equality_and_string` and
-  `math.vector4.value_identity`, `math.quaternion.value_identity` and
+  `math.vector4.value_identity`, `math.quaternion.value_identity`, `math.matrix.identity` and
   `math.curve.key_value_identity`. Compare UnitX/Identity with otherwise identical values
   containing `-0.0f`, compare each all-positive-zero value with a negative-zero component, and
   compare two CurveKeys differing only by Position's zero sign. Ordinary construction and
@@ -470,13 +515,14 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   while its signed-X-zero equal hashes to `-1082130432`; zero hashes to0 while its signed-W-zero
   equal hashes to `-2147483648`. Vector2 exhibits the equivalent UnitX/Y-zero and origin/X-zero
   mismatches, and Vector3 and Vector4 do the same for their tested UnitX and origin zero signs.
-  CurveKey likewise hashes a negative-zero Position differently from its equal positive-zero key.
-  Each demo retains exactly one expected hash failure, among five Quaternion, fourteen Vector2,
-  seven Vector3, seven Vector4 and six CurveKey controls.
+  Matrix Identity likewise hashes differently after only M12 changes from positive to negative
+  zero, and CurveKey does the same for Position. Each demo retains exactly one expected hash
+  failure, among five Quaternion, fourteen Vector2, seven Vector3, seven Vector4, seven Matrix and
+  six CurveKey controls.
 - **Expected/reference:** genuine Windows XNA 4.0 treats all tested pairs as equal and gives each
   pair equal hashes. The CurveKey pair both hash to `-1077936128`; the vector/quaternion unit pairs
-  both hash to `1065353216` and their zero pairs to0. The equality/hash invariant therefore holds
-  regardless of zero's sign bit.
+  both hash to `1065353216`, their zero pairs to0, and both Matrix Identity variants to
+  `-33554432`. The equality/hash invariant therefore holds regardless of zero's sign bit.
 - **Cause/suggested repair:** CNA's repeated `FloatHash` helpers copy each float's raw bits, while
   float equality equates both zeros. Canonicalize either zero sign to the same hash before combining
   components/fields and apply the rule consistently to every affected value type.
@@ -485,8 +531,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1044-quaternion-signed-zero-hash/*` and
   `/tmp/checkpoint-1047-vector2-signed-zero-hash/*` and
   `/tmp/checkpoint-1052-vector3-identity-bounds/*`,
-  `/tmp/checkpoint-1058-vector4-value-identity/*` and
-  `/tmp/checkpoint-1073-curve-members/*`. Warning-free three-job builds, exact known-issue CTests,
+  `/tmp/checkpoint-1058-vector4-value-identity/*`, `/tmp/checkpoint-1073-curve-members/*` and
+  `/tmp/checkpoint-1074-matrix-members/*`. Warning-free three-job builds, exact known-issue CTests,
   metadata through710/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer label
   reproduce only each demo's one hash assertion with empty stderr. No CNA source was modified and
   no upstream message was sent.

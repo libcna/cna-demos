@@ -84,7 +84,10 @@ baseline results for `math.point.basics`, all four `math.rectangle.*`, all four
 `math.bounding_box.*`, the three older `math.bounding_sphere.*` IDs, `math.ray.intersects`, the
 two older `math.plane.*` IDs, four console `math.color.*` IDs, `math.bounding_frustum.culling` and
 all three `math.math_helper.*` IDs and the five older `math.curve.*` IDs predate Focused1063-1073's
-deeper member assertions and ISSUE-124 through ISSUE-138 where applicable.
+deeper member assertions and ISSUE-124 through ISSUE-138 where applicable. The seven edited
+`math.matrix.*` IDs (`identity`, `create_world`, `element_operations`, `transpose`, `invert`,
+`transform_by_quaternion` and `reflection_and_shadow`) likewise predate Focused1074's assertions
+and ISSUE-139/-140. A complete710-demo checkpoint is the immediate next task.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
 3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1056's
 full runtime reports are the baseline inputs for the695-ID checkpoint catalog. Selected semantic
@@ -11231,3 +11234,45 @@ host display-cookie warning. Evidence:`/tmp/checkpoint-1073-curve-members/*`. No
 claim was made. The meaningful Curve family audit is complete. Consolidate the Matrix public-member
 disposition next against Focused1023-1033 and the existing Matrix demos; add controls only for
 concrete residual behavior gaps.
+
+## Focused1074-Matrix-public-members-and-residual-boundaries
+
+Seven existing Matrix console demos deepen without new IDs: `identity` has seven controls,
+`create_world`14, `element_operations`16, `transpose`4, `invert`7,
+`transform_by_quaternion`3 and `reflection_and_shadow`5. Focused1027-1033 plus these edits now
+disposition the complete public Matrix header. New checks cover all six signed direction setters,
+strong default/field layout, signed-zero identity, component-wise Matrix Divide, scalar operand
+order, Lerp extrapolation/NaN, CNA compound multiplication and ToColumnMajor, offset-plane
+normalization, and separate/aliased output forms for cross-component operations.
+
+Genuine Windows XNA 4.0 matches52 of56 controls. The four expected failures are the retained
+singular Invert assertion under ISSUE-116, the newly demonstrated Matrix signed-zero hash under
+ISSUE-120, and two new defects: ISSUE-139 for aliased Transpose corruption and ISSUE-140 for
+CreateShadow failing to normalize a scaled plane. CreateReflection does normalize the same plane;
+Invert and Transform support their aliased outputs; property setters, component arithmetic and
+both CNA extensions match their reference or documented CNA behavior.
+
+The clean incremental build used `-j3` and is warning-free. Metadata is710/0, all17 exact Matrix
+SOFTWARE CTests and validator/comparator self-tests5/5 plus4/4 pass. Ten SOFTWARE and ten
+OPENGLES3-labelled runs of each changed demo are byte-stable with empty stderr. Stdout hashes in
+the demo order above are `82d8408520f426b3614c93d26db43da9cdf3b3ffbceba346dfde18a34574d1ad`,
+`89138dabf11de2300d9a25bc4ae2a16cbf038bebd885cd425ce547a341724dcb`,
+`7488946abbf39993c1984580ef71829b516f264973cb7804b880f7ca9d3c094a`,
+`15253d36346527614169d0825ea23c0f3b1469c505201a895821a16e839b64e2`,
+`6195054ce0dd7585e77a62f81bb9b87b26a6f2ac7f4599fe21d8066e4ec55b89`,
+`67346a451455754406102dff4d17a15d858d433ff93d1cdebd043a304b7b6f95` and
+`2d4e383f753804fff6229d18862143d22a8f64f3236a629fbb1b737f013082f8`.
+
+The three genuine-XNA reference stdout hashes are
+`a57b251bd83c81cce54fda076196bf32e0d7841dc6ed72a41f77a876b0de7b85`,
+`9541e73b3fae5433cbdc18acb29c940c60986301c35901c1f1553f14bbf81389` and
+`5726695e88d03e971409650b674821a5c9b086147447e64556a9fdcef4a6e446`; the only stderr is the known
+host display-cookie warning from the first Wine invocation. Generated coverage remains307/329
+types,2128/2326 members,674/753 fields and3079/3205 C routes and adds Matrix::ToColumnMajor plus
+op_MultiplyAssignment to the declared CNA-extension list. Evidence:
+`/tmp/checkpoint-1074-matrix-members/*`. No rendering, screenshot or visual inspection was used.
+
+The meaningful Matrix audit is complete. Run the overdue complete710-demo checkpoint at the
+Focused1074 source commit next. Compare it to Complete1056, regenerate runtime-backed coverage,
+and then continue with the highest-priority remaining semantic public-member/behavior gap. Keep
+all builds at no more than three jobs.

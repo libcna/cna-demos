@@ -1589,6 +1589,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `MathHelper::ClosestMSAAPower` -- math.math_helper.scalar_functions
 - `MathHelper::MachineEpsilonFloat` -- math.math_helper.scalar_functions
 - `MathHelper::WithinEpsilon` -- math.math_helper.scalar_functions
+- `Matrix::ToColumnMajor` -- math.matrix.identity
+- `Matrix::op_MultiplyAssignment` -- math.matrix.element_operations
 - `MediaQueue::Add` -- media.media_player.queue_and_repeat
 - `MediaQueue::Clear` -- media.media_player.queue_and_repeat
 - `MediaQueue::MediaQueue` -- media.media_player.queue_and_repeat

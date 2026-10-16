@@ -42,6 +42,33 @@ namespace
         moved.setTranslationProperty(world.getTranslationProperty() + world.getForwardProperty() * 2.0f);
         ctx.Check(moved.getTranslationProperty() == Vector3(5.0f, 0.0f, -5.0f), "two units forward along its facing");
 
+        // The signed direction pairs share three matrix rows. Setting either spelling must make
+        // its opposite getter return the exact negation, just as XNA's mutable properties do.
+        Matrix authoredAxes = Matrix::getIdentityProperty();
+        authoredAxes.setRightProperty(Vector3(2.0f, 3.0f, 4.0f));
+        const bool rightSet = authoredAxes.getRightProperty() == Vector3(2.0f, 3.0f, 4.0f) &&
+                              authoredAxes.getLeftProperty() == Vector3(-2.0f, -3.0f, -4.0f);
+        authoredAxes.setLeftProperty(Vector3(-5.0f, 6.0f, -7.0f));
+        ctx.Check(rightSet && authoredAxes.getLeftProperty() == Vector3(-5.0f, 6.0f, -7.0f) &&
+                      authoredAxes.getRightProperty() == Vector3(5.0f, -6.0f, 7.0f),
+                  "Right and Left setters write opposite views of the first row");
+
+        authoredAxes.setUpProperty(Vector3(8.0f, 9.0f, 10.0f));
+        const bool upSet = authoredAxes.getUpProperty() == Vector3(8.0f, 9.0f, 10.0f) &&
+                           authoredAxes.getDownProperty() == Vector3(-8.0f, -9.0f, -10.0f);
+        authoredAxes.setDownProperty(Vector3(-11.0f, 12.0f, -13.0f));
+        ctx.Check(upSet && authoredAxes.getDownProperty() == Vector3(-11.0f, 12.0f, -13.0f) &&
+                      authoredAxes.getUpProperty() == Vector3(11.0f, -12.0f, 13.0f),
+                  "Up and Down setters write opposite views of the second row");
+
+        authoredAxes.setBackwardProperty(Vector3(14.0f, 15.0f, 16.0f));
+        const bool backwardSet = authoredAxes.getBackwardProperty() == Vector3(14.0f, 15.0f, 16.0f) &&
+                                 authoredAxes.getForwardProperty() == Vector3(-14.0f, -15.0f, -16.0f);
+        authoredAxes.setForwardProperty(Vector3(-17.0f, 18.0f, -19.0f));
+        ctx.Check(backwardSet && authoredAxes.getForwardProperty() == Vector3(-17.0f, 18.0f, -19.0f) &&
+                      authoredAxes.getBackwardProperty() == Vector3(17.0f, -18.0f, 19.0f),
+                  "Backward and Forward setters write opposite views of the third row");
+
         // XNA normalizes the three derived axes without repairing degenerate input. Position and
         // affine constants remain valid even when one or all orientation rows become NaN.
         const Matrix zeroForward = Matrix::CreateWorld(position, Vector3::Zero, Vector3::Up);
@@ -77,8 +104,8 @@ namespace
 CNA_DEMOS_CONSOLE(MatrixCreateWorld, {
     .id = "math.matrix.create_world",
     .title = "World matrix from position and facing",
-    .description = "Builds world matrices from normalized, scaled and degenerate direction vectors, including "
-                   "XNA's NaN-axis behavior and the value/output overloads.",
+    .description = "Builds world matrices from normalized, scaled and degenerate directions, and exercises every "
+                   "mutable signed-axis property plus translation.",
     .apis = {"Matrix::CreateWorld", "Matrix::Forward", "Matrix::Backward", "Matrix::Up", "Matrix::Down",
              "Matrix::Left", "Matrix::Right", "Matrix::Translation"},
     .tags = {"matrix", "orientation", "axes"},

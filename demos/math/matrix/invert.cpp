@@ -32,6 +32,10 @@ namespace
         Matrix::Invert(world, byReference);
         ctx.Check(byReference == inverse, "the by-reference overload gives the same inverse");
 
+        Matrix aliased = world;
+        Matrix::Invert(aliased, aliased);
+        ctx.Check(aliased == inverse, "the output overload supports the same input and output variable");
+
         // XNA exposes the underlying floating-point boundary instead of rejecting singular input.
         const Matrix zeroInverse = Matrix::Invert(Matrix());
         ctx.Check(std::isnan(zeroInverse.M11) && std::isnan(zeroInverse.M12) &&
