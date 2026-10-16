@@ -12180,3 +12180,24 @@ manual result is claimed.
 Commit and push this batch. Next consolidate the eight public `CNA::Graphics` headers against the
 already completed Focused940-945 workflows, then move to the larger `CNA::Input` surface and add
 behavior only for a concrete gap. Keep every compile at three jobs or fewer.
+
+## Focused1107-CNA-Graphics-public-header-disposition
+
+The eight public headers in the base graphics module are now explicitly dispositioned. The
+capability-report workflow covers `DisplayColorSpace` plus every public structured profile
+type/helper/member, all live features/limits and every format-usage bit across all27 formats. The
+supports-capability workflow queries every `GraphicsCapability`. The diagnostic parser covers the
+complete diagnostic/exception value contract; the shader matrix covers all eight languages, both
+live stages, invalid identities and descriptor-binding classification. Unsupported 3D policy and
+all public vertex-registry operations retain their Focused944/945 behavior evidence. Dialects and
+color spaces unavailable in the current renderer/display remain correctly build-specific.
+
+The warning-free incremental build uses `-j3`; metadata remains717/0. Four representative exact
+SOFTWARE CTests plus the catalog parser pass, and validator/comparator self-tests pass5/5 and4/4.
+Generated coverage remains307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes
+across all717 IDs. Evidence:`/tmp/checkpoint-1107-graphics-public-headers/*`. No new renderer,
+pixel, HDR display, screenshot or manual visual result is claimed.
+
+Commit and push this source-audit batch. Next audit the24 public `CNA::Input` headers against their
+existing input/device workflows and extend stable IDs only for real member or behavior gaps. Keep
+every compile at three jobs or fewer.

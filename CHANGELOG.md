@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Consolidated the eight public `CNA::Graphics` headers into an explicit source-level disposition,
+  tying every caller-facing family to its existing capability, diagnostic, shader-language,
+  unsupported-call, or vertex-registry workflow and retaining renderer-specific limits.
 - Added a renderer-free Gamer Services deployment-configuration demo covering offline defaults,
   every public field, exact overrides, manifest fallback, version syntax, and HTTPS/numeric-
   loopback endpoint validation without opening a connection.

@@ -12497,3 +12497,20 @@ members,674/753 fields and3079/3205 C routes; eleven `CNA::GamerServices` names 
 appendix. Evidence:`/tmp/checkpoint-1106-gamer-services-configuration/*`. Continue with the public
 `CNA::Graphics` header disposition already supported by Focused940-945, then the broader input
 surface.
+
+## Focused1107 CNA Graphics public-header disposition
+
+All eight public headers in the base graphics module now have one explicit disposition.
+`DisplayColorSpace` and every `RendererCapabilityProfile` value/helper/member are covered by the
+existing capability-report workflow; all `GraphicsCapability` identities are queried in the
+supports-capability workflow. The portable diagnostic workflow covers every
+`ShaderDiagnosticEXT`/`ShaderCompilationExceptionEXT` accessor and validation path. All eight
+shader languages, both live stages, invalid identities and descriptor-binding classification are
+direct; dialects that require other renderer builds stay build-specific. Unsupported 3D policy
+and every public `VertexTypeRegistryEXT` operation retain their focused behavior evidence.
+
+The warning-free `-j3` build, metadata717/0, four exact SOFTWARE CTests, catalog parser and both
+self-test suites pass. Generated coverage remains307/329 XNA types,2128/2326 members,674/753 fields
+and3079/3205 C routes across all717 IDs. Evidence:
+`/tmp/checkpoint-1107-graphics-public-headers/*`. Continue with the24 public `CNA::Input` headers;
+extend an existing input workflow only where source/member comparison finds a real semantic gap.

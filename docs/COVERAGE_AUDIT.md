@@ -7165,3 +7165,21 @@ self-test suites pass. Merged coverage contains all717 IDs and keeps the generat
 307/329 types,2128/2326 members,674/753 fields and3079/3205 routes; eleven names enter the CNA
 extension appendix. Evidence:`/tmp/checkpoint-1106-gamer-services-configuration/*`. No service,
 network, renderer, screenshot or manual result is claimed.
+
+### Focused1107 base Graphics public-header disposition
+
+The base graphics module's eight public CNA headers map completely to existing focused workflows:
+
+| Public family | Coverage decision |
+|---|---|
+| `DisplayColorSpace` | `graphics.device.capability_report` probes Srgb, Scrgb and Hdr10, verifies support/setter agreement and restores the original space. Actual HDR output still requires a renderer/display that advertises it. |
+| `GraphicsCapability` | `graphics.device.supports_capability` queries every defined identity and checks stable capability consequences; focused graphics demos retain the behavior behind supported features. Invalid enum permutations add no application behavior. |
+| `RendererCapabilityProfile` | The capability-report workflow covers the cached renderer identity; every live feature and limit; unique names/descriptions; support states; all ten format-usage bits over all27 formats; `IsKnown`/`Supports`; explicit unknown/retired results; additional limitations; and the matching English report. Private profile population is renderer implementation scope. |
+| `ShaderDiagnosticEXT` | `graphics.shader_effect.diagnostic_parser` covers construction, owned fields, all accessors, compiler-log forms, severity/stage propagation, invalid arguments and `ShaderCompilationExceptionEXT` diagnostics/summary; the compiler-diagnostics scene separately retains a real driver failure. |
+| `ShaderDialectEXT` / `ShaderLanguageEXT` | The capability report queries all eight live languages for both live stages, invalid identities and exact descriptor-binding classification. Live GLSL ES/Desktop selection is also executed. Other dialects/languages require their corresponding renderer/compiler builds. |
+| `Unsupported3DGraphicsCallBehavior` | The supports-capability workflow covers default, setter/getter, validation preservation, restoration and no-3D Throw/WarnAndStub behavior. CNA-DEMOS-ISSUE-104 retains the STUB defect; other unsupported operation families are not inferred from Texture3D. |
+| `Graphics::VertexTypeRegistryEXT` | `graphics.vertex_declaration.custom_vertex` covers stock resolution, null/throwing misses, registration, idempotent duplicate registration and both System::Type buffer-constructor consumers. Deleted construction and the private resolved-registration hook need no demo. |
+
+This consolidation adds no metadata credit. The relevant focused evidence remains Focused941-945;
+fresh exact CTests confirm the four representative workflows in the current717-demo build.
+Evidence:`/tmp/checkpoint-1107-graphics-public-headers/*`.
