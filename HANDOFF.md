@@ -10259,3 +10259,17 @@ The warning-free three-job build, metadata693/0, exact known-issue SOFTWARE CTes
 coverage totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes.
 Evidence:`/tmp/checkpoint-1027-matrix-decompose-xna/*`. No rendering or visual claim is involved.
 Continue with the next deterministic public-member behavior gap outside Matrix decomposition.
+
+## Focused1028-Matrix-Invert-XNA-singular-boundary
+
+`math.matrix.invert` grows from three to six controls without a new ID. It retains ordinary value
+and by-reference inversions, proves the zero matrix yields sixteen NaNs and that scale `1e-20`
+remains invertible. A genuine Windows XNA 4.0 probe gives finite `M22=8` and `M42=-8` for the tested
+singular affine input; CNA instead returns signed infinities, retained as the single visible
+`CNA-DEMOS-ISSUE-116` assertion.
+
+The warning-free three-job build, metadata693/0, exact known-issue SOFTWARE CTest and self-tests
+5/5 plus4/4 pass. Ten SOFTWARE and ten OPENGLES3-labelled runs have byte-identical stdout SHA-256
+`6195054ce0dd7585e77a62f81bb9b87b26a6f2ac7f4599fe21d8066e4ec55b89` and empty stderr. Coverage
+totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1028-matrix-invert-xna/*`. Continue with the next deterministic behavior gap.

@@ -15,6 +15,27 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-116 -- Singular affine Matrix inversion loses XNA's finite components
+
+- **Area/API:** `Microsoft::Xna::Framework::Matrix::Invert`, value and by-reference overloads.
+- **Demo/reproduction:** run `math.matrix.invert`. Invert
+  `Scale(1,0,1) * Translation(7,8,9)` and inspect all sixteen public components. The demo also
+  retains an ordinary round trip and adds zero-matrix and `1e-20` nonzero-scale controls.
+- **Observed:** CNA returns `M22=+infinity` and `M42=-infinity`; the other fourteen values are NaN.
+  This is the sole expected failure among six checks on ten SOFTWARE and ten OPENGLES3-labelled
+  runs. The zero matrix produces sixteen NaNs and the tiny nonzero scale correctly yields `1e20`.
+- **Expected/reference:** genuine Windows XNA 4.0 returns finite `M22=8` and `M42=-8` for the same
+  singular affine input, with the other fourteen values NaN. Both overloads have the same
+  component classification (ordinary equality is false because NaN is unequal to itself).
+- **Investigation/scope:** CNA's XNA-rounding implementation keeps the reciprocal determinant as
+  `double`; at this exact-zero singular boundary its later products yield infinities instead of
+  XNA's two finite values. Open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. The reference ran through the installed
+  Windows XNA 4.0 assembly under Wine. No rendering or visual claim is involved.
+- **Evidence/status:** `/tmp/checkpoint-1028-matrix-invert-xna/*`; exact known-issue CTest,
+  metadata693/0 and tool self-tests5/5 plus4/4 pass. No CNA source was modified and no upstream
+  message was sent.
+
 ### CNA-DEMOS-ISSUE-115 -- Matrix decomposition loses XNA reflection and zero-scale results
 
 - **Area/API:** `Microsoft::Xna::Framework::Matrix::Decompose`.

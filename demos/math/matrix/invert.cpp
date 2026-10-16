@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // Undoing a transform with Matrix::Invert.
+#include <cmath>
+
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/MathChecks.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
@@ -29,14 +31,47 @@ namespace
         Matrix byReference;
         Matrix::Invert(world, byReference);
         ctx.Check(byReference == inverse, "the by-reference overload gives the same inverse");
+
+        // XNA exposes the underlying floating-point boundary instead of rejecting singular input.
+        const Matrix zeroInverse = Matrix::Invert(Matrix());
+        ctx.Check(std::isnan(zeroInverse.M11) && std::isnan(zeroInverse.M12) &&
+                      std::isnan(zeroInverse.M13) && std::isnan(zeroInverse.M14) &&
+                      std::isnan(zeroInverse.M21) && std::isnan(zeroInverse.M22) &&
+                      std::isnan(zeroInverse.M23) && std::isnan(zeroInverse.M24) &&
+                      std::isnan(zeroInverse.M31) && std::isnan(zeroInverse.M32) &&
+                      std::isnan(zeroInverse.M33) && std::isnan(zeroInverse.M34) &&
+                      std::isnan(zeroInverse.M41) && std::isnan(zeroInverse.M42) &&
+                      std::isnan(zeroInverse.M43) && std::isnan(zeroInverse.M44),
+                  "XNA inversion of the zero matrix publishes sixteen NaN components");
+
+        const Matrix flat = Matrix::CreateScale(1.0f, 0.0f, 1.0f) *
+                            Matrix::CreateTranslation(7.0f, 8.0f, 9.0f);
+        const Matrix flatInverse = Matrix::Invert(flat);
+        ctx.Print("singular affine inverse: {}", flatInverse.ToString());
+        ctx.Check(flatInverse.M22 == 8.0f && flatInverse.M42 == -8.0f &&
+                      std::isnan(flatInverse.M11) && std::isnan(flatInverse.M12) &&
+                      std::isnan(flatInverse.M13) && std::isnan(flatInverse.M14) &&
+                      std::isnan(flatInverse.M21) && std::isnan(flatInverse.M23) &&
+                      std::isnan(flatInverse.M24) && std::isnan(flatInverse.M31) &&
+                      std::isnan(flatInverse.M32) && std::isnan(flatInverse.M33) &&
+                      std::isnan(flatInverse.M34) && std::isnan(flatInverse.M41) &&
+                      std::isnan(flatInverse.M43) && std::isnan(flatInverse.M44),
+                  "XNA singular affine inversion retains its two finite cofactor quotients");
+
+        const Matrix tiny = Matrix::CreateScale(1.0f, 1e-20f, 1.0f);
+        const Matrix tinyInverse = Matrix::Invert(tiny);
+        ctx.CheckNear(tinyInverse.M22, 1e20, 1e14,
+                      "a nonzero scale remains invertible even far below ordinary epsilon");
     }
 }
 
 CNA_DEMOS_CONSOLE(MatrixInvert, {
     .id = "math.matrix.invert",
     .title = "Invert a matrix",
-    .description = "Computes Matrix::Invert of a world matrix and uses it to take a world-space point back into "
-                   "model space.",
+    .description = "Computes Matrix::Invert for ordinary, tiny-scale and singular matrices, including XNA's "
+                   "public IEEE-754 NaN boundary behavior.",
     .apis = {"Matrix::Invert", "Matrix::Identity"},
     .tags = {"matrix", "inverse"},
+    .restrictions = "CNA-DEMOS-ISSUE-116 records CNA's differing finite components for a singular affine inverse.",
+    .knownIssue = "CNA-DEMOS-ISSUE-116",
 })

@@ -11274,3 +11274,11 @@ rotation for a flattened transform. CNA differs in exactly three assertions, ret
 CNA-DEMOS-ISSUE-115. The warning-free `-j3` build, metadata693/0, exact known-issue CTest, ten runs
 per renderer label and both self-test suites pass; output is byte-identical and stderr empty.
 Coverage totals are unchanged. Evidence:`/tmp/checkpoint-1027-matrix-decompose-xna/*`.
+
+## Focused1028 Matrix inversion XNA singular boundary
+
+`math.matrix.invert` adds zero, singular affine and tiny nonzero-scale controls. Genuine Windows
+XNA 4.0 preserves finite `M22=8` and `M42=-8` for the singular affine case; CNA produces signed
+infinities, retained as CNA-DEMOS-ISSUE-116. The warning-free `-j3` build, metadata693/0, exact
+known-issue CTest, ten runs per renderer label and both self-test suites pass. Output is stable,
+stderr empty and coverage unchanged. Evidence:`/tmp/checkpoint-1028-matrix-invert-xna/*`.

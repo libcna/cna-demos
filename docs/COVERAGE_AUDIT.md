@@ -5641,3 +5641,12 @@ scale. CNA's three differing assertions remain under CNA-DEMOS-ISSUE-115. Ten ru
 label are byte-stable with empty stderr; the exact known-issue CTest, metadata693/0 and both tool
 self-test suites pass. Coverage totals remain307/329 types,2128/2326 members,674/753 fields and
 3079/3205 C routes. Evidence:`/tmp/checkpoint-1027-matrix-decompose-xna/*`.
+
+### Focused1028 Matrix inversion XNA singular boundary
+
+`math.matrix.invert` now covers ordinary value/by-reference results, a zero matrix, a singular
+affine matrix and a nonzero `1e-20` scale. Genuine Windows XNA 4.0's two finite singular-affine
+components differ from CNA's signed infinities, retained as CNA-DEMOS-ISSUE-116. Ten runs per
+renderer label are byte-stable with empty stderr; the exact known-issue CTest, metadata693/0 and
+both self-test suites pass. Coverage totals remain unchanged. Evidence:
+`/tmp/checkpoint-1028-matrix-invert-xna/*`.
