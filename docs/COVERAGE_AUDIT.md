@@ -6850,3 +6850,23 @@ status row becomes56 pass/17 expected fail per renderer. Evidence:
 Document-envelope coverage is now coherent. Audit format sections2-12 against every existing
 intermediate demo and classify remaining corpus forms semantically; ordinary root/type spelling
 variants stay intentionally represented rather than repeated.
+
+### Focused1094 intermediate XML null semantics
+
+The core serializer workflow now has36 controls. Five new passes distinguish `Null="false"`, prove
+that `Null="true"` ignores supplied content, safely refuse null value-member/root reads and confirm
+the correct `ArgumentNullException` for a null root write. Two new expected failures expose
+ISSUE-149: CNA substitutes `InvalidContentException` for XNA's `NullReferenceException` on a value
+member and `ArgumentNullException` on the Asset root. The existing ISSUE-148 quartet remains, so
+the result is30 passes and six expected failures.
+
+Five runs per renderer label have common stdout SHA-256
+`08fdb7a2c29da63c2c3c9135c404e3197b289ab33d1fe5c171139096d55acfe5` and empty stderr. The clean
+`-j3` build, metadata716/0, thirteen related CTests and both self-test suites pass. Coverage stays
+307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes across716 IDs; content remains
+56 pass/17 expected fail. Evidence:`/tmp/checkpoint-1094-intermediate-null-semantics/*`. No CNA
+source change or fresh XNA run.
+
+The remaining distinct member-format gap is packed-collection `FlattenContent`. Its bare sibling
+text, ignored item-name setting and empty-list failure should extend the property workflow; the
+ordinary alias/type spelling cases remain represented syntax variants.

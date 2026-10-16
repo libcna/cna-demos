@@ -13,6 +13,8 @@
 #include "Microsoft/Xna/Framework/Content/ContentSerializerAttribute.hpp"
 #include "Microsoft/Xna/Framework/Content/Pipeline/InvalidContentException.hpp"
 #include "Microsoft/Xna/Framework/Content/Pipeline/Serialization/Intermediate/IntermediateSerializer.hpp"
+#include "System/ArgumentNullException.hpp"
+#include "System/NullReferenceException.hpp"
 #include "System/Object.hpp"
 #include "System/Xml/XmlReader.hpp"
 #include "System/Xml/XmlWriter.hpp"
@@ -181,19 +183,52 @@ int main()
         // Absence means keep the default; an explicit Null means clear it. A present value wins.
         const auto lootStart = xml.find("<Loot>");
         if (lootStart == std::string::npos) throw std::runtime_error("Serialized XML has no Loot element");
-        const std::pair<std::string, std::optional<std::string>> hintCases[] = {
-            {"<Hint>Watch the doorway</Hint>", std::string("Watch the doorway")},
-            {"<Hint Null=\"true\"/>", std::nullopt}};
-        for (const auto& [element, expected] : hintCases)
+        struct HintCase
+        {
+            std::string element;
+            std::optional<std::string> expected;
+            std::string_view expectation;
+        };
+        const HintCase hintCases[] = {
+            {"<Hint>Watch the doorway</Hint>", std::string("Watch the doorway"),
+             "a present optional hint overrides the default"},
+            {"<Hint Null=\"true\"/>", std::nullopt,
+             "explicit Null clears the default hint"},
+            {"<Hint Null=\"false\">Visible</Hint>", std::string("Visible"),
+             "Null=false is treated as an ordinary present reference value"},
+            {"<Hint Null=\"true\">Ignored text</Hint>", std::nullopt,
+             "Null=true wins over text content and clears the reference"}};
+        for (const auto& [element, expected, expectation] : hintCases)
         {
             std::string changed = xml;
             changed.insert(lootStart, element);
             std::unique_ptr<System::Xml::XmlReader> hintReader(System::Xml::XmlReader::CreateFromString(changed));
             const auto withHint = IntermediateSerializer::Deserialize<Encounter>(*hintReader, "");
             std::cout << "Authored override: " << element << '\n';
-            check(withHint && withHint->hint == expected,
-                  expected ? "a present optional hint overrides the default" : "explicit Null clears the default hint");
+            check(withHint && withHint->hint == expected, expectation);
         }
+
+        const std::string nullHealth = Replaced(xml, "<HitPoints>90</HitPoints>",
+                                                "<HitPoints Null=\"true\" />");
+        bool valueNullRejected = false;
+        bool valueNullUsesXnaException = false;
+        try
+        {
+            (void)DeserializeEncounter(nullHealth);
+        }
+        catch (const System::NullReferenceException& error)
+        {
+            valueNullRejected = valueNullUsesXnaException = true;
+            std::cout << "Null value member refusal: " << error.what() << '\n';
+        }
+        catch (const InvalidContentException& error)
+        {
+            valueNullRejected = true;
+            std::cout << "Null value member refusal: " << error.what() << '\n';
+        }
+        check(valueNullRejected, "Null=true on a value-type member is refused");
+        check(valueNullUsesXnaException,
+              "Null=true on a value-type member reports XNA's NullReferenceException (CNA-DEMOS-ISSUE-149)");
 
         // Ignored means neither written nor accepted, not a hidden route to inject runtime state.
         std::string invalid = xml;
@@ -303,6 +338,41 @@ int main()
         }
         check(embeddedBomRejected,
               "an in-memory UTF-8 BOM before the XML declaration is refused (CNA-DEMOS-ISSUE-148)");
+
+        bool nullRootReadRejected = false;
+        bool nullRootReadUsesXnaException = false;
+        try
+        {
+            (void)DeserializeEncounter("<XnaContent><Asset Null=\"true\" /></XnaContent>");
+        }
+        catch (const System::ArgumentNullException& error)
+        {
+            nullRootReadRejected = nullRootReadUsesXnaException = true;
+            std::cout << "Null root read refusal: " << error.what() << '\n';
+        }
+        catch (const InvalidContentException& error)
+        {
+            nullRootReadRejected = true;
+            std::cout << "Null root read refusal: " << error.what() << '\n';
+        }
+        check(nullRootReadRejected, "a null Asset root is refused");
+        check(nullRootReadUsesXnaException,
+              "a null Asset root reports XNA's ArgumentNullException (CNA-DEMOS-ISSUE-149)");
+
+        bool nullRootWriteUsesXnaException = false;
+        try
+        {
+            std::unique_ptr<System::Xml::XmlWriter> nullRootWriter(
+                System::Xml::XmlWriter::CreateToString(settings));
+            IntermediateSerializer::Serialize<Encounter>(*nullRootWriter, std::shared_ptr<Encounter>{}, "");
+        }
+        catch (const System::ArgumentNullException& error)
+        {
+            nullRootWriteUsesXnaException = true;
+            std::cout << "Null root write refusal: " << error.what() << '\n';
+        }
+        check(nullRootWriteUsesXnaException,
+              "serializing a null root reports ArgumentNullException before writing XML");
 
         authored->objective.reset();
         bool rejectedNullWrite = false;

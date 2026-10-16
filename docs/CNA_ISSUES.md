@@ -15,6 +15,29 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-149 -- intermediate null reads report broader exceptions than XNA
+
+- **Area/API:** `IntermediateSerializer::Deserialize<T>` while reading `Null="true"` on a value
+  member or on the root Asset.
+- **Demo/reproduction:** run `content.custom.intermediate_serializer`. The focused null controls
+  also prove `Null="false"` reads ordinary content, `Null="true"` wins over supplied text and a
+  null root passed to `Serialize` is refused before output with `ArgumentNullException`.
+- **Observed:** CNA safely refuses both invalid read forms, but reports `InvalidContentException`.
+  The value-member diagnostic explicitly names the non-nullable type; the root diagnostic says the
+  value cannot be null.
+- **Expected/reference:** the checked-in genuine-XNA corpus records `NullReferenceException` for
+  `Null="true"` on an `Int32` member and `ArgumentNullException` for `<Asset Null="true" />`.
+  CNA's `docs/xna-intermediate-xml-format.md` sections3,11 and12 preserve these expected categories
+  and identify the value-member refusal as a deliberate divergence.
+- **Cause/suggested repair:** `IntermediateReader::ReadObjectCore` substitutes its own
+  `InvalidContentException` for a null value type, and `IntermediateSerializer::DeserializeObject`
+  throws another when the loaded root is null. Match the two XNA exception categories without
+  weakening the existing pre-return refusal or diagnostics.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Focused evidence is under
+  `/tmp/checkpoint-1094-intermediate-null-semantics/*`. No CNA source was modified, and no fresh XNA
+  execution or upstream message is claimed.
+
 ### CNA-DEMOS-ISSUE-148 -- intermediate XML substrate disagrees on envelope node forms
 
 - **Area/API:** `IntermediateSerializer::Deserialize<T>` and its `System::Xml::XmlReader`

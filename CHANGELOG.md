@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended intermediate null semantics through Null=false/content precedence, value-member and
+  root read/write refusals; recorded CNA-DEMOS-ISSUE-149 for two read exception-category
+  differences from XNA.
 - Completed the intermediate document-envelope syntax boundary with expanded/empty sections,
   processing instructions, DOCTYPE and BOM input; recorded CNA-DEMOS-ISSUE-148 for four XML
   substrate differences from the measured XNA contract.

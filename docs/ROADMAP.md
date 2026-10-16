@@ -12290,3 +12290,23 @@ The document-envelope audit is now semantically covered. Reconcile sections2-12 
 format against the scalar, collection, polymorphism, shared/external-resource, property,
 type-serializer, existing-instance and opaque-data demos. Extend existing IDs only for distinct
 missing contracts.
+
+## Focused1094 intermediate XML null semantics
+
+`content.custom.intermediate_serializer` grows29->36 controls. `Null="false"` ordinary content,
+`Null="true"` content precedence, safe value-member/root refusal and the correct null-root write
+exception add five passes. Two expected failures record ISSUE-149: CNA maps invalid null value-
+member and root reads to `InvalidContentException`, whereas genuine XNA reports
+`NullReferenceException` and `ArgumentNullException` respectively. Together with the unchanged
+ISSUE-148 quartet, the workflow has30 passes and six expected failures.
+
+The warning-free `-j3` build validates metadata716/0. Twelve related SOFTWARE intermediate-XML
+demos plus the catalog parser pass13/13 with five known-issue tests; self-tests pass5/5 and4/4.
+Five runs per renderer label share stdout SHA-256
+`08fdb7a2c29da63c2c3c9135c404e3197b289ab33d1fe5c171139096d55acfe5` and empty stderr. Coverage
+contains all716 IDs at307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; content
+remains56 pass/17 expected fail. Evidence:`/tmp/checkpoint-1094-intermediate-null-semantics/*`.
+
+Next extend the existing property workflow with packed-collection `FlattenContent`: exact bare
+text placement, ignored item naming, nonempty round trip and the measured empty-list refusal. This
+is the remaining distinct `[ContentSerializer]` shape, not a reason for another ID.

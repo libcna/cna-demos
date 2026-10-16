@@ -73,7 +73,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content73, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,297 game and215
 standalone; 680 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1093
+Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1094
 results and includes all716 catalog IDs in both renderer columns. It incorporates every
 focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
@@ -92,7 +92,7 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
 Complete1084 exercises all3079 credited C routes and its711 catalog IDs in both full smoke suites;
-Focused1085-1093 execute the five new IDs and every edited workflow separately under both renderer
+Focused1085-1094 execute the five new IDs and every edited workflow separately under both renderer
 labels.
 Its focused lineage adds the compressed-texture ID, extends OcclusionQuery with the XNA-matching
 Reach refusal and closes SpriteBatch transformed clipping with exact CNA/XNA pixels.
@@ -11818,3 +11818,29 @@ existing workflows and their assertions, beginning with null/polymorphic/type-na
 than adding format variants. Record an explicit semantic disposition and extend an existing demo
 only where the corpus exposes a caller-visible contract that is still absent. Keep every compile at
 three jobs or fewer.
+
+## Focused1094-intermediate-XML-null-semantics
+
+The existing `content.custom.intermediate_serializer` grows29->36 controls. Five new passing
+controls prove that `Null="false"` reads ordinary text, `Null="true"` wins over supplied text, an
+invalid null value member is safely refused, a null Asset root is safely refused, and serializing a
+null root throws `ArgumentNullException` before output. Two new expected failures record
+CNA-DEMOS-ISSUE-149: CNA reports `InvalidContentException` for the two invalid read forms where the
+genuine-XNA corpus records `NullReferenceException` for a value member and
+`ArgumentNullException` for the root. The four ISSUE-148 failures remain unchanged, for30 passes
+and six expected failures total.
+
+The clean incremental build is warning-free with `-j3`; metadata remains716/0. Twelve related
+SOFTWARE intermediate-XML demos plus the catalog parser pass13/13 with five known-issue tests, and
+validator/comparator self-tests pass5/5 and4/4. Five runs under each renderer label retain exactly
+30 passes and six expected failures with byte-identical stdout SHA-256
+`08fdb7a2c29da63c2c3c9135c404e3197b289ab33d1fe5c171139096d55acfe5` and empty stderr. Generated
+coverage merges the focused result into Complete1084 plus Focused1085-1093, contains all716 IDs and
+remains307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes; content stays56
+pass/17 expected fail per renderer. Evidence:`/tmp/checkpoint-1094-intermediate-null-semantics/*`.
+No CNA source was modified and no fresh genuine-XNA execution or rendered result is claimed.
+
+Commit and push this batch. Continue the member-format audit with the distinct packed-collection
+`FlattenContent` contract: bare text between sibling members, ignored `CollectionItemName`, a
+successful nonempty round trip and the unrepresentable empty case belong in the existing property
+workflow. Do not add an attribute-only catalog ID. Keep every compile at three jobs or fewer.
