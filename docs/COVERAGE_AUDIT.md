@@ -7102,3 +7102,28 @@ HLSL/MSL/WGSL and SPIR-V execution, binary preference and Texture3D binding capa
 their respective renderer builds. Binding enum ordinals and additional combinations are trivial
 data permutations; internal ASCII headers remain excluded. Move to the next CNA-specific public
 module with undispositioned caller-facing behavior.
+
+### Focused1104 CNA runtime public-header audit
+
+The runtime module's caller-facing CNA surface consists of `ProjectGraphicsProfile.hpp` and
+`Misc.hpp`; its `CNA/Internal/Runtime` overlay/modal interfaces are implementation contracts.
+`game.graphics_device_manager.graphics_profile` already closes the project-profile path: declared
+HiDef seeds a new manager, a later Reach declaration affects future managers only, the direct
+setter restores the process value, and the live Reach device refuses a HiDef-only operation.
+Five fresh runs per renderer pass5/5 with common stdout SHA-256
+`2f0774014669ea982fbf3d464175c90e7a003a123a06a3bb6d3768b0ad1e78b4` and empty stderr.
+
+`CNA/Misc.hpp` is not runnable. The new minimal `tools/repro_runtime_facade.cpp` compiles cleanly
+as C++20 with `-Wall -Wextra -Werror`, then linking against `libcna.so` exits1 with undefined
+references to all five public `CNA::Runtime` methods. The runtime archive has no matching defined
+symbols and the source directory has no facade implementation. Pinned CNA independently tracks
+this exact defect as open REMED-CORE-011 and its C API check guards the absence. The public defect
+is recorded as CNA-DEMOS-ISSUE-150; no demo is added because it would prevent cna-demos itself from
+linking, and RuntimeOptions has no behavior without Initialize.
+
+The ordinary warning-free build uses `-j3`; metadata remains716/0. The exact SOFTWARE profile
+CTest, catalog parser and validator/comparator self-tests pass. Merged coverage remains307/329 XNA
+types,2128/2326 members,674/753 fields and3079/3205 C routes across all716 IDs. Evidence:
+`/tmp/checkpoint-1104-runtime-public-headers/*`. No screenshot or manual visual inspection was
+performed. This dispositions every public runtime header; continue with the next CNA-specific
+module.

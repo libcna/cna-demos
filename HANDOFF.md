@@ -12108,3 +12108,28 @@ preference and Texture3D binding capability require their renderer builds; enum 
 internal ASCII helpers do not justify demos. Commit and push this batch, then select the next
 CNA-specific public module with undispositioned caller-facing behavior. Keep every compile at three
 jobs or fewer.
+
+## Focused1104-CNA-runtime-public-header-audit
+
+The runtime module has two caller-facing CNA headers. The existing
+`game.graphics_device_manager.graphics_profile` workflow already covers the complete usable
+ProjectGraphicsProfileEXT/Get/Set contract. Five fresh SOFTWARE and five OPENGLES3/Xvfb runs pass
+5/5 with common stdout SHA-256
+`2f0774014669ea982fbf3d464175c90e7a003a123a06a3bb6d3768b0ad1e78b4` and empty stderr.
+
+The other header, `CNA/Misc.hpp`, exposes RuntimeOptions and five documented `CNA::Runtime`
+methods but pinned CNA defines none of them. `tools/repro_runtime_facade.cpp` compiles cleanly as
+C++20 with `-Wall -Wextra -Werror`, then the link against `libcna.so` exits1 with one undefined
+reference per method. `libcna_runtime.a` has no `CNA::Runtime::` definitions and no implementation
+source exists. CNA's own open REMED-CORE-011 and C API absence guard corroborate the defect. It is
+now CNA-DEMOS-ISSUE-150; no catalog demo can name the API without breaking the main link.
+
+The normal warning-free incremental build uses `-j3`; metadata remains716/0. The exact SOFTWARE
+profile CTest and catalog parser pass; validator/comparator self-tests pass5/5 and4/4. Merged
+coverage contains all716 IDs and stays307/329 XNA types,2128/2326 members,674/753 fields and
+3079/3205 C routes. Evidence:`/tmp/checkpoint-1104-runtime-public-headers/*`. No CNA source,
+screenshot or manual visual result is claimed.
+
+Commit and push this batch. The public runtime headers are now dispositioned; continue with the
+next CNA-specific module, preferring a small caller-facing surface before the broad XNA-heavy net
+module. Keep every compile at three jobs or fewer.

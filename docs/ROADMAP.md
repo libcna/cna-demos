@@ -62,6 +62,8 @@ Console demos with checks; each shows one operation family.
   `PreferMultiSampling`, `PreparingDeviceSettings`, device events, `ToggleFullScreen` (manual),
   `GraphicsProfile` Reach vs HiDef. ≈ 8
 - `LaunchParameters`, `TitleContainer.OpenStream`, `TitleLocation`. ≈ 3
+- CNA runtime extensions: `ProjectGraphicsProfileEXT` is covered end to end; the separate
+  `CNA::Runtime` facade cannot link and is recorded as ISSUE-150/upstream REMED-CORE-011.
 
 ## Phase 4 -- 2D graphics ✅ (48 demos including 7 SpriteFont demos; small remainders listed per line)
 - ✅ `graphics.device.*`, `graphics.viewport.*`, `graphics.graphics_adapter.*`,
@@ -761,8 +763,8 @@ Walk COVERAGE.md's backlog and the CNA-specific headers; for each remaining type
 part of another demo, or not independently meaningful (record why). ✅ First passes: the
 decisions for every XNA type without a demo are in [COVERAGE_AUDIT.md](COVERAGE_AUDIT.md), demos
 that already showed a type now name it, and new demos cover the effect interfaces and the
-graphics device service. The CNA-specific Devices, Platform and graphics-ext headers now have
-explicit member/behavior dispositions. Other CNA-specific headers remain. Member/behavior audit covers
+graphics device service. The CNA-specific Devices, Platform, graphics-ext and runtime headers now
+have explicit member/behavior dispositions. Other CNA-specific headers remain. Member/behavior audit covers
 initial reviews of Quaternion, EffectParameter, Curve,
 ContentManager, Texture2D, audio/XACT and CNA binary-content writer/document/cursor APIs
 (including overload, ownership and output-observation limitations); this is not a comprehensive member audit. Add screenshot references for

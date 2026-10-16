@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Audited the public CNA runtime headers, retained the fully covered project-profile path and
+  recorded CNA-DEMOS-ISSUE-150 with a minimal reproducer for the unimplemented Runtime facade.
 - Completed the public `graphics-ext` value audit with owned text/binary ShaderCode payloads,
   accessor mismatch and constructor refusals, package/binding accessors and structural validation.
 - Deepened the three CNA retro-effect workflows with ASCII overload/mode and cell validation,
