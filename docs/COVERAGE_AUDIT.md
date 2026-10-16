@@ -5706,3 +5706,12 @@ per renderer. The remaining GL10/11 title-check difference is reproduced across 
 passing runs. Normalized stderr matches and tool self-tests pass. Coverage remains307/329 types,
 2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `build/linux-full/reports/checkpoint-1034-complete-*`.
+
+### Focused1035 Quaternion interpolation boundaries
+
+`math.quaternion.slerp` now covers exact antipodes, amounts outside [0,1], normalized Lerp
+extrapolation, zero/zero Slerp versus Lerp, zero/identity Slerp magnitude and the output overload.
+Genuine Windows XNA 4.0 supplies the exact reference and CNA matches all twelve controls. Ten runs
+per renderer label are byte-stable with empty stderr; build, metadata, exact CTest and both self-
+test suites pass. Coverage totals are unchanged. Evidence:
+`/tmp/checkpoint-1035-quaternion-interpolation-boundaries/*`.

@@ -10368,3 +10368,18 @@ SHA-256 values are `d8112479f735d9200de7fda1b4867e7c8362b92534b7094ec4589c303d88
 `abf15ddb02909f182aaf937cc089a9b4d11caf776fdbdd1962535ff006b19b3a`. No screenshot, listening
 test, physical input, external service session or manual visual inspection was performed. Resume
 the deterministic behavior audit outside the absorbed Focused1023-1033 slices.
+
+## Focused1035-Quaternion-interpolation-boundaries
+
+`math.quaternion.slerp` grows from three to twelve controls without a new ID. Genuine Windows XNA
+4.0 anchors exact antipodes, unclamped -0.5/1.5 extrapolation, normalized Lerp extrapolation and the
+output Slerp overload. It also distinguishes zero inputs: zero/zero Slerp remains zero, zero/zero
+Lerp normalizes to four NaNs, and zero/identity Slerp has W=sqrt(0.5) and remains nonunit. CNA
+matches every value/classification.
+
+The warning-free three-job build, metadata693/0, exact SOFTWARE CTest and self-tests5/5 plus4/4
+pass. Ten SOFTWARE and ten OPENGLES3-labelled runs pass12/12 with byte-identical stdout SHA-256
+`be362fe52c40a89a9dc61e861c18507e8a0ebbc629afc0e0ee5d31f17ce19364` and empty stderr. Coverage
+totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1035-quaternion-interpolation-boundaries/*`. No rendering or visual claim was made
+and no CNA issue was found. Continue with the next deterministic behavior gap outside interpolation.

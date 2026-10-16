@@ -11333,3 +11333,11 @@ for ISSUE-115/116/117 and their five exact new assertions. Twenty isolated `game
 runs confirm its known10/11-check timing variance. Normalized stderr is unchanged; self-tests pass
 5/5 plus4/4. Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes.
 Evidence:`build/linux-full/reports/checkpoint-1034-complete-*`.
+
+## Focused1035 Quaternion interpolation boundaries
+
+`math.quaternion.slerp` adds XNA-referenced exact-antipode, unclamped extrapolation, zero-endpoint
+and output-overload controls. CNA matches all twelve exact orientation/magnitude/NaN results. The
+warning-free `-j3` build, metadata693/0, exact CTest, ten runs per renderer label and both self-test
+suites pass with stable stdout and empty stderr. Coverage remains unchanged. Evidence:
+`/tmp/checkpoint-1035-quaternion-interpolation-boundaries/*`.

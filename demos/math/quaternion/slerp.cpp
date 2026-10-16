@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "CnaDemos/Demo.hpp"
+#include "CnaDemos/MathChecks.hpp"
 #include "Microsoft/Xna/Framework/MathHelper.hpp"
 #include "Microsoft/Xna/Framework/Quaternion.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
@@ -37,14 +38,55 @@ namespace
         const Vector3 lerpQuarter = Vector3::Transform(Vector3::Forward, Quaternion::Lerp(start, end, 0.25f));
         ctx.Check(AngleBetween(Vector3::Forward, lerpQuarter) < 39.0f, "Lerp lags behind at 0.25");
         ctx.CheckNear(Quaternion::Lerp(start, end, 0.25f).Length(), 1.0, 1e-5, "Lerp returns a normalized quaternion");
+
+        // XNA takes the short representation path for exact antipodes too. The linear branch
+        // subtracts the negative endpoint before normalization, avoiding a zero midpoint.
+        const Quaternion antipode = -Quaternion::Identity;
+        ctx.Check(Quaternion::Slerp(Quaternion::Identity, antipode, 0.5f) == Quaternion::Identity &&
+                      Quaternion::Lerp(Quaternion::Identity, antipode, 0.5f) == Quaternion::Identity,
+                  "exact antipodes interpolate through the first orientation representation");
+
+        // Amount is not clamped: spherical interpolation extrapolates along the same great circle.
+        const Quaternion quarterTurn = Quaternion::CreateFromAxisAngle(Vector3::Up, MathHelper::PiOver2);
+        const Quaternion before = Quaternion::Slerp(Quaternion::Identity, quarterTurn, -0.5f);
+        const Quaternion after = Quaternion::Slerp(Quaternion::Identity, quarterTurn, 1.5f);
+        ctx.CheckNear(CnaDemos::RotationDifference(
+                          before, Quaternion::CreateFromAxisAngle(Vector3::Up, -MathHelper::PiOver4)),
+                      0.0, 1e-5, "Slerp extrapolates to -45 degrees before the interval");
+        ctx.CheckNear(CnaDemos::RotationDifference(
+                          after, Quaternion::CreateFromAxisAngle(Vector3::Up, 3.0f * MathHelper::PiOver4)),
+                      0.0, 1e-5, "Slerp extrapolates to 135 degrees beyond the interval");
+
+        const Quaternion lerpBefore = Quaternion::Lerp(Quaternion::Identity, quarterTurn, -0.5f);
+        const Quaternion lerpAfter = Quaternion::Lerp(Quaternion::Identity, quarterTurn, 1.5f);
+        ctx.CheckNear(lerpBefore.Length(), 1.0, 1e-6, "Lerp normalizes negative-amount extrapolation");
+        ctx.CheckNear(lerpAfter.Length(), 1.0, 1e-6, "Lerp normalizes beyond-one extrapolation");
+
+        const Quaternion zero;
+        ctx.Check(Quaternion::Slerp(zero, zero, 0.5f) == zero,
+                  "Slerp of two zero quaternions remains zero");
+        const Quaternion zeroLerp = Quaternion::Lerp(zero, zero, 0.5f);
+        ctx.Check(std::isnan(zeroLerp.X) && std::isnan(zeroLerp.Y) &&
+                      std::isnan(zeroLerp.Z) && std::isnan(zeroLerp.W),
+                  "Lerp of two zero quaternions exposes normalization NaNs");
+
+        const Quaternion halfZeroIdentity = Quaternion::Slerp(zero, Quaternion::Identity, 0.5f);
+        ctx.Check(halfZeroIdentity.X == 0.0f && halfZeroIdentity.Y == 0.0f &&
+                      halfZeroIdentity.Z == 0.0f &&
+                      std::abs(halfZeroIdentity.W - std::sqrt(0.5f)) < 1e-6f,
+                  "Slerp with a zero endpoint keeps XNA's nonunit half-way magnitude");
+
+        Quaternion byReference;
+        Quaternion::Slerp(Quaternion::Identity, quarterTurn, 1.5f, byReference);
+        ctx.Check(byReference == after, "the by-reference Slerp overload matches extrapolation");
     }
 }
 
 CNA_DEMOS_CONSOLE(QuaternionSlerp, {
     .id = "math.quaternion.slerp",
     .title = "Spherical interpolation",
-    .description = "Interpolates between two orientations with Quaternion::Slerp (constant turning speed) and "
-                   "Quaternion::Lerp (cheaper, uneven speed) and prints the angle reached.",
+    .description = "Compares Slerp and normalized Lerp for ordinary turns, exact antipodes, unclamped "
+                   "extrapolation and zero-quaternion boundaries.",
     .apis = {"Quaternion::Slerp", "Quaternion::Lerp"},
     .tags = {"quaternion", "interpolation", "animation"},
 })
