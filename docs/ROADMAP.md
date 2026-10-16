@@ -609,7 +609,7 @@ a check that all authored colors remain visible and that a blank texture row can
   path fallback, rating/track propagation, recursion, ignored formats and directory-symlink policy.
 
 
-## Phase 10 -- input ✅ (39 demos: keyboard, mouse, text input, clipboard, gamepad, touch, CNAEXT devices)
+## Phase 10 -- input ✅ (40 demos: keyboard, mouse, text input, clipboard, gamepad, touch, CNAEXT devices)
 - Keyboard: state, edge detection (pressed this frame), modifiers, `GetPressedKeys`.
 - Mouse: position, buttons, scroll wheel (vertical/horizontal CNAEXT), `SetPosition`,
   `MouseCursor`, relative mode (CNAEXT).
@@ -12514,3 +12514,21 @@ self-test suites pass. Generated coverage remains307/329 XNA types,2128/2326 mem
 and3079/3205 C routes across all717 IDs. Evidence:
 `/tmp/checkpoint-1107-graphics-public-headers/*`. Continue with the24 public `CNA::Input` headers;
 extend an existing input workflow only where source/member comparison finds a real semantic gap.
+
+## Focused1108 CNA Input public-header audit
+
+The 24 public `CNA::Input` headers are dispositioned against stable workflows. Haptic effects now
+cover complete owned record values, flag algebra, missing standalone/joystick opens and every safe
+closed-device operation. Raw joystick state now covers descriptor/capability/state value semantics
+and exact missing-id defaults without hardware. Device listing adds input/sensor descriptor
+semantics and explicit `SensorTypeEXT` credit; modifiers cover all bit operators; text input uses a
+typed email-layout start in addition to the plain start/stop lifecycle.
+
+The warning-free `-j3` build and metadata717/0 pass. Exact SOFTWARE tests pass or take their
+declared window skip; repeated SOFTWARE and OPENGLES3/Xvfb runs pass all focused controls with
+empty stderr. Generated coverage contains all717 IDs and remains307/329 XNA types,2128/2326
+members,674/753 fields and3079/3205 C routes. Hardware effect output, hot-plug events, populated
+joystick/sensor values, power-state variants and mobile IME layout remain correctly manual or
+platform-specific. Test-only reset hooks and trivial enum permutations do not justify catalog
+entries. Evidence:`/tmp/checkpoint-1108-input-public-headers/*`. Continue with the next public CNA
+module containing caller-visible gaps, preferring storage before the broader net surface.

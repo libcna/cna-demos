@@ -51,6 +51,16 @@ namespace
             pixel_ = std::make_unique<Texture2D>(getGraphicsDeviceProperty(), 1, 1);
             const Color white = Color::White;
             pixel_->SetData(&white, 1);
+
+            KeyModifiersEXT composed = KeyModifiersEXT::Shift | KeyModifiersEXT::Ctrl;
+            composed |= KeyModifiersEXT::Caps;
+            Context().Check((composed & KeyModifiersEXT::Shift) == KeyModifiersEXT::Shift &&
+                                (composed & KeyModifiersEXT::Caps) == KeyModifiersEXT::Caps &&
+                                (composed & KeyModifiersEXT::Alt) == KeyModifiersEXT::None,
+                            "modifier flags compose and mask independently");
+            composed &= ~KeyModifiersEXT::Ctrl;
+            Context().Check((composed & KeyModifiersEXT::Ctrl) == KeyModifiersEXT::None,
+                            "modifier flags can be removed with complement and AND assignment");
         }
 
         void Update(GameTime& gameTime) override

@@ -6,6 +6,7 @@
 #include <string>
 
 #include "CNA/Input/Clipboard.hpp"
+#include "CNA/Input/TextInputType.hpp"
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SamplerState.hpp"
@@ -69,6 +70,10 @@ namespace
             textToken_ = TextInputEXT::TextInput.Add([this](SharpRuntime::charcs c) { OnCharacter(c); });
             TextInputEXT::StartTextInput();
             Context().Check(TextInputEXT::IsTextInputActive(), "StartTextInput turns text input on");
+            TextInputEXT::StopTextInput();
+            TextInputEXT::StartTextInputWithTypeEXT(CNA::Input::TextInputTypeEXT::TextEmail);
+            Context().Check(TextInputEXT::IsTextInputActive(),
+                            "StartTextInputWithTypeEXT activates text input with an email-layout hint");
         }
 
         void UnloadContent() override
@@ -168,10 +173,12 @@ CNA_DEMOS_GAME(TypingDemo, {
     .id = "input.text_input.typing",
     .title = "Typing text (CNAEXT)",
     .description = "A one-line text box fed by the TextInputEXT::TextInput event between StartTextInput and "
-                   "StopTextInput; editing keys arrive as control characters (Backspace 8, Enter 13, Home 2, End 3, "
-                   "Delete 127, Ctrl+V 22).",
-    .apis = {"TextInputEXT::TextInput", "TextInputEXT::StartTextInput", "TextInputEXT::StopTextInput",
-             "TextInputEXT::IsTextInputActive", "CNA::Input::Clipboard::GetTextEXT"},
+                   "StopTextInput, including the TextEmail on-screen-keyboard hint; editing keys arrive as control "
+                   "characters (Backspace 8, Enter 13, Home 2, End 3, Delete 127, Ctrl+V 22).",
+    .apis = {"TextInputEXT::TextInput", "TextInputEXT::StartTextInput",
+             "TextInputEXT::StartTextInputWithTypeEXT", "TextInputEXT::StopTextInput",
+             "TextInputEXT::IsTextInputActive", "CNA::Input::TextInputTypeEXT",
+             "CNA::Input::Clipboard::GetTextEXT"},
     .tags = {"text", "typing", "text-box", "chat", "keyboard", "cnaext"},
     .automation = CnaDemos::Automation::SmokeOnly,
     .needs = CnaDemos::Need::Keyboard | CnaDemos::Need::Window,

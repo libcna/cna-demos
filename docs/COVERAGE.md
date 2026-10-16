@@ -6,7 +6,7 @@ Generated 2026-10-16 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**717 demos** in 19 categories. Kinds: console 205, game 297, standalone 215. Automation: automated 681, manual 3, smoke-only 33.
+**717 demos** in 19 categories. Kinds: console 205, game 297, standalone 215. Automation: automated 683, manual 3, smoke-only 31.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
@@ -21,7 +21,7 @@ Generated 2026-10-16 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 | game | 33 | 28 | 4 | 1 | 18 / 7 / 7 / 1 / 0 | 25 / 0 / 7 / 1 / 0 |
 | gamer_services | 20 | 19 | 0 | 1 | 17 / 0 / 2 / 1 / 0 | 17 / 0 / 2 / 1 / 0 |
 | graphics | 186 | 186 | 0 | 0 | 147 / 26 / 13 / 0 / 0 | 167 / 3 / 16 / 0 / 0 |
-| input | 40 | 15 | 25 | 0 | 34 / 6 / 0 / 0 / 0 | 40 / 0 / 0 / 0 / 0 |
+| input | 40 | 17 | 23 | 0 | 34 / 6 / 0 / 0 / 0 | 40 / 0 / 0 / 0 / 0 |
 | inspector | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
 | math | 95 | 95 | 0 | 0 | 44 / 0 / 51 / 0 / 0 | 44 / 0 / 51 / 0 / 0 |
 | media | 17 | 16 | 1 | 0 | 11 / 0 / 6 / 0 / 0 | 11 / 0 / 6 / 0 / 0 |
@@ -1204,26 +1204,37 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Input::Clipboard::SetTextEXT` -- input.clipboard.text
 - `CNA::Input::GamePadButtonLabelEXT` -- input.gamepad.device_info
 - `CNA::Input::GamePadConnectionStateEXT` -- input.gamepad.device_info
+- `CNA::Input::HapticCapabilitiesEXT` -- input.haptics.effects
 - `CNA::Input::HapticDevice::CreateEffectEXT` -- input.haptics.effects
 - `CNA::Input::HapticDevice::DestroyEffectEXT` -- input.haptics.effects
-- `CNA::Input::HapticDevice::Dispose` -- input.haptics.rumble
+- `CNA::Input::HapticDevice::Dispose` -- input.haptics.effects, input.haptics.rumble
 - `CNA::Input::HapticDevice::GetCapabilitiesEXT` -- input.haptics.effects, input.haptics.rumble
 - `CNA::Input::HapticDevice::GetEffectStatusEXT` -- input.haptics.effects
-- `CNA::Input::HapticDevice::GetNameEXT` -- input.haptics.rumble
-- `CNA::Input::HapticDevice::InitRumbleEXT` -- input.haptics.rumble
+- `CNA::Input::HapticDevice::GetNameEXT` -- input.haptics.effects, input.haptics.rumble
+- `CNA::Input::HapticDevice::InitRumbleEXT` -- input.haptics.effects, input.haptics.rumble
 - `CNA::Input::HapticDevice::IsEffectSupportedEXT` -- input.haptics.effects
-- `CNA::Input::HapticDevice::IsOpenEXT` -- input.haptics.rumble
-- `CNA::Input::HapticDevice::PlayRumbleEXT` -- input.haptics.rumble
+- `CNA::Input::HapticDevice::IsOpenEXT` -- input.haptics.effects, input.haptics.rumble
+- `CNA::Input::HapticDevice::PauseEXT` -- input.haptics.effects
+- `CNA::Input::HapticDevice::PlayRumbleEXT` -- input.haptics.effects, input.haptics.rumble
+- `CNA::Input::HapticDevice::ResumeEXT` -- input.haptics.effects
 - `CNA::Input::HapticDevice::RunEffectEXT` -- input.haptics.effects
+- `CNA::Input::HapticDevice::SetAutocenterEXT` -- input.haptics.effects
 - `CNA::Input::HapticDevice::SetGainEXT` -- input.haptics.effects
 - `CNA::Input::HapticDevice::StopAllEffectsEXT` -- input.haptics.effects
-- `CNA::Input::HapticDevice::StopRumbleEXT` -- input.haptics.rumble
+- `CNA::Input::HapticDevice::StopEffectEXT` -- input.haptics.effects
+- `CNA::Input::HapticDevice::StopRumbleEXT` -- input.haptics.effects, input.haptics.rumble
+- `CNA::Input::HapticDevice::UpdateEffectEXT` -- input.haptics.effects
+- `CNA::Input::HapticDirectionEXT` -- input.haptics.effects
+- `CNA::Input::HapticDirectionTypeEXT` -- input.haptics.effects
 - `CNA::Input::HapticEffectEXT` -- input.haptics.effects
 - `CNA::Input::HapticEffectTypeEXT` -- input.haptics.effects
 - `CNA::Input::HapticFeatureEXT` -- input.haptics.effects
-- `CNA::Input::Haptics::GetHapticsEXT` -- input.devices.list, input.haptics.rumble
+- `CNA::Input::HapticInfoEXT` -- input.haptics.effects
+- `CNA::Input::Haptics::GetHapticsEXT` -- input.devices.list, input.haptics.effects, input.haptics.rumble
+- `CNA::Input::Haptics::IsJoystickHapticEXT` -- input.haptics.effects
 - `CNA::Input::Haptics::IsMouseHapticEXT` -- input.devices.list, input.haptics.rumble
-- `CNA::Input::Haptics::OpenEXT` -- input.haptics.rumble
+- `CNA::Input::Haptics::OpenEXT` -- input.haptics.effects, input.haptics.rumble
+- `CNA::Input::Haptics::OpenFromJoystickEXT` -- input.haptics.effects
 - `CNA::Input::Haptics::OpenFromMouseEXT` -- input.haptics.rumble
 - `CNA::Input::InputDeviceInfoEXT` -- input.devices.list
 - `CNA::Input::InputDevices::GetKeyboardsEXT` -- input.devices.list
@@ -1247,9 +1258,11 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Input::Power::GetInfoEXT` -- input.power.battery
 - `CNA::Input::PowerStateEXT` -- input.gamepad.device_info, input.power.battery
 - `CNA::Input::SensorInfoEXT` -- input.devices.list
+- `CNA::Input::SensorTypeEXT` -- input.devices.list
 - `CNA::Input::Sensors::GetAccelerometerEXT` -- input.sensors.motion
 - `CNA::Input::Sensors::GetGyroscopeEXT` -- input.sensors.motion
 - `CNA::Input::Sensors::GetSensorsEXT` -- input.devices.list, input.sensors.motion
+- `CNA::Input::TextInputTypeEXT` -- input.text_input.typing
 - `CNA::Inspector::Agent::GetAuthenticationToken` -- inspector.agent.loopback_session
 - `CNA::Inspector::Agent::GetBindAddress` -- inspector.agent.loopback_session
 - `CNA::Inspector::Agent::GetPort` -- inspector.agent.loopback_session
@@ -1970,6 +1983,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `TextInputEXT::IsTextInputActive` -- input.text_input.typing
 - `TextInputEXT::SetInputRectangle` -- input.text_input.composition
 - `TextInputEXT::StartTextInput` -- input.text_input.composition, input.text_input.typing
+- `TextInputEXT::StartTextInputWithTypeEXT` -- input.text_input.typing
 - `TextInputEXT::StopTextInput` -- input.text_input.composition, input.text_input.typing
 - `TextInputEXT::TextEditing` -- input.text_input.composition
 - `TextInputEXT::TextEditingCandidatesEXT` -- input.text_input.composition

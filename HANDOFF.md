@@ -15,7 +15,7 @@ capability has a demo. See docs/PROJECT.md.
 Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMAP.md):
 
 * Complete: Phase 0-1 (research, infrastructure), 2 (math, 86 + 6 packed vectors), 3 (game lifecycle, 33), 4 (2D
-  graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 39), 11 (storage, 8).
+  graphics), 5 (render states, buffers, primitives, render targets), 10 (input, 40), 11 (storage, 8).
 * Mostly complete: 6 (effects and shaders, 48; the C `effects.h` route audit and PBR-family
   public-surface disposition are complete).
 * In progress: 7 (models/glTF, 30), 8 (content, 68), 9 (audio 23 incl. 10 C++ XACT plus a complete
@@ -69,19 +69,19 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 
 ## 6. Demo counts
 
-716 project-built catalog demos in19 categories: math95, game33, graphics186, audio23, core6,
-content73, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
-diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,297 game and215
-standalone; 680 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1099's full716-ID reports and includes every
-catalog ID in both renderer columns. It incorporates every
+717 project-built catalog demos in19 categories: math95, game33, graphics186, audio23, core6,
+content73, input40, storage7, media17, gamer services20, net14, devices5, phone1, design4,
+diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are205 console,297 game and215
+standalone; 683 are automated,31 smoke-only and3 manual. Every declared category has demos.
+Coverage: generated docs/COVERAGE.md merges Focused1108 results into Complete1099's full reports
+and includes all717 catalog IDs in both renderer columns. It incorporates every
 focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
 Curve and Matrix audits in Focused1063-1074 and the root Framework audits in Focused1076-1078,
 including ISSUE-124 through ISSUE-145.
 The surface totals are307/329 XNA types,2128/2326 XNA members,674/753 fields and
-3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1099's
-full runtime reports are the current baseline inputs. Selected semantic
+3079/3205 public C ABI routes. GamerServices field coverage is160/223 after Focused915; Complete1099
+plus the focused updates are the current baseline inputs. Selected semantic
 totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `input_touch.h`47/47, `input_devices.h`31/37, `input_text.h`17/17, `input_joystick.h`27/30 and
 `input_haptics.h`33/36, `sensors.h`116/144, `devices.h`59/62, `display.h`22/22 and
@@ -12201,3 +12201,35 @@ pixel, HDR display, screenshot or manual visual result is claimed.
 Commit and push this source-audit batch. Next audit the24 public `CNA::Input` headers against their
 existing input/device workflows and extend stable IDs only for real member or behavior gaps. Keep
 every compile at three jobs or fewer.
+
+## Focused1108-CNA-Input-public-header-audit
+
+All24 public `CNA::Input` headers are now explicitly dispositioned. Five existing workflows were
+deepened without adding an ID. `input.haptics.effects` now authors every `HapticEffectEXT` field,
+checks owned value/equality semantics and all haptic flag operators, and executes every safe
+`HapticDevice` operation plus standalone/joystick service calls against a deterministic missing id;
+its physical upload/run/status path remains conditional. `input.joystick.raw_state` now proves all
+three public record families, owned variable-length state and exact missing-id defaults, so it is
+automated without controller hardware. Device listing checks input/sensor record equality and names
+`SensorTypeEXT`; modifiers check all five bit operators; typing restarts text input with the
+`TextEmail` typed hint. Clipboard, live gamepad labels/connection, hot-plug events, power and sensor
+reads retain their existing coherent coverage. Test-only resets, trivial enum permutations and
+hardware/mobile observations have explicit dispositions.
+
+The warning-free incremental build uses `-j3`; metadata remains717/0. Exact SOFTWARE CTests pass
+for haptics, raw joystick and modifiers; the two window-dependent workflows take their declared
+skips. Five SOFTWARE/OPENGLES3 haptic runs pass12/12 at stdout SHA-256
+`d3a7e837ac31136034287e593370ba941ec819d154d96bae256ccf5404a0474d`; raw joystick passes5/5
+on both at `a4f152a8bbf77228e56b4073097106ec2c07c5af87ebdcd0c5147b9c00dfac4a`.
+Five OPENGLES3/Xvfb runs each pass device listing5/5, modifiers2/2 and typed input3/3 at hashes
+`3fd64b7bf81f6d83ad1c124f34e5fc7a8a622266644683abbaaa0bf308f8877f`,
+`e785e01f3267bd672e93688fcc9aa0e8305e076aab8c7499340f3cd133a321e2` and
+`84aca299304cac03f7f0953a324c1d00c6d0b3d03a315690bc9aabd345b445a8`; all stderr is empty.
+Validator/comparator self-tests pass5/5 and4/4. Merged coverage contains all717 IDs and remains
+307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1108-input-public-headers/*`. No new CNA defect appeared; no physical haptic,
+hot-plug, joystick, sensor, power-state, mobile-layout, screenshot or manual visual claim is made.
+
+Commit and push this batch. Then audit the public `CNA::Storage` headers before the broader net
+surface, extending stable storage workflows only for concrete caller-visible gaps. Keep every
+compile at three jobs or fewer.

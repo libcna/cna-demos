@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the 24-header public `CNA::Input` audit by extending stable device, joystick, modifier,
+  haptic and text-input workflows with record ownership/equality, disconnected-device contracts,
+  every closed haptic operation, flag algebra, typed text-input activation and explicit sensor-type
+  credit; hardware actuation, hot-plug and mobile keyboard layout remain honest manual boundaries.
 - Consolidated the eight public `CNA::Graphics` headers into an explicit source-level disposition,
   tying every caller-facing family to its existing capability, diagnostic, shader-language,
   unsupported-call, or vertex-registry workflow and retaining renderer-specific limits.

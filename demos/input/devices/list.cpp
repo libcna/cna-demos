@@ -37,6 +37,15 @@ namespace
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
 
+            const InputDeviceInfoEXT inputDevice{17, "Example keyboard"};
+            Context().Check(inputDevice == InputDeviceInfoEXT{17, "Example keyboard"} &&
+                                inputDevice != InputDeviceInfoEXT{18, inputDevice.name},
+                            "input-device descriptors compare id and name");
+            const SensorInfoEXT sensor{23, "Example left gyro", SensorTypeEXT::GyroscopeLeft};
+            Context().Check(sensor == SensorInfoEXT{23, "Example left gyro", SensorTypeEXT::GyroscopeLeft} &&
+                                sensor != SensorInfoEXT{23, sensor.name, SensorTypeEXT::GyroscopeRight},
+                            "sensor descriptors compare id, name and sensor type");
+
             // XNA has one mouse and one keyboard; the platform may know several (a laptop's
             // touchpad and a USB mouse, or virtual devices). Their states are still merged.
             List("Mice", InputDevices::GetMiceEXT());
@@ -111,7 +120,7 @@ CNA_DEMOS_GAME(DeviceListDemo, {
              "CNA::Input::InputDevices::GetTouchDevicesEXT", "CNA::Input::InputDeviceInfoEXT",
              "CNA::Input::Joysticks::GetJoysticksEXT", "CNA::Input::Haptics::GetHapticsEXT",
              "CNA::Input::Haptics::IsMouseHapticEXT", "CNA::Input::Sensors::GetSensorsEXT",
-             "CNA::Input::SensorInfoEXT"},
+             "CNA::Input::SensorInfoEXT", "CNA::Input::SensorTypeEXT"},
     .tags = {"devices", "mouse", "keyboard", "joystick", "haptics", "sensors", "cnaext"},
     .needs = CnaDemos::Need::Window,
     .frames = 3,

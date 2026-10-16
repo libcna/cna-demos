@@ -2,6 +2,7 @@
 // CNAEXT Joysticks: any game controller as raw axes, buttons, hats and balls -- wheels, flight
 // sticks and pads that GamePad's Xbox layout does not describe.
 #include <cstdint>
+#include <limits>
 #include <memory>
 #include <optional>
 #include <string>
@@ -38,6 +39,43 @@ namespace
             pixel_ = std::make_unique<Texture2D>(getGraphicsDeviceProperty(), 1, 1);
             const Color white = Color::White;
             pixel_->SetData(&white, 1);
+
+            JoystickInfoEXT described{17, "Example flight stick", JoystickTypeEXT::FlightStick};
+            Context().Check(described == JoystickInfoEXT{17, "Example flight stick", JoystickTypeEXT::FlightStick} &&
+                                described != JoystickInfoEXT{18, described.name, described.type},
+                            "joystick descriptors compare id, name and physical type");
+
+            JoystickCapabilitiesEXT authoredCaps;
+            authoredCaps.isConnected = true;
+            authoredCaps.axisCount = 6;
+            authoredCaps.buttonCount = 12;
+            authoredCaps.hatCount = 1;
+            authoredCaps.ballCount = 2;
+            authoredCaps.type = JoystickTypeEXT::FlightStick;
+            authoredCaps.name = "Example flight stick";
+            authoredCaps.guid = "00112233445566778899aabbccddeeff";
+            authoredCaps.powerState = PowerStateEXT::Charging;
+            authoredCaps.powerPercent = 73;
+            JoystickCapabilitiesEXT copiedCaps = authoredCaps;
+            copiedCaps.powerPercent--;
+            Context().Check(copiedCaps != authoredCaps && copiedCaps.name == authoredCaps.name,
+                            "capability snapshots compare every field independently");
+
+            JoystickStateEXT authoredState;
+            authoredState.axes = {-32768, 0, 32767};
+            authoredState.buttons = {true, false, true};
+            authoredState.hats = {JoystickHatPositionEXT::RightDown};
+            authoredState.balls = {Point(3, -4)};
+            JoystickStateEXT copiedState = authoredState;
+            Context().Check(copiedState == authoredState, "raw state snapshots own equal axis, button, hat and ball data");
+            copiedState.axes.front()++;
+            Context().Check(copiedState != authoredState && authoredState.axes.front() == -32768,
+                            "raw state copies own their variable-length data");
+
+            const auto missingId = std::numeric_limits<std::uint32_t>::max();
+            Context().Check(Joysticks::GetCapabilitiesEXT(missingId) == JoystickCapabilitiesEXT{} &&
+                                Joysticks::GetStateEXT(missingId) == JoystickStateEXT{},
+                            "an unknown joystick id has disconnected capabilities and an empty state");
         }
 
         void Update(GameTime& gameTime) override
@@ -115,13 +153,14 @@ CNA_DEMOS_GAME(RawStateDemo, {
     .id = "input.joystick.raw_state",
     .title = "Raw joystick state (CNAEXT)",
     .description = "Lists controllers with Joysticks::GetJoysticksEXT and shows the first one's capabilities and raw "
-                   "state -- 16-bit axes, buttons and hats -- for devices GamePad's Xbox layout does not describe.",
+                   "state -- 16-bit axes, buttons, hats and trackballs -- while also checking the documented "
+                   "disconnected result without requiring hardware.",
     .apis = {"CNA::Input::Joysticks::GetJoysticksEXT", "CNA::Input::Joysticks::GetCapabilitiesEXT",
              "CNA::Input::Joysticks::GetStateEXT", "CNA::Input::JoystickInfoEXT",
              "CNA::Input::JoystickCapabilitiesEXT", "CNA::Input::JoystickStateEXT",
              "CNA::Input::JoystickHatPositionEXT", "CNA::Input::JoystickTypeEXT"},
     .tags = {"joystick", "wheel", "flight-stick", "controller", "raw", "cnaext"},
-    .automation = CnaDemos::Automation::SmokeOnly,
-    .needs = CnaDemos::Need::GamePad,
+    .automation = CnaDemos::Automation::Automated,
+    .frames = 3,
     .assets = {"fonts/pixel_font.cnb"},
 })

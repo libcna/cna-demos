@@ -7183,3 +7183,35 @@ The base graphics module's eight public CNA headers map completely to existing f
 This consolidation adds no metadata credit. The relevant focused evidence remains Focused941-945;
 fresh exact CTests confirm the four representative workflows in the current717-demo build.
 Evidence:`/tmp/checkpoint-1107-graphics-public-headers/*`.
+
+### Focused1108 CNA Input public-header audit
+
+All 24 public `CNA::Input` headers now have an explicit semantic disposition. Five stable workflows
+were extended instead of adding variants:
+
+| Public family | Coverage decision |
+|---|---|
+| `Clipboard` | The text and data-format workflows cover both `SetDataEXT` overloads, MIME enumeration/query/read, text get/set/has, primary-selection get/set/has and two-way `CNA::Devices::Clipboard` interoperability with exact state restoration. |
+| Gamepad labels and connection state | `input.gamepad.device_info` reads the live connection medium, power state and four face-button labels. Other enum values require the corresponding physical controller and add no separate behavior. |
+| Haptic values, `HapticDevice` and `Haptics` | `input.haptics.effects` now authors every `HapticEffectEXT` field, proves owned custom samples, direction/capability/info equality and all feature-flag operators, then exercises enumeration plus every device operation against a deterministic missing id. The documented closed-device defaults and rejection results are exact, `Dispose` is idempotent, and the joystick query/open pair is covered. Existing conditional hardware paths still upload/run/destroy three representative effect families and use gain/status; the rumble workflow retains mouse opening and physical simple-rumble behavior. Remaining effect/direction enum permutations and actual force output require suitable hardware. The unusable public default constructor remains recorded as CNA-DEMOS-ISSUE-009; move-only special members are RAII mechanics rather than a separate user concept. |
+| Input-device enumeration and events | `input.devices.list` enumerates mice, keyboards and touch devices, checks unique ids and now proves descriptor equality. `input.devices.hot_plug` owns all six public event subscriptions and removes them. `ResetForTests` is explicitly test-only. |
+| Raw joystick values and service | `input.joystick.raw_state` now proves owned/equal descriptor, capability and variable-length state values, including hat and trackball data, and checks the exact disconnected/empty results for an unknown id without hardware. Its live path still enumerates and displays raw axes, buttons, hats and capabilities; hot-plug owns both events. Physical values remain hardware-dependent and `ResetForTests` is test-only. |
+| Modifier flags | `input.keyboard.modifiers` keeps the live `GetModStateEXT` display and now directly verifies OR, AND, complement and both compound operators. |
+| Host power | `input.power.battery` calls `Power::GetInfoEXT`, checks documented seconds/percentage ranges and displays every reachable `PowerStateEXT`; device-info covers the controller form. State variants depend on host/device power. |
+| Host sensors | Device listing now gives `SensorTypeEXT` explicit credit and proves all three `SensorInfoEXT` equality fields. The sensor workflow enumerates and repeatedly reads accelerometer/gyroscope values with their documented unavailable result on this desktop. Populated/mobile readings require that hardware. |
+| Typed text input | `input.text_input.typing` now starts plain text input, stops it and restarts with the `TextEmail` `TextInputTypeEXT` hint while checking active state. CNA's unit tests own the mechanical nine-value platform mapping; observing the distinct IME layouts requires a mobile platform and does not justify nine demo variants. |
+
+The warning-free incremental build uses `-j3`; metadata remains717/0. Exact SOFTWARE CTests pass
+for haptics, raw joystick and modifiers, while the two window-dependent workflows retain declared
+skips. Five repeated SOFTWARE/OPENGLES3 haptic runs pass12/12 with stdout SHA-256
+`d3a7e837ac31136034287e593370ba941ec819d154d96bae256ccf5404a0474d`; raw joystick passes5/5
+on both at `a4f152a8bbf77228e56b4073097106ec2c07c5af87ebdcd0c5147b9c00dfac4a`.
+Five OPENGLES3/Xvfb runs each pass device listing5/5, modifiers2/2 and typed input3/3 with hashes
+`3fd64b7bf81f6d83ad1c124f34e5fc7a8a622266644683abbaaa0bf308f8877f`,
+`e785e01f3267bd672e93688fcc9aa0e8305e076aab8c7499340f3cd133a321e2` and
+`84aca299304cac03f7f0953a324c1d00c6d0b3d03a315690bc9aabd345b445a8`; all stderr is empty.
+Validator/comparator self-tests pass5/5 and4/4. Merged coverage contains all717 IDs and stays
+307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes; the newly listed names
+are CNA extensions. Evidence:`/tmp/checkpoint-1108-input-public-headers/*`. No force-feedback
+actuation, hot-plug action, physical joystick/sensor/power-state coverage, mobile IME-layout
+inspection, screenshot or manual visual result is claimed.
