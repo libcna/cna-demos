@@ -6870,3 +6870,23 @@ source change or fresh XNA run.
 The remaining distinct member-format gap is packed-collection `FlattenContent`. Its bare sibling
 text, ignored item-name setting and empty-list failure should extend the property workflow; the
 ordinary alias/type spelling cases remain represented syntax variants.
+
+### Focused1095 intermediate XML flattened packed collection
+
+The property workflow now has8 passing controls. Its new integer route is both flattened and given
+a collection item name: the writer ignores the name, emits bare packed text between sibling members
+and the reader restores it before the following Reward. The empty variant has no representable text
+and is refused at the following element with the measured `ReadContentAsString` boundary. An initial
+compact-adjacency assertion was a demo bug under indentation and was narrowed to these semantic
+conditions before checkpointing.
+
+Five runs per renderer label share stdout SHA-256
+`b512007b947459ef3101ea914759fe8485d4744793fdfacd8e25b59ba42075d5` and empty stderr. The clean
+`-j3` build, metadata716/0, thirteen related CTests and both self-test suites pass. Coverage stays
+307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes across716 IDs; content remains
+56 pass/17 expected fail. Evidence:`/tmp/checkpoint-1095-intermediate-flattened-packed/*`. No CNA
+issue or fresh XNA run.
+
+Shared-resource identity/cycles are already strong, but empty/Null members retaining constructor
+defaults and the remaining resource-ID/type validation boundaries are still distinct caller-facing
+contracts. Extend the existing shared-resource ID rather than creating variants.

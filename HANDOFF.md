@@ -73,7 +73,7 @@ Systematic demo batches, one CNA area at a time (status per phase in docs/ROADMA
 content73, input40, storage7, media17, gamer services19, net14, devices5, phone1, design4,
 diagnostics6, inspector3, cnaext4, platform3 and c_api177. Kinds are204 console,297 game and215
 standalone; 680 are automated,33 smoke-only and3 manual. Every declared category has demos.
-Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1094
+Coverage: generated docs/COVERAGE.md uses Complete1084's full711-ID reports plus Focused1085-1095
 results and includes all716 catalog IDs in both renderer columns. It incorporates every
 focused assertion through the complete
 Point, Rectangle, BoundingBox, BoundingSphere, Ray, Plane, Color, BoundingFrustum, MathHelper,
@@ -92,7 +92,7 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `texture.h`19/21,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
 Complete1084 exercises all3079 credited C routes and its711 catalog IDs in both full smoke suites;
-Focused1085-1094 execute the five new IDs and every edited workflow separately under both renderer
+Focused1085-1095 execute the five new IDs and every edited workflow separately under both renderer
 labels.
 Its focused lineage adds the compressed-texture ID, extends OcclusionQuery with the XNA-matching
 Reach refusal and closes SpriteBatch transformed clipping with exact CNA/XNA pixels.
@@ -11844,3 +11844,30 @@ Commit and push this batch. Continue the member-format audit with the distinct p
 `FlattenContent` contract: bare text between sibling members, ignored `CollectionItemName`, a
 successful nonempty round trip and the unrepresentable empty case belong in the existing property
 workflow. Do not add an attribute-only catalog ID. Keep every compile at three jobs or fewer.
+
+## Focused1095-intermediate-XML-flattened-packed-collection
+
+The existing `content.custom.intermediate_properties` workflow grows5->8 passing controls. A
+nonempty integer route now uses `FlattenContent` plus an intentionally ignored
+`CollectionItemName`: exact XML places `4 8` as bare text between the preceding flattened class
+member and a following named Reward, with no Route/Step wrapper. The values round-trip in that
+position. A second authored object proves the measured boundary that an empty flattened packed
+collection emits no representation and therefore cannot be read before the following element.
+
+The first focused run failed only because the demo asserted compact adjacency for the empty case
+under an indented writer. The semantic conditions already held; the control was corrected to check
+absence of Route/Step, presence of Reward and the exact `ReadContentAsString` refusal. The clean
+incremental build is warning-free with `-j3`; metadata remains716/0. Twelve related SOFTWARE
+intermediate-XML demos plus the catalog parser pass13/13, and self-tests pass5/5 and4/4. Five runs
+per renderer label pass8/8 with byte-identical stdout SHA-256
+`b512007b947459ef3101ea914759fe8485d4744793fdfacd8e25b59ba42075d5` and empty stderr. Coverage
+contains all716 IDs and stays307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes;
+content remains56 pass/17 expected fail. Evidence:
+`/tmp/checkpoint-1095-intermediate-flattened-packed/*`. No CNA issue, fresh XNA execution or
+rendered result is claimed.
+
+Commit and push this batch. Continue the shared-resource semantic audit in the existing workflow:
+an empty or `Null=true` shared member must leave a constructor-owned default unassigned, while
+resource IDs have exact missing/duplicate/type/whitespace rules. Add only the meaningful identity
+and validation boundaries absent from its current graph/cycle coverage. Keep every compile at
+three jobs or fewer.

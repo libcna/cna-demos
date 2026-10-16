@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the intermediate property workflow with packed-list `FlattenContent`: bare sibling
+  text, ignored item naming, nonempty round trip and the unrepresentable empty-list boundary.
 - Extended intermediate null semantics through Null=false/content precedence, value-member and
   root read/write refusals; recorded CNA-DEMOS-ISSUE-149 for two read exception-category
   differences from XNA.

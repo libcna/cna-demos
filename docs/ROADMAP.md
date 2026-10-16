@@ -12310,3 +12310,24 @@ remains56 pass/17 expected fail. Evidence:`/tmp/checkpoint-1094-intermediate-nul
 Next extend the existing property workflow with packed-collection `FlattenContent`: exact bare
 text placement, ignored item naming, nonempty round trip and the measured empty-list refusal. This
 is the remaining distinct `[ContentSerializer]` shape, not a reason for another ID.
+
+## Focused1095 intermediate XML flattened packed collection
+
+`content.custom.intermediate_properties` grows5->8 controls. A nonempty integer route combines
+`FlattenContent` with an ignored `CollectionItemName`, emits exact bare `4 8` sibling text before a
+named Reward and round-trips both values. A second object proves that an empty flattened packed
+list emits no Route/Step representation and cannot be read before that following member. The only
+initial failure was an over-specific whitespace assertion under the indented writer; the corrected
+control tests the semantic XML shape and exact reader refusal.
+
+The warning-free `-j3` build validates metadata716/0. Twelve related SOFTWARE intermediate-XML
+demos plus the catalog parser pass13/13; self-tests pass5/5 and4/4. Five runs per renderer label
+pass8/8 with common stdout SHA-256
+`b512007b947459ef3101ea914759fe8485d4744793fdfacd8e25b59ba42075d5` and empty stderr. Coverage
+contains all716 IDs at307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes; content
+remains56 pass/17 expected fail. Evidence:`/tmp/checkpoint-1095-intermediate-flattened-packed/*`.
+No CNA issue or fresh XNA/rendered result is claimed.
+
+Next deepen the existing shared-resource workflow with the constructor-default meaning of empty and
+`Null=true` shared members plus still-uncovered resource-ID/type validation boundaries. Preserve
+its graph/cycle focus and avoid syntax-only variants that add no caller-visible behavior.

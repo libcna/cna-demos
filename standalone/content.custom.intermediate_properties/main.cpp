@@ -65,12 +65,16 @@ namespace
         int getDifficultyAssignments() const { return difficultyAssignments_; }
         std::vector<std::string>& getRooms() { return rooms_; } // no collection setter
         SpawnPoint spawn;
+        std::vector<int> route;
+        int reward = 0;
 
         static void DescribeContent(ContentTypeDescriptor<DungeonConfiguration>& type)
         {
             type.Property("Difficulty", &DungeonConfiguration::getDifficulty, &DungeonConfiguration::setDifficulty);
             type.ReadOnlyProperty("Rooms", &DungeonConfiguration::getRooms).CollectionItemName("Room");
             type.Field("Spawn", &DungeonConfiguration::spawn).FlattenContent();
+            type.Field("Route", &DungeonConfiguration::route).FlattenContent().CollectionItemName("Step");
+            type.Field("Reward", &DungeonConfiguration::reward);
             // BaseType places inherited members first even when declared after these bindings.
             type.BaseType<NamedConfiguration>();
         }
@@ -96,6 +100,8 @@ int main()
         authored->setDifficulty(3);
         authored->getRooms() = {"Shop", "Arena"};
         authored->spawn = {12, -4};
+        authored->route = {4, 8};
+        authored->reward = 25;
         System::Xml::XmlWriterSettings settings;
         settings.Indent = true;
         settings.NewLineChars = "\n";
@@ -121,6 +127,35 @@ int main()
         check(xml.find("<Spawn") == std::string::npos && xml.find("<X>12</X>") != std::string::npos &&
               xml.find("<Y>-4</Y>") != std::string::npos && loaded->spawn.x == 12 && loaded->spawn.y == -4,
               "flattened spawn coordinates keep their values while omitting the Spawn wrapper");
+        check(xml.find("</Y>4 8<Reward>25</Reward>") != std::string::npos &&
+              xml.find("<Route") == std::string::npos && xml.find("<Step") == std::string::npos,
+              "a flattened packed collection writes bare sibling text and ignores CollectionItemName");
+        check(loaded->route == authored->route && loaded->reward == 25,
+              "flattened packed text round-trips before the following named member");
+
+        auto emptyRoute = std::make_shared<DungeonConfiguration>();
+        emptyRoute->name = "Empty";
+        emptyRoute->setDifficulty(2);
+        emptyRoute->getRooms().clear();
+        emptyRoute->spawn = {1, 2};
+        emptyRoute->reward = 5;
+        std::unique_ptr<System::Xml::XmlWriter> emptyWriter(System::Xml::XmlWriter::CreateToString(settings));
+        IntermediateSerializer::Serialize<DungeonConfiguration>(*emptyWriter, emptyRoute, "");
+        const auto emptyXml = emptyWriter->ToString();
+        bool emptyFlattenedRejected = false;
+        try
+        {
+            std::unique_ptr<System::Xml::XmlReader> emptyReader(System::Xml::XmlReader::CreateFromString(emptyXml));
+            (void)IntermediateSerializer::Deserialize<DungeonConfiguration>(*emptyReader, "");
+        }
+        catch (const InvalidContentException& error)
+        {
+            emptyFlattenedRejected = std::string(error.what()).find("ReadContentAsString") != std::string::npos;
+            std::cout << "Rejected empty flattened route: " << error.what() << '\n';
+        }
+        check(emptyXml.find("<Route") == std::string::npos && emptyXml.find("<Step") == std::string::npos &&
+              emptyXml.find("<Reward>5</Reward>") != std::string::npos && emptyFlattenedRejected,
+              "an empty flattened packed collection has no XML spelling and blocks the following member on read");
 
         std::string invalid = xml;
         if (difficultyAt == std::string::npos) throw std::runtime_error("Expected authored difficulty missing");
