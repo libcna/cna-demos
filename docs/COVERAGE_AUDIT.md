@@ -530,6 +530,20 @@ complete at pinned d23. Focused1076 changes four existing IDs and adds no demo-c
 The meaningful public behavior of these three deterministic root helpers is complete at pinned
 d23. Focused1077 changes three existing IDs and adds no demo.
 
+### Title content and remaining root carriers
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| TitleContainer.OpenStream and TitleLocation | `game.title_container.open_stream` grows to ten controls. It reads exact PNG bytes from a seekable read-only stream, proves relative lookup remains rooted beside the title after changing the process working directory, and exercises backslash and dot-segment normalization. CNA's public `TitleLocation::Path`/getter return the same initialized object, and its CNA-only setter immediately relocates title-relative reads before an RAII guard restores both pieces of global process state. Genuine XNA confirms the corresponding executable-root behavior; `TitleLocation` itself is internal there and receives no invented XNA member credit. |
+| OpenStream validation and exception identity | Genuine XNA rejects an absolute name with ArgumentException, a missing relative file with FileNotFoundException and an empty name with ArgumentNullException. CNA instead opens the absolute path, throws `std::runtime_error` for the missing file and FileNotFoundException for empty input. The three visible failures are grouped as ISSUE-145; seven ordinary controls pass. A null `System.String` has no coherent `const std::string&` call form, and parent traversal is legal in XNA, so neither warrants an artificial C++ check. |
+| GraphicsDeviceInformation | `game.graphics_device_manager.preparing_device_settings` now has eleven controls. It covers default adapter/profile, every property setter/getter, a deep independent Clone, symmetric equality and hash for equal values, adapter/profile inequality, and all ten PresentationParameters fields that XNA includes in equality. The real manager selection/ranking/reset hooks and the event's changes to the created device remain in the same workflow. Unequal values are not required to have distinct hashes and are not asserted to do so. |
+| PreparingDeviceSettingsEventArgs | Direct mutable, const and CNA mutable-from-const accessors all retain the same settings object; the real event handler mutates it before device creation. This completes the constructor/property and CNA adaptation without a separate carrier-only demo. |
+| FileDropEventArgsEXT and TextDropEventArgsEXT | `game.window.file_drop` retains its interactive window workflow and now runs two deterministic checks at LoadContent: a two-file carrier preserves exact order and the text carrier preserves its complete string. Actual OS drag-and-drop delivery remains manual/smoke-only; deterministic value construction does not pretend to automate desktop input. These are CNA extensions absent from XNA. |
+| ExitingEventArgs | CNA declares this empty extra type, but genuine XNA has no such public type and both XNA and CNA expose `Game.Exiting` with `System::EventArgs`. CNA's Game never constructs or consumes ExitingEventArgs. A demo that merely default-constructs the unused placeholder would add no meaningful concept, so it is intentionally not demonstrated. |
+
+The meaningful deterministic title-content and remaining root carrier audit is complete at pinned
+d23. Focused1078 changes three existing IDs and adds no demo.
+
 ### Game loop, services and window callbacks
 
 | Members / behavior | Decision and evidence |

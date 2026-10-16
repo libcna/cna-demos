@@ -15,6 +15,31 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-145 -- TitleContainer accepts rooted names and reports non-XNA path exceptions
+
+- **Area/API:** `Microsoft::Xna::Framework::TitleContainer::OpenStream`.
+- **Demo/reproduction:** run `game.title_container.open_stream`. Alongside successful
+  title-relative, backslash, dot-segment and changed-working-directory reads, pass the absolute
+  path of the same deployed PNG, a missing relative name and an empty name.
+- **Observed:** CNA accepts the absolute path and opens the file. A missing relative file throws
+  `std::runtime_error`; an empty name reaches the title directory and ultimately throws
+  `System::IO::FileNotFoundException`. These are three expected failures in the focused demo.
+- **Expected/reference:** genuine Windows XNA 4.0 rejects an absolute name with
+  `System.ArgumentException`, a missing relative name with `System.IO.FileNotFoundException`, and
+  an empty name with `System.ArgumentNullException`. The same probe confirms that ordinary,
+  backslash and dot-segment names resolve beside the executable even after the working directory
+  changes; a parent segment is also legal.
+- **Cause/suggested repair:** `TitleContainer::OpenStream` explicitly treats rooted paths as files
+  to open directly and throws a generic runtime error when its preflight existence check fails.
+  Validate empty and rooted names before resolution, using the XNA exception mappings, and let the
+  existing `FileStream` path supply the specific missing-file exception.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Genuine XNA ran from the installed Windows
+  assemblies under Wine with stdout SHA-256
+  `7a7c6be52d3dab90c85dd30a44b881870276d4af86d8f96345280fcf326c5e64` and empty stderr. Focused CNA
+  evidence is under `/tmp/checkpoint-1078-root-values/*`. No CNA source was modified and no
+  upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-144 -- LaunchParameters drops empty values and silently ignores duplicate Add
 
 - **Area/API:** `Microsoft::Xna::Framework::LaunchParameters` parsing and `Add`.

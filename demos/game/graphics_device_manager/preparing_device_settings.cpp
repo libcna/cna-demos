@@ -3,10 +3,14 @@
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
+#include "Microsoft/Xna/Framework/DisplayOrientation.hpp"
 #include "Microsoft/Xna/Framework/Graphics/DepthFormat.hpp"
 #include "Microsoft/Xna/Framework/Graphics/GraphicsAdapter.hpp"
 #include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
 #include "Microsoft/Xna/Framework/Graphics/GraphicsProfile.hpp"
+#include "Microsoft/Xna/Framework/Graphics/PresentInterval.hpp"
+#include "Microsoft/Xna/Framework/Graphics/RenderTargetUsage.hpp"
+#include "Microsoft/Xna/Framework/Graphics/SurfaceFormat.hpp"
 #include "Microsoft/Xna/Framework/GraphicsDeviceInformation.hpp"
 #include "Microsoft/Xna/Framework/GraphicsDeviceManager.hpp"
 #include "Microsoft/Xna/Framework/PreparingDeviceSettingsEventArgs.hpp"
@@ -71,8 +75,13 @@ namespace
                             "new device information starts with no adapter and the Reach profile");
             information.setAdapterProperty(&GraphicsAdapter::getDefaultAdapterProperty());
             information.setGraphicsProfileProperty(GraphicsProfile::HiDef);
-            information.getPresentationParametersProperty().setBackBufferWidthProperty(320);
-            information.getPresentationParametersProperty().setBackBufferHeightProperty(180);
+            PresentationParameters requested;
+            requested.setBackBufferWidthProperty(320);
+            requested.setBackBufferHeightProperty(180);
+            information.setPresentationParametersProperty(requested);
+            Context().Check(information.getPresentationParametersProperty().getBackBufferWidthProperty() == 320 &&
+                                information.getPresentationParametersProperty().getBackBufferHeightProperty() == 180,
+                            "the presentation-parameters setter replaces the requested device settings");
 
             GraphicsDeviceInformation clone = information.Clone();
             Context().Check(information.Equals(&clone) && clone.Equals(&information) &&
@@ -83,9 +92,40 @@ namespace
                                 information.getPresentationParametersProperty().getBackBufferWidthProperty() == 320,
                             "changing cloned presentation parameters leaves the source independent and unequal");
 
+            GraphicsDeviceInformation changedProfile = information.Clone();
+            GraphicsDeviceInformation changedAdapter = information.Clone();
+            changedProfile.setGraphicsProfileProperty(GraphicsProfile::Reach);
+            changedAdapter.setAdapterProperty(nullptr);
+            Context().Check(!information.Equals(&changedProfile) && !information.Equals(&changedAdapter),
+                            "graphics profile and adapter identity both participate in value equality");
+
+            const auto differsBy = [&information](const auto& mutate) {
+                GraphicsDeviceInformation changed = information.Clone();
+                PresentationParameters parameters = changed.getPresentationParametersProperty();
+                mutate(parameters);
+                changed.setPresentationParametersProperty(parameters);
+                return !information.Equals(&changed) && !changed.Equals(&information);
+            };
+            const bool everyPresentationFieldCompared =
+                differsBy([](PresentationParameters& p) { p.setBackBufferWidthProperty(321); }) &&
+                differsBy([](PresentationParameters& p) { p.setBackBufferHeightProperty(181); }) &&
+                differsBy([](PresentationParameters& p) { p.setBackBufferFormatProperty(SurfaceFormat::Bgr565); }) &&
+                differsBy([](PresentationParameters& p) { p.setDepthStencilFormatProperty(DepthFormat::Depth16); }) &&
+                differsBy([](PresentationParameters& p) { p.setMultiSampleCountProperty(2); }) &&
+                differsBy([](PresentationParameters& p) { p.setDisplayOrientationProperty(DisplayOrientation::Portrait); }) &&
+                differsBy([](PresentationParameters& p) { p.setPresentationIntervalProperty(PresentInterval::Immediate); }) &&
+                differsBy([](PresentationParameters& p) { p.setRenderTargetUsageProperty(RenderTargetUsage::PreserveContents); }) &&
+                differsBy([](PresentationParameters& p) { p.setDeviceWindowHandleProperty(1); }) &&
+                differsBy([](PresentationParameters& p) { p.setIsFullScreenProperty(true); });
+            Context().Check(everyPresentationFieldCompared,
+                            "all ten XNA presentation fields participate in device-information equality");
+
             PreparingDeviceSettingsEventArgs explicitArgs(information);
-            Context().Check(&explicitArgs.getGraphicsDeviceInformationProperty() == &information,
-                            "explicit preparing-device args retain the mutable information object");
+            const PreparingDeviceSettingsEventArgs& constArgs = explicitArgs;
+            Context().Check(&explicitArgs.getGraphicsDeviceInformationProperty() == &information &&
+                                &constArgs.getGraphicsDeviceInformationProperty() == &information &&
+                                &constArgs.getGraphicsDeviceInformationEXT() == &information,
+                            "preparing-device args retain one information object through every accessor");
 
             DeviceSelectionProbe probe;
             GraphicsDeviceInformation best = probe.FindBest(true);
@@ -117,7 +157,11 @@ CNA_DEMOS_GAME(PreparingSettingsDemo, {
              "GraphicsDeviceInformation::GraphicsProfile", "GraphicsDeviceInformation::PresentationParameters",
              "GraphicsDeviceInformation::Clone", "GraphicsDeviceInformation::Equals",
              "GraphicsDeviceInformation::GetHashCode", "PresentationParameters::DepthStencilFormat",
-             "PresentationParameters::BackBufferWidth", "PresentationParameters::BackBufferHeight"},
+             "PresentationParameters::BackBufferWidth", "PresentationParameters::BackBufferHeight",
+             "PresentationParameters::BackBufferFormat", "PresentationParameters::MultiSampleCount",
+             "PresentationParameters::DisplayOrientation", "PresentationParameters::PresentationInterval",
+             "PresentationParameters::RenderTargetUsage", "PresentationParameters::DeviceWindowHandle",
+             "PresentationParameters::IsFullScreen"},
     .tags = {"device", "settings", "event"},
     .frames = 3,
 })

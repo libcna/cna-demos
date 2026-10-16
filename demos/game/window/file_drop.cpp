@@ -29,6 +29,18 @@ namespace
         {
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
+
+            // The native event is interactive, but its CNA-specific argument carriers are plain
+            // deterministic values and can be demonstrated during unattended runs.
+            const FileDropEventArgsEXT files({"/levels/one.cna", "/textures/two.png"});
+            const TextDropEventArgsEXT text("https://example.test/scene");
+            Context().Check(files.getFilesProperty().size() == 2 &&
+                                files.getFilesProperty()[0] == "/levels/one.cna" &&
+                                files.getFilesProperty()[1] == "/textures/two.png",
+                            "file-drop arguments preserve every path and its order");
+            Context().Check(text.getTextProperty() == "https://example.test/scene",
+                            "text-drop arguments preserve the complete text");
+
             // A level editor opening a dropped level file, a viewer showing a dropped image...
             // Both events are raised on the game-loop thread, between Updates.
             fileToken_ = getWindowProperty().FileDropEXT.Add([this](System::Object*, const FileDropEventArgsEXT& args) {
@@ -87,8 +99,9 @@ CNA_DEMOS_GAME(FileDropDemo, {
     .title = "Drag and drop (CNAEXT)",
     .description = "Lists files dropped onto the window (GameWindow::FileDropEXT, all files of one drop at once) and "
                    "dropped text (TextDropEXT, e.g. a link dragged from a browser), raised on the game-loop thread.",
-    .apis = {"GameWindow::FileDropEXT", "GameWindow::TextDropEXT", "FileDropEventArgsEXT::Files",
-             "TextDropEventArgsEXT::Text"},
+    .apis = {"GameWindow::FileDropEXT", "GameWindow::TextDropEXT",
+             "FileDropEventArgsEXT::FileDropEventArgsEXT", "FileDropEventArgsEXT::Files",
+             "TextDropEventArgsEXT::TextDropEventArgsEXT", "TextDropEventArgsEXT::Text"},
     .tags = {"window", "drag-and-drop", "files", "editor", "cnaext"},
     .automation = CnaDemos::Automation::SmokeOnly,
     .needs = CnaDemos::Need::Window | CnaDemos::Need::Mouse,

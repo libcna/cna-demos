@@ -1448,6 +1448,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Environment::DeviceType` -- devices.sensors.availability
 - `EvaluateMorphWeightsEXT` -- graphics.model.morph_animation_import, graphics.model.morph_targets
 - `FileAccess` -- storage.storage_container.file_modes
+- `FileDropEventArgsEXT::FileDropEventArgsEXT` -- game.window.file_drop
 - `FileDropEventArgsEXT::Files` -- game.window.file_drop
 - `FileMode` -- storage.storage_container.file_modes
 - `Game::GetPlatformCapabilitiesEXT` -- core.platform.capability_matrix
@@ -1909,6 +1910,7 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `StorageDevice::GetStorageRootEXT` -- storage.storage_device.storage_root
 - `StorageDevice::SetAppNameEXT` -- storage.storage_device.show_selector, storage.storage_device.storage_root
 - `TextDropEventArgsEXT::Text` -- game.window.file_drop
+- `TextDropEventArgsEXT::TextDropEventArgsEXT` -- game.window.file_drop
 - `TextInputEXT::INTERNAL_OnTextInput` -- gamer_services.guide.keyboard_input
 - `TextInputEXT::IsTextInputActive` -- input.text_input.typing
 - `TextInputEXT::SetInputRectangle` -- input.text_input.composition
@@ -1919,7 +1921,8 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `TextInputEXT::TextInput` -- input.text_input.composition, input.text_input.typing
 - `TextureCube::DDSFromStreamEXT` -- graphics.texture_cube.dds_streams
 - `TextureTransformEXT` -- graphics.pbr_effect.specular_material, graphics.pbr_effect.texture_coordinates
-- `TitleLocation::Path` -- media.media_player.play_song
+- `TitleLocation::Path` -- game.title_container.open_stream, media.media_player.play_song
+- `TitleLocation::setPathProperty` -- game.title_container.open_stream
 - `TouchLocation::PressureEXT` -- input.touch.touch_values
 - `TouchPanel::EnqueueGesture` -- input.touch.gesture_queue
 - `TouchPanel::MouseTouchEmulationEnabledEXT` -- input.touch.get_state

@@ -11918,3 +11918,36 @@ are byte-stable with empty stderr. Coverage remains307/329 types,2128/2326 membe
 and3079/3205 C routes and adds LaunchParameters::Add to the declared CNA-extension list. Evidence:
 `/tmp/checkpoint-1077-root-helpers/*`. Audit TitleContainer/TitleLocation and the remaining
 deterministic root event-argument/value carriers next.
+
+## Focused1078 title content and remaining root carriers
+
+Three existing IDs deepen without increasing the catalog. `game.title_container.open_stream` now
+has ten controls, `game.graphics_device_manager.preparing_device_settings` eleven and
+`game.window.file_drop` two deterministic carrier controls. They cover title-rooted path and stream
+behavior, CNA's public TitleLocation helpers, all GraphicsDeviceInformation properties and equality
+inputs, every PreparingDeviceSettingsEventArgs view, and direct file/text-drop carrier values.
+XNA's internal TitleLocation and CNA's unused non-XNA ExitingEventArgs are explicitly dispositioned
+without manufacturing public-XNA credit or a constructor-only demo; actual OS drop delivery stays
+manual.
+
+Genuine Windows XNA 4.0 exposes three TitleContainer differences grouped as ISSUE-145: CNA accepts
+a rooted name that XNA rejects with ArgumentException, reports a missing relative file through
+`std::runtime_error` instead of FileNotFoundException, and maps an empty name to FileNotFoundException
+instead of ArgumentNullException. Relative, backslash and dot-segment reads remain rooted beside the
+executable after the working directory changes. The reference stdout SHA-256 is
+`7a7c6be52d3dab90c85dd30a44b881870276d4af86d8f96345280fcf326c5e64` and stderr is empty across ten
+runs.
+
+The warning-free incremental build uses `-j3`; metadata is710/0. All three exact SOFTWARE CTests,
+all15 CLI CTests and validator/comparator self-tests5/5 plus4/4 pass. Ten runs of every changed ID
+under both renderer labels are stable: TitleContainer has seven passing and three expected-failing
+controls, device settings passes11, and file-drop carriers pass2 under OPENGLES3 while SOFTWARE
+keeps its declared no-window skip. Title/device stdout hashes are
+`7425c0d9f1b64a02896823508da0f02dee3b1d625702339d2e382bd46304b818` and
+`8a9e7705ebc7ce7a9bc37f0e8cfc9ba87bdbd0c06b6edabe55433ba866cdbd90`; OPENGLES3 file drop is
+`9c03b50c32b7082a9b83363a195c133a7f2cddb1ec5fbc6da8985d16a31571c4`. Coverage remains307/329
+types,2128/2326 members,674/753 fields and3079/3205 C routes and lists the new direct CNA-extension
+constructors/setter. Complete1075's three affected results predate these controls. Evidence:
+`/tmp/checkpoint-1078-root-values/*`. No visual or manual interaction claim was made. Continue with
+the highest-value deterministic semantic family selected from the remaining uncovered member
+inventory; keep all compiles at no more than three jobs.

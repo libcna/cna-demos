@@ -11372,3 +11372,41 @@ these controls. Evidence:`/tmp/checkpoint-1077-root-helpers/*`. No visual or man
 The meaningful audit of these three root helpers is complete. Audit TitleContainer/TitleLocation
 and the remaining deterministic root event-argument/value carriers next. Keep every compile at
 three jobs or fewer.
+
+## Focused1078-title-content-and-remaining-root-carriers
+
+Three existing IDs deepen without a new catalog entry: `game.title_container.open_stream` has ten
+controls, `game.graphics_device_manager.preparing_device_settings` eleven and
+`game.window.file_drop` two deterministic carrier controls. Title content now covers exact bytes and
+stream capabilities, title-root resolution independent of the working directory, separators/dot
+segments, CNA's public TitleLocation getter/Path/setter, and XNA validation boundaries. Device
+settings cover every public GraphicsDeviceInformation member, all ten fields involved in equality,
+the real pre-creation mutation event, protected selection helpers and every event-argument accessor.
+File/text-drop values are directly checked while actual OS delivery remains smoke-only/manual.
+
+Genuine Windows XNA 4.0 establishes three failures grouped as new ISSUE-145. CNA opens an absolute
+path that XNA refuses with ArgumentException, throws `std::runtime_error` instead of
+FileNotFoundException for a missing relative file, and reports FileNotFoundException instead of
+ArgumentNullException for an empty name. XNA's TitleLocation is internal; CNA's public helpers are
+extensions. CNA's ExitingEventArgs is likewise absent from XNA and unused by Game, whose Exiting
+event correctly carries System::EventArgs, so a standalone construction demo would be meaningless.
+The genuine-XNA stdout SHA-256 is
+`7a7c6be52d3dab90c85dd30a44b881870276d4af86d8f96345280fcf326c5e64`; ten runs are byte-stable with
+empty stderr.
+
+The clean incremental build used `-j3` and is warning-free. Metadata is710/0, all three exact
+SOFTWARE CTests, all15 CLI CTests and validator/comparator self-tests5/5 plus4/4 pass. Ten runs of
+all three changed IDs under both renderer labels are byte-stable. TitleContainer has seven passes
+and three expected ISSUE-145 failures under both labels; device settings passes11 under both;
+file-drop values pass2 under OPENGLES3/Xvfb and SOFTWARE retains the exact declared no-window skip.
+Title/device stdout SHA-256 values are
+`7425c0d9f1b64a02896823508da0f02dee3b1d625702339d2e382bd46304b818` and
+`8a9e7705ebc7ce7a9bc37f0e8cfc9ba87bdbd0c06b6edabe55433ba866cdbd90`; OPENGLES3 file drop is
+`9c03b50c32b7082a9b83363a195c133a7f2cddb1ec5fbc6da8985d16a31571c4`. Coverage remains307/329
+types,2128/2326 members,674/753 fields and3079/3205 C routes, adding only direct CNA-extension
+names. Complete1075's three affected results predate these controls. Evidence:
+`/tmp/checkpoint-1078-root-values/*`. No visual or manual interaction claim was made.
+
+The deterministic root Framework audit is now complete. Select the highest-value deterministic
+semantic family from the remaining uncovered-member inventory next, dispositioning existing demos
+before adding controls or a focused ID. Keep every compile at three jobs or fewer.
