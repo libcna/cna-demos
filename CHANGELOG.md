@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the SkinnedEffect clone-ownership workflow through non-owning raw texture aliases,
+  shared explicit-disposal identity, disposed-texture Apply refusal and final wrapper release.
 - Refreshed the complete 693-demo behavior baseline: all 706 enabled CTests and both renderer smoke
   suites pass with every catalog ID present, only reviewed issue deltas and no unexpected result.
 - Extended the custom-vertex workflow through disposal of the declaration behind an actively bound

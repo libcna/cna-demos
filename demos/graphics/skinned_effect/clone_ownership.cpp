@@ -25,6 +25,7 @@
 #include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
 #include "Microsoft/Xna/Framework/Graphics/VertexBuffer.hpp"
 #include "Microsoft/Xna/Framework/Graphics/VertexPositionNormalTextureSkinned.hpp"
+#include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
@@ -94,6 +95,22 @@ namespace
             } // the original effect no longer exists
             texture.reset(); // the caller also gives up its strong reference
             Context().Check(!textureLifetime_.expired(), "cloned effects retain the texture after source and caller release");
+
+            // The ordinary XNA-shaped setter is deliberately non-owning. Keep the pointer valid
+            // for the observation, clear it before releasing the caller's only strong reference,
+            // and prove that the effect never prolonged the wrapper lifetime.
+            {
+                SkinnedEffect rawProbe(device);
+                auto rawTexture = std::make_shared<Texture2D>(device, 1, 1);
+                std::weak_ptr<Texture2D> rawLifetime = rawTexture;
+                rawProbe.setTextureProperty(rawTexture.get());
+                Context().Check(rawProbe.getTextureProperty() == rawTexture.get() && rawTexture.use_count() == 1,
+                                "the raw Texture setter aliases its caller's object without taking ownership");
+                rawProbe.setTextureProperty(nullptr);
+                rawTexture.reset();
+                Context().Check(rawLifetime.expired(),
+                                "clearing the raw Texture pointer lets the caller-owned wrapper expire immediately");
+            }
             Context().Print("Left: copied gold pose. Right: independent blue pose. Both use the retained green tint. Original effect and caller texture reference released.");
         }
 
@@ -125,6 +142,31 @@ namespace
                                 "the surviving right clone renders its independent palette, material and retained texel");
                 Context().Check(pixels.At(pixels.Width() / 2, pixels.Height() / 2) == Color::MidnightBlue,
                                 "neither clone draws at the source's final identity pose");
+
+                Texture2D* const retainedTexture = left_->getTextureProperty();
+                retainedTexture->Dispose();
+                Context().Check(retainedTexture->getIsDisposedProperty() &&
+                                    right_->getTextureProperty() == retainedTexture &&
+                                    right_->getTextureProperty()->getIsDisposedProperty() &&
+                                    !textureLifetime_.expired(),
+                                "explicit disposal is shared by both clones while their owned wrapper stays alive");
+
+                bool refusedDisposedTexture = false;
+                try
+                {
+                    left_->getCurrentTechniqueProperty()->getPassesProperty()[0]->Apply();
+                }
+                catch (const System::ObjectDisposedException&)
+                {
+                    refusedDisposedTexture = true;
+                }
+                Context().Check(refusedDisposedTexture,
+                                "applying a clone refuses its explicitly disposed retained texture");
+
+                // Keep later frames valid while retaining the disposed wrapper through both
+                // effects. The final weak_ptr checks distinguish object lifetime from disposal.
+                left_->setTextureProperty(nullptr);
+                right_->setTextureProperty(nullptr);
             }
             Game::Draw(time);
         }
@@ -151,7 +193,8 @@ CNA_DEMOS_GAME(CloneOwnershipDemo, {
     .id = "graphics.skinned_effect.clone_ownership",
     .title = "Cloned skin palettes and shared texture lifetime",
     .description = "Clones a SkinnedEffect, gives its copies independent bone palettes and materials, then renders "
-                   "both after releasing the source and caller's texture reference; checks final shared-owner release.",
+                   "both after releasing the source and caller's texture reference; contrasts raw-pointer aliasing, "
+                   "shared disposal identity, draw refusal and final shared-owner release.",
     .apis = {"SkinnedEffect::Clone", "SkinnedEffect::SetBoneTransforms", "SkinnedEffect::GetBoneTransforms",
              "SkinnedEffect::WeightsPerVertex", "SkinnedEffect::DiffuseColor", "SkinnedEffect::Texture",
              "Microsoft::Xna::Framework::Graphics::SkinnedEffect::SetOwnedTexture"},
@@ -159,5 +202,5 @@ CNA_DEMOS_GAME(CloneOwnershipDemo, {
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,
     .deterministic = true,
-    .restrictions = "Shared ownership keeps the Texture2D wrapper alive; explicit texture disposal and non-owning raw setters are separate contracts.",
+    .restrictions = "Covers one-influence SkinnedEffect clones; other effect families and subclass cloning remain separate contracts.",
 })

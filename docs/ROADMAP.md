@@ -214,8 +214,9 @@ a check that all authored colors remain visible and that a blank texture row can
   check the translated shapes. A fourth mesh now addresses the final MaxBones slot while preserving
   all original controls: seven checks pass on both renderers; inspected captures are RGBA-identical.
 - ✅ `graphics.skinned_effect.clone_ownership`: copied independent palettes and shared owned
-  texture lifetime after source/caller release; actual tinted pixels and final weak ownership release
-  pass ten checks on both renderers. Explicit texture disposal and other skinning variants remain separate.
+  texture lifetime after source/caller release; actual tinted pixels, a non-owning raw alias,
+  shared explicit-disposal identity, disposed-texture Apply refusal and final weak ownership release
+  pass fourteen checks on both renderers. Other effect families and subclass cloning remain separate.
 - ✅ Effect API (4): parameters/techniques/passes reflection (properties reach parameters on
   Apply), `Effect::Clone`, the effect interfaces (IEffectMatrices/IEffectLights/IEffectFog).
 - Custom shaders: `ShaderEffect` per shader language (ask `RendererCapabilityProfile`), compiled
@@ -11086,3 +11087,14 @@ are `c8581dc7f4dd4404cb4be6a00dd450840c1c4ab06ba1641fe135f85c6bbd2b80` and
 `dc069865df7b395d0697f5f944bc6ee81a8d27e99b6bde878a033936a7a63453`. No screenshot, listening
 test, physical input, external service session or manual visual inspection was performed. Resume
 the deterministic behavior audit outside the completed graphics-lifecycle slices.
+
+## Focused1015-SkinnedEffect-texture-ownership-and-disposal
+
+The existing clone-ownership demo now proves that the ordinary Texture setter is a non-owning
+alias, while SetOwnedTexture survives caller/source release across clones. Explicit disposal is
+visible through both clone pointers without ending wrapper ownership, and the next real pass Apply
+is refused with ObjectDisposedException. Clearing the raw properties preserves ownership until the
+last clone is released. Both tested renderers pass14/14 in ten repeated runs with identical output
+and empty stderr; the exact SOFTWARE CTest, warning-free three-job build and metadata693/0 also
+pass. No new ID, coverage credit or CNA issue is introduced. Continue with the next deterministic
+gap outside the completed ownership/lifecycle slices.

@@ -3523,8 +3523,10 @@ ISSUE-112 and bound VertexDeclaration disposal. The complete warning-free three-
 
 Resume the deeper semantic behavior audit: reconcile explicit residual gaps in
 `docs/COVERAGE_AUDIT.md` against pinned CNA d23e139de and prioritize reachable deterministic behavior
-that strengthens an existing coherent demo. Choose the next gap outside the completed
-ShaderEffect/OcclusionQuery/RenderTarget/VertexDeclaration slices. Revisit the126 intentionally
+that strengthens an existing coherent demo. Focused1015 has now closed the explicit
+SkinnedEffect clone/raw-texture/disposal ownership gap in the existing clone workflow. Choose the
+next gap outside the completed ShaderEffect/OcclusionQuery/RenderTarget/VertexDeclaration and
+SkinnedEffect ownership slices. Revisit the126 intentionally
 uncredited C routes only if public headers or reachable environment capabilities change. Do not add
 metadata merely to raise a count.
 Focused957 closes the strict public build-configuration parser;
@@ -10017,3 +10019,22 @@ programmatically; no screenshot or visual inspection was performed. The exercise
 remains SHA256 `730ac2631f65b402d5d016ae85649067441b52c973e49f786b49b3253d75100a`.
 Sibling CNA is now clean at `cc547f5224`; inspect that revision, then attempt the deferred complete
 reconfigure/build and validation before the next member batch if it is coherent.
+
+## Focused1015-SkinnedEffect-texture-ownership-and-disposal
+
+`graphics.skinned_effect.clone_ownership` now closes the two explicit texture-lifecycle gaps in its
+own restriction. A separate probe assigns a caller-owned Texture2D through the ordinary raw setter,
+observes that the effect adds no strong reference, safely clears the pointer and then proves the
+wrapper expires. The two real clones still share their separately owned texture after source and
+caller release. Disposing it makes one disposed identity visible through both clones while their
+shared owners keep the wrapper alive; the next real EffectPass Apply is refused with
+ObjectDisposedException by CNA's texture-binding path. Clearing only the raw properties keeps that
+disposed wrapper owned until the last clone is released.
+
+The warning-free `-j3` build and metadata693/0 pass, as does the exact SOFTWARE CTest. Ten SOFTWARE
+and ten OPENGLES3/Xvfb runs pass14/14 with byte-identical stdout SHA-256
+`5baed11be4ab6fc4df327d6f8dad134c1546cc1cfd319c8b0497f9017a96b5dc` and empty stderr. Counts
+remain307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1015-skinned-ownership/*`. Pixel validation is the existing programmatic first-frame
+readback; no screenshot or manual visual inspection was performed. No CNA issue was found. Continue
+with the next reachable deterministic gap outside the completed ownership/lifecycle slices.
