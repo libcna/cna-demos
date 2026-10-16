@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Dispositioned the small CNA module surfaces: `audio` exposes backend-provider contracts covered
+  by CNA conformance tests and translated through existing SoundEffect/Microphone demos; `media`
+  and `design` expose only internal CNA headers; the completed diagnostics and Inspector audits
+  remain comprehensive for ordinary callers.
 - Audited the public CNA runtime headers, retained the fully covered project-profile path and
   recorded CNA-DEMOS-ISSUE-150 with a minimal reproducer for the unimplemented Runtime facade.
 - Completed the public `graphics-ext` value audit with owned text/binary ShaderCode payloads,

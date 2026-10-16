@@ -12133,3 +12133,26 @@ screenshot or manual visual result is claimed.
 Commit and push this batch. The public runtime headers are now dispositioned; continue with the
 next CNA-specific module, preferring a small caller-facing surface before the broad XNA-heavy net
 module. Keep every compile at three jobs or fewer.
+
+## Focused1105-CNA-small-module-public-header-disposition
+
+The small-module source inventory is now explicit. `audio` installs only two caller-visible CNA
+headers; they define playback/recording provider contracts implemented by CNA's SDL3, ALSA and NULL
+backends and consumed internally by the mixer and Microphone. CNA's parameterized conformance tests
+own their device lifecycle, callback barrier, negotiated-format, enumeration and nonblocking-I/O
+contracts. Existing SoundEffect, DynamicSoundEffectInstance and Microphone workflows demonstrate
+the translated application behavior, so a fake-provider catalog demo would duplicate CNA tests.
+
+Every `media` CNA header and both `design` CNA headers are internal, with their public XNA behavior
+already covered. The two public diagnostics headers retain the completed six-workflow Focused923
+disposition; the three Inspector headers retain the complete Focused982/983 disposition. No new
+demo or metadata credit is warranted.
+
+The warning-free incremental build uses `-j3`; metadata remains716/0. The catalog parser and
+validator/comparator self-tests pass. Generated coverage remains307/329 XNA types,2128/2326
+members,674/753 fields and3079/3205 C routes across all716 IDs. Evidence:
+`/tmp/checkpoint-1105-small-module-disposition/*`. No renderer, audio device, microphone, network,
+screenshot or manual visual result is claimed.
+
+Commit and push this documentation-only audit, then continue with the next public module that has a
+real caller-facing behavior gap. Keep every compile at three jobs or fewer.

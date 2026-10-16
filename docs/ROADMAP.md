@@ -12427,3 +12427,51 @@ Evidence:`build/linux-full/reports/checkpoint-1099-complete-*`.
 Continue Phase13 with deterministic C++ `CNA::Devices` wrapper behavior. Add support-gate parity to
 the existing capability matrix and exercise Clipboard interoperability in its existing text demo,
 including restoration when the clipboard was initially empty.
+
+## Focused1100 CNA Devices compatibility wrappers
+
+The existing capability and clipboard workflows now exercise all four deterministic
+`CNA::Devices` support gates plus Clipboard set/get/contains/clear interoperability, including
+restoring an initially empty clipboard. The focused build and runs pass without adding an ID.
+
+## Focused1101 CNA Platform public headers
+
+The native-window workflow now covers presence/description helpers, all mobile handle decoders,
+atomic malformed-handle refusal and windowless-system boundaries. Remaining platform declarations
+are entrypoint, transport or backend-provider contracts and have explicit build, translated-behavior
+or CNA-conformance dispositions.
+
+## Focused1102 CNA graphics extension effects
+
+The existing ASCII, CRT and depth-effect workflows now cover public defaults, validation,
+readback, overloads, modes and typed clone behavior. Every depth mode executes; DebugDraw remains
+fully represented by its C++ scene plus the complete C lifecycle/geometry workflow.
+
+## Focused1103 CNA shader package values
+
+The portable-package workflow now covers owned textual and binary ShaderCode values, accessor
+mismatch, invalid construction, package/binding accessors and structural validation. Renderer-
+specific binary execution and non-GL source languages retain their build-specific disposition.
+
+## Focused1104 CNA runtime public headers
+
+The project graphics-profile contract was already complete. The other public runtime header cannot
+link because all five `CNA::Runtime` methods lack definitions; the minimal reproducer and
+CNA-DEMOS-ISSUE-150 record the defect, which pinned CNA also tracks as REMED-CORE-011.
+
+## Focused1105 small-module public-header disposition
+
+The pinned source inventory closes five small modules without manufacturing demos. `audio` exposes
+only playback/recording provider contracts implemented by CNA's SDL3, ALSA and NULL backends;
+CNA's own parameterized conformance tests own their lifecycle, callback, negotiated-format and
+nonblocking-I/O guarantees, while existing SoundEffect, DynamicSoundEffectInstance and Microphone
+demos exercise translated application behavior. All `media` CNA headers and both `design` CNA
+headers are internal; their public XNA layers already have coherent demos. The two public
+`diagnostics` headers remain semantically complete through six profiler workflows, and the three
+Inspector headers retain the complete Focused982/983 declaration-level disposition.
+
+The warning-free `-j3` build, metadata validation, catalog parser and both self-test suites pass.
+The audit does not change the716-demo catalog or generated totals:307/329 XNA types,2128/2326
+members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1105-small-module-disposition/*`. Continue with the next public module containing
+an actual caller-facing member/behavior gap.

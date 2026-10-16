@@ -7127,3 +7127,21 @@ types,2128/2326 members,674/753 fields and3079/3205 C routes across all716 IDs. 
 `/tmp/checkpoint-1104-runtime-public-headers/*`. No screenshot or manual visual inspection was
 performed. This dispositions every public runtime header; continue with the next CNA-specific
 module.
+
+### Focused1105 small-module public-header disposition
+
+The remaining small CNA modules do not justify new catalog IDs merely because they install
+headers. Their caller-facing surface has been checked against the pinned source and the existing
+semantic demos:
+
+| Module | Public-header disposition |
+|---|---|
+| `audio` | `CNA/Audio/Platform/IAudioDevice.hpp` and `IAudioRecordingDevice.hpp` define playback, capture and enumeration contracts implemented by CNA's SDL3, ALSA and NULL backends. CNA consumes them through its mixer and `Microphone`; its parameterized device conformance tests own callback barriers, negotiated formats, lifecycle, enumeration and nonblocking I/O. Existing SoundEffect, DynamicSoundEffectInstance and Microphone demos cover the resulting game-facing behavior. `AudioFormat`, `BytesPerSample` and `IsValid` support those provider contracts; a demo built around a fake backend would duplicate CNA tests rather than demonstrate another user concept. |
+| `media` | Every installed `CNA` header is below `CNA/Internal/Media`. The public `Microsoft::Xna::Framework::Media` API is already covered by the Song, MediaPlayer, VideoPlayer, queue, dispatcher and visualization workflows, including the complete C `media_player.h` route audit. There is no additional caller-facing CNA header to credit. |
+| `design` | Both installed `CNA` headers are internal property-registration machinery. The caller-facing `Microsoft::Xna::Framework::Design` converters and descriptors are covered by the four stable type-converter workflows. There is no independent CNA surface. |
+| `diagnostics` | The two public headers are already covered by the six `diagnostics.profiler.*` workflows: build/runtime modes, handles and samples, frame/source lifetimes, resources and cursors, zones/markers/traces, bounded histories, drop counts and malformed-use containment. Focused923 already assigns enum permutations, malformed binary input, maximum-depth and multithread saturation to CNA's unit/stress suite. |
+| `inspector` | `Protocol.hpp`, `Agent.hpp` and `Client.hpp` were fully dispositioned in Focused982/983, including every transport carrier/configuration field and ordinary negotiation, backpressure, preview and lifecycle behavior. Timeout/rate-window stress, hostile-input fuzzing and remote security testing retain their documented CNA/manual disposition. |
+
+This source audit adds no `.apis` credit and does not change the generated XNA/C totals. Internal
+implementation headers and backend-provider contracts remain outside ordinary application coverage.
+Continue with the next module whose public members have an undispositioned caller-facing behavior.
