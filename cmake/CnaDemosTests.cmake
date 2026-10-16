@@ -80,7 +80,11 @@ add_test(NAME cna_demos.cli.catalog_json_parses
             -DCNA_DEMOS_EXE=$<TARGET_FILE:cna-demos>
             -DCNA_DEMOS_ISSUES_FILE=${CMAKE_SOURCE_DIR}/docs/CNA_ISSUES.md
             -P "${CMAKE_CURRENT_LIST_DIR}/CnaDemosCheckCatalog.cmake")
-set_tests_properties(cna_demos.cli.catalog_json_parses PROPERTIES LABELS "cli;headless" TIMEOUT 30)
+# CMake's string(JSON) reparses the one-megabyte catalog for each of its 700+ demo
+# objects. It takes about 17 seconds alone and can exceed 30 seconds beside two game
+# tests in the documented three-job validation, even though catalog generation is
+# immediate. Leave enough room for that deliberately dependency-free parser.
+set_tests_properties(cna_demos.cli.catalog_json_parses PROPERTIES LABELS "cli;headless" TIMEOUT 90)
 
 # Small framework regression fixture: compile the real launcher without linking CNA.
 add_executable(cna-demos-process-test

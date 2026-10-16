@@ -12,8 +12,10 @@
 #include "CnaDemos/GamerServicesDemo.hpp"
 #include "CnaDemos/PixelChecks.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
+#include "Microsoft/Xna/Framework/GamerServices/Gamer.hpp"
 #include "Microsoft/Xna/Framework/GamerServices/Guide.hpp"
 #include "Microsoft/Xna/Framework/GamerServices/NotificationPosition.hpp"
+#include "Microsoft/Xna/Framework/GamerServices/SignedInGamerCollection.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SamplerState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteFont.hpp"
@@ -113,18 +115,25 @@ namespace
             if (!checked_)
             {
                 const auto now = std::chrono::steady_clock::now();
-                if (!observationStarted_) observationStarted_ = now;
-                const CnaDemos::BackBufferPixels pixels(getGraphicsDeviceProperty());
-                const Footprint footprint = FindFootprint(pixels);
-                ++observations_;
-                if (footprint.covered > 500)
+                // The offline sign-in is delivered by GamerServicesComponent::Update. Under a
+                // loaded test run that asynchronous precondition can take longer than the toast's
+                // own rendering check; start the bounded observation only once the public gamer
+                // collection proves that the notification has actually been queued.
+                if (Gamer::getSignedInGamersProperty()->getCountProperty() > 0)
                 {
-                    CheckPosition(pixels, footprint);
-                }
-                else if (now - *observationStarted_ >= std::chrono::seconds(2))
-                {
-                    Context().Check(false, "the sign-in notification became visible within two seconds");
-                    checked_ = true;
+                    if (!observationStarted_) observationStarted_ = now;
+                    const CnaDemos::BackBufferPixels pixels(getGraphicsDeviceProperty());
+                    const Footprint footprint = FindFootprint(pixels);
+                    ++observations_;
+                    if (footprint.covered > 500)
+                    {
+                        CheckPosition(pixels, footprint);
+                    }
+                    else if (now - *observationStarted_ >= std::chrono::seconds(2))
+                    {
+                        Context().Check(false, "the queued sign-in notification became visible within two seconds");
+                        checked_ = true;
+                    }
                 }
             }
             DemoGame::EndDraw();
