@@ -95,6 +95,8 @@ Complete1080 exercises all3079 credited C routes and its710 catalog IDs in both 
 Focused1081 executes the new ID separately on both renderers.
 Focused1082 then extends the existing OcclusionQuery ID with the XNA-matching Reach constructor
 refusal; catalog and surface counts stay unchanged.
+Focused1083 closes the SpriteBatch transformed-clipping candidate with exact CNA/XNA pixels;
+catalog and surface counts again stay unchanged.
 Its lineage includes the completed field, build-time-pipeline and generated XNA member audits
 through Focused1002, including the production StorageDeviceNotConnectedException path.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
@@ -11517,3 +11519,24 @@ Counts remain711 demos,307/329 XNA types,2128/2326 members,674/753 fields and307
 Evidence:`/tmp/checkpoint-1082-occlusion-reach/*`. No screenshot or manual visual inspection was
 performed. Next, commit and push this validated focused batch, then continue from the next explicit
 deterministic candidate. Keep every compile at three jobs or fewer.
+
+## Focused1083-SpriteBatch-transformed-clipping
+
+The existing `graphics.sprite_batch.transform_matrix` ID now checks the distinct interaction
+between world-space SpriteBatch geometry and a back-buffer-space scissor. On the first frame,
+scale2/translation maps a red rectangle to `[200,680)x[140,460)` and the rasterizer clips it at
+`[180,620)x[100,380)`. Four controls distinguish the transformed top-left, clear pre-geometry
+pixels, the last shared pixel and both exclusive clip edges; later frames retain the original
+time-dependent camera.
+
+Three repetitions on each CNA renderer pass4/4 with byte-identical stdout SHA-256
+`783af750b02aad07daf46f105c29ed518a2cd37a521aef785135292cf1b8734b` and empty stderr. Genuine
+Windows XNA4 yields identical RGBA values at all six coordinates, stdout SHA-256
+`4879a9f940f3ecfcc3c46be4f532cf49bf1f1526c8cf2569a9bacf370e3195b8`, and empty stderr. The
+warning-free three-job build, metadata711/0, exact SOFTWARE CTest and validator/comparator
+self-tests5/5 plus4/4 pass; no CNA issue was found.
+
+Counts remain711 demos,307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes.
+Evidence:`/tmp/checkpoint-1083-transformed-clipping/*`. Pixel checks were programmatic; no
+screenshot or whole-animation visual validation occurred. Next, commit and push this validated
+batch, then continue the audit. Keep every compile at three jobs or fewer.

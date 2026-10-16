@@ -79,7 +79,8 @@ Console demos with checks; each shows one operation family.
   `Effect`; sprite sheets; many Begin/End pairs per frame. ≈ 20 -- custom `Effect` in `Begin` moves
   to Phase 6 (needs effects). The existing multiple_batches demo now checks deferred state
   application/retention after End and actual camera-world versus screen-HUD pixels (six checks
-  on both renderers; captures inspected).
+  on both renderers; captures inspected). `transform_matrix` now also checks the exact intersection
+  of scaled/translated world geometry with a framebuffer-space scissor on both renderers and XNA.
 - ✅ (7 demos) `graphics.sprite_font.*`: build-time CNB font (generated font-texture sheet),
   `DrawString`, `MeasureString`, `LineSpacing`, `Spacing`, `DefaultCharacter`, `Characters`,
   scaled/rotated/mirrored text, `StringBuilder`, the CNAEXT glyph constructor and its live atlas
@@ -12037,3 +12038,21 @@ typed/raw representatives, non-cubic mips, compressed/profile refusal, sampling/
 active/cross-device move lifetime are already executed; no Texture3D DDS entry point exists.
 Evidence:`/tmp/checkpoint-1082-occlusion-reach/*`. No screenshot, manual visual inspection or new
 CNA issue is claimed.
+
+## Focused1083 SpriteBatch transformed clipping
+
+The existing `graphics.sprite_batch.transform_matrix` scene now makes its first frame an exact
+world-to-screen discriminator. A red world rectangle maps through scale2 plus translation to
+`[200,680)x[140,460)`, while the rasterizer clips in back-buffer coordinates at
+`[180,620)x[100,380)`. Four programmatic checks distinguish the transformed top-left and the
+exclusive scissor right/bottom boundaries from clear pixels that lie inside only one region.
+Later frames retain the original time-dependent panning/zooming camera.
+
+SOFTWARE and OPENGLES3 pass4/4 in three repetitions with common stdout SHA-256
+`783af750b02aad07daf46f105c29ed518a2cd37a521aef785135292cf1b8734b` and empty stderr. Genuine
+Windows XNA4 returns the same six exact RGBA pixels; its stdout SHA-256 is
+`4879a9f940f3ecfcc3c46be4f532cf49bf1f1526c8cf2569a9bacf370e3195b8` and stderr is empty. The
+warning-free three-job build, metadata711/0, exact SOFTWARE CTest and validator/comparator
+self-tests5/5 plus4/4 pass. Evidence:
+`/tmp/checkpoint-1083-transformed-clipping/*`. No screenshot or whole-animation visual validation
+is claimed.
