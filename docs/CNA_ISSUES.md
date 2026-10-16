@@ -42,26 +42,29 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `/tmp/checkpoint-1042-quaternion-divide-boundaries/*`. Exact known-issue CTests, metadata693/0 and
   self-tests5/5 plus4/4 pass. No CNA source was modified and no upstream message was sent.
 
-### CNA-DEMOS-ISSUE-118 -- Quaternion normalization overflows on large finite components
+### CNA-DEMOS-ISSUE-118 -- Quaternion length and normalization lose extreme finite magnitudes
 
-- **Area/API:** `Microsoft::Xna::Framework::Quaternion::Normalize`, static/member/output forms.
-- **Demo/reproduction:** run `math.quaternion.normalize`. Normalize
-  `Quaternion(1e20,0,0,0)` with the static API. Ordinary accumulated drift, an explicit nonunit
-  value, zero and `1e-20` inputs provide adjacent controls.
-- **Observed:** CNA returns `(0,0,0,0)`: squaring `1e20f` overflows the float length sum to infinity,
-  its reciprocal square root becomes zero and multiplication erases the finite input. This is the
-  sole expected failure among seven checks on ten SOFTWARE and ten OPENGLES3-labelled runs.
-- **Expected/reference:** genuine Windows XNA 4.0 returns `(1,0,0,0)` with length1 for the same
-  finite input. It also returns four NaNs for zero and identity for the tiny-W case; CNA matches
-  those classifications semantically (the tiny result differs only within the accepted tolerance).
-- **Suggested repair/scope:** accumulate the magnitude with sufficient range or use a scaled norm
-  so finite representable quaternion components do not overflow before normalization. Open against
-  pinned CNA `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Genuine XNA ran from the installed
-  Windows XNA 4.0 assembly under Wine; no renderer or visual claim is involved.
-- **Evidence/status:** `/tmp/checkpoint-1036-quaternion-normalize-boundaries/*`; exact known-issue
-  CTest, metadata693/0 and self-tests5/5 plus4/4 pass. The first exact-equality tiny assertion was a
-  corrected over-strict demo oracle, not a second CNA issue. No CNA source was modified and no
-  upstream message was sent.
+- **Area/API:** `Microsoft::Xna::Framework::Quaternion::Length` and `Quaternion::Normalize`,
+  static/member/output normalization forms.
+- **Demo/reproduction:** run `math.quaternion.normalize`. Measure sole-component `1e20` and `1e-30`
+  values, then normalize `Quaternion(1e20,0,0,0)`. Ordinary magnitude, accumulated drift, zero and
+  `1e-20` controls distinguish both range ends from normal behavior.
+- **Observed:** CNA returns infinity for `Length(1e20)` and zero for `Length(1e-30)`. It also
+  normalizes the huge input to `(0,0,0,0)`. These are exactly three expected failures among eleven
+  controls on ten SOFTWARE and ten OPENGLES3-labelled runs. The separately returned
+  `LengthSquared` correctly overflows to infinity or underflows to zero in the two cases.
+- **Expected/reference:** genuine Windows XNA 4.0 returns the original finite magnitude from
+  `Length` even when `LengthSquared` is respectively infinity or zero, and normalizes the huge value
+  to `(1,0,0,0)`. It also returns four NaNs when normalizing zero and identity for the `1e-20` W
+  case; CNA matches those adjacent classifications semantically.
+- **Suggested repair/scope:** calculate the square-root norm with sufficient intermediate range or
+  use a scaled norm before returning Length or its reciprocal for Normalize. Open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine; no renderer or visual claim is involved.
+- **Evidence/status:** `/tmp/checkpoint-1036-quaternion-normalize-boundaries/*` and
+  `/tmp/checkpoint-1043-quaternion-length-range/*`; exact known-issue CTest, metadata693/0 and
+  self-tests5/5 plus4/4 pass. The earlier exact-equality tiny assertion was a corrected over-strict
+  demo oracle, not a second CNA issue. No CNA source was modified and no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-117 -- Perspective accepts Pi despite XNA's strict field-of-view bound
 

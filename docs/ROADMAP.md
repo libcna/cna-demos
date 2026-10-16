@@ -11405,3 +11405,14 @@ CTest, ten runs per renderer label and both self-test suites pass; every run ret
 expected failures among24 controls with stable stdout and empty stderr. Coverage remains unchanged.
 Evidence:`/tmp/checkpoint-1042-quaternion-divide-boundaries/*`. Continue with residual Quaternion
 value/output arithmetic and length/dot boundaries.
+
+## Focused1043 Quaternion length range
+
+`math.quaternion.normalize` adds ordinary and subnormal-square magnitude controls, then proves
+against genuine XNA that `Length` must retain finite `1e20` and `1e-30` values even where the
+separate `LengthSquared` result is infinity or zero. CNA loses both lengths, extending ISSUE-118
+beside its existing huge Normalize failure. The warning-free `-j3` build, metadata693/0, exact
+known-issue CTest, ten runs per renderer label and both self-test suites pass; every run retains
+exactly three expected failures among11 controls with stable stdout and empty stderr. Coverage is
+unchanged. Evidence:`/tmp/checkpoint-1043-quaternion-length-range/*`. Audit signed-zero
+equality/hash consistency next, then disposition trivial constructor and output forwards.

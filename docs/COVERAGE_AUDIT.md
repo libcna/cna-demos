@@ -136,7 +136,7 @@ as one atomic API snapshot. Planned work is not counted as completed or runtime-
 | Constructor, Identity, CreateFromAxisAngle, CreateFromRotationMatrix, CreateFromYawPitchRoll | Existing `from_axis_angle` and `from_yaw_pitch_roll` demonstrate orientation construction and matrix conversion; no separate constructor demo needed. |
 | Concatenate, Multiply, operator multiply | `concatenate` checks sequential vector transforms and noncommuting rotations. Focused1041 adds an exact arbitrary nonunit reversed Hamilton product, value/output/operator parity, both identity directions, zero operands and negative/zero scalar multiplication. Scalar multiplication is component scaling rather than rotation composition; the existing ID now makes that distinction directly. Evidence: `/tmp/checkpoint-1041-quaternion-concatenate-algebra/*`. |
 | Inverse, Conjugate | Existing `inverse_and_conjugate` checks undoing a rotation and the unit-quaternion precondition for replacing inverse by conjugate. |
-| Normalize, Length, LengthSquared | Existing `normalize` demonstrates accumulated drift and both normalization forms. LengthSquared is a trivial squared norm; can be named and checked there if extended. |
+| Normalize, Length, LengthSquared | `normalize` demonstrates accumulated drift plus member/static/output normalization. Focused1043 distinguishes ordinary and subnormal squared norms from a finite `Length` whose separately returned `LengthSquared` overflows or underflows; CNA loses both finite lengths and the huge normalization under ISSUE-118. Evidence: `/tmp/checkpoint-1043-quaternion-length-range/*`. |
 | Lerp, Slerp | Existing `slerp` checks constant versus uneven angular speed. Negative-dot inputs and antipodal representations deserve the `double_cover` demo. |
 | Negate, unary negation, Dot, Add, operator addition, equality / inequality | Demonstrated in `double_cover`: distinguish component equality from orientation equality; negate all four components, choose a common hemisphere before normalized blending, and show that adding antipodes gives zero and cannot be normalized meaningfully. |
 | Divide, operator division | `double_cover` checks `Divide(target, start)` as the additional rotation after start, including different axes so an order error cannot pass accidentally. Focused1042 adds an exact nonunit quotient, value/output/operator and multiply-by-inverse relations, identity, zero numerator/divisor and extreme finite divisors. The latter extend ISSUE-119 through Divide's duplicated reciprocal-norm path. Evidence: `/tmp/checkpoint-1042-quaternion-divide-boundaries/*`. |
@@ -5780,3 +5780,14 @@ now covers this second public route. Ten runs per renderer label retain exactly 
 failures among24 controls with byte-stable stdout and empty stderr; the warning-free `-j3` build,
 metadata, exact known-issue CTest and both self-test suites pass. Coverage totals remain unchanged.
 Evidence:`/tmp/checkpoint-1042-quaternion-divide-boundaries/*`.
+
+### Focused1043 Quaternion length range
+
+`math.quaternion.normalize` now separates `Length` from its separately rounded `LengthSquared`.
+Ordinary and `1e-20` subnormal-square controls pass. Genuine Windows XNA 4.0 returns finite
+`Length` for sole components `1e20` and `1e-30` even though `LengthSquared` returns infinity and
+zero respectively; CNA returns infinity and zero, adding two manifestations to ISSUE-118 beside
+the existing huge normalization failure. Ten runs per renderer label retain exactly those three
+expected failures among11 controls with byte-stable stdout and empty stderr; the warning-free
+`-j3` build, metadata, exact known-issue CTest and both self-test suites pass. Coverage totals
+remain unchanged. Evidence:`/tmp/checkpoint-1043-quaternion-length-range/*`.

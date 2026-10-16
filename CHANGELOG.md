@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended Quaternion magnitude coverage through ordinary, subnormal, overflowed-square and
+  underflowed-square cases, expanding CNA-DEMOS-ISSUE-118 to finite `Length` range loss.
 - Extended Quaternion division through nonunit, identity and zero behavior and added its extreme
   finite divisor failures to CNA-DEMOS-ISSUE-119.
 - Extended Quaternion concatenation and multiplication through an exact nonunit reversed Hamilton

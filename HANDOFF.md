@@ -10491,3 +10491,21 @@ totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C route
 `/tmp/checkpoint-1042-quaternion-divide-boundaries/*`. No rendering or visual claim was made. Next
 audit the remaining Quaternion value/output arithmetic and length/dot boundaries, avoiding
 duplicate extreme-norm assertions already isolated by ISSUE-118/119.
+
+## Focused1043-Quaternion-length-range
+
+`math.quaternion.normalize` grows from seven to eleven controls without a new ID and now names
+`LengthSquared` explicitly. Ordinary `(1,2,3,4)` length and an adjacent `1e-20` subnormal square
+pass. Genuine Windows XNA 4.0 returns finite `Length` for sole-component `1e20` and `1e-30` even
+though the separately returned `LengthSquared` is respectively infinity and zero. CNA instead
+returns infinity and zero for Length, extending `CNA-DEMOS-ISSUE-118` with two public manifestations
+beside its existing huge Normalize failure.
+
+The warning-free three-job build and metadata693/0 pass. The exact known-issue SOFTWARE CTest and
+self-tests5/5 plus4/4 pass. Ten SOFTWARE and ten OPENGLES3-labelled runs retain exactly three
+expected ISSUE-118 assertions among11 controls, with byte-identical stdout SHA-256
+`39c0a5fc964474c7fd651106c7f374a942ccdd595359c1ff3064a79f2414fc5e` and empty stderr. Coverage
+totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1043-quaternion-length-range/*`. No rendering or visual claim was made. Next audit
+Quaternion equality/hash consistency at signed zero, then close trivial constructor/output-overload
+dispositions rather than adding redundant checks.
