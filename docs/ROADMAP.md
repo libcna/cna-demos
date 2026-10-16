@@ -11367,3 +11367,11 @@ output overload. CNA matches all eleven exact component, magnitude and NaN resul
 fact that the API does not normalize its axis. The warning-free `-j3` build, metadata693/0, exact
 CTest, ten runs per renderer label and both self-test suites pass with stable stdout and empty
 stderr. Coverage remains unchanged. Evidence:`/tmp/checkpoint-1038-quaternion-axis-angle-boundaries/*`.
+
+## Focused1039 Quaternion yaw/pitch/roll periods
+
+`math.quaternion.from_yaw_pitch_roll` adds XNA-referenced zero, 2-Pi/4-Pi representation-period,
+NaN and output-overload controls. CNA matches all eight orientation/component results. The warning-
+free `-j3` build, metadata693/0, exact CTest, ten runs per renderer label and both self-test suites
+pass with stable stdout and empty stderr. Coverage remains unchanged. Evidence:
+`/tmp/checkpoint-1039-quaternion-ypr-periods/*`.

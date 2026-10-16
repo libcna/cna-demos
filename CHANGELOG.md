@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended Quaternion yaw/pitch/roll construction through zero, 2-Pi/4-Pi representation periods,
+  NaN propagation and output-overload parity against Windows XNA 4.0.
 - Extended Quaternion axis-angle construction through scaled and zero axes, zero/NaN angles and
   output-overload parity, showing that XNA consumes the axis without normalizing it.
 - Extended Quaternion inverse/conjugate through nonunit, zero and extreme finite magnitudes and

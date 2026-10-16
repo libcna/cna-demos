@@ -5742,3 +5742,11 @@ the exact component/magnitude classifications; CNA matches all eleven controls. 
 renderer label are byte-stable with empty stderr; build, metadata, exact CTest and both self-test
 suites pass. Coverage totals are unchanged. Evidence:
 `/tmp/checkpoint-1038-quaternion-axis-angle-boundaries/*`.
+
+### Focused1039 Quaternion yaw/pitch/roll periods
+
+`math.quaternion.from_yaw_pitch_roll` now covers zero input, 2-Pi antipodal and 4-Pi component
+periods, preserved orientation, NaN propagation and the output overload. Genuine Windows XNA 4.0
+supplies the reference and CNA matches all eight controls. Ten runs per renderer label are byte-
+stable with empty stderr; build, metadata, exact CTest and both self-test suites pass. Coverage
+totals are unchanged. Evidence:`/tmp/checkpoint-1039-quaternion-ypr-periods/*`.

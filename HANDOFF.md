@@ -10426,3 +10426,18 @@ pass. Ten SOFTWARE and ten OPENGLES3-labelled runs pass11/11 with byte-identical
 totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
 `/tmp/checkpoint-1038-quaternion-axis-angle-boundaries/*`. No rendering or visual claim was made
 and no CNA issue was found. Continue with the next deterministic behavior gap outside axis-angle.
+
+## Focused1039-Quaternion-yaw-pitch-roll-periods
+
+`math.quaternion.from_yaw_pitch_roll` grows from two to eight controls without a new ID. Genuine
+Windows XNA 4.0 establishes zero-angle Identity, the half-angle representation period (adding2Pi
+to yaw negates all quaternion components while preserving orientation; adding4Pi restores them),
+four-component NaN propagation and output-overload equality. CNA matches every result within the
+explicit rounding tolerance used for periodic components.
+
+The warning-free three-job build, metadata693/0, exact SOFTWARE CTest and self-tests5/5 plus4/4
+pass. Ten SOFTWARE and ten OPENGLES3-labelled runs pass8/8 with byte-identical stdout SHA-256
+`62ec4755e191f5908c11756c8bec5163064ffa417f9c06481822fb605e544ed2` and empty stderr. Coverage
+totals remain307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes. Evidence:
+`/tmp/checkpoint-1039-quaternion-ypr-periods/*`. No rendering or visual claim was made and no CNA
+issue was found. Continue with the next deterministic behavior gap outside Euler construction.
