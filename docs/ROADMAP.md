@@ -11670,3 +11670,14 @@ stderr. The clean `-j3` build, metadata701/0, exact known-issue CTest and both s
 pass. Coverage totals remain unchanged; the four CNA-only operators join the generated extension
 list. Evidence:`/tmp/checkpoint-1063-point-value-contract/*`. The meaningful Point audit is
 complete; continue with Rectangle value and boundary behavior.
+
+## Focused1064 Rectangle combination aliases
+
+`math.rectangle.intersect_and_union` grows6->10 controls. Genuine XNA confirms value/output and
+both input-alias forms, edge-touch/disjoint behavior and Union with Empty. CNA's Union output
+overload corrupts the far edge when the result aliases the offset input, recorded as new ISSUE-125;
+the other nine controls pass. Ten runs per renderer label are byte-stable with empty stderr. The
+clean incremental `-j3` build, metadata701/0, exact known-issue CTest and both self-test suites
+pass. Coverage totals remain unchanged and the Complete1056-backed report is byte-identical.
+Evidence:`/tmp/checkpoint-1064-rectangle-combination/*`. Continue with Rectangle construction,
+edge/center, containment and mutation boundaries.

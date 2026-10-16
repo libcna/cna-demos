@@ -15,6 +15,28 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-125 -- Rectangle Union corrupts bounds when output aliases the offset input
+
+- **Area/API:** output overload of `Microsoft::Xna::Framework::Rectangle::Union`.
+- **Demo/reproduction:** run `math.rectangle.intersect_and_union`. Union `(0,0,12,12)` with
+  `(10,10,5,5)` into a separate output, then alias the output with the offset input in either
+  argument position. Adjacent controls cover value/output parity, Intersect aliasing, disjoint and
+  edge-touch behavior and Union with Empty.
+- **Observed:** CNA writes `result.X/Y` before reading the aliased input's Right/Bottom. Moving the
+  offset input to `(0,0)` therefore shrinks its observed far edge and produces `(0,0,12,12)` instead
+  of `(0,0,15,15)`. The workflow retains this one grouped expected failure among ten controls.
+- **Expected/reference:** genuine Windows XNA 4.0 returns `(0,0,15,15)` through the value, separate
+  output and both input-alias calls. Intersect likewise permits either input alias, touching edges
+  do not intersect, a disjoint output is Empty and Union includes Empty's origin.
+- **Cause/suggested repair:** cache both inputs' left/top/right/bottom values before assigning any
+  result field, as the current Intersect output implementation already does.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1064-rectangle-combination/*`. The clean
+  warning-free three-job build, exact known-issue CTest, metadata701/0 and self-tests5/5 plus4/4
+  pass; ten runs per renderer label reproduce only the documented assertion with empty stderr.
+  No CNA source was modified and no upstream message was sent.
+
 ### CNA-DEMOS-ISSUE-124 -- Point GetHashCode uses XOR instead of XNA's unchecked sum
 
 - **Area/API:** `Microsoft::Xna::Framework::Point::GetHashCode`.

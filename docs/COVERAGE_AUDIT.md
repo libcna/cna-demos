@@ -189,6 +189,15 @@ output forwards are source-reviewed and do not justify duplicate controls.
 
 The meaningful Point public-member/behavior audit is complete at pinned d23.
 
+### Rectangle
+
+| Members / behavior | Decision and evidence |
+|---|---|
+| Intersects, Intersect and Union | Focused1064 grows `math.rectangle.intersect_and_union` from six to ten controls. Value and output forms agree for ordinary overlap; Intersects excludes an edge-only touch, Intersect permits either input alias and returns Empty for disjoint bounds, and Union includes Empty's origin. Genuine XNA also permits either input to alias Union's output. CNA stores output X/Y before reading the offset aliased input's Right/Bottom and corrupts the far edge, producing one grouped failure under ISSUE-125. Evidence:`/tmp/checkpoint-1064-rectangle-combination/*`. |
+| Construction, fields, edges, center, emptiness and identity | Existing `edges_and_center` demonstrates the ordinary value surface. Audit signed, degenerate and limit behavior next rather than duplicating ordinary construction. |
+| Contains | Existing `contains` demonstrates points, edges and rectangles. Audit zero/negative-size and output forms next. |
+| Inflate and Offset | Existing `inflate_and_offset` demonstrates ordinary mutation. Audit shrinking, over-shrinking and output/alias boundaries next while avoiding undefined signed overflow in C++. |
+
 ### BoundingBox, BoundingSphere and Ray value identity
 
 | Members / behavior | Decision and evidence |
@@ -6124,3 +6133,22 @@ Coverage totals remain307/329 types,2128/2326 members,674/753 fields and3079/320
 generated CNA-extension list gains the four arithmetic operators. Evidence:
 `/tmp/checkpoint-1063-point-value-contract/*`. No renderer or visual claim was made. The meaningful
 Point audit is complete; continue with Rectangle value and boundary behavior.
+
+### Focused1064 Rectangle combination aliases
+
+Existing `math.rectangle.intersect_and_union` grows6->10 controls. Genuine Windows XNA 4.0
+confirms value/output parity for Intersect and Union, both input-alias directions, disjoint Empty
+output, strict edge-touch exclusion and Union's inclusion of Empty's origin. CNA matches every
+case except aliased Union: the output overload writes X/Y before reading the offset aliased
+input's Right/Bottom and therefore shrinks the far edge. Both alias directions form one grouped
+failure recorded as new ISSUE-125.
+
+Ten runs per renderer label retain only that expected failure with byte-identical stdout SHA-256
+`094e22d9197d9603d1c462a5e39da676387d8967efc4543d1e327dc0fe86d42f` and empty stderr. The clean
+incremental `-j3` build, metadata701/0, exact known-issue SOFTWARE CTest and self-tests5/5 plus4/4
+pass. Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C routes and is
+byte-identical to the Complete1056-backed report. Genuine-XNA stdout SHA-256 is
+`011f23e6049fc1afa87670f2bf5b090478398dfb87928ce42b9b98fff187928a`; its stderr is only the host
+display-cookie warning. Evidence:`/tmp/checkpoint-1064-rectangle-combination/*`. No renderer or
+visual claim was made. Continue with Rectangle construction, edge/center, containment and mutation
+boundaries.
