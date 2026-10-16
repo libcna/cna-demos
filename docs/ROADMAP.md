@@ -127,8 +127,13 @@ a check that all authored colors remain visible and that a blank texture row can
   `graphics.render_target.multiple_render_targets` (two targets, a two-output GLSL
   ShaderEffect), ✅ `graphics.render_target.hdr_blendable` (values past 1.0 in an HdrBlendable
   target; ISSUE-027 found on SOFTWARE).
-- ✅ `graphics.texture3d.volume_data`, ✅ `graphics.occlusion_query.visible_pixels`. Remaining:
-  remaining typed/compressed format families, further DDS stream boundaries and resource lifetimes.
+- ✅ `graphics.texture3d.volume_data`, ✅ `graphics.texture3d.sampler_coordinates`: complete
+  public-member dispositions cover typed/raw transfer representatives, authored non-cubic mips,
+  format/profile refusals, sampling/filtering and active/cross-device move lifetime. Texture3D has
+  no public DDS loader; repeating every Texture2D packed format would add no volume behavior.
+- ✅ `graphics.occlusion_query.visible_pixels`: query ordering, polling, precise/boolean result
+  interpretation, ordinary/active disposal, Reach-profile constructor refusal and actual hidden/
+  visible draws. ISSUE-113 retains the distinct-active-query Begin mismatch.
   ✅ volume_data now also passes six signedVector4/scalar boxed-transfer controls, preserving
   its ten original assertions and pixel-identical inspected Color atlases on both renderers.
   ✅ `graphics.texture_cube.face_transfers` now passes eight focused checks per renderer: guarded
@@ -12013,3 +12018,22 @@ Coverage remains307/329 types,2128/2326 members,674/753 fields and3079/3205 C ro
 behavior is deeper evidence for already credited members. Evidence:
 `/tmp/checkpoint-1081-texture2d-compressed/*`. No screenshot, manual visual inspection or
 physical-GPU claim was made.
+
+## Focused1082 final Phase5 Texture3D/query reconciliation
+
+The existing `graphics.occlusion_query.visible_pixels` scene now creates a secondary Reach device
+and requires `NotSupportedException` before running its established HiDef lifecycle and visibility
+workflow. The secondary remains alive until all primary frames finish, keeping device teardown out
+of this constructor check. SOFTWARE and OPENGLES3 each execute14 controls: thirteen pass and the
+sole failure remains the expected ISSUE-113 distinct-active-query Begin mismatch. Three runs per
+renderer retain those exact status/count/issue triples, stable per-renderer stdout and empty stderr.
+The warning-free `-j3` build, metadata711/0, exact SOFTWARE CTest and validator/comparator
+self-tests5/5 plus4/4 pass.
+
+Genuine Windows XNA4 under Wine reports `profile=Reach` and the same `NotSupportedException` with
+stdout SHA-256 `b422d1f16371297957a23a1c15359aef78145bbbd629e286784e8ef4e1d74cbe` and empty stderr. The
+Roadmap's stale Texture3D remainder is also reconciled with its existing completed member audit:
+typed/raw representatives, non-cubic mips, compressed/profile refusal, sampling/filtering and
+active/cross-device move lifetime are already executed; no Texture3D DDS entry point exists.
+Evidence:`/tmp/checkpoint-1082-occlusion-reach/*`. No screenshot, manual visual inspection or new
+CNA issue is claimed.

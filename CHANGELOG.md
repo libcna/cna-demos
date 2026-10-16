@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Extended the existing occlusion-query lifecycle workflow with the genuine-XNA Reach-profile
+  construction refusal and reconciled the completed Texture3D semantic audit with the roadmap.
 - Added a direct compressed `Texture2D` workflow for exact DXT1 block windows and padded small
   mips, DXT3/DXT5 alpha blocks, sampled decoding, and XNA's multiple-of-four dimension rule.
 - Refreshed the complete 710-demo checkpoint after the root Framework audits: all 723 enabled

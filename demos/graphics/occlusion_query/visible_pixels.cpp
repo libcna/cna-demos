@@ -8,13 +8,20 @@
 
 #include "CnaDemos/Demo.hpp"
 #include "System/InvalidOperationException.hpp"
+#include "System/NotSupportedException.hpp"
 #include "System/ObjectDisposedException.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BasicEffect.hpp"
+#include "Microsoft/Xna/Framework/Graphics/DepthFormat.hpp"
 #include "Microsoft/Xna/Framework/Graphics/DepthStencilState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectPass.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectTechnique.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsAdapter.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsProfile.hpp"
 #include "Microsoft/Xna/Framework/Graphics/OcclusionQuery.hpp"
+#include "Microsoft/Xna/Framework/Graphics/PresentationParameters.hpp"
+#include "Microsoft/Xna/Framework/Graphics/PresentInterval.hpp"
 #include "Microsoft/Xna/Framework/Graphics/PrimitiveType.hpp"
 #include "Microsoft/Xna/Framework/Graphics/RasterizerState.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SamplerState.hpp"
@@ -59,6 +66,19 @@ namespace
         void LoadContent() override
         {
             GraphicsDevice& device = getGraphicsDeviceProperty();
+
+            PresentationParameters reachParameters;
+            reachParameters.setBackBufferWidthProperty(32);
+            reachParameters.setBackBufferHeightProperty(32);
+            reachParameters.setDepthStencilFormatProperty(DepthFormat::None);
+            reachParameters.setPresentationIntervalProperty(PresentInterval::Immediate);
+            reachDevice_ = std::make_unique<GraphicsDevice>(
+                GraphicsAdapter::getDefaultAdapterProperty(), GraphicsProfile::Reach,
+                reachParameters);
+            ExpectRefusal<System::NotSupportedException>(
+                Context(), "the Reach profile refuses occlusion-query construction",
+                [&] { OcclusionQuery unavailable(*reachDevice_); });
+
             // Ordering rules are independent of how quickly this renderer completes a query.
             // This scratch query is ended before disposal; the visible lights below use their own queries.
             OcclusionQuery scratch(device);
@@ -220,6 +240,9 @@ namespace
         bool checked_ = false;
         bool precise_ = true;
         std::unique_ptr<SpriteBatch> spriteBatch_;
+        // Keep the secondary device alive through the primary device's measured frames. Tearing
+        // down one live renderer context before another is a separate multi-device behavior.
+        std::unique_ptr<GraphicsDevice> reachDevice_;
         std::optional<SpriteFont> font_;
         std::unique_ptr<BasicEffect> effect_;
         std::unique_ptr<OcclusionQuery> hidden_;
@@ -235,7 +258,7 @@ CNA_DEMOS_GAME(OcclusionDemo, {
                    "for one hidden completely, many for one in the open, and a live count for one passing behind "
                    "the wall, read when IsComplete says the answer has arrived; isPixelCountPreciseEXT tells a real "
                    "tally from the 0/1 flag OpenGL ES 3.0 can only give. Scratch queries demonstrate ordering, "
-                   "ordinary disposal, active disposal and the distinct-query active Begin contract.",
+                   "ordinary disposal, active disposal, Reach-profile refusal and the distinct-query active Begin contract.",
     .apis = {"OcclusionQuery::OcclusionQuery", "OcclusionQuery::Begin", "OcclusionQuery::End",
              "OcclusionQuery::IsComplete", "OcclusionQuery::PixelCount", "OcclusionQuery::isPixelCountPreciseEXT",
              "OcclusionQuery::Dispose", "GraphicsResource::Dispose", "GraphicsResource::IsDisposed",

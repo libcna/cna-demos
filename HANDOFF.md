@@ -93,6 +93,8 @@ totals are `input.h`14/15, `input_gamepad.h`63/63, `input_keyboard.h`17/17,
 `texture_volume.h`12/16 and `sprite_font.h`9/9.
 Complete1080 exercises all3079 credited C routes and its710 catalog IDs in both full smoke suites;
 Focused1081 executes the new ID separately on both renderers.
+Focused1082 then extends the existing OcclusionQuery ID with the XNA-matching Reach constructor
+refusal; catalog and surface counts stay unchanged.
 Its lineage includes the completed field, build-time-pipeline and generated XNA member audits
 through Focused1002, including the production StorageDeviceNotConnectedException path.
 Build-only CNA-DEMOS-ISSUE-057 is tracked separately; it adds no runtime knownIssue marker.
@@ -11492,3 +11494,26 @@ physical-GPU claim was made.
 Next, commit/push this validated batch, then continue the deeper member/behavior audit from the
 next deterministic family whose existing disposition still names a concrete semantic gap. Keep
 every compile at three jobs or fewer.
+
+## Focused1082-OcclusionQuery-Reach-refusal-and-Phase5-reconciliation
+
+`graphics.occlusion_query.visible_pixels` now executes the constructor's remaining meaningful
+profile boundary on a secondary Reach device held alive through every primary frame. Both CNA
+renderers run14 controls: thirteen pass and the only failure remains the declared ISSUE-113
+distinct-active-query Begin mismatch. Three repetitions per renderer preserve exact
+FAILED/14/CNA-DEMOS-ISSUE-113 reports, stable per-renderer stdout hashes
+`ede3d05d40f41366b3142daa4b2ebb1eabada1d91db4c12d7e731cc4a23bc142` (SOFTWARE) and
+`61412384758127a55cfe9b432cd7d8530d9259652cedf36a69bd67fa6ad05d96` (OPENGLES3), and empty
+stderr. The exact SOFTWARE CTest passes through its expected-failure contract.
+The warning-free `-j3` build, metadata711/0 and validator/comparator self-tests5/5 plus4/4 pass.
+
+Genuine Windows XNA4 under Wine reports Reach and refuses construction with NotSupportedException;
+stdout SHA-256 is `b422d1f16371297957a23a1c15359aef78145bbbd629e286784e8ef4e1d74cbe` and stderr is empty. No CNA
+issue was found. ROADMAP's old Texture3D remainder is also closed against the existing member table:
+typed/raw transfer representatives, non-cubic mips, compressed/profile refusal, sampling/filtering
+and active/cross-device moves already have runtime evidence; Texture3D exposes no DDS loader.
+
+Counts remain711 demos,307/329 XNA types,2128/2326 members,674/753 fields and3079/3205 C routes.
+Evidence:`/tmp/checkpoint-1082-occlusion-reach/*`. No screenshot or manual visual inspection was
+performed. Next, commit and push this validated focused batch, then continue from the next explicit
+deterministic candidate. Keep every compile at three jobs or fewer.
