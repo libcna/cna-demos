@@ -236,7 +236,8 @@ Design decisions already taken to keep this cheap:
 
 ## 6. Continuous integration
 
-`.github/workflows/ci.yml` builds against the CNA release pinned in the workflow:
+`.github/workflows/ci.yml` builds against the exact CNA and sharp-runtime commits pinned in the
+workflow (HANDOFF.md "Dependencies"):
 
 1. checks out CNA and its siblings next to cna-demos (the same layout as a developer machine);
 2. configures the `windowless` preset (SOFTWARE/HEADLESS/STUB -- no GPU, no display, no GL siblings);

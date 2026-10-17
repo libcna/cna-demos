@@ -76,7 +76,7 @@ git clone https://github.com/libcna/cna.git
 git clone https://github.com/libcna/sharp-runtime.git
 git clone https://github.com/libcna/easy-gl.git
 git clone https://github.com/libcna/meta-gl.git
-git -C cna submodule update --init third_party/SDL third_party/SDL_image third_party/SDL_mixer third_party/draco
+git -C cna submodule update --init third_party/SDL third_party/SDL_mixer third_party/draco
 git clone https://github.com/libcna/cna-demos.git
 cd cna-demos
 

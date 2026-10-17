@@ -59,7 +59,7 @@ framework module, the selected renderer(s), Sharp Runtime, include paths and def
 
 * Location: `CNA_ROOT_DIR` (cache variable or environment variable), default `../cna`. CNA in turn
   needs `../sharp-runtime` and, for the GL renderers, `../easy-gl` and `../meta-gl`, and its
-  submodules `third_party/SDL`, `SDL_image`, `SDL_mixer`, `draco`. CNA reports each missing piece
+  submodules `third_party/SDL`, `SDL_mixer`, `draco`. CNA reports each missing piece
   itself; cna-demos only checks that the CNA checkout exists.
 * CNA is added `EXCLUDE_FROM_ALL` (only what cna-demos links is built) and, with CMake >= 3.25,
   `SYSTEM` (CNA headers do not trigger cna-demos' own warning flags).

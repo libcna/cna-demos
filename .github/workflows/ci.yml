@@ -1,4 +1,4 @@
-# Builds cna-demos against the pinned CNA release with the windowless renderers
+# Builds cna-demos against the pinned CNA revision with the windowless renderers
 # (SOFTWARE/HEADLESS/STUB) and runs the CLI tests and every demo on SOFTWARE.
 # No GPU and no display server are needed. See docs/AUTOMATION.md section 6.
 name: ci
@@ -9,9 +9,11 @@ on:
   workflow_dispatch:
 
 env:
-  # The CNA release cna-demos is built and tested against (HANDOFF.md "Dependencies").
-  CNA_REF: 10a4ef1cb4cd832f761536d77588000104947f8d             # CNA 0.1.0
-  SHARP_RUNTIME_REF: c20373bae5be1f02d1fe2fa33c4cbba8ad05e4a0   # sharp-runtime 0.1.0
+  # The exact CNA and sharp-runtime commits cna-demos is built and tested against
+  # (HANDOFF.md "Dependencies"). cna-demos needs CNA newer than 0.1.0: IPlatform::Supports and
+  # the renderer classification names of C ABI 0.49.0.
+  CNA_REF: 6ee757c2a16c1bbd873df717c94b3257ae6b50ed             # CNA next
+  SHARP_RUNTIME_REF: f2aecfefeac171b331787e5cdc4849507363ef0e   # sharp-runtime next
 
 jobs:
   windowless:
@@ -38,7 +40,7 @@ jobs:
           path: sharp-runtime
 
       - name: CNA submodules
-        run: git -C cna submodule update --init --depth 1 third_party/SDL third_party/SDL_image third_party/SDL_mixer third_party/draco
+        run: git -C cna submodule update --init --depth 1 third_party/SDL third_party/SDL_mixer third_party/draco
 
       - name: Install dependencies
         run: |

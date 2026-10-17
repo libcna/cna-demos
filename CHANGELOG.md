@@ -1248,6 +1248,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   passing demos and both issues are resolved.
 
 ### Fixed
+- CI pins CNA `6ee757c2a` and sharp-runtime `f2aecfef`, the validated siblings, instead of the
+  0.1.0 releases. CNA 0.1.0 lacked APIs the demos use, and CI's submodule step no longer names the
+  `third_party/SDL_image` submodule CNA has since removed; the setup docs follow.
 - XACT play_cue now waits for actual bank-idle state with a finite three-second limit instead
   of assuming completion after700ms. All three original checks remain; the first failed full
   checkpoint and inconclusive reproduction evidence are preserved.

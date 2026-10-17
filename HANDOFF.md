@@ -22,10 +22,9 @@ changes, remove known-issue markers when upstream defects are fixed, and expand 
 manual or visual-reference evidence only when the environment can observe it honestly.
 `cna-examples` remains deliberately outside this completed campaign.
 
-Since 2026-10-17 cna-demos uses CNA's renamed renderer classifications
-(`GraphicsRendererCategory`/`GraphicsRendererMaturity`, C ABI 0.49.0) with no old-name aliases,
-so it needs CNA `34e86e430` or later and no longer builds against `d23e139de`. Section 7 has the
-first run against the sibling at `6ee757c2a` and the seven unrelated results it leaves open.
+Since 2026-10-17 cna-demos is validated against CNA `6ee757c2a` (CNA `next`, C ABI 0.49.0, renamed
+renderer classifications with no old-name aliases) and sharp-runtime `f2aecfef`; CI pins exactly
+these (section 11). It no longer builds against `d23e139de` or CNA 0.1.0. Section 7 has the result.
 
 ## 3. Architecture in 10 lines
 
@@ -231,17 +230,17 @@ Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
 
-**2026-10-17 renderer-classification rename.** `build/linux-full` was reconfigured to the sibling
-`../cna` at `6ee757c2a`, because `/tmp/cna-demos-cna-d23` no longer exists and `d23e139de` lacks
-the renamed API. The `-j4` build passes (warnings only from vendored Draco), metadata is 719/0, the
-16 tool tests pass, and regenerated COVERAGE.md differs only in the renamed names. Under private
-Xvfb, CTest passes 725/732 with the same 48 skips and three disabled tests; both renamed demos pass.
-None of the seven failures uses the renamed API. They are CNA changes since `d23e139de` and the
-next maintenance task: two UNEXPECTED PASSes (`game.graphics_device_manager.back_buffer_size`
-ISSUE-083, `math.bounding_frustum.corners` ISSUE-134), plus `math.curve.tangents`,
-`game.services.service_container`, `graphics.model.node_animation`,
-`c_api.graphics.device_capabilities` and `c_api.media.video_player`. No full renderer smoke
-checkpoint was run. Complete1128 below remains the last complete checkpoint.
+**2026-10-17 current CNA.** `build/linux-full` builds against the clean sibling `../cna` at
+`6ee757c2a` and sharp-runtime `f2aecfef`, the CI pins (`/tmp/cna-demos-cna-d23` no longer exists).
+The `-j4` build has no diagnostics, metadata is 719/0, the 16 tool tests pass, and under private
+Xvfb all 732 enabled CTests pass with Complete1128's 48 skips and three disabled tests. Seven
+expectations moved with CNA after `d23e139de`. CNA fixed ISSUE-083 (`e7bd98e46`, `714bfd9bc`) and
+ISSUE-134 (`cd211420e`), so their known-issue markers are gone. `cd211420e` also made Curve,
+GameServiceContainer and ApplyClipToBonesEXT throw XNA's System exceptions, which genuine XNA's IL
+confirms for the two XNA types. SOFTWARE now evaluates image-based lighting (`f74e0a8f7`), and
+Texture2D reports its qualified XNA type name (`4dd8129c2`). No check count changed and
+COVERAGE.md is unchanged. No renderer smoke checkpoint was run; Complete1128 below remains the last
+complete one.
 
 Complete **1128-final-lifecycle-error-path-checkpoint** is the current full-build and full-runtime
 baseline. It tests cna-demos `042fea0` against the isolated CNA worktree
@@ -3494,12 +3493,15 @@ CNA-DEMOS-ISSUE-042 (documentation only: root-prefix comments describe older mes
 CNA-DEMOS-ISSUE-058 (`MediaPlayer::Play` frees an active-queue Song before copying/playing it;
 ASan probe-backed, no runtime knownIssue marker).
 
-## 11. Dependencies (pinned for CI; same as cna-template's dependencies.lock)
+## 11. Dependencies (pinned for CI)
+
+The validated sibling commits; `.github/workflows/ci.yml` pins the same CNA and sharp-runtime SHAs.
+cna-demos needs a newer CNA than cna-template's 0.1.0 lock.
 
 | Repo | Version | Commit |
 |---|---|---|
-| cna | 0.1.0 | 10a4ef1cb4cd832f761536d77588000104947f8d |
-| sharp-runtime | 0.1.0 | c20373bae5be1f02d1fe2fa33c4cbba8ad05e4a0 |
+| cna | next (C ABI 0.49.0) | 6ee757c2a16c1bbd873df717c94b3257ae6b50ed |
+| sharp-runtime | next | f2aecfefeac171b331787e5cdc4849507363ef0e |
 | easy-gl | 0.1.1 | f4d6afaf16cdc7e7e73130950bc45e6d865b41bd |
 | meta-gl | 0.4.1 | dd3b30055d55fdc42240de7af248259338256992 |
 

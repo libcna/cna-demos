@@ -9,7 +9,7 @@ docs/ARCHITECTURE.md.
 ## Starting a session
 
 1. Read HANDOFF.md. 2. `git status`, `git log --oneline | head`.
-3. Make sure the siblings exist: `../cna` (+ submodules SDL, SDL_image, SDL_mixer, draco),
+3. Make sure the siblings exist: `../cna` (+ submodules SDL, SDL_mixer, draco),
    `../sharp-runtime`, `../easy-gl`, `../meta-gl` (versions in HANDOFF.md).
 4. Baseline: `cmake --preset linux-full && cmake --build --preset linux-full -j4`,
    `build/linux-full/bin/cna-demos --validate`, `ctest --test-dir build/linux-full -j4`.

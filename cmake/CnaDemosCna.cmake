@@ -10,7 +10,7 @@
 # CNA in turn expects its own siblings next to it:
 #   ../sharp-runtime            always
 #   ../easy-gl and ../meta-gl   for the OPENGLES3 / OPENGL33 / WEBGL2 renderers
-# and its vendored submodules (third_party/SDL, SDL_image, SDL_mixer, draco).
+# and its vendored submodules (third_party/SDL, SDL_mixer, draco).
 # CNA itself reports a missing sibling or submodule with a precise message, so
 # this file only checks that CNA itself is where we were told it is.
 #
@@ -44,8 +44,8 @@ if(NOT EXISTS "${CNA_ROOT_DIR}/CMakeLists.txt"
         "  git clone https://github.com/libcna/sharp-runtime.git\n"
         "  git clone https://github.com/libcna/easy-gl.git      # GL renderers only\n"
         "  git clone https://github.com/libcna/meta-gl.git      # GL renderers only\n"
-        "  git -C cna submodule update --init third_party/SDL third_party/SDL_image \\\n"
-        "      third_party/SDL_mixer third_party/draco\n"
+        "  git -C cna submodule update --init third_party/SDL third_party/SDL_mixer \\\n"
+        "      third_party/draco\n"
         "or point the build at an existing checkout:\n"
         "  cmake -S . -B build -DCNA_ROOT_DIR=/path/to/cna\n"
         "(the CNA_ROOT_DIR environment variable works too).\n"

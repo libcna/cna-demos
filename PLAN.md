@@ -21,7 +21,7 @@ concrete areas is [docs/ROADMAP.md](docs/ROADMAP.md); the current state is [HAND
 * **Build/consumption:** no installed CMake package; consumers `add_subdirectory()` a CNA source
   checkout and link the `CNA` umbrella (cna-template, cna-examples, cna-samples all do this).
   Siblings: `../sharp-runtime` (always), `../easy-gl` + `../meta-gl` (GL renderers). Submodules:
-  SDL, SDL_image, SDL_mixer, draco. CNA links as `libcna.so` on Linux by default.
+  SDL, SDL_mixer, draco. CNA links as `libcna.so` on Linux by default.
 * **Content:** `ContentManager::Load<T>` returns by value; lookup `.xnb` → `.cnb` → literal → `.cnj`
   → loose formats (PNG/JPG/BMP/GIF/TGA/TIFF/QOI textures, WAV sounds, glTF/GLB models, MP3/OGG/
   WAV/FLAC songs, DDS cubes). SpriteFont and Effect have no loose source format at run time
