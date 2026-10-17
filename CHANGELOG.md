@@ -1234,6 +1234,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   mutation isolation and rendering after original disposal. Nine GL checks expose the three
   ISSUE-055 assertions; both images inspected. SOFTWARE declares its capability boundary.
 
+### Changed
+- `core.renderer.metadata` and `c_api.platform.renderer_metadata` use CNA's renamed renderer
+  classifications (`CNA::GraphicsRendererCategory`/`GraphicsRendererMaturity`, C ABI 0.49.0
+  `CNA_GraphicsRenderer*`/`cna_graphics_renderer_*`) and expect WEBGPU's `Supported` maturity.
+  They now need CNA `34e86e430` or later; the old names have no aliases.
+
 ### Fixed
 - XACT play_cue now waits for actual bank-idle state with a finite three-second limit instead
   of assuming completion after700ms. All three original checks remain; the first failed full

@@ -9,32 +9,32 @@
 
 typedef struct RendererExpectation {
     CNA_GraphicsRendererType type;
-    CNA_GraphicsBackendCategory category;
-    CNA_GraphicsBackendMaturity maturity;
+    CNA_GraphicsRendererCategory category;
+    CNA_GraphicsRendererMaturity maturity;
     const char* name;
 } RendererExpectation;
 
 static const RendererExpectation Renderers[] = {
-    {CNA_GRAPHICS_RENDERER_OPENGLES3, CNA_GRAPHICS_BACKEND_CATEGORY_NATIVE,
-     CNA_GRAPHICS_BACKEND_MATURITY_PRODUCTION, "OPENGLES3"},
-    {CNA_GRAPHICS_RENDERER_OPENGL33, CNA_GRAPHICS_BACKEND_CATEGORY_NATIVE,
-     CNA_GRAPHICS_BACKEND_MATURITY_PRODUCTION, "OPENGL33"},
-    {CNA_GRAPHICS_RENDERER_WEBGL2, CNA_GRAPHICS_BACKEND_CATEGORY_WEB,
-     CNA_GRAPHICS_BACKEND_MATURITY_SUPPORTED, "WEBGL2"},
-    {CNA_GRAPHICS_RENDERER_WEBGPU, CNA_GRAPHICS_BACKEND_CATEGORY_TRANSLATION_LAYER,
-     CNA_GRAPHICS_BACKEND_MATURITY_EXPERIMENTAL, "WEBGPU"},
-    {CNA_GRAPHICS_RENDERER_HEADLESS, CNA_GRAPHICS_BACKEND_CATEGORY_DIAGNOSTIC,
-     CNA_GRAPHICS_BACKEND_MATURITY_SUPPORTED, "HEADLESS"},
-    {CNA_GRAPHICS_RENDERER_SOFTWARE, CNA_GRAPHICS_BACKEND_CATEGORY_SOFTWARE,
-     CNA_GRAPHICS_BACKEND_MATURITY_EXPERIMENTAL, "SOFTWARE"},
-    {CNA_GRAPHICS_RENDERER_STUB, CNA_GRAPHICS_BACKEND_CATEGORY_DIAGNOSTIC,
-     CNA_GRAPHICS_BACKEND_MATURITY_SUPPORTED, "STUB"},
-    {CNA_GRAPHICS_RENDERER_DIRECTX9, CNA_GRAPHICS_BACKEND_CATEGORY_NATIVE,
-     CNA_GRAPHICS_BACKEND_MATURITY_PRODUCTION, "DIRECTX9"},
-    {CNA_GRAPHICS_RENDERER_SDL_GPU, CNA_GRAPHICS_BACKEND_CATEGORY_TRANSLATION_LAYER,
-     CNA_GRAPHICS_BACKEND_MATURITY_SUPPORTED, "SDL_GPU"},
-    {CNA_GRAPHICS_RENDERER_FNA3D, CNA_GRAPHICS_BACKEND_CATEGORY_TRANSLATION_LAYER,
-     CNA_GRAPHICS_BACKEND_MATURITY_EXPERIMENTAL, "FNA3D"},
+    {CNA_GRAPHICS_RENDERER_OPENGLES3, CNA_GRAPHICS_RENDERER_CATEGORY_NATIVE,
+     CNA_GRAPHICS_RENDERER_MATURITY_PRODUCTION, "OPENGLES3"},
+    {CNA_GRAPHICS_RENDERER_OPENGL33, CNA_GRAPHICS_RENDERER_CATEGORY_NATIVE,
+     CNA_GRAPHICS_RENDERER_MATURITY_PRODUCTION, "OPENGL33"},
+    {CNA_GRAPHICS_RENDERER_WEBGL2, CNA_GRAPHICS_RENDERER_CATEGORY_WEB,
+     CNA_GRAPHICS_RENDERER_MATURITY_SUPPORTED, "WEBGL2"},
+    {CNA_GRAPHICS_RENDERER_WEBGPU, CNA_GRAPHICS_RENDERER_CATEGORY_TRANSLATION_LAYER,
+     CNA_GRAPHICS_RENDERER_MATURITY_SUPPORTED, "WEBGPU"},
+    {CNA_GRAPHICS_RENDERER_HEADLESS, CNA_GRAPHICS_RENDERER_CATEGORY_DIAGNOSTIC,
+     CNA_GRAPHICS_RENDERER_MATURITY_SUPPORTED, "HEADLESS"},
+    {CNA_GRAPHICS_RENDERER_SOFTWARE, CNA_GRAPHICS_RENDERER_CATEGORY_SOFTWARE,
+     CNA_GRAPHICS_RENDERER_MATURITY_EXPERIMENTAL, "SOFTWARE"},
+    {CNA_GRAPHICS_RENDERER_STUB, CNA_GRAPHICS_RENDERER_CATEGORY_DIAGNOSTIC,
+     CNA_GRAPHICS_RENDERER_MATURITY_SUPPORTED, "STUB"},
+    {CNA_GRAPHICS_RENDERER_DIRECTX9, CNA_GRAPHICS_RENDERER_CATEGORY_NATIVE,
+     CNA_GRAPHICS_RENDERER_MATURITY_PRODUCTION, "DIRECTX9"},
+    {CNA_GRAPHICS_RENDERER_SDL_GPU, CNA_GRAPHICS_RENDERER_CATEGORY_TRANSLATION_LAYER,
+     CNA_GRAPHICS_RENDERER_MATURITY_SUPPORTED, "SDL_GPU"},
+    {CNA_GRAPHICS_RENDERER_FNA3D, CNA_GRAPHICS_RENDERER_CATEGORY_TRANSLATION_LAYER,
+     CNA_GRAPHICS_RENDERER_MATURITY_EXPERIMENTAL, "FNA3D"},
 };
 
 static const char* const CategoryNames[] = {
@@ -54,17 +54,17 @@ static int check_enum_names(void)
 
     for (index = 0U; index < 5U; ++index) {
         memset(text, 0, sizeof(text));
-        if (cna_graphics_backend_category_get_name_size(index, &bytes) != CNA_RESULT_SUCCESS ||
+        if (cna_graphics_renderer_category_get_name_size(index, &bytes) != CNA_RESULT_SUCCESS ||
             bytes != (uint64_t)strlen(CategoryNames[index]) ||
-            cna_graphics_backend_category_copy_name(index, text, sizeof(text), &bytes) !=
+            cna_graphics_renderer_category_copy_name(index, text, sizeof(text), &bytes) !=
                 CNA_RESULT_SUCCESS ||
             strcmp(text, CategoryNames[index]) != 0) {
             return 0;
         }
         memset(text, 0, sizeof(text));
-        if (cna_graphics_backend_maturity_get_name_size(index, &bytes) != CNA_RESULT_SUCCESS ||
+        if (cna_graphics_renderer_maturity_get_name_size(index, &bytes) != CNA_RESULT_SUCCESS ||
             bytes != (uint64_t)strlen(MaturityNames[index]) ||
-            cna_graphics_backend_maturity_copy_name(index, text, sizeof(text), &bytes) !=
+            cna_graphics_renderer_maturity_copy_name(index, text, sizeof(text), &bytes) !=
                 CNA_RESULT_SUCCESS ||
             strcmp(text, MaturityNames[index]) != 0) {
             return 0;
@@ -73,23 +73,23 @@ static int check_enum_names(void)
 
     memset(text, 0xA5, sizeof(text));
     memcpy(before, text, sizeof(text));
-    return cna_graphics_backend_category_copy_name(
-               CNA_GRAPHICS_BACKEND_CATEGORY_TRANSLATION_LAYER, text, UINT64_C(4), &bytes) ==
+    return cna_graphics_renderer_category_copy_name(
+               CNA_GRAPHICS_RENDERER_CATEGORY_TRANSLATION_LAYER, text, UINT64_C(4), &bytes) ==
                CNA_RESULT_BUFFER_TOO_SMALL &&
         bytes == UINT64_C(16) && memcmp(text, before, sizeof(text)) == 0;
 }
 
 static int check_renderer_table(void)
 {
-    CNA_GraphicsBackendCategory category = UINT32_MAX;
-    CNA_GraphicsBackendMaturity maturity = UINT32_MAX;
+    CNA_GraphicsRendererCategory category = UINT32_MAX;
+    CNA_GraphicsRendererMaturity maturity = UINT32_MAX;
     size_t index;
 
     for (index = 0U; index < sizeof(Renderers) / sizeof(Renderers[0]); ++index) {
-        if (cna_graphics_backend_get_category(Renderers[index].type, &category) !=
+        if (cna_graphics_renderer_get_category(Renderers[index].type, &category) !=
                 CNA_RESULT_SUCCESS ||
             category != Renderers[index].category ||
-            cna_graphics_backend_get_maturity(Renderers[index].type, &maturity) !=
+            cna_graphics_renderer_get_maturity(Renderers[index].type, &maturity) !=
                 CNA_RESULT_SUCCESS ||
             maturity != Renderers[index].maturity) {
             return 0;
@@ -113,8 +113,8 @@ int main(int argc, char** argv)
 {
     CnaDemo demo;
     CNA_GraphicsRendererType current = CNA_GRAPHICS_RENDERER_UNKNOWN;
-    CNA_GraphicsBackendCategory category = UINT32_MAX;
-    CNA_GraphicsBackendMaturity maturity = UINT32_MAX;
+    CNA_GraphicsRendererCategory category = UINT32_MAX;
+    CNA_GraphicsRendererMaturity maturity = UINT32_MAX;
     const RendererExpectation* expected = 0;
     char text[32];
     char before[32];
@@ -125,28 +125,28 @@ int main(int argc, char** argv)
 
     cna_demo_check(
         &demo,
-        CNA_GRAPHICS_BACKEND_CATEGORY_NATIVE == 0U &&
-            CNA_GRAPHICS_BACKEND_CATEGORY_DIAGNOSTIC == 4U &&
-            CNA_GRAPHICS_BACKEND_MATURITY_PRODUCTION == 0U &&
-            CNA_GRAPHICS_BACKEND_MATURITY_DEPRECATED == 4U,
-        "backend category and maturity identities retain their fixed public ordinals");
+        CNA_GRAPHICS_RENDERER_CATEGORY_NATIVE == 0U &&
+            CNA_GRAPHICS_RENDERER_CATEGORY_DIAGNOSTIC == 4U &&
+            CNA_GRAPHICS_RENDERER_MATURITY_PRODUCTION == 0U &&
+            CNA_GRAPHICS_RENDERER_MATURITY_DEPRECATED == 4U,
+        "renderer category and maturity identities retain their fixed public ordinals");
     cna_demo_check(&demo, check_enum_names(),
                    "all category and maturity identities have exact stable names and atomic copies");
     cna_demo_check(&demo, check_renderer_table(),
                    "every public renderer has its documented implementation category and maturity");
     cna_demo_check(
         &demo,
-        cna_graphics_backend_get_category(CNA_GRAPHICS_RENDERER_UNKNOWN, &category) ==
+        cna_graphics_renderer_get_category(CNA_GRAPHICS_RENDERER_UNKNOWN, &category) ==
                 CNA_RESULT_INVALID_ARGUMENT &&
-            cna_graphics_backend_get_maturity(UINT32_C(1), &maturity) ==
+            cna_graphics_renderer_get_maturity(UINT32_C(1), &maturity) ==
                 CNA_RESULT_INVALID_ARGUMENT &&
-            cna_graphics_backend_get_category(CNA_GRAPHICS_RENDERER_HEADLESS, 0) ==
+            cna_graphics_renderer_get_category(CNA_GRAPHICS_RENDERER_HEADLESS, 0) ==
                 CNA_RESULT_INVALID_ARGUMENT &&
-            cna_graphics_backend_get_maturity(CNA_GRAPHICS_RENDERER_HEADLESS, 0) ==
+            cna_graphics_renderer_get_maturity(CNA_GRAPHICS_RENDERER_HEADLESS, 0) ==
                 CNA_RESULT_INVALID_ARGUMENT &&
-            cna_graphics_backend_category_get_name_size(UINT32_C(5), &bytes) ==
+            cna_graphics_renderer_category_get_name_size(UINT32_C(5), &bytes) ==
                 CNA_RESULT_INVALID_ARGUMENT &&
-            cna_graphics_backend_maturity_copy_name(
+            cna_graphics_renderer_maturity_copy_name(
                 UINT32_C(5), text, sizeof(text), &bytes) == CNA_RESULT_INVALID_ARGUMENT,
         "unknown, retired and malformed classification/name requests are refused");
 
@@ -154,9 +154,9 @@ int main(int argc, char** argv)
         &demo,
         cna_graphics_renderer_get_current_type(&current) == CNA_RESULT_SUCCESS &&
             (expected = find_renderer(current)) != 0 &&
-            cna_graphics_backend_get_current_category(&category) == CNA_RESULT_SUCCESS &&
+            cna_graphics_renderer_get_current_category(&category) == CNA_RESULT_SUCCESS &&
             category == expected->category &&
-            cna_graphics_backend_get_current_maturity(&maturity) == CNA_RESULT_SUCCESS &&
+            cna_graphics_renderer_get_current_maturity(&maturity) == CNA_RESULT_SUCCESS &&
             maturity == expected->maturity,
         "the compiled-in renderer identity agrees with its current category and maturity");
 
@@ -187,8 +187,8 @@ int main(int argc, char** argv)
             cna_graphics_renderer_get_current_name_size(0) == CNA_RESULT_INVALID_ARGUMENT &&
             cna_graphics_renderer_copy_current_name(text, sizeof(text), 0) ==
                 CNA_RESULT_INVALID_ARGUMENT &&
-            cna_graphics_backend_get_current_category(0) == CNA_RESULT_INVALID_ARGUMENT &&
-            cna_graphics_backend_get_current_maturity(0) == CNA_RESULT_INVALID_ARGUMENT,
+            cna_graphics_renderer_get_current_category(0) == CNA_RESULT_INVALID_ARGUMENT &&
+            cna_graphics_renderer_get_current_maturity(0) == CNA_RESULT_INVALID_ARGUMENT,
         "compiled-renderer queries refuse null outputs");
 
     return cna_demo_finish(&demo);

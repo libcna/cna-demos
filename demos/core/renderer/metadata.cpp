@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // Renderer identities and their stable launcher-facing classification metadata.
-#include "CNA/GraphicsBackendCategory.hpp"
-#include "CNA/GraphicsBackendMaturity.hpp"
+#include "CNA/GraphicsRendererCategory.hpp"
+#include "CNA/GraphicsRendererMaturity.hpp"
 #include "CNA/GraphicsRendererType.hpp"
 #include "CnaDemos/Demo.hpp"
 
@@ -14,59 +14,59 @@ namespace
     {
         CNA::GraphicsRendererType type;
         std::string_view name;
-        CNA::GraphicsBackendCategory category;
-        CNA::GraphicsBackendMaturity maturity;
+        CNA::GraphicsRendererCategory category;
+        CNA::GraphicsRendererMaturity maturity;
     };
 
     struct NamedCategory
     {
-        CNA::GraphicsBackendCategory value;
+        CNA::GraphicsRendererCategory value;
         std::string_view name;
     };
 
     struct NamedMaturity
     {
-        CNA::GraphicsBackendMaturity value;
+        CNA::GraphicsRendererMaturity value;
         std::string_view name;
     };
 
     constexpr std::array Renderers{
         RendererMetadata{CNA::GraphicsRendererType::OpenGLES3, "OPENGLES3",
-                         CNA::GraphicsBackendCategory::Native, CNA::GraphicsBackendMaturity::Production},
+                         CNA::GraphicsRendererCategory::Native, CNA::GraphicsRendererMaturity::Production},
         RendererMetadata{CNA::GraphicsRendererType::OpenGL33, "OPENGL33",
-                         CNA::GraphicsBackendCategory::Native, CNA::GraphicsBackendMaturity::Production},
+                         CNA::GraphicsRendererCategory::Native, CNA::GraphicsRendererMaturity::Production},
         RendererMetadata{CNA::GraphicsRendererType::WebGL2, "WEBGL2",
-                         CNA::GraphicsBackendCategory::Web, CNA::GraphicsBackendMaturity::Supported},
+                         CNA::GraphicsRendererCategory::Web, CNA::GraphicsRendererMaturity::Supported},
         RendererMetadata{CNA::GraphicsRendererType::WebGPU, "WEBGPU",
-                         CNA::GraphicsBackendCategory::TranslationLayer, CNA::GraphicsBackendMaturity::Experimental},
+                         CNA::GraphicsRendererCategory::TranslationLayer, CNA::GraphicsRendererMaturity::Supported},
         RendererMetadata{CNA::GraphicsRendererType::Headless, "HEADLESS",
-                         CNA::GraphicsBackendCategory::Diagnostic, CNA::GraphicsBackendMaturity::Supported},
+                         CNA::GraphicsRendererCategory::Diagnostic, CNA::GraphicsRendererMaturity::Supported},
         RendererMetadata{CNA::GraphicsRendererType::Software, "SOFTWARE",
-                         CNA::GraphicsBackendCategory::Software, CNA::GraphicsBackendMaturity::Experimental},
+                         CNA::GraphicsRendererCategory::Software, CNA::GraphicsRendererMaturity::Experimental},
         RendererMetadata{CNA::GraphicsRendererType::Stub, "STUB",
-                         CNA::GraphicsBackendCategory::Diagnostic, CNA::GraphicsBackendMaturity::Supported},
+                         CNA::GraphicsRendererCategory::Diagnostic, CNA::GraphicsRendererMaturity::Supported},
         RendererMetadata{CNA::GraphicsRendererType::DirectX9, "DIRECTX9",
-                         CNA::GraphicsBackendCategory::Native, CNA::GraphicsBackendMaturity::Production},
+                         CNA::GraphicsRendererCategory::Native, CNA::GraphicsRendererMaturity::Production},
         RendererMetadata{CNA::GraphicsRendererType::SdlGpu, "SDL_GPU",
-                         CNA::GraphicsBackendCategory::TranslationLayer, CNA::GraphicsBackendMaturity::Supported},
+                         CNA::GraphicsRendererCategory::TranslationLayer, CNA::GraphicsRendererMaturity::Supported},
         RendererMetadata{CNA::GraphicsRendererType::Fna3d, "FNA3D",
-                         CNA::GraphicsBackendCategory::TranslationLayer, CNA::GraphicsBackendMaturity::Experimental},
+                         CNA::GraphicsRendererCategory::TranslationLayer, CNA::GraphicsRendererMaturity::Experimental},
     };
 
     constexpr std::array Categories{
-        NamedCategory{CNA::GraphicsBackendCategory::Native, "Native"},
-        NamedCategory{CNA::GraphicsBackendCategory::TranslationLayer, "TranslationLayer"},
-        NamedCategory{CNA::GraphicsBackendCategory::Software, "Software"},
-        NamedCategory{CNA::GraphicsBackendCategory::Web, "Web"},
-        NamedCategory{CNA::GraphicsBackendCategory::Diagnostic, "Diagnostic"},
+        NamedCategory{CNA::GraphicsRendererCategory::Native, "Native"},
+        NamedCategory{CNA::GraphicsRendererCategory::TranslationLayer, "TranslationLayer"},
+        NamedCategory{CNA::GraphicsRendererCategory::Software, "Software"},
+        NamedCategory{CNA::GraphicsRendererCategory::Web, "Web"},
+        NamedCategory{CNA::GraphicsRendererCategory::Diagnostic, "Diagnostic"},
     };
 
     constexpr std::array Maturities{
-        NamedMaturity{CNA::GraphicsBackendMaturity::Production, "Production"},
-        NamedMaturity{CNA::GraphicsBackendMaturity::Supported, "Supported"},
-        NamedMaturity{CNA::GraphicsBackendMaturity::Experimental, "Experimental"},
-        NamedMaturity{CNA::GraphicsBackendMaturity::Historical, "Historical"},
-        NamedMaturity{CNA::GraphicsBackendMaturity::Deprecated, "Deprecated"},
+        NamedMaturity{CNA::GraphicsRendererMaturity::Production, "Production"},
+        NamedMaturity{CNA::GraphicsRendererMaturity::Supported, "Supported"},
+        NamedMaturity{CNA::GraphicsRendererMaturity::Experimental, "Experimental"},
+        NamedMaturity{CNA::GraphicsRendererMaturity::Historical, "Historical"},
+        NamedMaturity{CNA::GraphicsRendererMaturity::Deprecated, "Deprecated"},
     };
 
     void Metadata(CnaDemos::DemoContext& ctx)
@@ -77,8 +77,8 @@ namespace
         for (const auto& renderer : Renderers)
         {
             namesMatch &= CNA::getGraphicsRendererName(renderer.type) == renderer.name;
-            classificationsMatch &= CNA::getGraphicsBackendCategory(renderer.type) == renderer.category &&
-                                    CNA::getGraphicsBackendMaturity(renderer.type) == renderer.maturity;
+            classificationsMatch &= CNA::getGraphicsRendererCategory(renderer.type) == renderer.category &&
+                                    CNA::getGraphicsRendererMaturity(renderer.type) == renderer.maturity;
 
             CNA::GraphicsRendererType parsed = CNA::GraphicsRendererType::Stub;
             roundTripsMatch &= CNA::tryParseGraphicsRendererName(renderer.name, parsed) && parsed == renderer.type;
@@ -109,19 +109,19 @@ namespace
         for (const auto& maturity : Maturities)
             valueNamesMatch &= CNA::toStringView(maturity.value) == maturity.name;
         ctx.Check(valueNamesMatch, "all category and maturity values have stable human-readable names");
-        ctx.Check(CNA::toStringView(static_cast<CNA::GraphicsBackendCategory>(999)) == "Unknown" &&
-                      CNA::toStringView(static_cast<CNA::GraphicsBackendMaturity>(999)) == "Unknown",
+        ctx.Check(CNA::toStringView(static_cast<CNA::GraphicsRendererCategory>(999)) == "Unknown" &&
+                      CNA::toStringView(static_cast<CNA::GraphicsRendererMaturity>(999)) == "Unknown",
                   "unknown category and maturity values have the documented fallback name");
 
         const auto current = CNA::getCurrentGraphicsRendererType();
         ctx.Check(CNA::getCurrentGraphicsRendererName() == CNA::getGraphicsRendererName(current) &&
-                      CNA::getCurrentGraphicsBackendCategory() == CNA::getGraphicsBackendCategory(current) &&
-                      CNA::getCurrentGraphicsBackendMaturity() == CNA::getGraphicsBackendMaturity(current),
+                      CNA::getCurrentGraphicsRendererCategory() == CNA::getGraphicsRendererCategory(current) &&
+                      CNA::getCurrentGraphicsRendererMaturity() == CNA::getGraphicsRendererMaturity(current),
                   "the current-build helpers agree with the general metadata queries");
 
         ctx.Print("Current renderer: {} ({}, {})", CNA::getCurrentGraphicsRendererName(),
-                  CNA::toStringView(CNA::getCurrentGraphicsBackendCategory()),
-                  CNA::toStringView(CNA::getCurrentGraphicsBackendMaturity()));
+                  CNA::toStringView(CNA::getCurrentGraphicsRendererCategory()),
+                  CNA::toStringView(CNA::getCurrentGraphicsRendererMaturity()));
     }
 }
 
@@ -132,8 +132,8 @@ CNA_DEMOS_CONSOLE(Metadata, {
                    "implementation category and maturity, parses names, and reports the current build.",
     .apis = {"CNA::GraphicsRendererType", "CNA::getGraphicsRendererName", "CNA::tryParseGraphicsRendererName",
              "CNA::getCurrentGraphicsRendererType", "CNA::getCurrentGraphicsRendererName",
-             "CNA::GraphicsBackendCategory", "CNA::getGraphicsBackendCategory",
-             "CNA::getCurrentGraphicsBackendCategory", "CNA::GraphicsBackendMaturity",
-             "CNA::getGraphicsBackendMaturity", "CNA::getCurrentGraphicsBackendMaturity", "CNA::toStringView"},
+             "CNA::GraphicsRendererCategory", "CNA::getGraphicsRendererCategory",
+             "CNA::getCurrentGraphicsRendererCategory", "CNA::GraphicsRendererMaturity",
+             "CNA::getGraphicsRendererMaturity", "CNA::getCurrentGraphicsRendererMaturity", "CNA::toStringView"},
     .tags = {"renderer", "metadata", "launcher"},
 })

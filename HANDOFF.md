@@ -1,7 +1,7 @@
 # HANDOFF
 
 **Read this first in every new session.** It is the single place that says what state the
-project is in and what to do next. Update it after every batch. Last updated: 2026-10-16.
+project is in and what to do next. Update it after every batch. Last updated: 2026-10-17.
 
 ## 1. Purpose (one paragraph)
 
@@ -21,6 +21,11 @@ Future work is maintenance: rerun a Complete1128-style checkpoint when CNA or pr
 changes, remove known-issue markers when upstream defects are fixed, and expand renderer/platform/
 manual or visual-reference evidence only when the environment can observe it honestly.
 `cna-examples` remains deliberately outside this completed campaign.
+
+Since 2026-10-17 cna-demos uses CNA's renamed renderer classifications
+(`GraphicsRendererCategory`/`GraphicsRendererMaturity`, C ABI 0.49.0) with no old-name aliases,
+so it needs CNA `34e86e430` or later and no longer builds against `d23e139de`. Section 7 has the
+first run against the sibling at `6ee757c2a` and the seven unrelated results it leaves open.
 
 ## 3. Architecture in 10 lines
 
@@ -225,6 +230,18 @@ controls; pathological depth remains CNA stress-test territory.
 Live numbers: `cna-demos --categories`, docs/COVERAGE.md.
 
 ## 7. Build and test status
+
+**2026-10-17 renderer-classification rename.** `build/linux-full` was reconfigured to the sibling
+`../cna` at `6ee757c2a`, because `/tmp/cna-demos-cna-d23` no longer exists and `d23e139de` lacks
+the renamed API. The `-j4` build passes (warnings only from vendored Draco), metadata is 719/0, the
+16 tool tests pass, and regenerated COVERAGE.md differs only in the renamed names. Under private
+Xvfb, CTest passes 725/732 with the same 48 skips and three disabled tests; both renamed demos pass.
+None of the seven failures uses the renamed API. They are CNA changes since `d23e139de` and the
+next maintenance task: two UNEXPECTED PASSes (`game.graphics_device_manager.back_buffer_size`
+ISSUE-083, `math.bounding_frustum.corners` ISSUE-134), plus `math.curve.tangents`,
+`game.services.service_container`, `graphics.model.node_animation`,
+`c_api.graphics.device_capabilities` and `c_api.media.video_player`. No full renderer smoke
+checkpoint was run. Complete1128 below remains the last complete checkpoint.
 
 Complete **1128-final-lifecycle-error-path-checkpoint** is the current full-build and full-runtime
 baseline. It tests cna-demos `042fea0` against the isolated CNA worktree
