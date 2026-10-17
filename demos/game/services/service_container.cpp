@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MS-PL
 // Sharing objects between components through Game.Services (GameServiceContainer).
 #include <memory>
-#include <stdexcept>
 #include <string>
 #include <utility>
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/GameComponent.hpp"
 #include "Microsoft/Xna/Framework/GameServiceContainer.hpp"
+#include "System/ArgumentException.hpp"
+#include "System/ArgumentNullException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 
@@ -76,25 +77,25 @@ namespace
             {
                 detached.AddService<ScoreService>(&replacement);
             }
-            catch (const std::invalid_argument&)
+            catch (const System::ArgumentException&)
             {
                 duplicateRejected = true;
             }
             ctx.Check(duplicateRejected && detached.GetService<ScoreService>() == &first,
-                      "duplicate registration is refused and preserves the original provider");
+                      "duplicate registration is refused with ArgumentException and preserves the original provider");
 
             bool nullRejected = false;
             try
             {
                 detached.AddService<ScoreService>(nullptr);
             }
-            catch (const std::invalid_argument&)
+            catch (const System::ArgumentNullException&)
             {
                 nullRejected = true;
             }
             detached.RemoveService<std::string>();
             ctx.Check(nullRejected && detached.GetService<ScoreService>() == &first,
-                      "a null provider is refused and removing a missing service is harmless");
+                      "a null provider is refused with ArgumentNullException and removing a missing service is harmless");
 
             GameServiceContainer moved(std::move(detached));
             ctx.Check(moved.GetService<ScoreService>() == &first &&

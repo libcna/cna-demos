@@ -505,24 +505,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   renderer label reproduce only the five documented BoundingFrustum assertions with empty
   stderr. No CNA source was modified and no upstream message was sent.
 
-### CNA-DEMOS-ISSUE-134 -- BoundingFrustum short corner output throws the wrong exception family
-
-- **Area/API:** `Microsoft::Xna::Framework::BoundingFrustum::GetCorners(std::vector<Vector3>&)`.
-- **Demo/reproduction:** run `math.bounding_frustum.corners`. Read the identity frustum's corner
-  vector and guarded ten-element output, then pass a seven-element output initialized to sentinels.
-- **Observed:** CNA atomically preserves the short output but throws `std::out_of_range`. The exact
-  framework-exception assertion is the sole expected failure among four controls.
-- **Expected/reference:** genuine Windows XNA 4.0 throws `System::ArgumentOutOfRangeException` for
-  the undersized destination and leaves it unchanged. The eight-corner order and guarded output
-  behavior match CNA.
-- **Cause/suggested repair:** replace the direct `std::out_of_range("corners")` with CNA's
-  framework `System::ArgumentOutOfRangeException`, retaining the existing pre-write size check.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1071-bounding-frustum-members/*`. The
-  focused build and stability evidence are shared with ISSUE-135. No CNA source was modified and
-  no upstream message was sent.
-
 ### CNA-DEMOS-ISSUE-133 -- BoundingFrustum boundary and equal-instance containment differ from XNA
 
 - **Area/API:** `Microsoft::Xna::Framework::BoundingFrustum::Contains(Vector3)` and
@@ -1973,38 +1955,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   Runtime color and every following typed read pass; no runtime knownIssue marker is needed. Both
   renderer runs have byte-identical stdout and empty stderr. Evidence:`/tmp/checkpoint-685-*`. No
   CNA source was modified and no upstream message was sent.
-
-### CNA-DEMOS-ISSUE-083 -- Adapter back-buffer query reports zero samples before a multisampled device is created
-
-- **Area/API:** `GraphicsAdapter::QueryBackBufferFormat`,
-  `GraphicsDeviceManager::PreferMultiSampling` and the applied
-  `PresentationParameters::MultiSampleCount`.
-- **Reproduction:** in `game.graphics_device_manager.back_buffer_size`, request Bgr565, the
-  default Depth24 and multisampling through GraphicsDeviceManager. Before inspecting the created
-  device, query its adapter for the same profile, formats and eight samples; compare all selected
-  values with the device's stored presentation parameters.
-- **Observed:** on SOFTWARE the query selects `Color`, `Depth24`, 0 samples while device creation
-  applies `Color`, `Depth24`, 4 samples. On OPENGLES3 the same query returns 0 while creation
-  applies 8 samples. The format and depth answers agree, and disabling multisampling through
-  `ApplyChanges` writes the expected zero to the device.
-- **Cause observed in source:** `GraphicsAdapter::QueryBackBufferFormat` can clamp samples only
-  through the selected renderer descriptor's `adapterQueries.clampMultiSampleCount` callback.
-  The SOFTWARE descriptor has no adapter queries, and OPENGLES3 supplies only a render-target
-  format predicate. Their live renderer instances nevertheless implement and apply supported
-  multisample counts. CNA's own current handoff independently records the same query-versus-reset
-  discrepancy for the surviving renderers.
-- **Expected:** the public format query's selected multisample count should predict the count the
-  same adapter/profile/settings combination will apply, or the API must expose a documented
-  inability to answer before device creation rather than returning a contradictory valid value.
-- **Positive controls/scope:** manager preference getters retain Bgr565/true; the adapter-selected
-  Color and Depth24 match the device; applied multisampling is greater than one; the later
-  Color/false transition reaches Color/zero. No edge-quality, screenshot or visual result is
-  claimed.
-- **Status:** open against the runtime built from external CNA `73991b01f7`; the sibling checkout
-  also has six unrelated renderer/build documentation paths, none edited here. Both renderer runs
-  fail only the query-agreement control with empty stderr. Initial diagnostics are
-  `/tmp/checkpoint-660-diagnostic*`; final marked evidence is `/tmp/checkpoint-660-*`. No CNA source
-  was modified and no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-082 -- Disposing an open SpriteBatch leaves its device batch active
 
@@ -4282,6 +4232,66 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-134 -- BoundingFrustum short corner output throws the wrong exception family
+
+- **Area/API:** `Microsoft::Xna::Framework::BoundingFrustum::GetCorners(std::vector<Vector3>&)`.
+- **Demo/reproduction:** run `math.bounding_frustum.corners`. Read the identity frustum's corner
+  vector and guarded ten-element output, then pass a seven-element output initialized to sentinels.
+- **Observed:** CNA atomically preserves the short output but throws `std::out_of_range`. The exact
+  framework-exception assertion is the sole expected failure among four controls.
+- **Expected/reference:** genuine Windows XNA 4.0 throws `System::ArgumentOutOfRangeException` for
+  the undersized destination and leaves it unchanged. The eight-corner order and guarded output
+  behavior match CNA.
+- **Cause/suggested repair:** replace the direct `std::out_of_range("corners")` with CNA's
+  framework `System::ArgumentOutOfRangeException`, retaining the existing pre-write size check.
+- **Original evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1071-bounding-frustum-members/*`. The
+  focused build and stability evidence are shared with ISSUE-135. No CNA source was modified and
+  no upstream message was sent.
+- **Status:** fixed by CNA `cd211420e` (XNA-facing argument errors throw the matching System
+  exceptions), which made exactly the suggested repair: the pre-write size check now throws
+  `System::ArgumentOutOfRangeException`, as CNA's `BoundingFrustumTests` asserts. At CNA
+  `6ee757c2a`, all four controls pass on SOFTWARE under private Xvfb. The runtime known-issue
+  marker was removed.
+
+### CNA-DEMOS-ISSUE-083 -- Adapter back-buffer query reports zero samples before a multisampled device is created
+
+- **Area/API:** `GraphicsAdapter::QueryBackBufferFormat`,
+  `GraphicsDeviceManager::PreferMultiSampling` and the applied
+  `PresentationParameters::MultiSampleCount`.
+- **Reproduction:** in `game.graphics_device_manager.back_buffer_size`, request Bgr565, the
+  default Depth24 and multisampling through GraphicsDeviceManager. Before inspecting the created
+  device, query its adapter for the same profile, formats and eight samples; compare all selected
+  values with the device's stored presentation parameters.
+- **Observed:** on SOFTWARE the query selects `Color`, `Depth24`, 0 samples while device creation
+  applies `Color`, `Depth24`, 4 samples. On OPENGLES3 the same query returns 0 while creation
+  applies 8 samples. The format and depth answers agree, and disabling multisampling through
+  `ApplyChanges` writes the expected zero to the device.
+- **Cause observed in source:** `GraphicsAdapter::QueryBackBufferFormat` can clamp samples only
+  through the selected renderer descriptor's `adapterQueries.clampMultiSampleCount` callback.
+  The SOFTWARE descriptor has no adapter queries, and OPENGLES3 supplies only a render-target
+  format predicate. Their live renderer instances nevertheless implement and apply supported
+  multisample counts. CNA's own current handoff independently records the same query-versus-reset
+  discrepancy for the surviving renderers.
+- **Expected:** the public format query's selected multisample count should predict the count the
+  same adapter/profile/settings combination will apply, or the API must expose a documented
+  inability to answer before device creation rather than returning a contradictory valid value.
+- **Positive controls/scope:** manager preference getters retain Bgr565/true; the adapter-selected
+  Color and Depth24 match the device; applied multisampling is greater than one; the later
+  Color/false transition reaches Color/zero. No edge-quality, screenshot or visual result is
+  claimed.
+- **Original status:** open against the runtime built from external CNA `73991b01f7`; the
+  sibling checkout also has six unrelated renderer/build documentation paths, none edited here.
+  Both renderer runs fail only the query-agreement control with empty stderr. Initial diagnostics
+  are `/tmp/checkpoint-660-diagnostic*`; final marked evidence is `/tmp/checkpoint-660-*`. No CNA
+  source was modified and no upstream message was sent.
+- **Status:** fixed by CNA `e7bd98e46`, where the SOFTWARE, WebGPU, SDL_GPU and EasyGL adapter
+  queries answer the multisample count each renderer applies, and `714bfd9bc`, where EasyGL's
+  query, back buffer and render targets share one clamp of at most 4x, so llvmpipe agrees too. At
+  CNA `6ee757c2a`, all nine controls pass on SOFTWARE and OPENGLES3 under private Xvfb. The
+  runtime known-issue marker was removed.
 
 ### CNA-DEMOS-ISSUE-053 -- In-flight framework update registration uses an out-of-scope array
 

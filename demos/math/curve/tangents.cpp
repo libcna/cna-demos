@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MS-PL
 // How CurveTangent (Flat, Linear, Smooth) shapes a curve between its keys.
-#include <stdexcept>
-
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Curve.hpp"
 #include "Microsoft/Xna/Framework/CurveKey.hpp"
 #include "Microsoft/Xna/Framework/CurveTangent.hpp"
+#include "System/ArgumentOutOfRangeException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 
@@ -95,7 +94,7 @@ namespace
         {
             edited.ComputeTangent(-1, CurveTangent::Flat);
         }
-        catch (const std::out_of_range&)
+        catch (const System::ArgumentOutOfRangeException&)
         {
             negativeRejected = true;
         }
@@ -103,13 +102,14 @@ namespace
         {
             edited.ComputeTangent(edited.getKeysProperty().getCountProperty(), CurveTangent::Flat);
         }
-        catch (const std::out_of_range&)
+        catch (const System::ArgumentOutOfRangeException&)
         {
             pastEndRejected = true;
         }
         ctx.Check(negativeRejected && pastEndRejected &&
                       edited.getKeysProperty().getItemProperty(0) == firstBeforeInvalid,
-                  "C++ ComputeTangent rejects both invalid index directions without changing keys");
+                  "ComputeTangent rejects both invalid index directions with XNA's ArgumentOutOfRangeException "
+                  "without changing keys");
 
         // Linear: straight segments. Flat: zero slope at every key (ease in and out).
         ctx.CheckNear(linear.Evaluate(0.25f), 2.5, 1e-4, "Linear moves at constant speed");

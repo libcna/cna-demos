@@ -2,7 +2,6 @@
 // CNAEXT rigid node animation: glTF clips that move a model's own bones (no skin).
 #include <cmath>
 #include <optional>
-#include <stdexcept>
 #include <string_view>
 #include <vector>
 
@@ -18,6 +17,7 @@
 #include "Microsoft/Xna/Framework/MathHelper.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
+#include "System/ArgumentException.hpp"
 #include "System/TimeSpan.hpp"
 
 using namespace Microsoft::Xna::Framework;
@@ -88,7 +88,7 @@ namespace
             wrongSpace.TargetSpace = ClipTargetSpaceEXT::JointPalette;
             bool refused = false;
             try { ApplyClipToBonesEXT(*stand_, wrongSpace, TimeSpan::Zero); }
-            catch (const std::invalid_argument&) { refused = true; }
+            catch (const System::ArgumentException&) { refused = true; }
             ctx.Check(refused, "a joint-palette clip is refused instead of treating joint slots as scene-node indices");
             stand_->CopyBoneTransformsTo(after);
             ctx.Check(after == before, "refusing the wrong target space preserves every current local bone transform");

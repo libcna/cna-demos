@@ -128,7 +128,7 @@ static CNA_Result load_content(
     CNA_CallbackError* out_error)
 {
     static const char PlayerType[] = "Microsoft.Xna.Framework.Media.VideoPlayer";
-    static const char TextureType[] = "Texture2D";
+    static const char TextureType[] = "Microsoft.Xna.Framework.Graphics.Texture2D";
     State* state = (State*)context;
     CNA_Handle device = CNA_INVALID_HANDLE;
     CNA_Handle first_texture = CNA_INVALID_HANDLE;

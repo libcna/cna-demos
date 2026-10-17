@@ -288,7 +288,7 @@ static void audit_execution_and_color_space(
         executes_source <= CNA_TRUE && supports_ibl <= CNA_TRUE;
     if (info->renderer_type == CNA_GRAPHICS_RENDERER_SOFTWARE) {
         execution_coherent = execution_coherent && executes_source == CNA_FALSE &&
-            supports_ibl == CNA_FALSE;
+            supports_ibl == CNA_TRUE;
     } else if (info->renderer_type == CNA_GRAPHICS_RENDERER_OPENGLES3 ||
                info->renderer_type == CNA_GRAPHICS_RENDERER_OPENGL33) {
         execution_coherent = execution_coherent && executes_source == CNA_TRUE &&

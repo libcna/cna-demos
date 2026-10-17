@@ -123,7 +123,4 @@ CNA_DEMOS_GAME(BackBufferSizeDemo, {
              "GraphicsDevice::PresentationParameters"},
     .tags = {"resolution", "window", "device", "multisampling", "format"},
     .frames = 6,
-    .restrictions = "CNA-DEMOS-ISSUE-083: QueryBackBufferFormat reports zero samples before the device applies "
-                    "a supported multisample count.",
-    .knownIssue = "CNA-DEMOS-ISSUE-083",
 })

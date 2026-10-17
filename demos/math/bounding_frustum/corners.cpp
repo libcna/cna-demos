@@ -65,6 +65,4 @@ CNA_DEMOS_CONSOLE(BoundingFrustumCorners, {
                    "atomic short-buffer refusal.",
     .apis = {"BoundingFrustum::GetCorners", "BoundingFrustum::CornerCount"},
     .tags = {"frustum", "corners", "output", "validation"},
-    .restrictions = "CNA-DEMOS-ISSUE-134 records std::out_of_range replacing XNA's ArgumentOutOfRangeException.",
-    .knownIssue = "CNA-DEMOS-ISSUE-134",
 })

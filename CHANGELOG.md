@@ -1239,6 +1239,13 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   classifications (`CNA::GraphicsRendererCategory`/`GraphicsRendererMaturity`, C ABI 0.49.0
   `CNA_GraphicsRenderer*`/`cna_graphics_renderer_*`) and expect WEBGPU's `Supported` maturity.
   They now need CNA `34e86e430` or later; the old names have no aliases.
+- Seven demos follow CNA behavior since `d23e139de`. `math.curve.tangents`,
+  `game.services.service_container` and `graphics.model.node_animation` expect the System
+  exceptions CNA now throws (`ArgumentOutOfRangeException`, `ArgumentException`/
+  `ArgumentNullException`, `ArgumentException`). `c_api.graphics.device_capabilities` expects
+  SOFTWARE image-based lighting, and `c_api.media.video_player` the qualified Texture2D type name.
+  CNA fixed ISSUE-083 and ISSUE-134, so `back_buffer_size` and `bounding_frustum.corners` are plain
+  passing demos and both issues are resolved.
 
 ### Fixed
 - XACT play_cue now waits for actual bank-idle state with a finite three-second limit instead
