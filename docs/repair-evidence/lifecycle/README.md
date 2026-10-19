@@ -1,7 +1,7 @@
-# Prepared lifecycle audit (141–144; not repaired)
+# Prepared lifecycle audit and native witnesses (141–144; not repaired)
 
-Read-only audit while the geometry checkpoint is frozen. No lifecycle code or
-demo assertions have been changed. The fresh `ComponentContractsOracle.cs` now
+Production audit while the geometry checkpoint is frozen. No lifecycle runtime
+code or demo assertions have been changed. The fresh `ComponentContractsOracle.cs` now
 passes29/29 genuine checks (`repair-lifecycle-contracts-xna{,-build}.log`): hook
 dispatch/suppression and identity, repeated explicit disposal/finalizer silence,
 collection index ordering/null Clear events, and launch parsing/duplicate Add.
@@ -52,3 +52,29 @@ launch tests; demos game.components.* and game.launch_parameters.parse; permanen
 issue141–144 histories. Next: reproduce exact contracts with a small genuine
 runtime probe, then add failing native tests before any product edit. Keep this
 batch separate from geometry and the prepared Color132 work.
+
+## Native pre-fix witnesses (2026-10-20)
+
+Three added LaunchParameters tests and two added collection tests all fail against
+unchanged runtime production; all39 old controls pass (44total). This covers the
+full eight-entry parse, one-character/empty keys, duplicate Add atomicity, invalid
+duplicate index ordering and null Clear events. Reports:
+`repair-runtime-values-before.log`, `repair-runtime-values-corrected-before-build.log`.
+The initial strict build found two pre-existing ignored nodiscard Remove results;
+the existing tests now additionally assert both return true. No assertion removed.
+
+`ComponentLifecycleCompatibilityTests.cpp` adds six genuine-backed real-Game
+tests. All six fail on unchanged code, with zero skips (1.014s), on a private
+display: hook order/suppression/sender identity, repeated disposal/finalizer silence,
+guarded reentry/throwing handlers, removal before disposal, last owning reference
+surviving the entire virtual call, and Game's owning snapshot despite removal by
+another callback. The ownership cases retain safe pre-fix cleanup; after repair
+they must also run against instrumented production translation units.
+Report: `repair-runtime-lifecycle-corrected-before.log`.
+
+The standalone Game probe initially added -Wpedantic beyond CNA's normal runtime
+test configuration, which rejects Sharp Runtime Decimal's explicitly required
+native unsigned __int128. That build failure and the following missing-executable
+launch are retained. The corrected probe uses C++23/Wall/Wextra/Werror, compatible
+with that supported extension, and builds without warnings. No dependency change
+or behavioral test suppression was made. No lifecycle fix or closure is claimed.
