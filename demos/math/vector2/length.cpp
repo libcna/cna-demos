@@ -106,6 +106,4 @@ CNA_DEMOS_CONSOLE(Vector2Length, {
              "Vector2::One", "Vector2::UnitX", "Vector2::UnitY", "Vector2::X", "Vector2::Y",
              "Vector2::Normalize", "Vector2::Distance", "Vector2::DistanceSquared"},
     .tags = {"vector", "magnitude", "precision"},
-    .restrictions = "CNA-DEMOS-ISSUE-118 records extreme finite range loss in Vector2 magnitude operations.",
-    .knownIssue = "CNA-DEMOS-ISSUE-118",
 })

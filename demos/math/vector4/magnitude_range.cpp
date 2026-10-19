@@ -106,6 +106,4 @@ CNA_DEMOS_CONSOLE(Vector4MagnitudeRange, {
     .apis = {"Vector4::Length", "Vector4::LengthSquared", "Vector4::Normalize", "Vector4::Distance",
              "Vector4::DistanceSquared", "Vector4::Zero", "Vector4::UnitX"},
     .tags = {"vector", "magnitude", "distance", "precision"},
-    .restrictions = "CNA-DEMOS-ISSUE-118 records extreme finite Vector4 magnitude range loss.",
-    .knownIssue = "CNA-DEMOS-ISSUE-118",
 })

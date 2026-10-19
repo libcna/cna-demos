@@ -57,6 +57,4 @@ CNA_DEMOS_CONSOLE(Vector3Distance, {
                    "displacements through value and output forms.",
     .apis = {"Vector3::Distance", "Vector3::DistanceSquared"},
     .tags = {"vector", "range", "precision"},
-    .restrictions = "CNA-DEMOS-ISSUE-118 records extreme finite Vector3 Distance range loss.",
-    .knownIssue = "CNA-DEMOS-ISSUE-118",
 })

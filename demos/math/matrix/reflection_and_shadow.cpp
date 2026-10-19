@@ -57,6 +57,4 @@ CNA_DEMOS_CONSOLE(MatrixReflectionAndShadow, {
                    "of scaled offset-plane coefficients and both output forms.",
     .apis = {"Matrix::CreateReflection", "Matrix::CreateShadow", "Plane::Plane"},
     .tags = {"matrix", "plane", "mirror", "shadow"},
-    .restrictions = "CNA-DEMOS-ISSUE-140 records missing plane normalization in CreateShadow.",
-    .knownIssue = "CNA-DEMOS-ISSUE-140",
 })

@@ -312,29 +312,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   focused CNA evidence are shared with ISSUE-142/-143. No CNA source was modified and no upstream
   message was sent.
 
-### CNA-DEMOS-ISSUE-140 -- Matrix CreateShadow does not normalize its plane
-
-- **Area/API:** `Microsoft::Xna::Framework::Matrix::CreateShadow`, value and output overloads.
-- **Demo/reproduction:** run `math.matrix.reflection_and_shadow`. Construct the same offset plane
-  `y=2` once as `(0,1,0,-2)` and once with every coefficient doubled, then compare the exact
-  shadow matrices from both overloads. The adjacent reflection control performs the same scaled-
-  plane comparison and passes.
-- **Observed:** CNA uses the raw plane coefficients, so the scaled plane produces a shadow matrix
-  whose every nonzero element is doubled. The grouped normalization assertion is the sole expected
-  failure among five controls; the ordinary projected point still lands on the plane after a
-  homogeneous divide because the complete matrix has been scaled uniformly.
-- **Expected/reference:** genuine Windows XNA 4.0 normalizes the plane internally and returns
-  exactly equal matrices for both representations through value and ref/out forms. It likewise
-  normalizes the reflection plane.
-- **Cause/suggested repair:** `Matrix::CreateShadow` computes directly from `plane.Normal` and
-  `plane.D`, while `CreateReflection` first calls the existing `NormalizePlaneValue` helper. Apply
-  the same normalization before computing the shadow coefficients.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1074-matrix-members/*`. The focused build,
-  all17 Matrix SOFTWARE CTests, metadata710/0 and self-tests5/5 plus4/4 pass; ten runs per changed
-  demo and renderer label reproduce only the documented Matrix failures with empty stderr. No CNA
-  source was modified and no upstream message was sent.
 
 
 
@@ -556,75 +533,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 
 
-### CNA-DEMOS-ISSUE-123 -- Vector Dot and Cross lose XNA's wide product cancellation
-
-- **Area/API:** `Microsoft::Xna::Framework::Vector3::Dot`, `Vector3::Cross` and `Vector4::Dot`,
-  including their output overloads.
-- **Demo/reproduction:** run `math.vector3.dot`, `math.vector3.cross` and `math.vector4.dot`. Dot
-  `(1e20,1e20,1)` with `(1e20,-1e20,1)`, cross an all-`1e20` vector with itself, then cross
-  `(1e20,1e20,1)` with `(1e20,1e20,2)`. The Vector4 case appends finite products `1*1 + 2*3`
-  after the opposite huge pair. Ordinary angles, projections, axes, homogeneous W and output
-  forms remain adjacent positive controls.
-- **Observed:** CNA narrows each multiplication before addition/subtraction. The Dot products
-  become positive and negative infinity and combine to NaN instead of cancelling before the final
-  `+1`. Cross likewise subtracts equal infinities: the parallel result has three NaN components,
-  and the partially huge result loses its otherwise exact zero Z component. Vector3 Dot retains
-  exactly one expected failure among six controls, Cross two among eight and Vector4 Dot one among
-  five on each renderer label.
-- **Expected/reference:** genuine Windows XNA 4.0 returns exactly `1.0f` through both Dot forms,
-  exact `Vector3::Zero` through both parallel Cross forms, and `(1e20,-1e20,0)` for the partially
-  huge Cross. Vector4 Dot similarly returns exactly `7.0f`. Its 32-bit x87 evaluation retains the
-  finite products beyond float range until each sum/difference is complete, then narrows once.
-- **Cause/suggested repair:** compute each Dot accumulation and Cross product difference in a wider
-  intermediate and narrow only its final scalar/component, following the already measured approach
-  used by CNA's Vector3 matrix transforms. Keep Cross inputs cached so output aliasing remains safe.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1055-vector3-product-range/*` and
-  `/tmp/checkpoint-1060-vector4-dot-range/*`. The clean warning-free three-job builds, all three
-  exact known-issue CTests, metadata699/0 and self-tests5/5 plus4/4 pass; ten runs per demo and
-  renderer label reproduce only the four documented assertions
-  with empty stderr. No CNA source was modified and no upstream message was sent.
 
 
 
 
 
-### CNA-DEMOS-ISSUE-118 -- Vector and Quaternion magnitude operations lose extreme finite ranges
-
-- **Area/API:** `Microsoft::Xna::Framework::Quaternion::Length`/`Normalize` and
-  `Vector2`/`Vector3`/`Vector4` `Length`/`Distance`/`Normalize`, including
-  static/member/output forms.
-- **Demo/reproduction:** run `math.quaternion.normalize`, `math.vector2.length`,
-  `math.vector3.normalize`, `math.vector3.distance` and `math.vector4.magnitude_range`. Measure
-  sole-component `1e20` and `1e-30` values, normalize the same finite inputs and measure
-  value/output Distance from zero. Ordinary magnitude/normalization, zero and separately rounded
-  squared-magnitude controls distinguish the range defect from normal behavior.
-- **Observed:** CNA returns infinity for every tested `Length(1e20)` path and zero for every
-  `Length(1e-30)` path. Quaternion normalization loses the huge value. Every Vector2, Vector3 and
-  Vector4 normalization form loses both extremes, while all three vector Distance paths likewise
-  return infinity or zero. Quaternion retains three expected failures among eleven controls;
-  Vector2 retains six among eighteen; Vector3 normalization retains four among fourteen and
-  distance two among eight; Vector4 retains six among fourteen. The separately returned
-  `LengthSquared` and `DistanceSquared` intentionally overflow to infinity or underflow to zero
-  and match XNA.
-- **Expected/reference:** genuine Windows XNA 4.0 returns the original finite magnitudes from
-  Length and vector Distance even when their squared counterparts are infinity or zero. It
-  normalizes each sole positive component to UnitX in every tested public form. XNA and CNA both
-  return NaN components when normalizing zero.
-- **Suggested repair/scope:** calculate square-root magnitudes with sufficient intermediate range
-  or use a scaled norm before returning Length/Distance or a normalization reciprocal. The repeated
-  direct float squared-sum implementations expose the same range defect across these value types.
-  Open against pinned CNA `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Genuine XNA ran
-  from the installed Windows XNA 4.0 assembly under Wine; no renderer or visual claim is involved.
-- **Evidence/status:** `/tmp/checkpoint-1036-quaternion-normalize-boundaries/*`,
-  `/tmp/checkpoint-1043-quaternion-length-range/*` and
-  `/tmp/checkpoint-1046-vector2-magnitude-range/*` and
-  `/tmp/checkpoint-1051-vector3-magnitude-range/*` and
-  `/tmp/checkpoint-1057-vector4-magnitude-range/*`; exact known-issue CTests, metadata696/0 and
-  self-tests5/5 plus4/4 pass. The earlier Quaternion exact-equality tiny assertion was a corrected
-  over-strict demo oracle, not a second CNA issue. No CNA source was modified and no upstream
-  message was sent.
 
 
 
@@ -3233,6 +3146,123 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-140 -- Matrix CreateShadow does not normalize its plane
+
+- **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.** CNA `e4ddea6e0`
+  repairs public plane normalization and Matrix shadow/reflection consumers. Original behavior assertions remain;
+  markers were removed only after focused passes under both renderer labels.
+  See [genuine and native evidence](repair-evidence/matrix-residual/README.md) and
+  [the complete shared checkpoint](repair-evidence/issue-118/REGRESSION_CHECKPOINT.md):
+  all732 enabled CTests accepted, six exact visuals and both719-ID renderer sweeps
+  with exactly36 cumulative intended changes and no unrelated differences.
+  Historical evidence follows.
+
+- **Area/API:** `Microsoft::Xna::Framework::Matrix::CreateShadow`, value and output overloads.
+- **Demo/reproduction:** run `math.matrix.reflection_and_shadow`. Construct the same offset plane
+  `y=2` once as `(0,1,0,-2)` and once with every coefficient doubled, then compare the exact
+  shadow matrices from both overloads. The adjacent reflection control performs the same scaled-
+  plane comparison and passes.
+- **Observed:** CNA uses the raw plane coefficients, so the scaled plane produces a shadow matrix
+  whose every nonzero element is doubled. The grouped normalization assertion is the sole expected
+  failure among five controls; the ordinary projected point still lands on the plane after a
+  homogeneous divide because the complete matrix has been scaled uniformly.
+- **Expected/reference:** genuine Windows XNA 4.0 normalizes the plane internally and returns
+  exactly equal matrices for both representations through value and ref/out forms. It likewise
+  normalizes the reflection plane.
+- **Cause/suggested repair:** `Matrix::CreateShadow` computes directly from `plane.Normal` and
+  `plane.D`, while `CreateReflection` first calls the existing `NormalizePlaneValue` helper. Apply
+  the same normalization before computing the shadow coefficients.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1074-matrix-members/*`. The focused build,
+  all17 Matrix SOFTWARE CTests, metadata710/0 and self-tests5/5 plus4/4 pass; ten runs per changed
+  demo and renderer label reproduce only the documented Matrix failures with empty stderr. No CNA
+  source was modified and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-123 -- Vector Dot and Cross lose XNA's wide product cancellation
+
+- **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.** CNA `0e7be08e0` and avatar companion `32e470ed4`
+  repairs wide vector products and Cross zero signs. Original behavior assertions remain;
+  markers were removed only after focused passes under both renderer labels.
+  See [genuine and native evidence](repair-evidence/issue-123/README.md) and
+  [the complete shared checkpoint](repair-evidence/issue-118/REGRESSION_CHECKPOINT.md):
+  all732 enabled CTests accepted, six exact visuals and both719-ID renderer sweeps
+  with exactly36 cumulative intended changes and no unrelated differences.
+  Historical evidence follows.
+
+- **Area/API:** `Microsoft::Xna::Framework::Vector3::Dot`, `Vector3::Cross` and `Vector4::Dot`,
+  including their output overloads.
+- **Demo/reproduction:** run `math.vector3.dot`, `math.vector3.cross` and `math.vector4.dot`. Dot
+  `(1e20,1e20,1)` with `(1e20,-1e20,1)`, cross an all-`1e20` vector with itself, then cross
+  `(1e20,1e20,1)` with `(1e20,1e20,2)`. The Vector4 case appends finite products `1*1 + 2*3`
+  after the opposite huge pair. Ordinary angles, projections, axes, homogeneous W and output
+  forms remain adjacent positive controls.
+- **Observed:** CNA narrows each multiplication before addition/subtraction. The Dot products
+  become positive and negative infinity and combine to NaN instead of cancelling before the final
+  `+1`. Cross likewise subtracts equal infinities: the parallel result has three NaN components,
+  and the partially huge result loses its otherwise exact zero Z component. Vector3 Dot retains
+  exactly one expected failure among six controls, Cross two among eight and Vector4 Dot one among
+  five on each renderer label.
+- **Expected/reference:** genuine Windows XNA 4.0 returns exactly `1.0f` through both Dot forms,
+  exact `Vector3::Zero` through both parallel Cross forms, and `(1e20,-1e20,0)` for the partially
+  huge Cross. Vector4 Dot similarly returns exactly `7.0f`. Its 32-bit x87 evaluation retains the
+  finite products beyond float range until each sum/difference is complete, then narrows once.
+- **Cause/suggested repair:** compute each Dot accumulation and Cross product difference in a wider
+  intermediate and narrow only its final scalar/component, following the already measured approach
+  used by CNA's Vector3 matrix transforms. Keep Cross inputs cached so output aliasing remains safe.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1055-vector3-product-range/*` and
+  `/tmp/checkpoint-1060-vector4-dot-range/*`. The clean warning-free three-job builds, all three
+  exact known-issue CTests, metadata699/0 and self-tests5/5 plus4/4 pass; ten runs per demo and
+  renderer label reproduce only the four documented assertions
+  with empty stderr. No CNA source was modified and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-118 -- Vector and Quaternion magnitude operations lose extreme finite ranges
+
+- **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.** CNA `bd46b6ffe` and avatar companion `785bf2d2a`
+  repairs magnitude range and normalization rounding. Original behavior assertions remain;
+  markers were removed only after focused passes under both renderer labels.
+  See [genuine and native evidence](repair-evidence/issue-118/README.md) and
+  [the complete shared checkpoint](repair-evidence/issue-118/REGRESSION_CHECKPOINT.md):
+  all732 enabled CTests accepted, six exact visuals and both719-ID renderer sweeps
+  with exactly36 cumulative intended changes and no unrelated differences.
+  Historical evidence follows.
+
+- **Area/API:** `Microsoft::Xna::Framework::Quaternion::Length`/`Normalize` and
+  `Vector2`/`Vector3`/`Vector4` `Length`/`Distance`/`Normalize`, including
+  static/member/output forms.
+- **Demo/reproduction:** run `math.quaternion.normalize`, `math.vector2.length`,
+  `math.vector3.normalize`, `math.vector3.distance` and `math.vector4.magnitude_range`. Measure
+  sole-component `1e20` and `1e-30` values, normalize the same finite inputs and measure
+  value/output Distance from zero. Ordinary magnitude/normalization, zero and separately rounded
+  squared-magnitude controls distinguish the range defect from normal behavior.
+- **Observed:** CNA returns infinity for every tested `Length(1e20)` path and zero for every
+  `Length(1e-30)` path. Quaternion normalization loses the huge value. Every Vector2, Vector3 and
+  Vector4 normalization form loses both extremes, while all three vector Distance paths likewise
+  return infinity or zero. Quaternion retains three expected failures among eleven controls;
+  Vector2 retains six among eighteen; Vector3 normalization retains four among fourteen and
+  distance two among eight; Vector4 retains six among fourteen. The separately returned
+  `LengthSquared` and `DistanceSquared` intentionally overflow to infinity or underflow to zero
+  and match XNA.
+- **Expected/reference:** genuine Windows XNA 4.0 returns the original finite magnitudes from
+  Length and vector Distance even when their squared counterparts are infinity or zero. It
+  normalizes each sole positive component to UnitX in every tested public form. XNA and CNA both
+  return NaN components when normalizing zero.
+- **Suggested repair/scope:** calculate square-root magnitudes with sufficient intermediate range
+  or use a scaled norm before returning Length/Distance or a normalization reciprocal. The repeated
+  direct float squared-sum implementations expose the same range defect across these value types.
+  Open against pinned CNA `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Genuine XNA ran
+  from the installed Windows XNA 4.0 assembly under Wine; no renderer or visual claim is involved.
+- **Evidence/status:** `/tmp/checkpoint-1036-quaternion-normalize-boundaries/*`,
+  `/tmp/checkpoint-1043-quaternion-length-range/*` and
+  `/tmp/checkpoint-1046-vector2-magnitude-range/*` and
+  `/tmp/checkpoint-1051-vector3-magnitude-range/*` and
+  `/tmp/checkpoint-1057-vector4-magnitude-range/*`; exact known-issue CTests, metadata696/0 and
+  self-tests5/5 plus4/4 pass. The earlier Quaternion exact-equality tiny assertion was a corrected
+  over-strict demo oracle, not a second CNA issue. No CNA source was modified and no upstream
+  message was sent.
 
 ### CNA-DEMOS-ISSUE-139 -- Aliased Matrix Transpose corrupts off-diagonal elements
 

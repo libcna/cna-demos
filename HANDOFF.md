@@ -12,7 +12,50 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
-Latest checkpoint: Quaternion 119 is Resolved by CNA `df9234202`. Native math has
+Latest closure (2026-10-20):118/123/140 FIXED_VALIDATED, runtime785bf2d2a.
+All155 IDs retained:49 final/106 pending. Native math944 passes/two unchanged
+skips; consumer1086/four unchanged skips; strict actual C ABI passes. All732
+enabled CTests accepted (1114.49s),48 skips/three disabled unchanged. Full719
+SOFTWARE593/75/48/3,OPENGLES3 632/77/7/3, exactly36 cumulative intended changes
+and no unrelated differences; six visuals exact. Previous CLI metadata failure
+is preserved and corrected by an exact expected-row update and full rerun.
+See docs/repair-evidence/issue-118/REGRESSION_CHECKPOINT.md. Prior checkpoint
+jobs are finished; external freeze released. Geometry native math now950pass/two
+unchanged skips; four standard vertex text companion repairs are building at two
+jobs. Genuine six text-consumer checks pass; original four vertex probes fail.
+No geometry marker removal yet. Commit preceding closure separately; next finish
+native geometry/vertex validation, exact genuine-backed demo text corrections,
+actual C ABI/focused runs, then complete regression. Follow CNA's repair handoff.
+The following older checkpoint paragraphs are superseded by this update.
+
+Current CNA repair campaign: follow `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and its
+machine-readable matrix for active builds, freezes and exact next tasks. Inventory
+has 155 permanent IDs: 46 final/109 pending. Latest closed batch is integer values
+124/125 (`5a44d2c50`) and transpose139 (`0b03b7b21`), demo closure `a30f4e1`.
+All732 enabled CTests accepted, six exact visuals, full719 SOFTWARE584/84/48/3 and
+OPENGLES3 623/86/7/3; exactly27 cumulative intended changes, no other differences.
+The preceding values120/121/122/136 closure `62a496e` retains and explains its
+pre-existing030 network-oracle delta in `docs/repair-evidence/bounds/REGRESSION_CHECKPOINT.md`.
+
+Active118/123/140 checkpoint freezes external binaries at CNA `785bf2d2a`, including
+catalog arithmetic companions that preserve all original avatar golden digests.
+Native math944 passes/two unchanged skips; consumer1086/four unchanged skips;
+955 selected registered tests accepted. Focused C++ and strict actual C ABI tests
+pass; nine markers removed after focused passes. Both95 math sweeps81pass/14expected
+fail, exactly36 cumulative changes. Six visual references exact; full SOFTWARE
+593/75/48/3 with no unrelated differences. OPENGLES3 full and corrected fullCTest
+are RUNNING. First fullCTest retains one failure: CLI list_ids pinned the removed118
+marker; its exact expected row is corrected without rebuilding frozen binaries.
+Do not close these three IDs or rebuild demos until the remaining runs are audited.
+
+Next native geometry batch024/126/128/130/135 is uncommitted in CNA. Genuine1338
+checks distinguish correct negative-zero plane data from incorrect text; pre-fix
+native952 tests944pass/two skips/six failures. C marshalling must preserve mutable
+negative-radius fields separately from constructor validation. Native post-build
+running; no geometry markers removed. New geometry evidence is separate from the
+pending118/123 evidence. All earlier paragraphs below are historical checkpoints.
+
+Previous checkpoint: Quaternion 119 is Resolved by CNA `df9234202`. Native math has
 893 passes/two unchanged skips; aggregate and registered Quaternion tests 109/109.
 Both full math sweeps have 54 passes/41 unrelated expected failures, with only nine
 cumulative expected deltas. All 732 enabled CTests pass (408.88s); 48 skips/three

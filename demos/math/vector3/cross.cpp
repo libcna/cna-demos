@@ -58,6 +58,4 @@ CNA_DEMOS_CONSOLE(Vector3Cross, {
                    "wide-intermediate cancellation.",
     .apis = {"Vector3::Cross", "Vector3::Normalize", "Vector3::Dot"},
     .tags = {"vector", "normal", "perpendicular", "precision"},
-    .restrictions = "CNA-DEMOS-ISSUE-123 records loss of XNA's wide Cross intermediates.",
-    .knownIssue = "CNA-DEMOS-ISSUE-123",
 })

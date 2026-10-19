@@ -87,6 +87,4 @@ CNA_DEMOS_CONSOLE(Vector3Normalize, {
                    "extreme finite magnitudes.",
     .apis = {"Vector3::Normalize", "Vector3::Length", "Vector3::LengthSquared"},
     .tags = {"vector", "direction", "unit-vector", "precision"},
-    .restrictions = "CNA-DEMOS-ISSUE-118 records extreme finite Vector3 Length and normalization range loss.",
-    .knownIssue = "CNA-DEMOS-ISSUE-118",
 })

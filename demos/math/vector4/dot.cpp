@@ -49,6 +49,4 @@ CNA_DEMOS_CONSOLE(Vector4Dot, {
                    "cancellation before the final float result.",
     .apis = {"Vector4::Dot", "Vector4::UnitX", "Vector4::UnitW", "Vector4::Zero"},
     .tags = {"vector", "dot-product", "homogeneous", "precision"},
-    .restrictions = "CNA-DEMOS-ISSUE-123 records premature Vector4 product overflow.",
-    .knownIssue = "CNA-DEMOS-ISSUE-123",
 })

@@ -50,6 +50,4 @@ CNA_DEMOS_CONSOLE(Vector3Dot, {
                    "cancellation through value and output forms.",
     .apis = {"Vector3::Dot", "Vector3::Normalize", "MathHelper::ToDegrees"},
     .tags = {"vector", "angle", "projection", "precision"},
-    .restrictions = "CNA-DEMOS-ISSUE-123 records loss of XNA's wide Dot intermediates.",
-    .knownIssue = "CNA-DEMOS-ISSUE-123",
 })

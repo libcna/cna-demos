@@ -65,7 +65,7 @@ _cna_demos_cli_test(list_prefix   ARGS --list math     REGEX "math\\.vector2\\.l
 _cna_demos_cli_test(categories    ARGS --categories    REGEX "math \\([0-9]+\\)")
 _cna_demos_cli_test(search        ARGS --search vector2 REGEX "math\\.vector2\\.length")
 _cna_demos_cli_test(info          ARGS --info math.vector2.length REGEX "Vector2::Length")
-_cna_demos_cli_test(list_ids      ARGS --list-ids      REGEX "math\\.vector2\\.length console automated - CNA-DEMOS-ISSUE-118")
+_cna_demos_cli_test(list_ids      ARGS --list-ids      REGEX "math\\.vector2\\.length console automated - -")
 _cna_demos_cli_test(renderers     ARGS --renderers     REGEX "${CNA_GRAPHICS_RENDERER}")
 _cna_demos_cli_test(catalog_json  ARGS --catalog-json  REGEX "\"schema\": \"cna-demos-catalog/1\"")
 _cna_demos_cli_test(validate      ARGS --validate      REGEX " 0 problem\\(s\\)")

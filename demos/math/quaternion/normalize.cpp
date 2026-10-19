@@ -84,6 +84,4 @@ CNA_DEMOS_CONSOLE(QuaternionNormalize, {
     .apis = {"Quaternion::Normalize", "Quaternion::Length", "Quaternion::LengthSquared",
              "Quaternion::op_Multiply"},
     .tags = {"quaternion", "precision", "drift"},
-    .restrictions = "CNA-DEMOS-ISSUE-118 records range loss in Length and normalization.",
-    .knownIssue = "CNA-DEMOS-ISSUE-118",
 })
