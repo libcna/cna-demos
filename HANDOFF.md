@@ -18,10 +18,20 @@ all-155-issue matrix are `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and
 is the conformance/regression oracle. Do not start a new demo-expansion campaign or weaken tests.
 The fresh baseline against CNA runtime source `688f3f23e` passes all 732 enabled demo CTests,
 both complete 719-ID SOFTWARE/OPENGLES3 sweeps with their documented known failures, and six
-exact visual references. Native CNA validation continues; detailed results and setup boundaries
+exact visual references. Native CNA baseline validation is captured; results and setup boundaries
 are in the CNA handoff. Seven historical issues are verified already fixed before this campaign.
 ISSUE-116 is a proven console-encoding error in the old XNA expectation, with permanent evidence
-under `docs/repair-evidence/issue-116`; its test correction is pending. ISSUE-001 still reproduces
+under `docs/repair-evidence/issue-116`. Its incorrect singular-affine assertion now checks
+signed-infinity classification, preserving all seven checks, and its knownIssue marker is
+removed. The build is warning-free; the corrected console reproduction passes seven checks
+under both renderer labels with empty stderr (no display/GPU used). All 19 selected demo
+Matrix/catalog/validation CTests pass, as do 91 native Matrix tests including the new value/out/
+alias regression in CNA `62e3f9c56`. ISSUE-116 is Resolved as DEMO_EXPECTATION_BUG, not a CNA
+runtime repair. Native MSAA baseline oracle correction `461064b90` separately passes unchanged
+coverage thresholds; all six genuine-XNA reference tests passed. COVERAGE run columns retain
+the complete pre-repair baseline, not a claimed post-repair full sweep. Next: documentation
+corrections, then coherent Curve root-cause repairs; see the CNA campaign handoff.
+ISSUE-001 still reproduces
 on CMake 3.28 and 3.29, but not 3.30. CI dependency pins have not been changed by this work.
 
 The CNA-native campaign is complete for pinned CNA `d23e139de` at Complete1128. All meaningful

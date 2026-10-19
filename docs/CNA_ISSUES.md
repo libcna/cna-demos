@@ -960,32 +960,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   Exact known-issue CTest, metadata693/0 and self-tests5/5 plus4/4 pass. No CNA source was modified
   and no upstream message was sent.
 
-### CNA-DEMOS-ISSUE-116 -- Singular affine Matrix inversion loses XNA's finite components
-
-- **Repair-campaign correction (2026-10-19): DEMO_EXPECTATION_BUG.** The historical
-  reference interpretation below is disproved by a fresh genuine XNA run with explicit
-  IEEE-754 bits and infinity/equality checks. XNA returns the same signed infinities as CNA;
-  its U+221E infinity symbol was best-fit encoded as ASCII `8` by the CP1252 console.
-  [Preserved source and evidence](repair-evidence/issue-116/README.md) explain the ambiguity.
-  The demo correction and native regression are pending; do not change CNA to return finite 8/-8.
-- **Area/API:** `Microsoft::Xna::Framework::Matrix::Invert`, value and by-reference overloads.
-- **Demo/reproduction:** run `math.matrix.invert`. Invert
-  `Scale(1,0,1) * Translation(7,8,9)` and inspect all sixteen public components. The demo also
-  retains an ordinary round trip and adds zero-matrix and `1e-20` nonzero-scale controls.
-- **Observed:** CNA returns `M22=+infinity` and `M42=-infinity`; the other fourteen values are NaN.
-  This is the sole expected failure among six checks on ten SOFTWARE and ten OPENGLES3-labelled
-  runs. The zero matrix produces sixteen NaNs and the tiny nonzero scale correctly yields `1e20`.
-- **Expected/reference:** genuine Windows XNA 4.0 returns finite `M22=8` and `M42=-8` for the same
-  singular affine input, with the other fourteen values NaN. Both overloads have the same
-  component classification (ordinary equality is false because NaN is unequal to itself).
-- **Investigation/scope:** CNA's XNA-rounding implementation keeps the reciprocal determinant as
-  `double`; at this exact-zero singular boundary its later products yield infinities instead of
-  XNA's two finite values. Open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. The reference ran through the installed
-  Windows XNA 4.0 assembly under Wine. No rendering or visual claim is involved.
-- **Evidence/status:** `/tmp/checkpoint-1028-matrix-invert-xna/*`; exact known-issue CTest,
-  metadata693/0 and tool self-tests5/5 plus4/4 pass. No CNA source was modified and no upstream
-  message was sent.
 
 ### CNA-DEMOS-ISSUE-115 -- Matrix decomposition loses XNA reflection and zero-scale results
 
@@ -4181,6 +4155,39 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-116 -- Singular affine Matrix inversion loses XNA's finite components
+
+- **Repair-campaign correction (2026-10-19): DEMO_EXPECTATION_BUG.** The historical
+  reference interpretation below is disproved by a fresh genuine XNA run with explicit
+  IEEE-754 bits and infinity/equality checks. XNA returns the same signed infinities as CNA;
+  its U+221E infinity symbol was best-fit encoded as ASCII `8` by the CP1252 console.
+  [Preserved source and evidence](repair-evidence/issue-116/README.md) explain the ambiguity.
+  Resolved by correcting the demo oracle; CNA runtime behavior is unchanged. Native regression
+  commit `62e3f9c56` protects value/out/alias classifications. All 91 selected native Matrix
+  tests pass; the corrected demo passes all seven checks with empty stderr under both renderer
+  labels, and all 19 selected Matrix/catalog/validation CTests pass. Its invalid knownIssue
+  marker is removed. Logs: `build/linux-full/reports/repair-116-closed-*`,
+  `repair-116-ctest.log`, `repair-oracles-native-ctest.log`.
+  The historical observations below are retained, not current expectations.
+- **Area/API:** `Microsoft::Xna::Framework::Matrix::Invert`, value and by-reference overloads.
+- **Demo/reproduction:** run `math.matrix.invert`. Invert
+  `Scale(1,0,1) * Translation(7,8,9)` and inspect all sixteen public components. The demo also
+  retains an ordinary round trip and adds zero-matrix and `1e-20` nonzero-scale controls.
+- **Observed:** CNA returns `M22=+infinity` and `M42=-infinity`; the other fourteen values are NaN.
+  This is the sole expected failure among six checks on ten SOFTWARE and ten OPENGLES3-labelled
+  runs. The zero matrix produces sixteen NaNs and the tiny nonzero scale correctly yields `1e20`.
+- **Expected/reference:** genuine Windows XNA 4.0 returns finite `M22=8` and `M42=-8` for the same
+  singular affine input, with the other fourteen values NaN. Both overloads have the same
+  component classification (ordinary equality is false because NaN is unequal to itself).
+- **Investigation/scope:** CNA's XNA-rounding implementation keeps the reciprocal determinant as
+  `double`; at this exact-zero singular boundary its later products yield infinities instead of
+  XNA's two finite values. Open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. The reference ran through the installed
+  Windows XNA 4.0 assembly under Wine. No rendering or visual claim is involved.
+- **Evidence/status:** `/tmp/checkpoint-1028-matrix-invert-xna/*`; exact known-issue CTest,
+  metadata693/0 and tool self-tests5/5 plus4/4 pass. No CNA source was modified and no upstream
+  message was sent.
 
 ### CNA-DEMOS-ISSUE-021 -- EasyGL sampled a rendered RenderTargetCube face upside down
 

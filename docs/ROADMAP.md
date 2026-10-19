@@ -1,5 +1,10 @@
 # Roadmap
 
+The completed coverage roadmap below remains historical. The active CNA repair campaign is
+tracked in `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and its all-155-issue matrix. Baseline capture is
+complete; ISSUE-116 is closed as an evidence-backed demo-oracle correction. Documentation and
+subsystem root-cause repairs continue without changing this project's completed coverage scope.
+
 Coverage work is organised in **phases** of concrete, CNA-named areas. Take one area at a time,
 finish it (demos built, run, validated, coverage regenerated, HANDOFF updated), then move on.
 The machine-derived backlog of XNA types without a demo is in [COVERAGE.md](COVERAGE.md)

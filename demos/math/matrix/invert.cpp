@@ -52,7 +52,10 @@ namespace
                             Matrix::CreateTranslation(7.0f, 8.0f, 9.0f);
         const Matrix flatInverse = Matrix::Invert(flat);
         ctx.Print("singular affine inverse: {}", flatInverse.ToString());
-        ctx.Check(flatInverse.M22 == 8.0f && flatInverse.M42 == -8.0f &&
+        // The old XNA transcript's "8" was the CP1252 best-fit encoding of U+221E,
+        // not a finite quotient. See docs/repair-evidence/issue-116 for bit-level evidence.
+        ctx.Check(std::isinf(flatInverse.M22) && flatInverse.M22 > 0.0f &&
+                      std::isinf(flatInverse.M42) && flatInverse.M42 < 0.0f &&
                       std::isnan(flatInverse.M11) && std::isnan(flatInverse.M12) &&
                       std::isnan(flatInverse.M13) && std::isnan(flatInverse.M14) &&
                       std::isnan(flatInverse.M21) && std::isnan(flatInverse.M23) &&
@@ -60,7 +63,7 @@ namespace
                       std::isnan(flatInverse.M32) && std::isnan(flatInverse.M33) &&
                       std::isnan(flatInverse.M34) && std::isnan(flatInverse.M41) &&
                       std::isnan(flatInverse.M43) && std::isnan(flatInverse.M44),
-                  "XNA singular affine inversion retains its two finite cofactor quotients");
+                  "XNA singular affine inversion produces two signed infinities and fourteen NaNs");
 
         const Matrix tiny = Matrix::CreateScale(1.0f, 1e-20f, 1.0f);
         const Matrix tinyInverse = Matrix::Invert(tiny);
@@ -76,6 +79,4 @@ CNA_DEMOS_CONSOLE(MatrixInvert, {
                    "public IEEE-754 NaN boundary behavior.",
     .apis = {"Matrix::Invert", "Matrix::Identity"},
     .tags = {"matrix", "inverse"},
-    .restrictions = "CNA-DEMOS-ISSUE-116 records CNA's differing finite components for a singular affine inverse.",
-    .knownIssue = "CNA-DEMOS-ISSUE-116",
 })
