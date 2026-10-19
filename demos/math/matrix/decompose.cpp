@@ -97,6 +97,4 @@ CNA_DEMOS_CONSOLE(MatrixDecompose, {
     .apis = {"Matrix::Decompose", "Matrix::Determinant", "Matrix::CreateFromQuaternion",
              "Quaternion::CreateFromYawPitchRoll"},
     .tags = {"matrix", "decompose", "animation"},
-    .restrictions = "CNA-DEMOS-ISSUE-115 records mirrored and zero-scale results that differ from Windows XNA 4.0.",
-    .knownIssue = "CNA-DEMOS-ISSUE-115",
 })

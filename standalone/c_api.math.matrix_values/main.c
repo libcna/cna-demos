@@ -175,9 +175,11 @@ int main(int argc, char** argv)
         cna_matrix_decompose(
             zero, &decomposed_scale, &rotation, &decomposed_translation, &decomposed) ==
                 CNA_RESULT_SUCCESS &&
-            decomposed == CNA_FALSE && quaternion_is(rotation, 0.0f, 0.0f, 0.0f, 1.0f) &&
+            decomposed == CNA_TRUE &&
+            vector_is(decomposed_scale, 0.0f, 0.0f, 0.0f) &&
+            isnan(rotation.x) && isnan(rotation.y) && isnan(rotation.z) && isnan(rotation.w) &&
             vector_is(decomposed_translation, 0.0f, 0.0f, 0.0f),
-        "singular decomposition reports false while still publishing canonical outputs");
+        "XNA zero-matrix decomposition succeeds with zero scale/translation and NaN rotation");
 
     memset(text, 0xA5, sizeof(text));
     cna_demo_check(

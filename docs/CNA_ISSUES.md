@@ -810,28 +810,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   message was sent.
 
 
-### CNA-DEMOS-ISSUE-115 -- Matrix decomposition loses XNA reflection and zero-scale results
-
-- **Area/API:** `Microsoft::Xna::Framework::Matrix::Decompose`.
-- **Demo/reproduction:** run `math.matrix.decompose`. It retains the ordinary affine control and
-  axis-aligned quarter turns, then decomposes `Scale(-2,3,4) * RotationY(0.7) * Translation(7,8,9)`
-  and `Scale(1,0,1) * Translation(7,8,9)`. The reflected result is also recomposed.
-- **Observed in CNA:** the reflection reports positive scale `(2,3,4)` and a rotation that cannot
-  rebuild the source matrix (maximum component difference `3.5296845`). The flattened transform
-  reports failure and identity rotation. These are exactly the demo's three expected failures on
-  ten SOFTWARE and ten OPENGLES3-labelled runs; the other six controls pass and stderr is empty.
-- **Expected/reference:** a genuine Windows XNA 4.0 probe reports success with scale `(2,3,-4)`
-  for the reflection and recomposes it exactly. The flattened transform also reports success,
-  preserves scale `(1,0,1)` and translation `(7,8,9)`, and returns a quaternion with four NaN
-  components. The ordinary and all three quarter-turn controls agree.
-- **Cause/scope:** CNA follows FNA's row-product sign heuristic, whose affine zero entries prevent
-  it from retaining this reflection, and explicitly returns false when any extracted scale is
-  near zero. This is an inherited compatibility difference, not a demo oracle error. Open against
-  clean pinned CNA `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. The XNA reference ran
-  under Wine from the installed Windows XNA 4.0 assembly; no renderer or visual claim is involved.
-- **Evidence/status:** `/tmp/checkpoint-1027-matrix-decompose-xna/*` contains the C# probe, assembly
-  hash, XNA output, repeated CNA outputs and hashes. The exact known-issue CTest, metadata693/0 and
-  both tool self-test suites pass. No CNA source was modified and no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-114 -- Releasing a nonterminal SoundEffect loop drops its authored tail
 
@@ -3438,6 +3416,44 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-115 -- Matrix decomposition loses XNA reflection and zero-scale results
+
+- **Repair-campaign resolution (2026-10-19): FIXED_VALIDATED.** CNA `705ea2324`
+  matches genuine XNA ranked-basis decomposition, reflection sign selection and
+  degenerate rotation behavior. The [permanent oracle](repair-evidence/issue-115/README.md)
+  passes 92 checks. Native math passes 898 tests with two unchanged fixture skips;
+  Matrix CTests pass 106/106; Matrix/glTF/avatar consumers pass 1,022 tests with four
+  baseline-identical skips. The original demo retains all nine checks and passes
+  both labels; C17/Werror MatrixSmoke and extended C factory controls pass. A separate
+  incorrect C demo zero-matrix oracle is corrected using genuine XNA evidence,
+  retaining 18 checks and adding the scale assertion. Its initial failed checkpoint
+  remains preserved. Corrected full CTest: 732 accepted outcomes, zero failures,
+  48 skips/three disabled unchanged (1,174.76s). Complete SOFTWARE/OPENGLES3 sweeps
+  each cover 719 IDs with exactly ten cumulative expected changes and no unrelated
+  outcome/assertion deltas. Six visual references are exact. Historical evidence
+  below predates this repair; logs are `build/linux-full/reports/repair-115-*`.
+
+- **Area/API:** `Microsoft::Xna::Framework::Matrix::Decompose`.
+- **Demo/reproduction:** run `math.matrix.decompose`. It retains the ordinary affine control and
+  axis-aligned quarter turns, then decomposes `Scale(-2,3,4) * RotationY(0.7) * Translation(7,8,9)`
+  and `Scale(1,0,1) * Translation(7,8,9)`. The reflected result is also recomposed.
+- **Observed in CNA:** the reflection reports positive scale `(2,3,4)` and a rotation that cannot
+  rebuild the source matrix (maximum component difference `3.5296845`). The flattened transform
+  reports failure and identity rotation. These are exactly the demo's three expected failures on
+  ten SOFTWARE and ten OPENGLES3-labelled runs; the other six controls pass and stderr is empty.
+- **Expected/reference:** a genuine Windows XNA 4.0 probe reports success with scale `(2,3,-4)`
+  for the reflection and recomposes it exactly. The flattened transform also reports success,
+  preserves scale `(1,0,1)` and translation `(7,8,9)`, and returns a quaternion with four NaN
+  components. The ordinary and all three quarter-turn controls agree.
+- **Cause/scope:** CNA follows FNA's row-product sign heuristic, whose affine zero entries prevent
+  it from retaining this reflection, and explicitly returns false when any extracted scale is
+  near zero. This is an inherited compatibility difference, not a demo oracle error. Open against
+  clean pinned CNA `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. The XNA reference ran
+  under Wine from the installed Windows XNA 4.0 assembly; no renderer or visual claim is involved.
+- **Evidence/status:** `/tmp/checkpoint-1027-matrix-decompose-xna/*` contains the C# probe, assembly
+  hash, XNA output, repeated CNA outputs and hashes. The exact known-issue CTest, metadata693/0 and
+  both tool self-test suites pass. No CNA source was modified and no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-119 -- Quaternion inverse and division lose extreme finite magnitudes
 

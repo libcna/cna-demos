@@ -195,6 +195,38 @@ int main(int argc, char** argv)
             near(result.m44, 1.0f),
         "scalar, component and vector scale factories populate the diagonal");
 
+    CNA_Vector3 scale = {0}, translation = {0};
+    CNA_Quaternion rotation = {0};
+    CNA_Bool decomposed = CNA_FALSE;
+    CNA_Matrix reflected = identity, rebuilt = identity;
+    cna_demo_check(
+        &demo,
+        cna_matrix_create_scale_xyz(-2, 3, 4, &reflected) == CNA_RESULT_SUCCESS &&
+            cna_matrix_decompose(reflected, &scale, &rotation, &translation, &decomposed) ==
+                CNA_RESULT_SUCCESS && decomposed == CNA_TRUE &&
+            scale.x == 2 && scale.y == 3 && scale.z == -4 &&
+            cna_matrix_create_scale_vector3(scale, &rebuilt) == CNA_RESULT_SUCCESS &&
+            cna_matrix_create_from_quaternion(rotation, &result) == CNA_RESULT_SUCCESS &&
+            cna_matrix_multiply(rebuilt, result, &rebuilt) == CNA_RESULT_SUCCESS &&
+            matrix_is(rebuilt, reflected),
+        "decomposing a reflected scale retains its sign and recomposes through the C ABI");
+    cna_demo_check(
+        &demo,
+        cna_matrix_create_scale_xyz(1, 0, 1, &result) == CNA_RESULT_SUCCESS &&
+            cna_matrix_decompose(result, &scale, &rotation, &translation, &decomposed) ==
+                CNA_RESULT_SUCCESS && decomposed == CNA_TRUE &&
+            scale.x == 1 && scale.y == 0 && scale.z == 1 &&
+            isnan(rotation.x) && isnan(rotation.y) && isnan(rotation.z) && isnan(rotation.w),
+        "a zero scale axis succeeds with XNA's undefined rotation");
+    cna_demo_check(
+        &demo,
+        cna_matrix_create_scale_xyz(1e-5f, 1, 1, &result) == CNA_RESULT_SUCCESS &&
+            cna_matrix_decompose(result, &scale, &rotation, &translation, &decomposed) ==
+                CNA_RESULT_SUCCESS && decomposed == CNA_FALSE &&
+            scale.x == 1e-5f && scale.y == 1 && scale.z == 1 &&
+            rotation.x == 0 && rotation.y == 0 && rotation.z == 0 && rotation.w == 1,
+        "tiny nonzero scale refusal is a false decomposition result, not a C ABI error");
+
     cna_demo_check(
         &demo,
         cna_matrix_create_shadow(
