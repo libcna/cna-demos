@@ -178,3 +178,35 @@ implementations retain the historical defects. Genuine XNA takes precedence wher
 they differ. That work is not folded silently into this value batch.
 131 remains explicitly reserved for the human author in CNA `handoff.md` section6;
 no ray/frustum implementation or removal of its exception is authorized here.
+
+## Additional measured arithmetic boundary (129, not a parity assumption)
+
+`SpherePointRadiusParityHypothesis.cs` preserves an initially disproved assumption:
+genuine point Contains value/output forms differ for1012/2048 axis-surface cases.
+`repair-sphere-point-radius-precision-xna.log` retains that failed run. The diagnostic
+`SpherePointRadiusPrecisionOracle.cs` forces a Single serialization boundary in
+its narrow comparison model: the value form reports no contained samples, whereas
+the output form reports1012. The output method stores DistanceSquared as Single
+before comparing against a wide radius product; the value method retains its
+inlined wide squared-distance result. No approximation/tolerance change explains
+this distinction, and forwarding one overload to the other is not faithful.
+
+`SphereSquaredArithmeticOracle.cs` validates that model and the underlying Vector3
+squared operations over varied3D coordinates, scales from1e-20 to1e20 and adjacent
+radius bit patterns:19,200/19,200 genuine checks pass. Vector3's public LengthSquared
+and DistanceSquared accumulate wide then return/store Single; they still overflow
+or underflow at that final Single boundary, preserving the prior118 controls.
+Sphere/sphere intersection uses the explicitly stored squared distance.
+
+Two new native regressions fail against the previous containment build:965total,
+961pass/two skips/two failures. A small private Vector3 arithmetic helper now owns
+the shared wide calculation; public Vector3 methods narrow their outputs, sphere
+point overloads preserve their distinct comparison boundaries. Native full math
+then passes963 tests/two unchanged skips. Reports:repair-sphere-squared-native-{before,after}*.
+The previously passing14,328-pair separation fixture remains passing. Updated
+four-production-TU sanitizers pass13/13 with leak detection (696ms), and registered
+geometry/Vector3 tests pass247/247 (63.64s). The frozen native consumer subset
+passes1408 tests/four unchanged skips (1412total,272.475s), including original
+avatar golden controls. Strict pre-fix C ABI fails four exact stages, including
+the added squared-vector stage; actual post-fix C ABI/external validation remains
+pending. No change to native ray/frustum implementation or exception.

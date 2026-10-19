@@ -12,6 +12,25 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+Latest closure (2026-10-20):024/128/130/135 FIXED_VALIDATED;126 verified duplicate
+of024. All155 IDs retained,54 final/101 pending. Frozen runtimee1377c437/a8a60bf03:
+both719-ID sweeps exact42 cumulative changes,SW599/69/48/3,GLES638/71/7/3;
+six pixel-exact visuals; all732 enabled CTests accepted in the full isolated run
+(1248.07s),48 skips/three disabled unchanged. First concurrent network-discovery
+failure is retained; unchanged test passes with isolated discovery traffic.
+See docs/repair-evidence/geometry/REGRESSION_CHECKPOINT.md. External freeze released.
+
+NEXT: containment127/129/133 native repair committed CNA5ab1c7729 but external
+validation remains pending. Native math963pass/two skips,registered247/247,
+consumers1408pass/four skips,ASan/UBSan/leak13/13. Correct the sphere-creation
+demo's geometric enclosure assertion and C boundary-ray oracle from genuine
+evidence,then rebuild actual external C ABI/demos against5ab1c7729. No Color
+production edits until this external build is finished and frozen. Three new
+Color native tests are deliberately pre-fix failures; genuineColor1782checks
+pass, native standalone witness fails162. Lifecycle genuine29+8 checks pass,
+but no lifecycle product changes. Follow CNA's campaign handoff for live jobs.
+All following checkpoint paragraphs are historical/superseded.
+
 Latest closure (2026-10-20):118/123/140 FIXED_VALIDATED, runtime785bf2d2a.
 All155 IDs retained:49 final/106 pending. Native math944 passes/two unchanged
 skips; consumer1086/four unchanged skips; strict actual C ABI passes. All732
