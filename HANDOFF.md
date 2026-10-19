@@ -25,12 +25,31 @@ under `docs/repair-evidence/issue-116`. Its incorrect singular-affine assertion 
 signed-infinity classification, preserving all seven checks, and its knownIssue marker is
 removed. The build is warning-free; the corrected console reproduction passes seven checks
 under both renderer labels with empty stderr (no display/GPU used). All 19 selected demo
-Matrix/catalog/validation CTests pass, as do 91 native Matrix tests including the new value/out/
+Matrix/catalog/validation CTests pass, as do 92 native Matrix tests including the new value/out/
 alias regression in CNA `62e3f9c56`. ISSUE-116 is Resolved as DEMO_EXPECTATION_BUG, not a CNA
 runtime repair. Native MSAA baseline oracle correction `461064b90` separately passes unchanged
 coverage thresholds; all six genuine-XNA reference tests passed. COVERAGE run columns retain
 the complete pre-repair baseline, not a claimed post-repair full sweep. Next: documentation
 corrections, then coherent Curve root-cause repairs; see the CNA campaign handoff.
+The initial 91-test CTest run targeted the old aggregate executable, not the newly linked
+module executable. Fresh direct verification explicitly passes all 92 tests, including the
+added regression (`repair-116-native-direct.log`). Its first wrong-cwd diagnostic is retained
+separately; the existing matrix oracle requires CNA's source working directory.
+Pending, uncommitted preparation for Curve: `demos/math/curve/key_collection.cpp`
+now catches the XNA/framework ArgumentOutOfRangeException for invalid indices and
+ArgumentException for an insufficient CopyTo destination. The old std catches aborted after
+six of twenty controls following CNA's pre-campaign exception migration. No assertion or
+ISSUE-097 knownIssue marker is removed. Both renderer-labelled focused runs now execute
+all twenty checks and fail only the actual nearby-position ordering assertion. The native
+Curve repair and regressions now pass the whole math module (886 passes, two unchanged
+fixture skips), aggregate Curve selection and targeted ASan/UBSan aliasing probe. The demo
+build still uses the pre-Curve runtime while its full documentation regression runs.
+Documentation fixes are committed in CNA `66918da04` and `60b6b747f`; both 28-demo focused
+renderer comparisons match baseline exactly. All 732 enabled CTests passed (391.13s,
+three disabled); 23 documentation IDs are now Resolved with their original history.
+Inventory totals: 155 historical IDs, 23 documentation corrections, seven already-fixed,
+one demonstrated demo-oracle error, 124 awaiting final disposition. Curve remains open
+pending focused demos/C API and regression validation of the rebuilt demo library.
 ISSUE-001 still reproduces
 on CMake 3.28 and 3.29, but not 3.30. CI dependency pins have not been changed by this work.
 

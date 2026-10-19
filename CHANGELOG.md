@@ -6,9 +6,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Closed 23 documentation-only CNA findings with public-contract corrections in CNA
+  `66918da04` and `60b6b747f`. All 732 enabled demo CTests pass; 28 focused scenarios on
+  each renderer exactly preserve baseline outcomes and assertions. Historical IDs remain.
 - Corrected ISSUE-116's proven CP1252 reference-decoding error: singular inversion now checks
   signed infinities plus fourteen NaNs, retaining all seven controls. Removed only that invalid
-  knownIssue marker; focused demos and 91 native Matrix tests pass (CNA regression `62e3f9c56`).
+  knownIssue marker; focused demos and 92 native Matrix tests pass (CNA regression `62e3f9c56`).
 - Established the CNA repair baseline against runtime source `688f3f23e`: all 732 enabled
   CTests pass, complete SOFTWARE/OPENGLES3 reports preserve all 719 IDs, and six visual references
   remain exact. Verified pre-campaign repairs without suppressing remaining failures.

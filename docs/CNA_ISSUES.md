@@ -15,66 +15,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
-### CNA-DEMOS-ISSUE-155 -- MathTypeConverter comments contradict its conversion policy
-
-- **Area/API:** public `MathTypeConverter` documentation in
-  `modules/design/include/Microsoft/Xna/Framework/Design/MathTypeConverter.hpp`.
-- **Observed contract conflicts:** the `CanConvertTo` return comment says the base converter
-  reports true for `InstanceDescriptor`, but its implementation and CNA test report false; each
-  concrete converter adds that support in its own override. The protected `supportStringConvert`
-  comment says only BoundingBox/BoundingSphere/Ray clear the flag and that Matrix/Rectangle leave
-  it set. Production constructors also clear it for Rectangle, Matrix and Plane, matching their
-  tested XNA behavior and the four cna-demos workflows.
-- **Expected:** describe the base result separately from concrete overrides, and list the actual
-  parsing converters (Point, Vector2/3/4, Quaternion and Color) versus the six structural-text-only
-  converters.
-- **Evidence/status:** source-confirmed documentation defect at pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`; evidence is under
-  `/tmp/checkpoint-1117-design-public-headers/*`. Open; no CNA source was modified, no runtime
-  knownIssue marker is needed and no upstream message was sent.
-
-### CNA-DEMOS-ISSUE-154 -- AccelerometerReadingEventArgs says its event is never raised
-
-- **Area/API:** public `AccelerometerReadingEventArgs` documentation in
-  `modules/devices/include/Microsoft/Devices/Sensors/AccelerometerReadingEventArgs.hpp` and the
-  public `Accelerometer::ReadingChanged` event.
-- **Observed contract conflict:** the event-arguments class says `ReadingChanged` "is not raised
-  by this implementation." `Accelerometer::DispatchSensorReading` explicitly snapshots and raises
-  it after `CurrentValueChanged`, and the `Accelerometer.hpp` event comment documents that exact
-  order. The keyboard-emulation path reaches the production dispatcher: every automated reading
-  raised one `CurrentValueChanged` followed by one `ReadingChanged`, with the same sender/vector
-  and a nondefault timestamp, under both SOFTWARE and OPENGLES3 labels.
-- **Expected:** describe the class as the legacy payload that CNA still raises after the modern
-  event, consistent with the event declaration and implementation.
-- **Evidence/status:** source-confirmed documentation defect at pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`; runtime evidence is under
-  `/tmp/checkpoint-1116-devices-phone-public-headers/*`. Open; no CNA source was modified, no
-  runtime knownIssue marker is needed and no upstream message was sent.
-
-### CNA-DEMOS-ISSUE-153 -- GraphicsDevice DeviceLost comment contradicts implemented desktop backends
-
-- **Area/API:** public `GraphicsDevice::DeviceLost` event documentation in
-  `modules/graphics/include/Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp`.
-- **Observed contract conflict:** the public comment says the event is "never raised on desktop".
-  `GraphicsDevice::createRenderer` nevertheless converts a renderer `Lost` callback into
-  `GraphicsDeviceStatus::Lost` and raises this exact event. Both DirectX9 and WebGPU call that
-  callback from their implemented loss paths; their renderer examples also exercise the
-  deterministic `DebugSimulateContextLoss` seam. DirectX9 additionally throws
-  `DeviceLostException` while the device remains lost.
-- **Current cna-demos boundary:** the pinned `linux-full` build contains SOFTWARE and OPENGLES3,
-  which provide no public deterministic loss trigger. `graphics.device.owned_lifecycle` therefore
-  truthfully observes zero DeviceLost events and Normal status through caller-initiated resets.
-  This audit adds no synthetic event, exception or metadata credit and makes no DirectX9/WebGPU
-  runtime claim.
-- **Expected:** describe DeviceLost as renderer/platform dependent and identify the backends that
-  can report it, instead of promising that desktop never raises it. Nearby implementation comments
-  that still say every renderer except DirectX9 leaves the status Normal should also account for
-  WebGPU's callback path.
-- **Evidence/status:** source-confirmed documentation defect at pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`; evidence is under
-  `/tmp/checkpoint-1114-graphics-public-headers/*`. Open; no CNA source was modified, no runtime
-  knownIssue marker is needed and no upstream message was sent.
-
 ### CNA-DEMOS-ISSUE-152 -- StorageContainer ignores the requested FileShare policy
 
 - **Area/API:** `StorageContainer::OpenFile(file, mode, access, fileShare)` in
@@ -1192,29 +1132,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA source was modified, no upstream message was
   sent, and no genuine-XNA behavior is claimed for direct construction of CNA's extension type.
 
-### CNA-DEMOS-ISSUE-107 -- XNB output digest documentation gives an impossible example
-
-- **Area/API:** `CNA::Content::Pipeline::XnbOutputOptionsDigest`, declared in
-  `XnbOutputContentPipeline.hpp`.
-- **Demo/reproduction:** run `content.xnb.output_pipeline`. The public function returns `w5run`
-  for the documented defaults and `d5h4p` for DesktopGL/version5/HiDef/LZ4/portable names. The
-  latter digest also appears in the resolved writer identity and drives an actual deterministic
-  container whose header is `d`, version5 and flags `0x41`.
-- **Observed:** the header documents a human-readable result “such as `w5rn-x`”. The implementation
-  always appends exactly five fields with no separators: one platform byte, one decimal version,
-  one profile byte (`r`/`h`), one compression byte (`u`/`x`/`4`) and one reader-style byte
-  (`n`/`p`). It therefore cannot produce the documented six-character hyphenated example.
-- **Expected:** the example should use a value the public function can return, such as default
-  `w5run`, or explicitly document the five field positions without an example that suggests a
-  different grammar.
-- **Cause/source evidence:** the implementation in `XnbOutputContentPipeline.cpp` appends the five
-  values directly and the same digest is incorporated into both writer and codec versions. This
-  is a stale public comment, not a byte-output or incremental-invalidation defect.
-- **Scope/status:** documentation-only, so the demo remains a passing workflow and has no runtime
-  `knownIssue` marker. Open against clean isolated CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA source was modified and no upstream message
-  was sent.
-
 ### CNA-DEMOS-ISSUE-106 -- Pre-built content compiler reports every service option as an FX option
 
 - **Area/API:** `CNA::Content::Pipeline::ContentCompilerOptions` and the pre-built-registry
@@ -1915,27 +1832,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   LeaderboardOutcome columns. Evidence:`/tmp/checkpoint-704-property-dictionary-*`. No CNA source
   was modified and no upstream message was sent.
 
-### CNA-DEMOS-ISSUE-084 -- PacketReader documentation and example still describe the fixed Color mismatch
-
-- **Area/API:** `PacketReader::ReadColor`, `PacketWriter::Write(Color)`, the public
-  `PacketReader.hpp` contract and `modules/net/examples/demo_packet_roundtrip`.
-- **Reproduction:** run `net.packet.send_and_receive` with two local profiles. The demo writes
-  `Color::Orange` through PacketWriter, sends the packet through a real local System Link session
-  and reads it through PacketReader before reading the following double, vectors, quaternion and
-  matrix. Compare this with the public header and the bundled roundtrip example.
-- **Observed:** the implementation reads four byte channels and the complete 141-byte packet
-  round-trips exactly on SOFTWARE and OPENGLES3. CNA's public header still says ReadColor reads four
-  floats, is not the inverse of Write(Color), and preserves that behavior for fidelity. The bundled
-  example likewise expects the former 4-byte/16-byte mismatch and treats its exception as a quirk.
-  CNA's own `BINDFIX-022` record says that mismatch was fixed.
-- **Expected:** public documentation and the bundled example should describe and exercise the
-  current inverse four-byte behavior, so users are not told to avoid a working API or to expect an
-  exception that no longer occurs.
-- **Scope/status:** open documentation/example defect against clean external CNA `f698d0f548`.
-  Runtime color and every following typed read pass; no runtime knownIssue marker is needed. Both
-  renderer runs have byte-identical stdout and empty stderr. Evidence:`/tmp/checkpoint-685-*`. No
-  CNA source was modified and no upstream message was sent.
-
 ### CNA-DEMOS-ISSUE-082 -- Disposing an open SpriteBatch leaves its device batch active
 
 - **Area/API:** `SpriteBatch::Dispose(bool)`, `SpriteBatch::Begin/End` and the per-device
@@ -1993,48 +1889,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   in its check and `restrictions`; no CNA source was modified or upstream message sent. Evidence:
   `checkpoint-623-c-model-meshes-focused-*-direct.*`.
 
-### CNA-DEMOS-ISSUE-080 -- C avatar animation info claims built-in clips have no timeline
-
-- **Area/API:** `CNA_AvatarAnimationInfo` documentation in
-  `modules/c-api/include/CNA/C/gamer_services.h`; the canonical `AvatarAnimation` implementation
-  and `cna_avatar_animation_*` adapters.
-- **Reproduction:** create each defined `CNA_AVATAR_ANIMATION_PRESET_*`, call
-  `cna_avatar_animation_get_info`, then sample Wave at zero and1.2 seconds and inspect its right-
-  elbow transform.
-- **Observed:** all31 presets report71 bones and real lengths from2.5 to10 seconds. Wave's elbow
-  changes substantially at1.2 seconds; direct position, clamped/looping update and Celebration's
-  keyed facial expression all work. This agrees with the canonical C++ header, implementation and
-  tests.
-- **Expected:** the C info documentation currently says a built-in preset has no timeline and
-  `length_ticks` stays zero until a real clip is loaded. It should describe the built-in original
-  CNA clips and their real timeline, bone and expression sampling.
-- **Scope/status:** passing C-header documentation mismatch. The renderer-free demo validates CPU
-  animation data only and needs no runtime knownIssue marker. Both focused renderer-labelled direct
-  runs pass17 byte-identical controls with empty stderr. No CNA source was modified or upstream
-  message sent. Evidence:`checkpoint-599-c-avatar-animations-focused-*-direct.*`.
-
-### CNA-DEMOS-ISSUE-079 -- Anonymous leaderboard entry clears an output promised unchanged
-
-- **Area/API:** `cna_leaderboard_entry_get_gamer` in
-  `modules/c-api/include/CNA/C/gamer_services.h` and generated `Leaderboards.inc`.
-- **Reproduction:** create a leaderboard entry with `CNA_INVALID_HANDLE` as its optional gamer,
-  initialize `out_gamer` to a nonzero sentinel and call `cna_leaderboard_entry_get_gamer`.
-- **Observed:** the call succeeds with `out_has_gamer == CNA_FALSE` and replaces the sentinel with
-  `CNA_INVALID_HANDLE`. The generated wrapper unconditionally clears `*out_gamer` before the helper
-  discovers that the entry has no gamer.
-- **Expected:** the public header explicitly says the gamer output "is left exactly as the caller
-  set it" when the presence flag is false. Either preserve it for the ordinary absent result or
-  document deterministic invalid-handle initialization, matching the wrapper and the wider C
-  output policy.
-- **Positive controls:** gamer-backed borrowing, exact entry info, rating mutation/hook behavior,
-  equality, live mutable columns, alias retention and stale-handle refusal all pass. Both focused
-  renderer-labelled direct runs pass all23 controls with byte-identical output and empty stderr.
-- **Scope/status:** passing public-header documentation mismatch; the demo asserts the current
-  deterministic result and needs no runtime knownIssue marker. No CNA source was modified or
-  upstream message sent. Evidence:`checkpoint-596-c-leaderboard-entries-focused-*-direct.*`;
-  runtime uses the last completed CNA libraries while current source contains the same generated
-  assignment.
-
 ### CNA-DEMOS-ISSUE-078 -- Missing C achievement key escapes as an internal failure
 
 - **Area/API:** `cna_achievement_collection_get_by_key` in
@@ -2079,27 +1933,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `checkpoint-589-c-achievement-collection-focused-*-direct.*`; runtime uses the last completed CNA
   libraries while current source contains the same hard-coded property.
 
-### CNA-DEMOS-ISSUE-076 -- Absent signed-in player lookup contradicts its output contract
-
-- **Area/API:** `cna_gamer_get_signed_in_gamer_at_player_index` in
-  `modules/c-api/include/CNA/C/gamer_services.h` and generated `Gamers.inc`.
-- **Reproduction:** create a valid signed-in gamer for player two but leave the process collection
-  empty, initialize `out_gamer` to a nonzero sentinel, then query player two. Repeat after publishing
-  player two while querying the unoccupied player-one slot.
-- **Observed:** both calls succeed with `out_has_gamer == CNA_FALSE` and replace the sentinel with
-  `CNA_INVALID_HANDLE`. The generated wrapper unconditionally assigns `*out_gamer` to the invalid
-  handle before the implementation determines whether the player slot is occupied.
-- **Expected:** the public header explicitly says `out_gamer` "is left exactly as the caller set it"
-  when `out_has_gamer` is false. Either preserve it for the ordinary absent result or update the
-  contract to promise deterministic invalid-handle initialization, matching the generated wrapper
-  and the broader C output policy.
-- **Scope/status:** passing public-header documentation mismatch; the demo follows the current
-  deterministic invalid-handle behavior and needs no runtime knownIssue marker. Both focused
-  renderer-labelled runs pass all29 controls with identical output and empty stderr. No CNA source
-  was modified or upstream message sent. Evidence:
-  `checkpoint-587-c-signed-in-state-focused-*-direct.*`; runtime uses the last completed CNA
-  libraries while current source contains the same unconditional generated assignment.
-
 ### CNA-DEMOS-ISSUE-075 -- C offset packet receive overwrites bytes outside the requested range
 
 - **Area/API:** `cna_local_network_gamer_receive_data_at` in
@@ -2126,28 +1959,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   Evidence:`checkpoint-583-c-local-packets-focused-*-direct.*`; runtime uses the last completed CNA
   libraries while unrelated renderer-retirement work remains in flight.
 
-### CNA-DEMOS-ISSUE-074 -- C assembly-title route misstates malformed-text result
-
-- **Area/API:** `cna_assembly_set_title_ext` in
-  `modules/c-api/include/CNA/C/core_ext.h`.
-- **Observed contract conflict:** the route-specific return documentation lists
-  `CNA_RESULT_INVALID_ARGUMENT` for a malformed string view. An otherwise valid five-byte view
-  containing an embedded NUL returns `CNA_RESULT_ENCODING` and leaves the existing title intact.
-  The generated adapter explicitly uses `ReadText(..., EmbeddedNul::Refused)`, whose documented
-  result set includes `ENCODING`; CNA's general `STRINGS_AND_BUFFERS.md` likewise says semantic
-  text values reject embedded U+0000 with `CNA_RESULT_ENCODING`.
-- **Runtime evidence:** `c_api.platform.host_identity` first installs and exactly copies an
-  authored title, submits `{'b','a','d','\0','x'}`, observes `ENCODING`, and copies the unchanged
-  authored bytes before restoring the previous process title. Both focused direct renderer
-  selections pass with identical output and empty stderr after correcting the demo's initial
-  expectation. Evidence:`checkpoint-556-c-platform-host-identity-focused-*-direct.*`.
-- **Expected:** list `CNA_RESULT_ENCODING` for malformed UTF-8 or forbidden embedded NUL text,
-  while retaining `CNA_RESULT_INVALID_ARGUMENT` for an invalid pointer/count pair. The
-  implementation and shared text contract should stay as-is.
-- **Scope/status:** passing public-header documentation mismatch; no runtime knownIssue marker is
-  needed. No CNA source was modified or upstream message sent. Direct runtime uses the last
-  completed CNA libraries while unrelated external renderer-retirement work remains in flight.
-
 ### CNA-DEMOS-ISSUE-073 -- Refused live-3D pan setter changes the public pan value
 
 - **Area/API:** `SoundEffectInstance::setPanProperty` and the C
@@ -2167,47 +1978,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   evidence awaits completion of the unrelated in-progress Vulkan retirement. Both direct renderer
   selections pass21 of22 controls with identical stdout and empty stderr; evidence is archived as
   `checkpoint-530-c-spatial-state-focused-*-direct.*`.
-
-### CNA-DEMOS-ISSUE-072 -- C SoundEffectInstance snapshot promises pitch clamping
-
-- **Area/API:** `CNA_SoundEffectInstanceInfo.pitch` and
-  `cna_sound_effect_instance_set_pitch` in `modules/c-api/include/CNA/C/audio.h`.
-- **Observed contract conflict:** the public snapshot field says it reports the pitch "after CNA
-  clamping to `[-1, 1]`", and the setter only documents a finite input. Passing2.0 actually returns
-  `CNA_RESULT_INVALID_ARGUMENT`; setting1.0 succeeds and the snapshot returns1.0. The generated C
-  adapter checks finiteness and then calls `SoundEffectInstance::setPitchProperty`, whose canonical
-  implementation deliberately throws for every value outside the closed interval. CNA's pure-C
-  `AudioSmoke.c` also explicitly requires rejection of2.0 and describes that as XNA behavior.
-- **Runtime evidence:** `c_api.audio.sound_effect_instance_state` range-checks2.0, then configures
-  pitch1.0 with volume, pan and looping. The complete property snapshot and all later Play/Pause/
-  Resume/release/replay controls pass in five repeated SOFTWARE direct runs and one OPENGLES3
-  direct run with byte-identical output and empty stderr.
-- **Expected:** document pitch as range-checked to `[-1, 1]` and list out-of-range input among the
-  setter's invalid-argument outcomes. The implementation and its canonical test should stay as-is.
-- **Scope/status:** passing public-header documentation mismatch; no runtime knownIssue marker is
-  needed. No CNA source was modified or upstream message sent. Direct runtime currently uses the
-  last completed CNA libraries from `b2ded99da9`; project-built evidence awaits completion of the
-  unrelated in-progress Vulkan retirement. Open; direct evidence is archived as
-  `checkpoint-529-c-sound-instance-state-focused-*-direct.*`.
-
-### CNA-DEMOS-ISSUE-071 -- C PBR texture getter documents five of its seven slots
-
-- **Area/API:** `cna_pbr_effect_get_texture` in
-  `modules/c-api/include/CNA/C/effects.h`.
-- **Observed contract conflict:** its `slot` parameter says "One of the five `CNA_PBR_TEXTURE_*`
-  identities." The same public header defines seven identities from base color0 through specular
-  color6, makes6 `CNA_PBR_TEXTURE_MAXIMUM`, and describes the coordinate/transform routes as
-  accepting all of them. The generated texture getter/setter accept every identity through6.
-- **Runtime evidence:** `c_api.graphics.pbr_texture_slots` gets and sets exact retained handles in
-  all seven slots, independently round-trips each slot's UV selector and transform, and confirms the
-  three color-carrying sRGB identities. Two textures survive cloning and source destruction through
-  five core and two specular slots respectively, then release after their last slot clears. All34
-  controls pass identically under SOFTWARE and OPENGLES3 with empty stderr.
-- **Expected:** say seven defined slot identities, or refer to the inclusive named range, so the
-  public C contract includes its two specular extension slots.
-- **Scope/status:** passing public-header documentation mismatch; no runtime knownIssue marker is
-  needed. No CNA source was modified or upstream message sent. Observed at clean CNA `a6bb279d47`;
-  focused evidence is archived as `checkpoint-517-c-pbr-textures-focused-*`. Open.
 
 ### CNA-DEMOS-ISSUE-070 -- PBR clones lose vertex-color and alpha-coverage state
 
@@ -2232,46 +2002,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   or visual result is claimed. No CNA source was modified or upstream message sent. Observed at
   clean CNA `a6bb279d47`; focused evidence is archived as
   `checkpoint-516-c-pbr-material-focused-*`. Open.
-
-### CNA-DEMOS-ISSUE-069 -- C Effect clone comment overpromises concrete-type preservation
-
-- **Area/API:** `cna_effect_clone` in `modules/c-api/include/CNA/C/effects.h`.
-- **Observed contract conflict:** the public C comment says the result is "an owned clone of the
-  same concrete native type." `EffectMaterial` deliberately has no `Clone` override, so its
-  inherited canonical `Effect::Clone()` returns an independent base `Effect`. CNA's public
-  software-renderer documentation and dedicated C++ tests identify this as recovered Microsoft XNA
-  and FNA behavior; changing the runtime to preserve `EffectMaterial` would be a regression.
-- **Runtime evidence:** `c_api.graphics.effect_concrete_types` creates an `EffectMaterial`, clones
-  it through the public C route and observes the exact base type name
-  `Microsoft.Xna.Framework.Graphics.Effect`; the clone applies successfully but both
-  EffectMaterial-only ownership routes refuse it. In the same run, `SpriteEffect.Clone()` preserves
-  its concrete type and exact stock-sprite identity. All22 controls pass identically under SOFTWARE
-  and OPENGLES3 with empty stderr.
-- **Expected:** document the independent clone and the `EffectMaterial` exception instead of
-  promising concrete-type preservation for every effect. No runtime change is indicated.
-- **Scope/status:** passing public-header documentation mismatch; no runtime knownIssue marker is
-  needed. No CNA source was modified or upstream message sent. Observed at clean CNA `a6bb279d47`.
-  Open; focused evidence will be archived as
-  `checkpoint-510-c-effect-concrete-types-focused-*`.
-
-### CNA-DEMOS-ISSUE-068 -- C effect-parameter semantic lookup misstates case matching
-
-- **Area/API:** `cna_effect_parameter_collection_find_semantic` in
-  `modules/c-api/include/CNA/C/effects.h`.
-- **Observed contract conflict:** the public C comment calls its input an "Exact UTF-8 semantic",
-  but the route delegates to `EffectParameterCollection::GetParameterBySemantic`. The public C++
-  header documents case-insensitive matching, its implementation uses `OrdinalIgnoreCase`, and its
-  tests require mixed-case matching plus first-insertion wins for semantic duplicates.
-- **Runtime evidence:** `c_api.graphics.effect_parameter_collections` stores `POSITION` followed by
-  `Position`; a lookup for lowercase `position` returns the first parameter and its current value77
-  under both tested renderer selections. Name lookup in the same collection remains case-sensitive.
-- **Expected:** describe the C route as ordinal case-insensitive and state that the first matching
-  parameter is returned, aligning the public binding contract with the behavior it deliberately
-  exposes. No runtime change is indicated.
-- **Scope/status:** passing public-header documentation mismatch; no runtime knownIssue marker is
-  needed. No CNA source was modified or upstream message sent. Observed at clean CNA `fbd8e64a3`.
-  Open; focused evidence will be archived as
-  `checkpoint-507-c-effect-parameter-collections-focused-*`.
 
 ### CNA-DEMOS-ISSUE-067 -- C display-color-space routes expose unnamed integer ordinals
 
@@ -2315,72 +2045,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   No CNA source was modified or upstream message sent. Observed at clean CNA `f37f8d184`; focused
   evidence is archived as `checkpoint-503-c-draw-routes-focused-*`. Open.
 
-### CNA-DEMOS-ISSUE-065 -- C GraphicsDevice reset declaration is separated from its documentation
-
-- **Area/API:** `cna_graphics_device_reset` in
-  `modules/c-api/include/CNA/C/graphics_device.h`.
-- **Observed:** the complete documentation block for resetting with current presentation parameters
-  and the resetting/reset event order appears before the separate, complete documentation block for
-  `cna_graphics_device_create`. The create declaration, destroy documentation and destroy
-  declaration then intervene before the bare `cna_graphics_device_reset` declaration. A reader or
-  documentation generator cannot associate the reset contract with the reset declaration.
-- **Runtime/source evidence:** `c_api.graphics.owned_device` calls the bare-declared route on a
-  caller-owned device and observes SUCCESS plus the synchronous resetting-then-reset callback pair
-  under both SOFTWARE and OPENGLES3. The generated implementation calls canonical `Reset()`; the
-  behavior matches the displaced comment. All20 demo controls pass identically with empty stderr.
-- **Expected:** place the reset declaration immediately after its existing documentation block, or
-  move that block immediately above the existing declaration after destroy. No runtime change is
-  indicated by this evidence.
-- **Scope/status:** passing public-header documentation-placement defect; no runtime knownIssue
-  marker is needed. No CNA source was modified or upstream message sent. Observed at clean CNA
-  `d7eff66ee`; focused evidence is archived as `checkpoint-502-c-owned-device-focused-*`. Open.
-
-### CNA-DEMOS-ISSUE-064 -- C Viewport default comment promises the wrong maximum depth
-
-- **Area/API:** `cna_viewport_init` and its public comment in
-  `modules/c-api/include/CNA/C/graphics_device.h`.
-- **Observed contract conflict:** the comment says the default initializer writes zero position
-  and size, `min_depth` zero and `max_depth` one. The generated route constructs the canonical
-  `Viewport()` value, whose six fields are all zero. CNA's own `GraphicsDeviceSmoke.c` explicitly
-  requires `max_depth == 0` and explains that XNA has no parameterless Viewport constructor, so
-  `default(Viewport)` is the all-zero value; only the bounds constructors install depth0..1.
-- **Runtime evidence:** `c_api.graphics.viewport` seeds every field with seven, calls the route and
-  observes six zero fields under both SOFTWARE and OPENGLES3. Its separate parameterized controls
-  observe depth0..1, so the two contracts cannot be confused. All19 demo controls pass identically
-  with empty stderr, and the focused61-test regression is green.
-- **Expected:** change the public C comment to promise `max_depth` zero for the default value and
-  reserve the0..1 statement for the two parameterized constructors. The current implementation
-  and tests match XNA value semantics; changing runtime behavior to match the stale sentence would
-  reintroduce the old contradiction described by CNA's own test.
-- **Scope/status:** passing documentation mismatch; no runtime knownIssue marker is needed. No CNA
-  source was modified or upstream message sent. Observed at clean CNA `d7eff66ee`; focused evidence
-  is archived as `checkpoint-498-c-viewport-focused-*`. Open.
-
-### CNA-DEMOS-ISSUE-063 -- C synthetic-camera comments promise an unreachable Closed state
-
-- **Area/API:** `cna_camera_create_with_test_backend_ext`, `cna_camera_set_test_state_ext`,
-  `cna_camera_set_test_frame_ext` and their comments in
-  `modules/c-api/include/CNA/C/devices.h`.
-- **Observed contract conflict:** the creation comment says the synthetic camera starts closed,
-  and the frame-publishing comment says a null pixel pointer clears the frame and closes the
-  camera. Actual creation reports `CNA_CAMERA_STATE_OPENING` with zero dimensions; clearing a
-  frame restores the same Opening state. Passing the defined `CNA_CAMERA_STATE_CLOSED` identity to
-  the documented state setter returns `CNA_RESULT_INVALID_ARGUMENT`, as does NotSupported.
-- **Runtime/source evidence:** `c_api.devices.camera_frames` observes Opening at creation, then
-  round-trips Denied, Lost and Opening, proves Closed/NotSupported/undefined states are refused
-  without mutation, publishes and acquires an exact synthetic frame, and observes Opening again
-  after clearing it. All23 controls pass under SOFTWARE and OPENGLES3 with identical output and
-  empty stderr. `CameraTestState` initializes to Opening; `CameraSetTestStateExt` explicitly
-  refuses Closed/NotSupported; the null-frame branch explicitly assigns Opening. CNA's own pure-C
-  smoke expects the same behavior and explains that the platform now hands out only opened devices.
-- **Expected:** update all three public comments to describe the current platform-opened model and
-  list the two defined but rejected identities, or restore the documented Closed lifecycle and
-  make it reachable consistently. The current words and behavior cannot both be correct.
-- **Scope/status:** passing documentation mismatch; no runtime knownIssue marker is needed. The
-  real `cna_camera_create` route is deliberately not invoked, so no camera is opened and no
-  permission prompt is claimed. No CNA source was modified or upstream message sent. Open; focused
-  evidence is archived as `checkpoint-488-c-camera-frames-focused-*`.
-
 ### CNA-DEMOS-ISSUE-062 -- Disposed accelerometer and gyroscope retain readable CurrentValue
 
 - **Area/API:** `cna_accelerometer_get_current_value`, `cna_gyroscope_get_current_value`, their
@@ -2411,95 +2075,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   shared getters against the header's broad post-disposal statement. No CNA source was modified or
   upstream message sent. Open; focused catalog evidence is archived as
   `checkpoint-483-c-sensor-lifecycle-focused-*`.
-
-### CNA-DEMOS-ISSUE-061 -- C default mouse-cursor documentation contradicts the Arrow constructor
-
-- **Area/API:** `cna_mouse_cursor_create_ext`,
-  `modules/c-api/include/CNA/C/input_cursor.h`, `CnaCApiInput.cpp` and the public C++
-  `MouseCursor.hpp`/`MouseCursor.cpp`.
-- **Observed contract conflict:** the C header says this route creates an empty cursor that wraps
-  no native cursor and that setting it changes nothing. The route actually allocates
-  `MouseCursor()`. That public C++ constructor is documented as creating the default Arrow and its
-  implementation leaves `systemShape_` at `ShapeArrow`, `isCustom_` false and `isDisposed_` false;
-  `Mouse::SetCursor` therefore selects the platform Arrow.
-- **Runtime/source evidence:** the extended `c_api.input.keyboard_mouse` creates the owned default,
-  installs it successfully under both renderer selections, disposes it twice and destroys its
-  handle. Separate controls show that a borrowed stock Arrow survives Dispose and that a
-  texture-derived cursor can be installed before restoring the stock Arrow. The run does not use
-  pixel or pointer-shape inspection, so the Arrow identity is established by the direct public
-  constructor/setter source path rather than a visual claim.
-- **Expected:** describe the C route as an owned default Arrow cursor, matching the public C++
-  constructor, or change the implementation and the underlying cursor model if a distinct empty
-  cursor is really intended. The current API has no separate empty shape identity.
-- **Scope/status:** passing documentation mismatch; cursor creation, installation and lifetime
-  succeed, so no runtime knownIssue marker is needed. Focused source hashes, exact child controls
-  and both renderer logs are archived under `checkpoint-476-c-input-mouse-cursor-focused-*`.
-  Complete476 preserves every prior parent outcome and38/42 failures while only this child grows
-  15->32; evidence is under `checkpoint-476-c-input-mouse-cursor-*`. No CNA file was edited and no
-  upstream message was sent. Open.
-
-### CNA-DEMOS-ISSUE-060 -- Raised C touch-event documentation contradicts its gesture-only implementation
-
-- **Area/API:** `cna_touch_panel_raise_touch_event_ext`,
-  `modules/c-api/include/CNA/C/input_touch.h`, generated `Input.inc`, `TouchPanel.cpp` and
-  `SdlInputBridge.cpp`.
-- **Observed contract conflict:** one public-header paragraph says the route feeds "gesture
-  detection and the event-driven touch map, not the slot array," then says a raised event never
-  appears in the snapshot. Those statements cannot both describe CNA's current `GetState`
-  fallback, which reads the event-driven map when the slot array is empty.
-- **Implementation and runtime evidence:** the generated C route calls only
-  `TouchPanel::INTERNAL_onTouchEvent`, which scales the normalized coordinates and feeds the
-  gesture detector. The real SDL bridge separately calls `INTERNAL_setTouchState` before that
-  gesture call; the C route does not. The extended `c_api.input.gesture_queue` workflow raises a
-  deterministic FreeDrag, reads its exact 640x480-scaled position/delta, then observes an empty
-  `CNA_TouchState`. This agrees with the latter sentence and CNA's pure-C smoke expectation.
-- **Expected:** describe the route as gesture-processing input only, or make it update the
-  event-driven state map as the first sentence promises. If behavior changes, clarify identifier,
-  pressure and previous-location semantics rather than silently treating the gesture event as a
-  complete platform touch event.
-- **Scope/status:** documentation mismatch; no renderer, physical-device or gesture-timing defect
-  is claimed. The passing demo records actual behavior and needs no runtime knownIssue marker. Both
-  focused renderer runs pass64 identical controls with empty stderr; source hashes and the exact
-  31->64 comparison are archived under `checkpoint-476-c-input-touch-scaling-focused-*`. No CNA
-  file was edited and no upstream message was sent. Complete476 preserves every prior parent and
-  unrelated child result while this demo alone grows31->64 controls; evidence:
-  `checkpoint-476-c-input-touch-scaling-*`. Open.
-
-### CNA-DEMOS-ISSUE-059 -- Empty MediaQueue active-Song output contradicts its C documentation
-
-- **Area/API:** `cna_media_queue_get_active_song`,
-  `modules/c-api/include/CNA/C/media_player.h` and generated `MediaPlayer.inc`.
-- **Reproduction:** after the existing C media demo stops playback and safely clears the global
-  queue, initialize `out_song` with a still-valid shared Song handle and `out_available` with
-  `CNA_TRUE`, then call `cna_media_queue_get_active_song`. Repeat after deliberately storing the
-  documented unchecked active index 7 in the empty queue. Both SOFTWARE and OPENGLES3 runs use
-  the same public C route; neither dereferences the unavailable result.
-- **Observed:** both calls return `CNA_RESULT_SUCCESS`, set availability to `CNA_FALSE` and replace
-  the valid sentinel with `CNA_INVALID_HANDLE`. All53demo checks pass identically under both
-  renderers with empty stderr. The independently held sentinel Song remains valid and is released
-  once through its original handle. Generated `MediaPlayer.inc` explicitly assigns
-  `CNA_INVALID_HANDLE` before delegating to the queue lookup.
-- **Expected/documented:** the public header says `out_song` receives an owned handle when active
-  and is "untouched otherwise." An empty queue is the ordinary unavailable case, so overwriting a
-  valid caller value contradicts that statement. Either the route must preserve the output or,
-  consistently with its generated implementation and other handle-output routes, the header must
-  document initialization to `CNA_INVALID_HANDLE` when unavailable.
-- **Controls/scope:** `cna_media_queue_get_at` independently returns INVALID_ARGUMENT for index
-  zero on the empty queue and initializes its output to invalid; its header makes no untouched
-  output promise. The active-index setter stores 7 exactly as documented, active lookup remains
-  unavailable, and the demo restores -1 before cleanup. Collection disposal, idempotence and
-  retained-Song lifetime also pass. This is a documentation/implementation mismatch, not a
-  renderer, playback, ownership or memory-safety failure. ISSUE-058's unsafe replay is never
-  invoked.
-- **Evidence/environment:** Linux x86_64, GCC14.2/CMake3.31.6 linux-full, CNA clean at
-  `eff31310179168fb4f47258e6226a5234c2140d0`. Exact two-renderer logs, output lists, focused
-  review, targeted29-test log, observed CNA sources/hashes and watched3909-input build evidence
-  are archived under `build/linux-full/reports/checkpoint-474-c-media-bounds-focused-*`.
-- **Status/handling:** open documentation defect. No CNA source was edited and no upstream message
-  was sent. The passing demo names the behavior it actually observes and needs no runtime
-  knownIssue marker; revisit the wording or expectation after CNA resolves the contract. Complete
-  checkpoint474-C-media-lifecycle-bounds preserves all prior full-smoke outcomes and the exact
-  seven-check extension under both renderers; evidence: `checkpoint-474-c-media-bounds-*`.
 
 ### CNA-DEMOS-ISSUE-058 -- Replaying the active MediaQueue Song uses it after freeing it
 
@@ -3556,26 +3131,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   contract; ten runs per label are byte-stable with empty stderr. Genuine XNA ran from the
   installed Windows XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1073-curve-members/*`.
 
-### CNA-DEMOS-ISSUE-037 -- DynamicSoundEffectInstance header incorrectly says IsLooped is ignored
-
-- **Area:** documentation only, `DynamicSoundEffectInstance::setIsLoopedProperty` in
-  `modules/audio/include/Microsoft/Xna/Framework/Audio/DynamicSoundEffectInstance.hpp`.
-- **Related demo:** `audio.dynamic_sound_effect_instance.streaming` now checks that true is
-  refused and false is accepted. Its failure marker is for the separate disposal issue below.
-- **Evidence:** source review at CNA `2b15506a48e1a6202c985823131daf5856826f71`. Both setter
-  declarations say the argument is ignored/no effect. The implementation in
-  `modules/audio/src/Xna/DynamicSoundEffectInstance.cpp` first checks disposal, then throws
-  `System::InvalidOperationException` when the value is true; false is accepted. The rvalue
-  overload forwards to this same implementation.
-- **Expected:** document that dynamic instances cannot loop: setting true throws, setting false
-  is accepted, and using the setter after disposal throws ObjectDisposedException. This agrees
-  with the locally available decompilation of genuine XNA 4.0 DynamicSoundEffectInstance.IsLooped.
-- **Validation scope:** header, implementation and reference source inspected; the extended
-  streaming demo executed both setter values successfully on SOFTWARE and OPENGLES3. Genuine XNA was not run.
-  This is a confirmed comment contradiction, not a setter implementation defect. No CNA source
-  was changed.
-- **Suggested correction:** update both setter comments and their exception documentation.
-
 ### CNA-DEMOS-ISSUE-038 -- Dynamic audio getters ignore disposal
 
 - **Area:** `DynamicSoundEffectInstance::getPendingBufferCountProperty` and
@@ -3628,76 +3183,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   exists at the CI pin (source checked only).
 - **Status:** runtime-confirmed XNA compatibility gap, not a demo workaround; no CNA source
   changed and no upstream report sent.
-
-### CNA-DEMOS-ISSUE-040 -- Picture and Album thumbnail comments contradict generation paths
-
-- **Area:** documentation only, Picture::GetThumbnail and Album::GetThumbnail in
-  `modules/media/include/Microsoft/Xna/Framework/Media/{Picture,Album}.hpp`, plus the
-  Album implementation comment described below.
-- **Related demos:** `media.media_library.save_picture` (normal Picture thumbnail checks pass;
-  its expected-failure marker belongs to the separate short-read ISSUE-041) and
-  `media.media_library.album_art` (normal Album thumbnail checks pass).
-- **Evidence:** the public comment says no separate thumbnail is generated and that GetThumbnail
-  returns the same image as GetImage. The implementation in `modules/media/src/Xna/Picture.cpp`
-  instead calls ThumbnailGenerator::CreatePngThumbnail and returns a caller-owned MemoryStream
-  containing the generated image when possible; it otherwise falls back to the source FileStream.
-- **Reproduction/observed:** save the original 640x320 PNG into a private library, read GetImage
-  and verify its bytes equal the source, then save GetThumbnail's stream as a second picture.
-  The second Picture reports 128x64, and both files are indexed by a fresh MediaLibrary. The
-  demo checks smaller dimensions and preserved aspect ratio, not a fixed XNA thumbnail size.
-- **Environment/evidence:** Linux GCC 14.2, current CNA ce74063e6483020835af07c4af1e3614ebc5d962
-  (media implementation unchanged from e60fa35f7). The standalone ran under both SOFTWARE and
-  OPENGLES3 selections and passed 11 child checks each, including private XDG root verification
-  before library access. This is file/stream evidence, not GPU or visual thumbnail validation.
-  Reports/logs: `/tmp/cna-save-picture-{SOFTWARE,OPENGLES3}.{json,log}`; parent JSON check count
-  is zero for standalone tools, so the checks are in child stdout. No real user media was used.
-- **Expected/suggested correction:** document the possible generated thumbnail and original-image
-  fallback. The current 128-pixel maximum is an implementation choice, not a universal XNA
-  contract. The implementation's useful resizing behavior should not be removed to match the
-  stale comment.
-- **Additional Album evidence (2026-10-13):** at clean CNA `eff31310179168fb4f47258e6226a5234c2140d0`,
-  `Album.hpp::GetThumbnail` repeats the unconditional claim that it returns the same image as
-  GetAlbumArt. `Album.cpp::GetThumbnail` instead calls CreatePngThumbnail for file-based art,
-  returning generated PNG bytes on success and the original FileStream on failure. Embedded
-  art follows a different branch and currently returns GetAlbumArt directly; its implementation
-  comment about downscaling decoded bytes also overstates that branch. The album_art demo runs
-  the file-based path under both requested renderer selections: GetAlbumArt matches the original
-  640x320 PNG bytes, while GetThumbnail returns distinct PNG bytes decoded through public
-  SavePicture as 128x64. Both streams remain readable after MediaLibrary destruction. Its eight
-  child checks pass identically with parent JSON0; 29 media/CLI CTests pass. This is stream and
-  dimension evidence, not visual-quality validation. Embedded-art and fallback branches remain
-  source-only. Evidence: `checkpoint-474-art-focused-*`; no runtime knownIssue marker is needed.
-- **Status:** confirmed documentation contradictions with native Picture and file-based Album
-  evidence. No CNA source changed and no upstream report sent.
-
-
-### CNA-DEMOS-ISSUE-042 -- Root-prefix comments describe an older mesh-cancellation representation
-
-- **Area:** documentation only, SkinningData::SkeletonRootPrefix and
-  ApplyBindPoseBoneTransformsEXT comments in `modules/graphics/include/Microsoft/Xna/Framework/Graphics/AnimationPlayer.hpp`.
-- **Related demo:** `graphics.model.multiple_skins` (passes; no expected-failure marker).
-- **Evidence:** the root-prefix comment describes non-joint ancestry and inverse mesh-node
-  cancellation as context retained in SkeletonRootPrefix. The current loose glTF loader instead
-  calls BuildSkeleton with scene ancestry alone and parents each skinned ModelMesh to its identity
-  model root. The authored mesh node remains in Model.Bones but its placement is not applied to
-  the skinned draw. The runtime result is correct; the public storage explanation is stale.
-- **Reproduction/observed:** import two one-joint skins sharing a quad and material, with non-joint
-  ancestors at X=-0.5/+0.5 and mesh nodes at X=+4/-4. The public prefixes are -0.5/+0.5, not
-  -4.5/+4.5. Both mesh parents are the identity model root, while named scene nodes retain +4/-4.
-  Animating the left root preserves its ancestor; restoring the right bind pose touches only its
-  own effect. Actual red/green positions and the vacated left position pass pixel checks.
-- **Environment/evidence:** Linux GCC 14.2, CNA 8b5564f1e81196f3aaee9e9a652b8030e21f4c6c;
-  no runtime library change since the preceding checkpoint (external documentation/test cleanup).
-  Both SOFTWARE and OPENGLES3 initially passed 17 checks; the final live-bounds extension
-  passes 21. Captures were inspected and RGBA-identical; final captures match those inspected
-  images: `/tmp/cna-427-multiple-skins-final-{SOFTWARE,OPENGLES3}.{json,log,png}`.
-- **Expected/suggested correction:** describe the current loose loader's identity mesh parent and
-  ancestor-only prefix, distinguishing the ignored mesh-node transform from a stored inverse
-  matrix. Avoid implying that every legacy/custom SkinningData carrier has this same representation.
-- **Status:** confirmed public-comment mismatch, not a rendering failure. No CNA source changed,
-  no upstream report sent and no failing check suppressed. The final demo independently verifies
-  live-bound updates with an intentionally distant palette and restoration; broader skinning
-  bounds and multi-influence cases are not implied.
 
 ### CNA-DEMOS-ISSUE-043 -- GetTypeReader confuses the target type name with the reader factory key
 
@@ -3914,33 +3399,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   all 30 selected runtime hashes match. Archives: `reports/checkpoint-441-contracts-*`.
 - **Status:** open; an observable public metadata/contract discrepancy, not a demo failure.
 
-### CNA-DEMOS-ISSUE-049 -- Build-environment overview incorrectly says built-ins ignore its fields
-
-- **Area:** documentation only, the host-level build-facts overview above ContentBuildEnvironment
-  in `modules/content/include/CNA/Content/Pipeline/ContentPipeline.hpp` (around lines 169-176).
-- **Related demo:** `content.texture_processor.resize_to_power_of_two` (passes; no expected-failure marker).
-- **Mismatch:** the overview says "None of them changes what a built-in CNA component does today."
-  Actual TextureProcessor behavior consults targetProfile when processing an XNB-targeted texture.
-- **Reproduction/observed:** register the native texture pipeline and ImportAndProcess the original
-  100x60 PNG with Xnb output intent, Color format and generateMipmaps=true. Reach refuses it at
-  Process/CNA.TextureProcessor with the power-of-two requirement. Changing only targetProfile to
-  HiDef produces seven mip payloads at the original size. Explicit resizing instead permits Reach
-  with 128x64 and eight levels; disabling mipmaps permits the unscaled Reach case. CNB output
-  intentionally has no XNB profile gate and writes/decodes the original seven mip levels.
-- **Evidence:** seven checks pass on SOFTWARE and OPENGLES3; the old rendered CNB scene remains
-  RGBA-identical before/after and across renderers, and fresh resized base pixels match its loaded
-  texture. Original streams/captures/source hashes are `reports/checkpoint-445-profile-focused-*`,
-  with baseline captures `checkpoint-445-profile-before-*`; all 33 targeted CTests pass.
-  The XNB cases inspect processed values, not written XNB bytes or XNA/Reach hardware execution.
-- **Environment:** Linux/GCC 14.2; observed CNA HEAD `30831ba6ca01a8820e84720c12ddd10a04d52051`.
-  The inspected pipeline header and texture processor source have no uncommitted changes; other
-  C API work continues. This is not an atomic source/dependency snapshot.
-- **Expected/suggested correction:** describe the environment as host facts that built-in and
-  custom components can consult; remove the obsolete blanket claim. For example, distinguish
-  XNB texture-profile policy from CNB processing without implying every field affects every route.
-- **Status:** confirmed public-comment mismatch; runtime behavior is correct. No CNA source
-  changed, upstream message sent, failing assertion suppressed or new known-failure demo added.
-
 ### CNA-DEMOS-ISSUE-050 -- Owner-only C game operations enter the foreign-thread queue
 
 - **Area:** C ABI game-thread affinity; generated `Runtime.inc`, `CnaCApiRuntime.cpp` and
@@ -4156,6 +3614,733 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Resolved
 
+### CNA-DEMOS-ISSUE-155 -- MathTypeConverter comments contradict its conversion policy
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `66918da04` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** public `MathTypeConverter` documentation in
+  `modules/design/include/Microsoft/Xna/Framework/Design/MathTypeConverter.hpp`.
+- **Observed contract conflicts:** the `CanConvertTo` return comment says the base converter
+  reports true for `InstanceDescriptor`, but its implementation and CNA test report false; each
+  concrete converter adds that support in its own override. The protected `supportStringConvert`
+  comment says only BoundingBox/BoundingSphere/Ray clear the flag and that Matrix/Rectangle leave
+  it set. Production constructors also clear it for Rectangle, Matrix and Plane, matching their
+  tested XNA behavior and the four cna-demos workflows.
+- **Expected:** describe the base result separately from concrete overrides, and list the actual
+  parsing converters (Point, Vector2/3/4, Quaternion and Color) versus the six structural-text-only
+  converters.
+- **Evidence/status:** source-confirmed documentation defect at pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`; evidence is under
+  `/tmp/checkpoint-1117-design-public-headers/*`. Open; no CNA source was modified, no runtime
+  knownIssue marker is needed and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-154 -- AccelerometerReadingEventArgs says its event is never raised
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `66918da04` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** public `AccelerometerReadingEventArgs` documentation in
+  `modules/devices/include/Microsoft/Devices/Sensors/AccelerometerReadingEventArgs.hpp` and the
+  public `Accelerometer::ReadingChanged` event.
+- **Observed contract conflict:** the event-arguments class says `ReadingChanged` "is not raised
+  by this implementation." `Accelerometer::DispatchSensorReading` explicitly snapshots and raises
+  it after `CurrentValueChanged`, and the `Accelerometer.hpp` event comment documents that exact
+  order. The keyboard-emulation path reaches the production dispatcher: every automated reading
+  raised one `CurrentValueChanged` followed by one `ReadingChanged`, with the same sender/vector
+  and a nondefault timestamp, under both SOFTWARE and OPENGLES3 labels.
+- **Expected:** describe the class as the legacy payload that CNA still raises after the modern
+  event, consistent with the event declaration and implementation.
+- **Evidence/status:** source-confirmed documentation defect at pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`; runtime evidence is under
+  `/tmp/checkpoint-1116-devices-phone-public-headers/*`. Open; no CNA source was modified, no
+  runtime knownIssue marker is needed and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-153 -- GraphicsDevice DeviceLost comment contradicts implemented desktop backends
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `66918da04` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** public `GraphicsDevice::DeviceLost` event documentation in
+  `modules/graphics/include/Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp`.
+- **Observed contract conflict:** the public comment says the event is "never raised on desktop".
+  `GraphicsDevice::createRenderer` nevertheless converts a renderer `Lost` callback into
+  `GraphicsDeviceStatus::Lost` and raises this exact event. Both DirectX9 and WebGPU call that
+  callback from their implemented loss paths; their renderer examples also exercise the
+  deterministic `DebugSimulateContextLoss` seam. DirectX9 additionally throws
+  `DeviceLostException` while the device remains lost.
+- **Current cna-demos boundary:** the pinned `linux-full` build contains SOFTWARE and OPENGLES3,
+  which provide no public deterministic loss trigger. `graphics.device.owned_lifecycle` therefore
+  truthfully observes zero DeviceLost events and Normal status through caller-initiated resets.
+  This audit adds no synthetic event, exception or metadata credit and makes no DirectX9/WebGPU
+  runtime claim.
+- **Expected:** describe DeviceLost as renderer/platform dependent and identify the backends that
+  can report it, instead of promising that desktop never raises it. Nearby implementation comments
+  that still say every renderer except DirectX9 leaves the status Normal should also account for
+  WebGPU's callback path.
+- **Evidence/status:** source-confirmed documentation defect at pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`; evidence is under
+  `/tmp/checkpoint-1114-graphics-public-headers/*`. Open; no CNA source was modified, no runtime
+  knownIssue marker is needed and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-107 -- XNB output digest documentation gives an impossible example
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `66918da04` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** `CNA::Content::Pipeline::XnbOutputOptionsDigest`, declared in
+  `XnbOutputContentPipeline.hpp`.
+- **Demo/reproduction:** run `content.xnb.output_pipeline`. The public function returns `w5run`
+  for the documented defaults and `d5h4p` for DesktopGL/version5/HiDef/LZ4/portable names. The
+  latter digest also appears in the resolved writer identity and drives an actual deterministic
+  container whose header is `d`, version5 and flags `0x41`.
+- **Observed:** the header documents a human-readable result “such as `w5rn-x`”. The implementation
+  always appends exactly five fields with no separators: one platform byte, one decimal version,
+  one profile byte (`r`/`h`), one compression byte (`u`/`x`/`4`) and one reader-style byte
+  (`n`/`p`). It therefore cannot produce the documented six-character hyphenated example.
+- **Expected:** the example should use a value the public function can return, such as default
+  `w5run`, or explicitly document the five field positions without an example that suggests a
+  different grammar.
+- **Cause/source evidence:** the implementation in `XnbOutputContentPipeline.cpp` appends the five
+  values directly and the same digest is incorporated into both writer and codec versions. This
+  is a stale public comment, not a byte-output or incremental-invalidation defect.
+- **Scope/status:** documentation-only, so the demo remains a passing workflow and has no runtime
+  `knownIssue` marker. Open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA source was modified and no upstream message
+  was sent.
+
+### CNA-DEMOS-ISSUE-084 -- PacketReader documentation and example still describe the fixed Color mismatch
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `66918da04` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** `PacketReader::ReadColor`, `PacketWriter::Write(Color)`, the public
+  `PacketReader.hpp` contract and `modules/net/examples/demo_packet_roundtrip`.
+- **Reproduction:** run `net.packet.send_and_receive` with two local profiles. The demo writes
+  `Color::Orange` through PacketWriter, sends the packet through a real local System Link session
+  and reads it through PacketReader before reading the following double, vectors, quaternion and
+  matrix. Compare this with the public header and the bundled roundtrip example.
+- **Observed:** the implementation reads four byte channels and the complete 141-byte packet
+  round-trips exactly on SOFTWARE and OPENGLES3. CNA's public header still says ReadColor reads four
+  floats, is not the inverse of Write(Color), and preserves that behavior for fidelity. The bundled
+  example likewise expects the former 4-byte/16-byte mismatch and treats its exception as a quirk.
+  CNA's own `BINDFIX-022` record says that mismatch was fixed.
+- **Expected:** public documentation and the bundled example should describe and exercise the
+  current inverse four-byte behavior, so users are not told to avoid a working API or to expect an
+  exception that no longer occurs.
+- **Scope/status:** open documentation/example defect against clean external CNA `f698d0f548`.
+  Runtime color and every following typed read pass; no runtime knownIssue marker is needed. Both
+  renderer runs have byte-identical stdout and empty stderr. Evidence:`/tmp/checkpoint-685-*`. No
+  CNA source was modified and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-080 -- C avatar animation info claims built-in clips have no timeline
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `60b6b747f` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** `CNA_AvatarAnimationInfo` documentation in
+  `modules/c-api/include/CNA/C/gamer_services.h`; the canonical `AvatarAnimation` implementation
+  and `cna_avatar_animation_*` adapters.
+- **Reproduction:** create each defined `CNA_AVATAR_ANIMATION_PRESET_*`, call
+  `cna_avatar_animation_get_info`, then sample Wave at zero and1.2 seconds and inspect its right-
+  elbow transform.
+- **Observed:** all31 presets report71 bones and real lengths from2.5 to10 seconds. Wave's elbow
+  changes substantially at1.2 seconds; direct position, clamped/looping update and Celebration's
+  keyed facial expression all work. This agrees with the canonical C++ header, implementation and
+  tests.
+- **Expected:** the C info documentation currently says a built-in preset has no timeline and
+  `length_ticks` stays zero until a real clip is loaded. It should describe the built-in original
+  CNA clips and their real timeline, bone and expression sampling.
+- **Scope/status:** passing C-header documentation mismatch. The renderer-free demo validates CPU
+  animation data only and needs no runtime knownIssue marker. Both focused renderer-labelled direct
+  runs pass17 byte-identical controls with empty stderr. No CNA source was modified or upstream
+  message sent. Evidence:`checkpoint-599-c-avatar-animations-focused-*-direct.*`.
+
+### CNA-DEMOS-ISSUE-079 -- Anonymous leaderboard entry clears an output promised unchanged
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `60b6b747f` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** `cna_leaderboard_entry_get_gamer` in
+  `modules/c-api/include/CNA/C/gamer_services.h` and generated `Leaderboards.inc`.
+- **Reproduction:** create a leaderboard entry with `CNA_INVALID_HANDLE` as its optional gamer,
+  initialize `out_gamer` to a nonzero sentinel and call `cna_leaderboard_entry_get_gamer`.
+- **Observed:** the call succeeds with `out_has_gamer == CNA_FALSE` and replaces the sentinel with
+  `CNA_INVALID_HANDLE`. The generated wrapper unconditionally clears `*out_gamer` before the helper
+  discovers that the entry has no gamer.
+- **Expected:** the public header explicitly says the gamer output "is left exactly as the caller
+  set it" when the presence flag is false. Either preserve it for the ordinary absent result or
+  document deterministic invalid-handle initialization, matching the wrapper and the wider C
+  output policy.
+- **Positive controls:** gamer-backed borrowing, exact entry info, rating mutation/hook behavior,
+  equality, live mutable columns, alias retention and stale-handle refusal all pass. Both focused
+  renderer-labelled direct runs pass all23 controls with byte-identical output and empty stderr.
+- **Scope/status:** passing public-header documentation mismatch; the demo asserts the current
+  deterministic result and needs no runtime knownIssue marker. No CNA source was modified or
+  upstream message sent. Evidence:`checkpoint-596-c-leaderboard-entries-focused-*-direct.*`;
+  runtime uses the last completed CNA libraries while current source contains the same generated
+  assignment.
+
+### CNA-DEMOS-ISSUE-076 -- Absent signed-in player lookup contradicts its output contract
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `60b6b747f` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** `cna_gamer_get_signed_in_gamer_at_player_index` in
+  `modules/c-api/include/CNA/C/gamer_services.h` and generated `Gamers.inc`.
+- **Reproduction:** create a valid signed-in gamer for player two but leave the process collection
+  empty, initialize `out_gamer` to a nonzero sentinel, then query player two. Repeat after publishing
+  player two while querying the unoccupied player-one slot.
+- **Observed:** both calls succeed with `out_has_gamer == CNA_FALSE` and replace the sentinel with
+  `CNA_INVALID_HANDLE`. The generated wrapper unconditionally assigns `*out_gamer` to the invalid
+  handle before the implementation determines whether the player slot is occupied.
+- **Expected:** the public header explicitly says `out_gamer` "is left exactly as the caller set it"
+  when `out_has_gamer` is false. Either preserve it for the ordinary absent result or update the
+  contract to promise deterministic invalid-handle initialization, matching the generated wrapper
+  and the broader C output policy.
+- **Scope/status:** passing public-header documentation mismatch; the demo follows the current
+  deterministic invalid-handle behavior and needs no runtime knownIssue marker. Both focused
+  renderer-labelled runs pass all29 controls with identical output and empty stderr. No CNA source
+  was modified or upstream message sent. Evidence:
+  `checkpoint-587-c-signed-in-state-focused-*-direct.*`; runtime uses the last completed CNA
+  libraries while current source contains the same unconditional generated assignment.
+
+### CNA-DEMOS-ISSUE-074 -- C assembly-title route misstates malformed-text result
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `60b6b747f` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** `cna_assembly_set_title_ext` in
+  `modules/c-api/include/CNA/C/core_ext.h`.
+- **Observed contract conflict:** the route-specific return documentation lists
+  `CNA_RESULT_INVALID_ARGUMENT` for a malformed string view. An otherwise valid five-byte view
+  containing an embedded NUL returns `CNA_RESULT_ENCODING` and leaves the existing title intact.
+  The generated adapter explicitly uses `ReadText(..., EmbeddedNul::Refused)`, whose documented
+  result set includes `ENCODING`; CNA's general `STRINGS_AND_BUFFERS.md` likewise says semantic
+  text values reject embedded U+0000 with `CNA_RESULT_ENCODING`.
+- **Runtime evidence:** `c_api.platform.host_identity` first installs and exactly copies an
+  authored title, submits `{'b','a','d','\0','x'}`, observes `ENCODING`, and copies the unchanged
+  authored bytes before restoring the previous process title. Both focused direct renderer
+  selections pass with identical output and empty stderr after correcting the demo's initial
+  expectation. Evidence:`checkpoint-556-c-platform-host-identity-focused-*-direct.*`.
+- **Expected:** list `CNA_RESULT_ENCODING` for malformed UTF-8 or forbidden embedded NUL text,
+  while retaining `CNA_RESULT_INVALID_ARGUMENT` for an invalid pointer/count pair. The
+  implementation and shared text contract should stay as-is.
+- **Scope/status:** passing public-header documentation mismatch; no runtime knownIssue marker is
+  needed. No CNA source was modified or upstream message sent. Direct runtime uses the last
+  completed CNA libraries while unrelated external renderer-retirement work remains in flight.
+
+### CNA-DEMOS-ISSUE-072 -- C SoundEffectInstance snapshot promises pitch clamping
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `60b6b747f` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** `CNA_SoundEffectInstanceInfo.pitch` and
+  `cna_sound_effect_instance_set_pitch` in `modules/c-api/include/CNA/C/audio.h`.
+- **Observed contract conflict:** the public snapshot field says it reports the pitch "after CNA
+  clamping to `[-1, 1]`", and the setter only documents a finite input. Passing2.0 actually returns
+  `CNA_RESULT_INVALID_ARGUMENT`; setting1.0 succeeds and the snapshot returns1.0. The generated C
+  adapter checks finiteness and then calls `SoundEffectInstance::setPitchProperty`, whose canonical
+  implementation deliberately throws for every value outside the closed interval. CNA's pure-C
+  `AudioSmoke.c` also explicitly requires rejection of2.0 and describes that as XNA behavior.
+- **Runtime evidence:** `c_api.audio.sound_effect_instance_state` range-checks2.0, then configures
+  pitch1.0 with volume, pan and looping. The complete property snapshot and all later Play/Pause/
+  Resume/release/replay controls pass in five repeated SOFTWARE direct runs and one OPENGLES3
+  direct run with byte-identical output and empty stderr.
+- **Expected:** document pitch as range-checked to `[-1, 1]` and list out-of-range input among the
+  setter's invalid-argument outcomes. The implementation and its canonical test should stay as-is.
+- **Scope/status:** passing public-header documentation mismatch; no runtime knownIssue marker is
+  needed. No CNA source was modified or upstream message sent. Direct runtime currently uses the
+  last completed CNA libraries from `b2ded99da9`; project-built evidence awaits completion of the
+  unrelated in-progress Vulkan retirement. Open; direct evidence is archived as
+  `checkpoint-529-c-sound-instance-state-focused-*-direct.*`.
+
+### CNA-DEMOS-ISSUE-071 -- C PBR texture getter documents five of its seven slots
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `60b6b747f` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** `cna_pbr_effect_get_texture` in
+  `modules/c-api/include/CNA/C/effects.h`.
+- **Observed contract conflict:** its `slot` parameter says "One of the five `CNA_PBR_TEXTURE_*`
+  identities." The same public header defines seven identities from base color0 through specular
+  color6, makes6 `CNA_PBR_TEXTURE_MAXIMUM`, and describes the coordinate/transform routes as
+  accepting all of them. The generated texture getter/setter accept every identity through6.
+- **Runtime evidence:** `c_api.graphics.pbr_texture_slots` gets and sets exact retained handles in
+  all seven slots, independently round-trips each slot's UV selector and transform, and confirms the
+  three color-carrying sRGB identities. Two textures survive cloning and source destruction through
+  five core and two specular slots respectively, then release after their last slot clears. All34
+  controls pass identically under SOFTWARE and OPENGLES3 with empty stderr.
+- **Expected:** say seven defined slot identities, or refer to the inclusive named range, so the
+  public C contract includes its two specular extension slots.
+- **Scope/status:** passing public-header documentation mismatch; no runtime knownIssue marker is
+  needed. No CNA source was modified or upstream message sent. Observed at clean CNA `a6bb279d47`;
+  focused evidence is archived as `checkpoint-517-c-pbr-textures-focused-*`. Open.
+
+### CNA-DEMOS-ISSUE-069 -- C Effect clone comment overpromises concrete-type preservation
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `60b6b747f` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** `cna_effect_clone` in `modules/c-api/include/CNA/C/effects.h`.
+- **Observed contract conflict:** the public C comment says the result is "an owned clone of the
+  same concrete native type." `EffectMaterial` deliberately has no `Clone` override, so its
+  inherited canonical `Effect::Clone()` returns an independent base `Effect`. CNA's public
+  software-renderer documentation and dedicated C++ tests identify this as recovered Microsoft XNA
+  and FNA behavior; changing the runtime to preserve `EffectMaterial` would be a regression.
+- **Runtime evidence:** `c_api.graphics.effect_concrete_types` creates an `EffectMaterial`, clones
+  it through the public C route and observes the exact base type name
+  `Microsoft.Xna.Framework.Graphics.Effect`; the clone applies successfully but both
+  EffectMaterial-only ownership routes refuse it. In the same run, `SpriteEffect.Clone()` preserves
+  its concrete type and exact stock-sprite identity. All22 controls pass identically under SOFTWARE
+  and OPENGLES3 with empty stderr.
+- **Expected:** document the independent clone and the `EffectMaterial` exception instead of
+  promising concrete-type preservation for every effect. No runtime change is indicated.
+- **Scope/status:** passing public-header documentation mismatch; no runtime knownIssue marker is
+  needed. No CNA source was modified or upstream message sent. Observed at clean CNA `a6bb279d47`.
+  Open; focused evidence will be archived as
+  `checkpoint-510-c-effect-concrete-types-focused-*`.
+
+### CNA-DEMOS-ISSUE-068 -- C effect-parameter semantic lookup misstates case matching
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `60b6b747f` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** `cna_effect_parameter_collection_find_semantic` in
+  `modules/c-api/include/CNA/C/effects.h`.
+- **Observed contract conflict:** the public C comment calls its input an "Exact UTF-8 semantic",
+  but the route delegates to `EffectParameterCollection::GetParameterBySemantic`. The public C++
+  header documents case-insensitive matching, its implementation uses `OrdinalIgnoreCase`, and its
+  tests require mixed-case matching plus first-insertion wins for semantic duplicates.
+- **Runtime evidence:** `c_api.graphics.effect_parameter_collections` stores `POSITION` followed by
+  `Position`; a lookup for lowercase `position` returns the first parameter and its current value77
+  under both tested renderer selections. Name lookup in the same collection remains case-sensitive.
+- **Expected:** describe the C route as ordinal case-insensitive and state that the first matching
+  parameter is returned, aligning the public binding contract with the behavior it deliberately
+  exposes. No runtime change is indicated.
+- **Scope/status:** passing public-header documentation mismatch; no runtime knownIssue marker is
+  needed. No CNA source was modified or upstream message sent. Observed at clean CNA `fbd8e64a3`.
+  Open; focused evidence will be archived as
+  `checkpoint-507-c-effect-parameter-collections-focused-*`.
+
+### CNA-DEMOS-ISSUE-065 -- C GraphicsDevice reset declaration is separated from its documentation
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `60b6b747f` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** `cna_graphics_device_reset` in
+  `modules/c-api/include/CNA/C/graphics_device.h`.
+- **Observed:** the complete documentation block for resetting with current presentation parameters
+  and the resetting/reset event order appears before the separate, complete documentation block for
+  `cna_graphics_device_create`. The create declaration, destroy documentation and destroy
+  declaration then intervene before the bare `cna_graphics_device_reset` declaration. A reader or
+  documentation generator cannot associate the reset contract with the reset declaration.
+- **Runtime/source evidence:** `c_api.graphics.owned_device` calls the bare-declared route on a
+  caller-owned device and observes SUCCESS plus the synchronous resetting-then-reset callback pair
+  under both SOFTWARE and OPENGLES3. The generated implementation calls canonical `Reset()`; the
+  behavior matches the displaced comment. All20 demo controls pass identically with empty stderr.
+- **Expected:** place the reset declaration immediately after its existing documentation block, or
+  move that block immediately above the existing declaration after destroy. No runtime change is
+  indicated by this evidence.
+- **Scope/status:** passing public-header documentation-placement defect; no runtime knownIssue
+  marker is needed. No CNA source was modified or upstream message sent. Observed at clean CNA
+  `d7eff66ee`; focused evidence is archived as `checkpoint-502-c-owned-device-focused-*`. Open.
+
+### CNA-DEMOS-ISSUE-064 -- C Viewport default comment promises the wrong maximum depth
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `60b6b747f` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** `cna_viewport_init` and its public comment in
+  `modules/c-api/include/CNA/C/graphics_device.h`.
+- **Observed contract conflict:** the comment says the default initializer writes zero position
+  and size, `min_depth` zero and `max_depth` one. The generated route constructs the canonical
+  `Viewport()` value, whose six fields are all zero. CNA's own `GraphicsDeviceSmoke.c` explicitly
+  requires `max_depth == 0` and explains that XNA has no parameterless Viewport constructor, so
+  `default(Viewport)` is the all-zero value; only the bounds constructors install depth0..1.
+- **Runtime evidence:** `c_api.graphics.viewport` seeds every field with seven, calls the route and
+  observes six zero fields under both SOFTWARE and OPENGLES3. Its separate parameterized controls
+  observe depth0..1, so the two contracts cannot be confused. All19 demo controls pass identically
+  with empty stderr, and the focused61-test regression is green.
+- **Expected:** change the public C comment to promise `max_depth` zero for the default value and
+  reserve the0..1 statement for the two parameterized constructors. The current implementation
+  and tests match XNA value semantics; changing runtime behavior to match the stale sentence would
+  reintroduce the old contradiction described by CNA's own test.
+- **Scope/status:** passing documentation mismatch; no runtime knownIssue marker is needed. No CNA
+  source was modified or upstream message sent. Observed at clean CNA `d7eff66ee`; focused evidence
+  is archived as `checkpoint-498-c-viewport-focused-*`. Open.
+
+### CNA-DEMOS-ISSUE-063 -- C synthetic-camera comments promise an unreachable Closed state
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `60b6b747f` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** `cna_camera_create_with_test_backend_ext`, `cna_camera_set_test_state_ext`,
+  `cna_camera_set_test_frame_ext` and their comments in
+  `modules/c-api/include/CNA/C/devices.h`.
+- **Observed contract conflict:** the creation comment says the synthetic camera starts closed,
+  and the frame-publishing comment says a null pixel pointer clears the frame and closes the
+  camera. Actual creation reports `CNA_CAMERA_STATE_OPENING` with zero dimensions; clearing a
+  frame restores the same Opening state. Passing the defined `CNA_CAMERA_STATE_CLOSED` identity to
+  the documented state setter returns `CNA_RESULT_INVALID_ARGUMENT`, as does NotSupported.
+- **Runtime/source evidence:** `c_api.devices.camera_frames` observes Opening at creation, then
+  round-trips Denied, Lost and Opening, proves Closed/NotSupported/undefined states are refused
+  without mutation, publishes and acquires an exact synthetic frame, and observes Opening again
+  after clearing it. All23 controls pass under SOFTWARE and OPENGLES3 with identical output and
+  empty stderr. `CameraTestState` initializes to Opening; `CameraSetTestStateExt` explicitly
+  refuses Closed/NotSupported; the null-frame branch explicitly assigns Opening. CNA's own pure-C
+  smoke expects the same behavior and explains that the platform now hands out only opened devices.
+- **Expected:** update all three public comments to describe the current platform-opened model and
+  list the two defined but rejected identities, or restore the documented Closed lifecycle and
+  make it reachable consistently. The current words and behavior cannot both be correct.
+- **Scope/status:** passing documentation mismatch; no runtime knownIssue marker is needed. The
+  real `cna_camera_create` route is deliberately not invoked, so no camera is opened and no
+  permission prompt is claimed. No CNA source was modified or upstream message sent. Open; focused
+  evidence is archived as `checkpoint-488-c-camera-frames-focused-*`.
+
+### CNA-DEMOS-ISSUE-061 -- C default mouse-cursor documentation contradicts the Arrow constructor
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `60b6b747f` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** `cna_mouse_cursor_create_ext`,
+  `modules/c-api/include/CNA/C/input_cursor.h`, `CnaCApiInput.cpp` and the public C++
+  `MouseCursor.hpp`/`MouseCursor.cpp`.
+- **Observed contract conflict:** the C header says this route creates an empty cursor that wraps
+  no native cursor and that setting it changes nothing. The route actually allocates
+  `MouseCursor()`. That public C++ constructor is documented as creating the default Arrow and its
+  implementation leaves `systemShape_` at `ShapeArrow`, `isCustom_` false and `isDisposed_` false;
+  `Mouse::SetCursor` therefore selects the platform Arrow.
+- **Runtime/source evidence:** the extended `c_api.input.keyboard_mouse` creates the owned default,
+  installs it successfully under both renderer selections, disposes it twice and destroys its
+  handle. Separate controls show that a borrowed stock Arrow survives Dispose and that a
+  texture-derived cursor can be installed before restoring the stock Arrow. The run does not use
+  pixel or pointer-shape inspection, so the Arrow identity is established by the direct public
+  constructor/setter source path rather than a visual claim.
+- **Expected:** describe the C route as an owned default Arrow cursor, matching the public C++
+  constructor, or change the implementation and the underlying cursor model if a distinct empty
+  cursor is really intended. The current API has no separate empty shape identity.
+- **Scope/status:** passing documentation mismatch; cursor creation, installation and lifetime
+  succeed, so no runtime knownIssue marker is needed. Focused source hashes, exact child controls
+  and both renderer logs are archived under `checkpoint-476-c-input-mouse-cursor-focused-*`.
+  Complete476 preserves every prior parent outcome and38/42 failures while only this child grows
+  15->32; evidence is under `checkpoint-476-c-input-mouse-cursor-*`. No CNA file was edited and no
+  upstream message was sent. Open.
+
+### CNA-DEMOS-ISSUE-060 -- Raised C touch-event documentation contradicts its gesture-only implementation
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `60b6b747f` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** `cna_touch_panel_raise_touch_event_ext`,
+  `modules/c-api/include/CNA/C/input_touch.h`, generated `Input.inc`, `TouchPanel.cpp` and
+  `SdlInputBridge.cpp`.
+- **Observed contract conflict:** one public-header paragraph says the route feeds "gesture
+  detection and the event-driven touch map, not the slot array," then says a raised event never
+  appears in the snapshot. Those statements cannot both describe CNA's current `GetState`
+  fallback, which reads the event-driven map when the slot array is empty.
+- **Implementation and runtime evidence:** the generated C route calls only
+  `TouchPanel::INTERNAL_onTouchEvent`, which scales the normalized coordinates and feeds the
+  gesture detector. The real SDL bridge separately calls `INTERNAL_setTouchState` before that
+  gesture call; the C route does not. The extended `c_api.input.gesture_queue` workflow raises a
+  deterministic FreeDrag, reads its exact 640x480-scaled position/delta, then observes an empty
+  `CNA_TouchState`. This agrees with the latter sentence and CNA's pure-C smoke expectation.
+- **Expected:** describe the route as gesture-processing input only, or make it update the
+  event-driven state map as the first sentence promises. If behavior changes, clarify identifier,
+  pressure and previous-location semantics rather than silently treating the gesture event as a
+  complete platform touch event.
+- **Scope/status:** documentation mismatch; no renderer, physical-device or gesture-timing defect
+  is claimed. The passing demo records actual behavior and needs no runtime knownIssue marker. Both
+  focused renderer runs pass64 identical controls with empty stderr; source hashes and the exact
+  31->64 comparison are archived under `checkpoint-476-c-input-touch-scaling-focused-*`. No CNA
+  file was edited and no upstream message was sent. Complete476 preserves every prior parent and
+  unrelated child result while this demo alone grows31->64 controls; evidence:
+  `checkpoint-476-c-input-touch-scaling-*`. Open.
+
+### CNA-DEMOS-ISSUE-059 -- Empty MediaQueue active-Song output contradicts its C documentation
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `60b6b747f` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area/API:** `cna_media_queue_get_active_song`,
+  `modules/c-api/include/CNA/C/media_player.h` and generated `MediaPlayer.inc`.
+- **Reproduction:** after the existing C media demo stops playback and safely clears the global
+  queue, initialize `out_song` with a still-valid shared Song handle and `out_available` with
+  `CNA_TRUE`, then call `cna_media_queue_get_active_song`. Repeat after deliberately storing the
+  documented unchecked active index 7 in the empty queue. Both SOFTWARE and OPENGLES3 runs use
+  the same public C route; neither dereferences the unavailable result.
+- **Observed:** both calls return `CNA_RESULT_SUCCESS`, set availability to `CNA_FALSE` and replace
+  the valid sentinel with `CNA_INVALID_HANDLE`. All53demo checks pass identically under both
+  renderers with empty stderr. The independently held sentinel Song remains valid and is released
+  once through its original handle. Generated `MediaPlayer.inc` explicitly assigns
+  `CNA_INVALID_HANDLE` before delegating to the queue lookup.
+- **Expected/documented:** the public header says `out_song` receives an owned handle when active
+  and is "untouched otherwise." An empty queue is the ordinary unavailable case, so overwriting a
+  valid caller value contradicts that statement. Either the route must preserve the output or,
+  consistently with its generated implementation and other handle-output routes, the header must
+  document initialization to `CNA_INVALID_HANDLE` when unavailable.
+- **Controls/scope:** `cna_media_queue_get_at` independently returns INVALID_ARGUMENT for index
+  zero on the empty queue and initializes its output to invalid; its header makes no untouched
+  output promise. The active-index setter stores 7 exactly as documented, active lookup remains
+  unavailable, and the demo restores -1 before cleanup. Collection disposal, idempotence and
+  retained-Song lifetime also pass. This is a documentation/implementation mismatch, not a
+  renderer, playback, ownership or memory-safety failure. ISSUE-058's unsafe replay is never
+  invoked.
+- **Evidence/environment:** Linux x86_64, GCC14.2/CMake3.31.6 linux-full, CNA clean at
+  `eff31310179168fb4f47258e6226a5234c2140d0`. Exact two-renderer logs, output lists, focused
+  review, targeted29-test log, observed CNA sources/hashes and watched3909-input build evidence
+  are archived under `build/linux-full/reports/checkpoint-474-c-media-bounds-focused-*`.
+- **Status/handling:** open documentation defect. No CNA source was edited and no upstream message
+  was sent. The passing demo names the behavior it actually observes and needs no runtime
+  knownIssue marker; revisit the wording or expectation after CNA resolves the contract. Complete
+  checkpoint474-C-media-lifecycle-bounds preserves all prior full-smoke outcomes and the exact
+  seven-check extension under both renderers; evidence: `checkpoint-474-c-media-bounds-*`.
+
+### CNA-DEMOS-ISSUE-037 -- DynamicSoundEffectInstance header incorrectly says IsLooped is ignored
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `66918da04` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area:** documentation only, `DynamicSoundEffectInstance::setIsLoopedProperty` in
+  `modules/audio/include/Microsoft/Xna/Framework/Audio/DynamicSoundEffectInstance.hpp`.
+- **Related demo:** `audio.dynamic_sound_effect_instance.streaming` now checks that true is
+  refused and false is accepted. Its failure marker is for the separate disposal issue below.
+- **Evidence:** source review at CNA `2b15506a48e1a6202c985823131daf5856826f71`. Both setter
+  declarations say the argument is ignored/no effect. The implementation in
+  `modules/audio/src/Xna/DynamicSoundEffectInstance.cpp` first checks disposal, then throws
+  `System::InvalidOperationException` when the value is true; false is accepted. The rvalue
+  overload forwards to this same implementation.
+- **Expected:** document that dynamic instances cannot loop: setting true throws, setting false
+  is accepted, and using the setter after disposal throws ObjectDisposedException. This agrees
+  with the locally available decompilation of genuine XNA 4.0 DynamicSoundEffectInstance.IsLooped.
+- **Validation scope:** header, implementation and reference source inspected; the extended
+  streaming demo executed both setter values successfully on SOFTWARE and OPENGLES3. Genuine XNA was not run.
+  This is a confirmed comment contradiction, not a setter implementation defect. No CNA source
+  was changed.
+- **Suggested correction:** update both setter comments and their exception documentation.
+
+### CNA-DEMOS-ISSUE-040 -- Picture and Album thumbnail comments contradict generation paths
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `66918da04` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area:** documentation only, Picture::GetThumbnail and Album::GetThumbnail in
+  `modules/media/include/Microsoft/Xna/Framework/Media/{Picture,Album}.hpp`, plus the
+  Album implementation comment described below.
+- **Related demos:** `media.media_library.save_picture` (normal Picture thumbnail checks pass;
+  its expected-failure marker belongs to the separate short-read ISSUE-041) and
+  `media.media_library.album_art` (normal Album thumbnail checks pass).
+- **Evidence:** the public comment says no separate thumbnail is generated and that GetThumbnail
+  returns the same image as GetImage. The implementation in `modules/media/src/Xna/Picture.cpp`
+  instead calls ThumbnailGenerator::CreatePngThumbnail and returns a caller-owned MemoryStream
+  containing the generated image when possible; it otherwise falls back to the source FileStream.
+- **Reproduction/observed:** save the original 640x320 PNG into a private library, read GetImage
+  and verify its bytes equal the source, then save GetThumbnail's stream as a second picture.
+  The second Picture reports 128x64, and both files are indexed by a fresh MediaLibrary. The
+  demo checks smaller dimensions and preserved aspect ratio, not a fixed XNA thumbnail size.
+- **Environment/evidence:** Linux GCC 14.2, current CNA ce74063e6483020835af07c4af1e3614ebc5d962
+  (media implementation unchanged from e60fa35f7). The standalone ran under both SOFTWARE and
+  OPENGLES3 selections and passed 11 child checks each, including private XDG root verification
+  before library access. This is file/stream evidence, not GPU or visual thumbnail validation.
+  Reports/logs: `/tmp/cna-save-picture-{SOFTWARE,OPENGLES3}.{json,log}`; parent JSON check count
+  is zero for standalone tools, so the checks are in child stdout. No real user media was used.
+- **Expected/suggested correction:** document the possible generated thumbnail and original-image
+  fallback. The current 128-pixel maximum is an implementation choice, not a universal XNA
+  contract. The implementation's useful resizing behavior should not be removed to match the
+  stale comment.
+- **Additional Album evidence (2026-10-13):** at clean CNA `eff31310179168fb4f47258e6226a5234c2140d0`,
+  `Album.hpp::GetThumbnail` repeats the unconditional claim that it returns the same image as
+  GetAlbumArt. `Album.cpp::GetThumbnail` instead calls CreatePngThumbnail for file-based art,
+  returning generated PNG bytes on success and the original FileStream on failure. Embedded
+  art follows a different branch and currently returns GetAlbumArt directly; its implementation
+  comment about downscaling decoded bytes also overstates that branch. The album_art demo runs
+  the file-based path under both requested renderer selections: GetAlbumArt matches the original
+  640x320 PNG bytes, while GetThumbnail returns distinct PNG bytes decoded through public
+  SavePicture as 128x64. Both streams remain readable after MediaLibrary destruction. Its eight
+  child checks pass identically with parent JSON0; 29 media/CLI CTests pass. This is stream and
+  dimension evidence, not visual-quality validation. Embedded-art and fallback branches remain
+  source-only. Evidence: `checkpoint-474-art-focused-*`; no runtime knownIssue marker is needed.
+- **Status:** confirmed documentation contradictions with native Picture and file-based Album
+  evidence. No CNA source changed and no upstream report sent.
+
+
+### CNA-DEMOS-ISSUE-042 -- Root-prefix comments describe an older mesh-cancellation representation
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `66918da04` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area:** documentation only, SkinningData::SkeletonRootPrefix and
+  ApplyBindPoseBoneTransformsEXT comments in `modules/graphics/include/Microsoft/Xna/Framework/Graphics/AnimationPlayer.hpp`.
+- **Related demo:** `graphics.model.multiple_skins` (passes; no expected-failure marker).
+- **Evidence:** the root-prefix comment describes non-joint ancestry and inverse mesh-node
+  cancellation as context retained in SkeletonRootPrefix. The current loose glTF loader instead
+  calls BuildSkeleton with scene ancestry alone and parents each skinned ModelMesh to its identity
+  model root. The authored mesh node remains in Model.Bones but its placement is not applied to
+  the skinned draw. The runtime result is correct; the public storage explanation is stale.
+- **Reproduction/observed:** import two one-joint skins sharing a quad and material, with non-joint
+  ancestors at X=-0.5/+0.5 and mesh nodes at X=+4/-4. The public prefixes are -0.5/+0.5, not
+  -4.5/+4.5. Both mesh parents are the identity model root, while named scene nodes retain +4/-4.
+  Animating the left root preserves its ancestor; restoring the right bind pose touches only its
+  own effect. Actual red/green positions and the vacated left position pass pixel checks.
+- **Environment/evidence:** Linux GCC 14.2, CNA 8b5564f1e81196f3aaee9e9a652b8030e21f4c6c;
+  no runtime library change since the preceding checkpoint (external documentation/test cleanup).
+  Both SOFTWARE and OPENGLES3 initially passed 17 checks; the final live-bounds extension
+  passes 21. Captures were inspected and RGBA-identical; final captures match those inspected
+  images: `/tmp/cna-427-multiple-skins-final-{SOFTWARE,OPENGLES3}.{json,log,png}`.
+- **Expected/suggested correction:** describe the current loose loader's identity mesh parent and
+  ancestor-only prefix, distinguishing the ignored mesh-node transform from a stored inverse
+  matrix. Avoid implying that every legacy/custom SkinningData carrier has this same representation.
+- **Status:** confirmed public-comment mismatch, not a rendering failure. No CNA source changed,
+  no upstream report sent and no failing check suppressed. The final demo independently verifies
+  live-bound updates with an intentionally distant palette and restoration; broader skinning
+  bounds and multi-influence cases are not implied.
+
+### CNA-DEMOS-ISSUE-049 -- Build-environment overview incorrectly says built-ins ignore its fields
+
+- **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `66918da04` corrects the public contract; runtime behavior and demo assertions are unchanged.
+  Source/native-contract review, 266 selected native tests, 28 focused demos under each
+  SOFTWARE/OPENGLES3 label and all 732 enabled demo CTests pass. Focused comparisons
+  preserve statuses, check counts and exact unrelated expected failures. Evidence:
+  `build/linux-full/reports/repair-docs-*`. Hardware/backend-specific statements were
+  source-checked, not a claim of physical-device, DirectX9, WebGPU or online validation.
+  Historical observations below are retained; their Open/no-change wording predates this repair.
+
+- **Area:** documentation only, the host-level build-facts overview above ContentBuildEnvironment
+  in `modules/content/include/CNA/Content/Pipeline/ContentPipeline.hpp` (around lines 169-176).
+- **Related demo:** `content.texture_processor.resize_to_power_of_two` (passes; no expected-failure marker).
+- **Mismatch:** the overview says "None of them changes what a built-in CNA component does today."
+  Actual TextureProcessor behavior consults targetProfile when processing an XNB-targeted texture.
+- **Reproduction/observed:** register the native texture pipeline and ImportAndProcess the original
+  100x60 PNG with Xnb output intent, Color format and generateMipmaps=true. Reach refuses it at
+  Process/CNA.TextureProcessor with the power-of-two requirement. Changing only targetProfile to
+  HiDef produces seven mip payloads at the original size. Explicit resizing instead permits Reach
+  with 128x64 and eight levels; disabling mipmaps permits the unscaled Reach case. CNB output
+  intentionally has no XNB profile gate and writes/decodes the original seven mip levels.
+- **Evidence:** seven checks pass on SOFTWARE and OPENGLES3; the old rendered CNB scene remains
+  RGBA-identical before/after and across renderers, and fresh resized base pixels match its loaded
+  texture. Original streams/captures/source hashes are `reports/checkpoint-445-profile-focused-*`,
+  with baseline captures `checkpoint-445-profile-before-*`; all 33 targeted CTests pass.
+  The XNB cases inspect processed values, not written XNB bytes or XNA/Reach hardware execution.
+- **Environment:** Linux/GCC 14.2; observed CNA HEAD `30831ba6ca01a8820e84720c12ddd10a04d52051`.
+  The inspected pipeline header and texture processor source have no uncommitted changes; other
+  C API work continues. This is not an atomic source/dependency snapshot.
+- **Expected/suggested correction:** describe the environment as host facts that built-in and
+  custom components can consult; remove the obsolete blanket claim. For example, distinguish
+  XNB texture-profile policy from CNB processing without implying every field affects every route.
+- **Status:** confirmed public-comment mismatch; runtime behavior is correct. No CNA source
+  changed, upstream message sent, failing assertion suppressed or new known-failure demo added.
+
+
 ### CNA-DEMOS-ISSUE-116 -- Singular affine Matrix inversion loses XNA's finite components
 
 - **Repair-campaign correction (2026-10-19): DEMO_EXPECTATION_BUG.** The historical
@@ -4164,11 +4349,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   its U+221E infinity symbol was best-fit encoded as ASCII `8` by the CP1252 console.
   [Preserved source and evidence](repair-evidence/issue-116/README.md) explain the ambiguity.
   Resolved by correcting the demo oracle; CNA runtime behavior is unchanged. Native regression
-  commit `62e3f9c56` protects value/out/alias classifications. All 91 selected native Matrix
+  commit `62e3f9c56` protects value/out/alias classifications. All 92 selected native Matrix
   tests pass; the corrected demo passes all seven checks with empty stderr under both renderer
   labels, and all 19 selected Matrix/catalog/validation CTests pass. Its invalid knownIssue
   marker is removed. Logs: `build/linux-full/reports/repair-116-closed-*`,
-  `repair-116-ctest.log`, `repair-oracles-native-ctest.log`.
+  `repair-116-ctest.log`, `repair-oracles-native-ctest.log`, `repair-116-native-direct.log`.
+  The initial CTest selection ran 91 old aggregate tests; the direct 92-test run explicitly
+  verifies the added regression from the newly built math executable in CNA's working directory.
   The historical observations below are retained, not current expectations.
 - **Area/API:** `Microsoft::Xna::Framework::Matrix::Invert`, value and by-reference overloads.
 - **Demo/reproduction:** run `math.matrix.invert`. Invert
