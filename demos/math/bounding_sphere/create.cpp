@@ -119,6 +119,4 @@ CNA_DEMOS_CONSOLE(BoundingSphereCreate, {
              "BoundingSphere::Equals", "BoundingSphere::GetHashCode", "BoundingSphere::op_Equality",
              "BoundingSphere::op_Inequality"},
     .tags = {"bounds", "sphere"},
-    .restrictions = "CNA-DEMOS-ISSUE-128 records BoundingSphere argument-validation differences.",
-    .knownIssue = "CNA-DEMOS-ISSUE-128",
 })

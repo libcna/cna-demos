@@ -155,15 +155,15 @@ namespace
                 "equal stock vertex values have equal hashes");
             ctx.Check(
                 pcValue.ToString() ==
-                        "{{Position:{X:1 Y:2 Z:3} Color:{R:10 G:20 B:30 A:40}}}" &&
+                        "{Position:{X:1 Y:2 Z:3} Color:{R:10 G:20 B:30 A:40}}" &&
                     pctValue.ToString() ==
-                        "{{Position:{X:1 Y:2 Z:3} Color:{R:10 G:20 B:30 A:40} "
-                        "TextureCoordinate:{X:4 Y:5}}}" &&
+                        "{Position:{X:1 Y:2 Z:3} Color:{R:10 G:20 B:30 A:40} "
+                        "TextureCoordinate:{X:4 Y:5}}" &&
                     pntValue.ToString() ==
-                        "{{Position:{X:1 Y:2 Z:3} Normal:{X:0 Y:1 Z:0} "
-                        "TextureCoordinate:{X:4 Y:5}}}" &&
+                        "{Position:{X:1 Y:2 Z:3} Normal:{X:0 Y:1 Z:0} "
+                        "TextureCoordinate:{X:4 Y:5}}" &&
                     ptValue.ToString() ==
-                        "{{Position:{X:1 Y:2 Z:3} TextureCoordinate:{X:4 Y:5}}}",
+                        "{Position:{X:1 Y:2 Z:3} TextureCoordinate:{X:4 Y:5}}",
                 "all four stock values use XNA's exact field-labelled text");
 
             // VertexPositionColorTexture: a textured quad whose corners also carry a tint.

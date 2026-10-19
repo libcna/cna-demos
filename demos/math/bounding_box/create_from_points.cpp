@@ -87,6 +87,4 @@ CNA_DEMOS_CONSOLE(BoundingBoxFromPoints, {
              "BoundingBox::GetHashCode", "BoundingBox::ToString", "BoundingBox::op_Equality",
              "BoundingBox::op_Inequality"},
     .tags = {"bounds", "aabb", "collision"},
-    .restrictions = "CNA-DEMOS-ISSUE-126 records BoundingBox's extra outer ToString braces.",
-    .knownIssue = "CNA-DEMOS-ISSUE-126",
 })

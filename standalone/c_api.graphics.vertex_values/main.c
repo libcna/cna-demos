@@ -64,10 +64,10 @@ static const ExpectedElement PositionTextureElements[] = {
 
 static const VertexCase Cases[] = {
     {CNA_VERTEX_TYPE_POSITION_COLOR, 16U, 2U, PositionColorElements,
-     "{{Position:{X:1 Y:2 Z:3} Color:{R:4 G:5 B:6 A:7}}}"},
+     "{Position:{X:1 Y:2 Z:3} Color:{R:4 G:5 B:6 A:7}}"},
     {CNA_VERTEX_TYPE_POSITION_COLOR_TEXTURE, 24U, 3U, PositionColorTextureElements,
-     "{{Position:{X:1 Y:2 Z:3} Color:{R:4 G:5 B:6 A:7} "
-     "TextureCoordinate:{X:11 Y:12}}}"},
+     "{Position:{X:1 Y:2 Z:3} Color:{R:4 G:5 B:6 A:7} "
+     "TextureCoordinate:{X:11 Y:12}}"},
     {CNA_VERTEX_TYPE_POSITION_NORMAL_TANGENT_TEXTURE, 48U, 4U,
      PositionNormalTangentTextureElements,
      "{{Position:{X:1 Y:2 Z:3} Normal:{X:4 Y:5 Z:6} Tangent:{X:7 Y:8 Z:9 W:10} "
@@ -78,14 +78,14 @@ static const VertexCase Cases[] = {
      "TextureCoordinate:{X:11 Y:12} BlendWeight:{X:13 Y:14 Z:15 W:16} "
      "BlendIndices:{1 2 3 4}}}"},
     {CNA_VERTEX_TYPE_POSITION_NORMAL_TEXTURE, 32U, 3U, PositionNormalTextureElements,
-     "{{Position:{X:1 Y:2 Z:3} Normal:{X:4 Y:5 Z:6} "
-     "TextureCoordinate:{X:11 Y:12}}}"},
+     "{Position:{X:1 Y:2 Z:3} Normal:{X:4 Y:5 Z:6} "
+     "TextureCoordinate:{X:11 Y:12}}"},
     {CNA_VERTEX_TYPE_POSITION_NORMAL_TEXTURE_SKINNED, 52U, 5U,
      PositionNormalTextureSkinnedElements,
      "{{Position:{X:1 Y:2 Z:3} Normal:{X:4 Y:5 Z:6} TextureCoordinate:{X:11 Y:12} "
      "BlendWeight:{X:13 Y:14 Z:15 W:16} BlendIndices:{1 2 3 4}}}"},
     {CNA_VERTEX_TYPE_POSITION_TEXTURE, 20U, 2U, PositionTextureElements,
-     "{{Position:{X:1 Y:2 Z:3} TextureCoordinate:{X:11 Y:12}}}"}
+     "{Position:{X:1 Y:2 Z:3} TextureCoordinate:{X:11 Y:12}}"}
 };
 
 static int bytes_are(const void* data, size_t count, uint8_t expected)

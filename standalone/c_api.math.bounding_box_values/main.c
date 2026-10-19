@@ -27,7 +27,7 @@ static int box_is(CNA_BoundingBox value, CNA_Vector3 min, CNA_Vector3 max)
 int main(int argc, char** argv)
 {
     static const char ExpectedText[] =
-        "{{Min:{X:-1 Y:-2 Z:-3} Max:{X:4 Y:5 Z:6}}}";
+        "{Min:{X:-1 Y:-2 Z:-3} Max:{X:4 Y:5 Z:6}}";
     const CNA_BoundingBox outer = {{-2.0f, -2.0f, -2.0f}, {2.0f, 2.0f, 2.0f}};
     const CNA_BoundingBox inner = {{-1.0f, -1.0f, -1.0f}, {1.0f, 1.0f, 1.0f}};
     const CNA_BoundingSphere inside_sphere = {{0.0f, 0.0f, 0.0f}, 0.5f};

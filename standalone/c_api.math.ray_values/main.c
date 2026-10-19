@@ -21,7 +21,7 @@ static int vector_is(CNA_Vector3 value, float x, float y, float z)
 int main(int argc, char** argv)
 {
     static const char ExpectedText[] =
-        "{{Position:{X:0 Y:0 Z:5} Direction:{X:0 Y:0 Z:-1}}}";
+        "{Position:{X:0 Y:0 Z:5} Direction:{X:0 Y:0 Z:-1}}";
     const CNA_BoundingBox unit_box = {{-1.0f, -1.0f, -1.0f}, {1.0f, 1.0f, 1.0f}};
     const CNA_BoundingSphere unit_sphere = {{0.0f, 0.0f, 0.0f}, 1.0f};
     const CNA_Plane origin_plane = {{0.0f, 0.0f, 1.0f}, 0.0f};

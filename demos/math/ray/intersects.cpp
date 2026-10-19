@@ -106,6 +106,4 @@ CNA_DEMOS_CONSOLE(RayIntersects, {
                    "forms, including inside, tangent, behind, tolerance and miss boundaries.",
     .apis = {"Ray::Intersects"},
     .tags = {"ray", "picking", "collision"},
-    .restrictions = "CNA-DEMOS-ISSUE-130 records a zero-direction ray inside a box returning no hit.",
-    .knownIssue = "CNA-DEMOS-ISSUE-130",
 })

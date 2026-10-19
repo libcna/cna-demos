@@ -46,6 +46,4 @@ CNA_DEMOS_CONSOLE(RayValueIdentity, {
     .apis = {"Ray::Ray", "Ray::Position", "Ray::Direction", "Ray::Equals", "Ray::GetHashCode",
              "Ray::ToString", "Ray::op_Equality", "Ray::op_Inequality"},
     .tags = {"ray", "value-semantics", "formatting"},
-    .restrictions = "CNA-DEMOS-ISSUE-126 records Ray's extra outer ToString braces.",
-    .knownIssue = "CNA-DEMOS-ISSUE-126",
 })

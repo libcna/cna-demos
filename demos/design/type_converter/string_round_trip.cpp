@@ -107,11 +107,11 @@ namespace
         ctx.Check(rectangles.ConvertToInvariantString(Rectangle(1, 2, 30, 40)) ==
                           "{X:1 Y:2 Width:30 Height:40}" &&
                       boxes.ConvertToInvariantString(BoundingBox(Vector3(-1.0f), Vector3::One)) ==
-                          "{{Min:{X:-1 Y:-1 Z:-1} Max:{X:1 Y:1 Z:1}}}" &&
+                          "{Min:{X:-1 Y:-1 Z:-1} Max:{X:1 Y:1 Z:1}}" &&
                       planes.ConvertToInvariantString(Plane(Vector3::Up, -2.0f)) ==
                           "{Normal:{X:0 Y:1 Z:0} D:-2}" &&
                       rays.ConvertToInvariantString(Ray(Vector3::Zero, Vector3::Forward)) ==
-                          "{{Position:{X:0 Y:0 Z:0} Direction:{X:0 Y:0 Z:-1}}}" &&
+                          "{Position:{X:0 Y:0 Z:0} Direction:{X:0 Y:0 Z:-1}}" &&
                       matrices.ConvertToInvariantString(Matrix::getIdentityProperty()).find("M44:1") != std::string::npos,
                   "non-parsing converters still emit each value's exact structural text");
 

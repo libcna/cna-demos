@@ -83,6 +83,4 @@ CNA_DEMOS_CONSOLE(BoundingFrustumCulling, {
              "BoundingFrustum::Matrix", "BoundingFrustum::Equals", "BoundingFrustum::GetHashCode",
              "BoundingFrustum::ToString", "BoundingFrustum::op_Equality", "BoundingFrustum::op_Inequality"},
     .tags = {"culling", "camera", "frustum", "value-semantics"},
-    .restrictions = "CNA-DEMOS-ISSUE-135 records negative zeros in identity-frustum ToString output.",
-    .knownIssue = "CNA-DEMOS-ISSUE-135",
 })

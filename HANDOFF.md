@@ -1,7 +1,7 @@
 # HANDOFF
 
 **Read this first in every new session.** It is the single place that says what state the
-project is in and what to do next. Update it after every batch. Last updated: 2026-10-19.
+project is in and what to do next. Update it after every batch. Last updated: 2026-10-20.
 
 ## 1. Purpose (one paragraph)
 
@@ -21,11 +21,20 @@ and no unrelated differences; six visuals exact. Previous CLI metadata failure
 is preserved and corrected by an exact expected-row update and full rerun.
 See docs/repair-evidence/issue-118/REGRESSION_CHECKPOINT.md. Prior checkpoint
 jobs are finished; external freeze released. Geometry native math now950pass/two
-unchanged skips; four standard vertex text companion repairs are building at two
-jobs. Genuine six text-consumer checks pass; original four vertex probes fail.
-No geometry marker removal yet. Commit preceding closure separately; next finish
-native geometry/vertex validation, exact genuine-backed demo text corrections,
-actual C ABI/focused runs, then complete regression. Follow CNA's repair handoff.
+unchanged skips. Geometry runtime committed e1377c437/a8a60bf03, native consumers
+1393pass/four skips; registered341/341. Actual external C ABI and all13 focused
+demos pass; six markers removed afterward. Both95 math87pass/8expectedfail, exact42
+cumulative changes. SOFTWARE full719:599pass/69expectedfail/48skip/3manual, no
+unrelated delta; six visuals exact. OPENGLES3 full running. First complete CTest
+has one network find_and_join failure: discovery chose a competing same-gamertag
+session while another suite used the shared network. Preserve this failure and
+repeat full CTest only AFTER smoke completes, without concurrent network suites.
+External binaries remain FROZEN at a8a60bf03; no geometry issue closure yet.
+Next native containment127/129/133 is separate and uncommitted:961math passes/two
+skips,160/160 registered,11/11 actual-production-TU ASan/UBSan/leak tests. Broad
+native consumers and actual rebuilt external C ABI remain pending. Do not apply
+next-batch demo changes until preceding geometry checkpoint ends. Owner-reserved
+131 ray method remains untouched. Follow CNA's repair handoff for active jobs.
 The following older checkpoint paragraphs are superseded by this update.
 
 Current CNA repair campaign: follow `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and its

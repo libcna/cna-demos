@@ -60,5 +60,4 @@ CNA_DEMOS_CONSOLE(ToStringFormats, {
              "Rectangle::ToString", "Color::ToString", "Plane::ToString", "BoundingSphere::ToString",
              "BoundingBox::ToString", "Ray::ToString", "Matrix::ToString"},
     .tags = {"math", "string", "debug", "format"},
-    .knownIssue = "CNA-DEMOS-ISSUE-024",
 })

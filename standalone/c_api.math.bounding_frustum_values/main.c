@@ -26,9 +26,9 @@ static int plane_is(CNA_Plane value, float x, float y, float z, float d)
 int main(int argc, char** argv)
 {
     static const char ExpectedText[] =
-        "{Near:{Normal:{X:-0 Y:-0 Z:-1} D:-0} Far:{Normal:{X:0 Y:0 Z:1} D:-1} "
-        "Left:{Normal:{X:-1 Y:-0 Z:-0} D:-1} Right:{Normal:{X:1 Y:0 Z:0} D:-1} "
-        "Top:{Normal:{X:0 Y:1 Z:0} D:-1} Bottom:{Normal:{X:-0 Y:-1 Z:-0} D:-1}}";
+        "{Near:{Normal:{X:0 Y:0 Z:-1} D:0} Far:{Normal:{X:0 Y:0 Z:1} D:-1} "
+        "Left:{Normal:{X:-1 Y:0 Z:0} D:-1} Right:{Normal:{X:1 Y:0 Z:0} D:-1} "
+        "Top:{Normal:{X:0 Y:1 Z:0} D:-1} Bottom:{Normal:{X:0 Y:-1 Z:0} D:-1}}";
     const CNA_Matrix identity = {
         1.0f, 0.0f, 0.0f, 0.0f,
         0.0f, 1.0f, 0.0f, 0.0f,
