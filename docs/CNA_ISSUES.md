@@ -3228,27 +3228,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Status:** open (low: one ContentManager per content build avoids it); not reported upstream
   yet.
 
-### CNA-DEMOS-ISSUE-021 -- EasyGL sampled a rendered RenderTargetCube face upside down
-
-- **Area:** graphics, EasyGL renderer (OPENGLES3, OPENGL33). EasyGL kept a render target's GL
-  texels bottom-up and corrected 2D sampling per texture unit, but left cube maps out of that
-  correction, so a face drawn into with `SetRenderTarget(RenderTargetCube*, CubeMapFace)` was
-  sampled flipped vertically by `EnvironmentMapEffect`.
-- **Demo:** `graphics.render_target.render_target_cube` (now passing on OPENGLES3 and OPENGL33).
-- **Reproduction:** fill the +Z face of a `TextureCube` (SetData) and of a `RenderTargetCube`
-  (SpriteBatch into the face) with the same image -- top half red, bottom half black; both read
-  back identical with `GetData`. Draw a mirror sphere (EnvironmentMapEffect, FresnelFactor 0) with
-  each as its EnvironmentMap, seen from +Z.
-- **Observed:** on OPENGLES3 and OPENGL33 the `SetData` cube shows red above the sphere's centre and
-  the rendered cube below it. In the demo, cubes orbiting above the sphere are reflected in its
-  lower half (0-30 reflected pixels above the centre, ~360 below).
-- **Expected:** both cubes sampled the same way, as SOFTWARE, VULKAN and SDL_GPU do (red above the
-  centre; ~450 reflected cube pixels above the centre, 0 below): a dynamic environment map must
-  reflect the scene upright.
-- **Environment:** CNA 0.1.0, Linux, Mesa llvmpipe under Xvfb (GL ES 3.2 and GL 3.3 core).
-- **Status:** fixed by CNA `a6e8104d2` (`REMED-GFX-137`, sampling half). Fresh isolated Linux
-  Xvfb runs report the green +Z face at the sphere centre and 445/12 reflected cube pixels
-  above/below on OPENGLES3, 434/0 on OPENGL33. The runtime known-issue marker was removed.
 
 ### CNA-DEMOS-ISSUE-022 -- A compiled glTF with an embedded texture refers to a file the build never writes
 
@@ -3703,50 +3682,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Status:** confirmed documentation contradictions with native Picture and file-based Album
   evidence. No CNA source changed and no upstream report sent.
 
-### CNA-DEMOS-ISSUE-041 -- SavePicture ignores short reads and saves a zero-padded image
-
-- **Area:** MediaLibrary::SavePicture(std::string, System::IO::Stream*) in
-  `modules/media/src/Xna/MediaLibrary.cpp`.
-- **Demo:** `media.media_library.save_picture` (marked `knownIssue` for this one failing check).
-- **Reproduction:** wrap the valid, original 1,666-byte 640x320 PNG in a public MemoryStream
-  subclass whose Read caps each delivery at 13 bytes. Start at position zero. A control reader
-  loops over the same fixture and verifies every byte matches the source, so the input is neither
-  truncated nor malformed. Pass another such stream to SavePicture and read back its GetImage.
-- **Observed:** only one Read occurs, consuming 13/1666 bytes. CNA nevertheless writes the full
-  allocated 1,666-byte vector, whose unread tail remains zero, and returns a Picture with 0x0
-  decoded dimensions. The saved image differs from the original. Both renderer selections
-  reproduce this; ordinary byte-vector and full-memory-stream saves pass independently.
-- **Expected:** consume repeated positive short reads until the intended image data is copied;
-  detect premature EOF instead of silently writing unread zero-filled storage. The public
-  SharpRuntime Stream.hpp contract explicitly permits Read to return fewer than count bytes
-  before EOF. This is a stream-consumer defect, not a malformed-image fixture or an assertion
-  about a particular genuine-XNA implementation.
-- **Investigation:** the overload allocates source->getLengthProperty() bytes, calls Read once,
-  ignores its returned count, and forwards the entire vector to the byte-buffer overload. That
-  overload writes the bytes and catches the decoder failure, producing width/height zero.
-  Partial-read handling is the confirmed defect; nonzero starting positions, unknown-length
-  streams and premature EOF have not been exercised by this reproduction.
-- **Environment/evidence:** Linux GCC 14.2, CNA ce74063e6483020835af07c4af1e3614ebc5d962
-  (media implementation unchanged from e60fa35f7). Initial repro logs/reports:
-  `/tmp/cna-save-picture-chunks-{SOFTWARE,OPENGLES3}.{json,log}` (13 checks before adding the
-  returned-pointer guard and issue label; exactly one failure in each). Final labeled runs
-  `/tmp/cna-save-picture-final-{SOFTWARE,OPENGLES3}.{json,log}` have 14 checks and the same
-  single failure; the targeted WILL_FAIL CTest passes. All filesystem work
-  used verified private XDG roots; no user pictures were read or written. The normal thumbnail
-  path still passed and returned 128x64. No visual/GPU validation is claimed for this file tool.
-- **Complete checkpoint:** all 423 demos validated at cna-demos 37ad437. Both original stdout
-  logs add exactly this one assertion relative to 422; all older statuses and failures are
-  unchanged. SOFTWARE 377/18/25/3, OPENGLES3 398/19/3/3; 436 enabled CTests pass including
-  this WILL_FAIL test. Archives/reviews: `build/linux-full/reports/checkpoint-423-*`.
-- **Status:** runtime-confirmed CNA bug. The demo keeps the failing byte-preservation check;
-  no loop/workaround was added around CNA's SavePicture call, no CNA source changed and no
-  upstream report was sent. Follow-up source audit at Focused880 classifies nonzero starting
-  position and premature EOF as the same ignored-Read-count mechanism, so they do not get
-  duplicate failing controls; SharpRuntime requires a total Length and has no unknown-length
-  sentinel. CNA commit `a83673fc53a2c4694e69eb95238a041960dfc560`, four commits after this
-  project's pinned `d23e139de9e5c15511b6be745de290896a69ee37`, now loops until the advertised
-  length or EOF and resizes to the bytes received. That later fix is source-reviewed here but has
-  not been incorporated into or runtime-validated by the Complete871 baseline, so the marker stays.
 
 ### CNA-DEMOS-ISSUE-042 -- Root-prefix comments describe an older mesh-cancellation representation
 
@@ -4232,6 +4167,91 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-021 -- EasyGL sampled a rendered RenderTargetCube face upside down
+
+- **Area:** graphics, EasyGL renderer (OPENGLES3, OPENGL33). EasyGL kept a render target's GL
+  texels bottom-up and corrected 2D sampling per texture unit, but left cube maps out of that
+  correction, so a face drawn into with `SetRenderTarget(RenderTargetCube*, CubeMapFace)` was
+  sampled flipped vertically by `EnvironmentMapEffect`.
+- **Demo:** `graphics.render_target.render_target_cube` (now passing on OPENGLES3 and OPENGL33).
+- **Reproduction:** fill the +Z face of a `TextureCube` (SetData) and of a `RenderTargetCube`
+  (SpriteBatch into the face) with the same image -- top half red, bottom half black; both read
+  back identical with `GetData`. Draw a mirror sphere (EnvironmentMapEffect, FresnelFactor 0) with
+  each as its EnvironmentMap, seen from +Z.
+- **Observed:** on OPENGLES3 and OPENGL33 the `SetData` cube shows red above the sphere's centre and
+  the rendered cube below it. In the demo, cubes orbiting above the sphere are reflected in its
+  lower half (0-30 reflected pixels above the centre, ~360 below).
+- **Expected:** both cubes sampled the same way, as SOFTWARE, VULKAN and SDL_GPU do (red above the
+  centre; ~450 reflected cube pixels above the centre, 0 below): a dynamic environment map must
+  reflect the scene upright.
+- **Environment:** CNA 0.1.0, Linux, Mesa llvmpipe under Xvfb (GL ES 3.2 and GL 3.3 core).
+- **Status:** fixed by CNA `a6e8104d2` (`REMED-GFX-137`, sampling half). Fresh isolated Linux
+  Xvfb runs report the green +Z face at the sphere centre and 445/12 reflected cube pixels
+  above/below on OPENGLES3, 434/0 on OPENGL33. The runtime known-issue marker was removed.
+- **Repair-campaign verification (2026-10-19): ALREADY_FIXED.** At CNA
+  `688f3f23e79f1f8294f38985b1beda5ecc13862b`, the unchanged demo passes all 13
+  controls in the full SOFTWARE and OPENGLES3 baselines and the focused OPENGL33
+  run. The latter observes 434 reflected pixels above and zero below the centre.
+  Current runs use private Weston/Xwayland on AMD Radeon 780M/Mesa 25.0.7; they
+  do not substitute for the older llvmpipe evidence. Logs are
+  `build/linux-full/reports/repair-baseline-{SOFTWARE,OPENGLES3}.log` and
+  `repair-baseline-cube-OPENGL33.{json,log,stderr.log}`. This entry was already
+  described as fixed but incorrectly remained under Open; its history is retained.
+
+### CNA-DEMOS-ISSUE-041 -- SavePicture ignores short reads and saves a zero-padded image
+
+- **Area:** MediaLibrary::SavePicture(std::string, System::IO::Stream*) in
+  `modules/media/src/Xna/MediaLibrary.cpp`.
+- **Demo:** `media.media_library.save_picture` (marked `knownIssue` for this one failing check).
+- **Reproduction:** wrap the valid, original 1,666-byte 640x320 PNG in a public MemoryStream
+  subclass whose Read caps each delivery at 13 bytes. Start at position zero. A control reader
+  loops over the same fixture and verifies every byte matches the source, so the input is neither
+  truncated nor malformed. Pass another such stream to SavePicture and read back its GetImage.
+- **Observed:** only one Read occurs, consuming 13/1666 bytes. CNA nevertheless writes the full
+  allocated 1,666-byte vector, whose unread tail remains zero, and returns a Picture with 0x0
+  decoded dimensions. The saved image differs from the original. Both renderer selections
+  reproduce this; ordinary byte-vector and full-memory-stream saves pass independently.
+- **Expected:** consume repeated positive short reads until the intended image data is copied;
+  detect premature EOF instead of silently writing unread zero-filled storage. The public
+  SharpRuntime Stream.hpp contract explicitly permits Read to return fewer than count bytes
+  before EOF. This is a stream-consumer defect, not a malformed-image fixture or an assertion
+  about a particular genuine-XNA implementation.
+- **Investigation:** the overload allocates source->getLengthProperty() bytes, calls Read once,
+  ignores its returned count, and forwards the entire vector to the byte-buffer overload. That
+  overload writes the bytes and catches the decoder failure, producing width/height zero.
+  Partial-read handling is the confirmed defect; nonzero starting positions, unknown-length
+  streams and premature EOF have not been exercised by this reproduction.
+- **Environment/evidence:** Linux GCC 14.2, CNA ce74063e6483020835af07c4af1e3614ebc5d962
+  (media implementation unchanged from e60fa35f7). Initial repro logs/reports:
+  `/tmp/cna-save-picture-chunks-{SOFTWARE,OPENGLES3}.{json,log}` (13 checks before adding the
+  returned-pointer guard and issue label; exactly one failure in each). Final labeled runs
+  `/tmp/cna-save-picture-final-{SOFTWARE,OPENGLES3}.{json,log}` have 14 checks and the same
+  single failure; the targeted WILL_FAIL CTest passes. All filesystem work
+  used verified private XDG roots; no user pictures were read or written. The normal thumbnail
+  path still passed and returned 128x64. No visual/GPU validation is claimed for this file tool.
+- **Complete checkpoint:** all 423 demos validated at cna-demos 37ad437. Both original stdout
+  logs add exactly this one assertion relative to 422; all older statuses and failures are
+  unchanged. SOFTWARE 377/18/25/3, OPENGLES3 398/19/3/3; 436 enabled CTests pass including
+  this WILL_FAIL test. Archives/reviews: `build/linux-full/reports/checkpoint-423-*`.
+- **Status:** runtime-confirmed CNA bug. The demo keeps the failing byte-preservation check;
+  no loop/workaround was added around CNA's SavePicture call, no CNA source changed and no
+  upstream report was sent. Follow-up source audit at Focused880 classifies nonzero starting
+  position and premature EOF as the same ignored-Read-count mechanism, so they do not get
+  duplicate failing controls; SharpRuntime requires a total Length and has no unknown-length
+  sentinel. CNA commit `a83673fc53a2c4694e69eb95238a041960dfc560`, four commits after this
+  project's pinned `d23e139de9e5c15511b6be745de290896a69ee37`, now loops until the advertised
+  length or EOF and resizes to the bytes received. That later fix is source-reviewed here but has
+  not been incorporated into or runtime-validated by the Complete871 baseline, so the marker stays.
+- **Repair-campaign verification (2026-10-19): ALREADY_FIXED.** The unchanged
+  short-read control passes against CNA `688f3f23e79f1f8294f38985b1beda5ecc13862b`
+  in both complete renderer suites: 129 Read calls consume 1666/1666 bytes, the
+  returned image remains 640x320, and every encoded byte is preserved. The fix is
+  CNA `a83673fc53a2c4694e69eb95238a041960dfc560`, before this repair campaign.
+  Evidence: `build/linux-full/reports/repair-baseline-parts/{SOFTWARE,OPENGLES3}/media.log`.
+  The scenario still fails four separate ISSUE-098 disposal controls; its marker
+  already names 098, and those assertions and restrictions remain unchanged.
+  This closure is based on the individual short-read assertion, not WILL_FAIL.
 
 ### CNA-DEMOS-ISSUE-134 -- BoundingFrustum short corner output throws the wrong exception family
 
