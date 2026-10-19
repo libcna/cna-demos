@@ -962,6 +962,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-116 -- Singular affine Matrix inversion loses XNA's finite components
 
+- **Repair-campaign correction (2026-10-19): DEMO_EXPECTATION_BUG.** The historical
+  reference interpretation below is disproved by a fresh genuine XNA run with explicit
+  IEEE-754 bits and infinity/equality checks. XNA returns the same signed infinities as CNA;
+  its U+221E infinity symbol was best-fit encoded as ASCII `8` by the CP1252 console.
+  [Preserved source and evidence](repair-evidence/issue-116/README.md) explain the ambiguity.
+  The demo correction and native regression are pending; do not change CNA to return finite 8/-8.
 - **Area/API:** `Microsoft::Xna::Framework::Matrix::Invert`, value and by-reference overloads.
 - **Demo/reproduction:** run `math.matrix.invert`. Invert
   `Scale(1,0,1) * Translation(7,8,9)` and inspect all sixteen public components. The demo also
@@ -2684,6 +2690,14 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-001 -- `libcna.so` fails to link with CMake 3.28 (duplicate symbols)
 
+- **Repair-campaign reproduction (2026-10-19): CONFIRMED_OPEN.** A two-library cyclic
+  fixture using the unchanged current CNA shared-runtime helper reproduces duplicate symbols
+  with official checksum-verified CMake 3.28.6 and 3.29.9. The identical fixture builds and its
+  consumer runs with 3.30.9 and 3.31.6, even with CMP0156 OLD. CMake 3.30's WHOLE_ARCHIVE
+  feature attributes deduplicate the archives; disabling that feature-level deduplication on
+  3.31 reproduces the failure. Therefore the historical 3.29 support-boundary hypothesis and
+  demo workaround below are insufficient. Evidence: `build-probe/shared-runtime-source/` and
+  `build/linux-full/reports/repair-baseline-shared-runtime-*.log`. No CNA repair applied yet.
 - **Area:** build system -- CNA's shared runtime library (`CNA_SHARED_LIBRARY`,
   `cmake/SharedRuntimeLibrary.cmake`).
 - **Demos:** none specifically; it blocks building any consumer.

@@ -6,6 +6,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Established the CNA repair baseline against runtime source `688f3f23e`: all 732 enabled
+  CTests pass, complete SOFTWARE/OPENGLES3 reports preserve all 719 IDs, and six visual references
+  remain exact. Verified pre-campaign repairs without suppressing remaining failures.
+- Preserved a bit-level genuine-XNA probe disproving ISSUE-116's old finite-value expectation:
+  CP1252 printed the infinity symbol as `8`. Also reproduced ISSUE-001 on CMake 3.28 and 3.29,
+  with successful 3.30/3.31 controls; the shared-link support boundary still needs repair.
 - Established Complete1128 at cna-demos `042fea0` against pinned CNA `d23e139`: the warning-free
   `-j3` build validates719/0 metadata, all732 enabled CTests pass, both719-ID renderer suites have
   zero unexpected results, all16 tool tests pass, and all six visual references match exactly.

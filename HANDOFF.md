@@ -1,7 +1,7 @@
 # HANDOFF
 
 **Read this first in every new session.** It is the single place that says what state the
-project is in and what to do next. Update it after every batch. Last updated: 2026-10-17.
+project is in and what to do next. Update it after every batch. Last updated: 2026-10-19.
 
 ## 1. Purpose (one paragraph)
 
@@ -11,6 +11,18 @@ unattended runs, CTest tests and a coverage report. Long-term goal: every meanin
 capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
+
+An autonomous **CNA repair campaign** is now active. Its authoritative continuation state and
+all-155-issue matrix are `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and
+`../cna/CNA_DEMOS_REPAIR_MATRIX.json`. CNA is the product being repaired; this completed project
+is the conformance/regression oracle. Do not start a new demo-expansion campaign or weaken tests.
+The fresh baseline against CNA runtime source `688f3f23e` passes all 732 enabled demo CTests,
+both complete 719-ID SOFTWARE/OPENGLES3 sweeps with their documented known failures, and six
+exact visual references. Native CNA validation continues; detailed results and setup boundaries
+are in the CNA handoff. Seven historical issues are verified already fixed before this campaign.
+ISSUE-116 is a proven console-encoding error in the old XNA expectation, with permanent evidence
+under `docs/repair-evidence/issue-116`; its test correction is pending. ISSUE-001 still reproduces
+on CMake 3.28 and 3.29, but not 3.30. CI dependency pins have not been changed by this work.
 
 The CNA-native campaign is complete for pinned CNA `d23e139de` at Complete1128. All meaningful
 caller-facing behavior is covered or has an explicit evidence-backed disposition, including the
