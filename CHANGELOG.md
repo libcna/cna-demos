@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Closed Quaternion finding 119 against CNA `df9234202`: wide intermediates preserve
+  finite inverse/division results, including subnormal contributions and input aliases.
+  Native/C ABI regressions, both math sweeps, all 732 CTests and six exact visuals pass.
 - Closed perspective finding 117 against CNA `2a245b91f`: public Pi boundary and
   exact XNA exception contracts, with native and C ABI regressions. All 732 enabled
   CTests pass; both full math sweeps preserve unrelated outcomes; six visuals are exact.

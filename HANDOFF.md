@@ -12,7 +12,16 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
-Latest checkpoint: perspective 117 is Resolved by CNA `2a245b91f`. Native math has
+Latest checkpoint: Quaternion 119 is Resolved by CNA `df9234202`. Native math has
+893 passes/two unchanged skips; aggregate and registered Quaternion tests 109/109.
+Both full math sweeps have 54 passes/41 unrelated expected failures, with only nine
+cumulative expected deltas. All 732 enabled CTests pass (408.88s); 48 skips/three
+disabled unchanged. Six visual references remain exact. Inventory: 38 final
+dispositions (seven runtime findings, 23 docs, seven already fixed, one demo oracle),
+117 pending. Next: Matrix decomposition 115; its separate native repair is applied
+but not yet closed. Preserve its uncommitted evidence and follow the CNA handoff.
+
+Previous checkpoint: perspective 117 is Resolved by CNA `2a245b91f`. Native math has
 889 passes/two unchanged fixture skips; all 98 Matrix CTests pass. Both 95-demo math
 sweeps now have 52 passes/43 unrelated expected failures, with no unexplained delta.
 All 732 enabled CTests pass (557.06s), 48 skipped/three disabled unchanged; all six

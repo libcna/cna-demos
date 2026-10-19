@@ -76,6 +76,4 @@ CNA_DEMOS_CONSOLE(QuaternionInverse, {
                    "and extreme finite magnitude boundaries.",
     .apis = {"Quaternion::Inverse", "Quaternion::Conjugate", "Quaternion::op_Multiply"},
     .tags = {"quaternion", "inverse"},
-    .restrictions = "CNA-DEMOS-ISSUE-119 records overflow and underflow for extreme finite inverses.",
-    .knownIssue = "CNA-DEMOS-ISSUE-119",
 })

@@ -178,6 +178,30 @@ int main(int argc, char** argv)
             cna_quaternion_divide(axis_rotation, axis_rotation, &result) == CNA_RESULT_SUCCESS &&
             quaternion_is(result, 0.0f, 0.0f, 0.0f, 1.0f),
         "inverse reverses the rotation and dividing it by itself yields identity");
+
+    const CNA_Quaternion huge = {1e20f, 0.0f, 0.0f, 0.0f};
+    const CNA_Quaternion tiny = {1e-30f, 0.0f, 0.0f, 0.0f};
+    cna_demo_check(
+        &demo,
+        cna_quaternion_inverse(huge, &result) == CNA_RESULT_SUCCESS &&
+            result.x == (float)(-1.0 / (double)huge.x) &&
+            result.y == 0 && result.z == 0 && result.w == 0 &&
+            cna_quaternion_inverse(tiny, &result) == CNA_RESULT_SUCCESS &&
+            result.x == (float)(-1.0 / (double)tiny.x) &&
+            result.y == 0 && result.z == 0 && result.w == 0,
+        "extreme finite inverses retain representable components through the C ABI");
+    cna_demo_check(
+        &demo,
+        cna_quaternion_divide(identity, tiny, &result) == CNA_RESULT_SUCCESS &&
+            result.x == (float)(-1.0 / (double)tiny.x) &&
+            result.y == 0 && result.z == 0 && result.w == 0 &&
+            cna_quaternion_divide(huge, huge, &result) == CNA_RESULT_SUCCESS &&
+            result.x == 0 && result.y == 0 && result.z == 0 && result.w == 1 &&
+            cna_quaternion_divide((CNA_Quaternion){0, 1e20f, 0, 0},
+                (CNA_Quaternion){1e20f, 1e-20f, 0, 0}, &result) == CNA_RESULT_SUCCESS &&
+            result.x == 0 && result.y == 0 && result.z == 1 && result.w > 0 &&
+            isfinite(result.w),
+        "extreme division preserves finite and subnormal final contributions");
     cna_demo_check(
         &demo,
         cna_quaternion_dot(identity, axis_rotation, &scalar) == CNA_RESULT_SUCCESS &&

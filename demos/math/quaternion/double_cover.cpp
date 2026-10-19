@@ -140,6 +140,4 @@ CNA_DEMOS_CONSOLE(DoubleCover, {
              "Quaternion::Slerp", "Quaternion::Divide", "Quaternion::op_Division",
              "Quaternion::X", "Quaternion::Y", "Quaternion::Z", "Quaternion::W"},
     .tags = {"quaternion", "rotation", "interpolation", "precision"},
-    .restrictions = "CNA-DEMOS-ISSUE-119 records overflow and underflow for extreme finite inverses and divisors.",
-    .knownIssue = "CNA-DEMOS-ISSUE-119",
 })
