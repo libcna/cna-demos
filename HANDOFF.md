@@ -12,6 +12,18 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+Latest repair checkpoint: Curve IDs 002/036/097/137/138 are Resolved by CNA
+`d753d0997`, with native/C ABI regressions and targeted production-TU ASan/UBSan
+validation. All original assertions remain; five knownIssue markers are removed.
+Both full 95-demo math sweeps have 51 passes/44 unrelated expected failures, with
+no unexplained status/check/assertion delta. All 732 enabled CTests pass (412.58s),
+48 skipped/three disabled unchanged. Genuine XNA evidence is in
+`docs/repair-evidence/curve/`. Inventory now has 36 final dispositions: five runtime
+repairs, 23 documentation corrections, seven already-fixed IDs, one demo-oracle
+correction; 119 remain to be finalized. Earlier progress notes below are historical.
+Next: perspective ISSUE-117 regression/oracle validation and repair; its uncommitted
+probe is separate from the validated Curve batch. See the authoritative CNA handoff.
+
 An autonomous **CNA repair campaign** is now active. Its authoritative continuation state and
 all-155-issue matrix are `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and
 `../cna/CNA_DEMOS_REPAIR_MATRIX.json`. CNA is the product being repaired; this completed project

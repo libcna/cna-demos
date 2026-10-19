@@ -357,50 +357,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   and stability evidence are shared with ISSUE-140. No CNA source was modified and no upstream
   message was sent.
 
-### CNA-DEMOS-ISSUE-138 -- Curve evaluation loses NaN and exact duplicate-position behavior
-
-- **Area/API:** `Microsoft::Xna::Framework::Curve::Evaluate` and its in-range segment selection.
-- **Demo/reproduction:** run `math.curve.evaluate`. Evaluate a three-key nonconstant curve at NaN,
-  then create keys `(0,0)`, `(0,10)`, `(1,20)` with Linear tangents and evaluate at exact position
-  zero and the smallest positive float. Ordinary keys, midpoint interpolation, empty/default state
-  and infinite positions are adjacent controls.
-- **Observed:** CNA returns zero for the NaN position instead of NaN. At the exact duplicate
-  position it divides a zero numerator by the zero-width first segment and returns NaN instead of
-  the first key's zero value. The next positive float correctly enters the later segment and
-  returns10. These are the two expected failures among seven controls.
-- **Expected/reference:** genuine Windows XNA 4.0 propagates NaN for a nonconstant curve, returns
-  zero at the exact first duplicate, and returns10 at the next float. Empty curves return zero even
-  for NaN, and one-key curves return their sole value for finite, NaN and infinite positions.
-- **Cause/suggested repair:** CNA's simple linear scan falls through to zero when every comparison
-  with NaN is false. For equal first positions it accepts the zero-width segment and evaluates its
-  Hermite fraction. Match XNA's nonfinite handling and exact-key selection before dividing by the
-  segment span.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1073-curve-members/*`. After the
-  configure-only vendored-Draco warning, the clean warning-free three-job build, all seven exact
-  SOFTWARE CTests, metadata710/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer
-  label reproduce only the eight documented Curve assertions with empty stderr. No CNA source was
-  modified and no upstream message was sent.
-
-### CNA-DEMOS-ISSUE-137 -- CurveKey CompareTo treats NaN positions as equal
-
-- **Area/API:** `Microsoft::Xna::Framework::CurveKey::CompareTo`.
-- **Demo/reproduction:** run `math.curve.key_ordering`. Compare ordinary, equal-but-different-value,
-  infinite and signed-zero positions, then compare real-to-NaN, NaN-to-real and NaN-to-NaN keys.
-- **Observed:** CNA returns zero for all three NaN comparisons because both ordered IEEE comparisons
-  are false. The grouped NaN assertion is the sole expected failure among four controls.
-- **Expected/reference:** genuine Windows XNA 4.0 returns positive one for all three operand orders.
-  Its ordinary, infinite, signed-zero and equal-position results match CNA.
-- **Cause/suggested repair:** the implementation checks `<`, then `>`, then returns zero. XNA's
-  CurveKey comparison checks `<`, then equality, and otherwise returns positive one, so unordered
-  NaN positions are never reported as equal. Preserve that exact branch order.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1073-curve-members/*`. The focused build
-  and stability evidence are shared with ISSUE-138. No CNA source was modified and no upstream
-  message was sent.
-
 ### CNA-DEMOS-ISSUE-136 -- MathHelper Min and Max lose a NaN first operand
 
 - **Area/API:** `Microsoft::Xna::Framework::MathHelper::Min` and `MathHelper::Max`.
@@ -1452,35 +1408,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `/tmp/checkpoint-886-*`. No CNA source was modified and no upstream message was sent. This is
   exact exception/state/stream-lifetime evidence; no screenshot or visual judgment is involved.
 
-### CNA-DEMOS-ISSUE-097 -- Nearby CurveKey replacement can violate collection ordering
-
-- **Area/API:** `CurveKeyCollection::setItemProperty`, the writable `Item` property and the
-  collection's ascending-position invariant.
-- **Reproduction:** `math.curve.key_collection` adds keys at positions zero and one half of
-  `MathHelper::MachineEpsilonFloat`, then replaces index zero with a key at three quarters of that
-  epsilon. The replacement position is greater than the following key, while remaining within
-  one machine epsilon of the old position.
-- **Observed:** the setter leaves the replacement at index zero. The resulting positions are
-  descending, with `0.75 * epsilon` before `0.5 * epsilon`. SOFTWARE and OPENGLES3-labelled runs
-  each pass the other nineteen controls and fail only the ascending-order invariant. Ordinary
-  duplicate insertion is stable, exact-position replacement stays in place, a larger position
-  change is reinserted correctly, and C++ CopyTo/Item/RemoveAt invalid inputs throw atomically.
-- **Cause observed in source:** `setItemProperty` compares the old and replacement positions with
-  `MathHelper::WithinEpsilon`. It assigns in place when that comparison succeeds and performs the
-  sorted remove-and-`Add` path otherwise. The in-place branch does not compare the new position to
-  either neighbour. This can contradict the public header's explicit promise to preserve position
-  ordering.
-- **Expected/reference:** every successful indexed replacement must leave positions in ascending
-  order. Genuine Windows XNA 4.0 reinserts this exact nearby replacement as positions
-  `0.5 * epsilon`, then `0.75 * epsilon`. Exact-position replacement may remain in place; any
-  changed position should use the sorted path as `Add`, or otherwise check both neighbours.
-- **Scope/status:** open against clean isolated CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`; genuine XNA ran from the installed Windows XNA 4.0
-  assembly under Wine. The reproduction is renderer-independent and uses public collection values
-  only. Evidence:`/tmp/checkpoint-860-curve-key-collection-*` and
-  `/tmp/checkpoint-1073-curve-members/*`. No CNA source was modified and no upstream message was
-  sent.
-
 ### CNA-DEMOS-ISSUE-096 -- Partial SkinningData root-prefix arrays are silently ignored
 
 - **Area/API:** `SkinningData::SkeletonRootPrefix` and `AnimationPlayer` construction/update.
@@ -2282,37 +2209,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   WHOLE_ARCHIVE list in `cmake/SharedRuntimeLibrary.cmake` so cycle repetition cannot occur.
 - **Status:** documented; not yet reported upstream.
 
-### CNA-DEMOS-ISSUE-002 -- `Curve::Evaluate` with Step keys compares the absolute position with 1.0
-
-- **Area:** math -- `Microsoft::Xna::Framework::Curve` (`modules/math/src/Curve.cpp`, the
-  `CurveContinuity::Step` branch of the in-range evaluation, around line 288).
-- **Demo:** `math.curve.step_continuity` (marked `knownIssue`).
-- **Reproduction:**
-  ```cpp
-  Curve c;
-  c.getKeysProperty().Add(CurveKey(1.0f, 10.0f, 0.0f, 0.0f, CurveContinuity::Step));
-  c.getKeysProperty().Add(CurveKey(2.0f, 20.0f, 0.0f, 0.0f, CurveContinuity::Step));
-  c.Evaluate(1.5f);   // returns 20
-  ```
-- **Observed:** 20 -- the *next* key's value. The implementation returns `next.Value` whenever
-  `position >= 1.0f` and `prev.Value` otherwise, i.e. it compares the absolute curve position with
-  1.0 instead of the position's fraction within the segment. Segments that lie entirely below
-  position 1.0 behave as documented (keys at 0 and 0.5: `Evaluate(0.25)` returns the first key's
-  value), which is why the problem only appears for curves whose keys extend past 1.0.
-- **Expected/reference:** 10. Genuine Windows XNA 4.0 returns the preceding values0,1,2 at
-  positions0.5,1.5,2.5 for keys at0,1,2,3; CNA returns0,2,3. XNA also passes exactly through every
-  key. This agrees with the XNA 4.0 documentation: a position between Step keys returns the first
-  point.
-- **Cause/suggested repair:** compare the normalized segment fraction with one, or directly return
-  the preceding key for every position strictly before the next key. The current absolute
-  `position >= 1.0f` test accidentally works only in segments below one.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. The six-control workflow retains exactly the two later-segment
-  failures on both renderer labels; its exact SOFTWARE CTest passes the expected-failure contract.
-  Evidence:`/tmp/checkpoint-1073-curve-members/*`. No CNA source was modified and no upstream
-  message was sent.
-
 ### CNA-DEMOS-ISSUE-003 -- `SpriteBatch` does not leave its texture in `GraphicsDevice::Textures[0]`
 
 - **Area:** graphics -- `Microsoft::Xna::Framework::Graphics::SpriteBatch`
@@ -3107,30 +3003,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ---
 
-### CNA-DEMOS-ISSUE-036 -- Linear curve post-loop reads the first key's outgoing tangent
-
-- **Area:** math, `Curve::Evaluate`, `modules/math/src/Curve.cpp` (PostLoop Linear branch).
-- **Demo:** `math.curve.loop_types` (marked `knownIssue`).
-- **Environment:** Linux, GCC 14.2, pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`.
-- **Reproduction:** two keys `(0, 0)` and `(1, 1)`, ComputeTangents(Linear), then set the last
-  key's TangentOut to 3 and PostLoop to Linear. Evaluate at position 2.
-- **Observed:** 2, from `last.Value + first.TangentOut * (position - last.Position)`.
-- **Expected/reference:** 4, from the last key's value1 plus its outgoing tangent3 times distance1.
-  Genuine Windows XNA 4.0 returns4 at position2 and1.75 at position1.25. Its other four post-loop
-  and five pre-loop modes match the focused CNA results.
-- **Investigation:** the prior demo expected 2 after computing Linear tangents on a two-key
-  ramp. The last outgoing tangent is then zero, so even that original expectation was wrong:
-  XNA would hold at 1. The corrected demo sets distinct endpoint slopes explicitly and checks
-  the intended contract; first-key incoming extrapolation and negative CycleOffset/Oscillate
-  checks remain independent. No CNA source was modified.
-- **Related upstream record:** [CNA-BUG-064](https://libcna.com/known-issues/bugs/cna-bug-064.html)
-  also describes this post-loop error and the Step error already tracked here as ISSUE-002.
-- **Validation:** the updated seventeen-control demo executes on SOFTWARE and OPENGLES3 with
-  exactly one failure (actual2, expected4). Its exact SOFTWARE CTest passes the expected-failure
-  contract; ten runs per label are byte-stable with empty stderr. Genuine XNA ran from the
-  installed Windows XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1073-curve-members/*`.
-
 ### CNA-DEMOS-ISSUE-038 -- Dynamic audio getters ignore disposal
 
 - **Area:** `DynamicSoundEffectInstance::getPendingBufferCountProperty` and
@@ -3613,6 +3485,200 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-138 -- Curve evaluation loses NaN and exact duplicate-position behavior
+
+- **Repair-campaign resolution (2026-10-19): FIXED_VALIDATED.** CNA commit
+  `d753d0997` fixes the root cause: Segment evaluation divided by duplicate/tiny spans and returned zero on the NaN scan fallthrough instead of the XNA segment/Hermite behavior.
+  Genuine XNA passes all 28 independent [Curve oracle checks](repair-evidence/curve/README.md).
+  Native math: 886 passes/two unchanged fixture skips; aggregate Curve/content readers
+  92/92; registered Curve CTests 74/74. Native C17/Werror CurveSmoke and the extended
+  17-check C API demo pass against the repaired library. Targeted production collection
+  ASan/UBSan aliasing checks pass without diagnostics, replacing a proven invalid-vptr failure.
+  Both 95-demo math sweeps have only the five Curve repairs plus earlier oracle correction
+  116 as expected deltas; all unrelated failed assertions remain unchanged. All 732
+  enabled demo CTests pass. The original assertion is retained and its knownIssue marker
+  removed only after focused passes under both renderer labels. Evidence:
+  `build/linux-full/reports/repair-curve-*`. Historical observations below predate this repair.
+
+- **Area/API:** `Microsoft::Xna::Framework::Curve::Evaluate` and its in-range segment selection.
+- **Demo/reproduction:** run `math.curve.evaluate`. Evaluate a three-key nonconstant curve at NaN,
+  then create keys `(0,0)`, `(0,10)`, `(1,20)` with Linear tangents and evaluate at exact position
+  zero and the smallest positive float. Ordinary keys, midpoint interpolation, empty/default state
+  and infinite positions are adjacent controls.
+- **Observed:** CNA returns zero for the NaN position instead of NaN. At the exact duplicate
+  position it divides a zero numerator by the zero-width first segment and returns NaN instead of
+  the first key's zero value. The next positive float correctly enters the later segment and
+  returns10. These are the two expected failures among seven controls.
+- **Expected/reference:** genuine Windows XNA 4.0 propagates NaN for a nonconstant curve, returns
+  zero at the exact first duplicate, and returns10 at the next float. Empty curves return zero even
+  for NaN, and one-key curves return their sole value for finite, NaN and infinite positions.
+- **Cause/suggested repair:** CNA's simple linear scan falls through to zero when every comparison
+  with NaN is false. For equal first positions it accepts the zero-width segment and evaluates its
+  Hermite fraction. Match XNA's nonfinite handling and exact-key selection before dividing by the
+  segment span.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1073-curve-members/*`. After the
+  configure-only vendored-Draco warning, the clean warning-free three-job build, all seven exact
+  SOFTWARE CTests, metadata710/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer
+  label reproduce only the eight documented Curve assertions with empty stderr. No CNA source was
+  modified and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-137 -- CurveKey CompareTo treats NaN positions as equal
+
+- **Repair-campaign resolution (2026-10-19): FIXED_VALIDATED.** CNA commit
+  `d753d0997` fixes the root cause: Unordered NaN comparisons incorrectly returned equality; genuine XNA direct comparisons return positive one.
+  Genuine XNA passes all 28 independent [Curve oracle checks](repair-evidence/curve/README.md).
+  Native math: 886 passes/two unchanged fixture skips; aggregate Curve/content readers
+  92/92; registered Curve CTests 74/74. Native C17/Werror CurveSmoke and the extended
+  17-check C API demo pass against the repaired library. Targeted production collection
+  ASan/UBSan aliasing checks pass without diagnostics, replacing a proven invalid-vptr failure.
+  Both 95-demo math sweeps have only the five Curve repairs plus earlier oracle correction
+  116 as expected deltas; all unrelated failed assertions remain unchanged. All 732
+  enabled demo CTests pass. The original assertion is retained and its knownIssue marker
+  removed only after focused passes under both renderer labels. Evidence:
+  `build/linux-full/reports/repair-curve-*`. Historical observations below predate this repair.
+
+- **Area/API:** `Microsoft::Xna::Framework::CurveKey::CompareTo`.
+- **Demo/reproduction:** run `math.curve.key_ordering`. Compare ordinary, equal-but-different-value,
+  infinite and signed-zero positions, then compare real-to-NaN, NaN-to-real and NaN-to-NaN keys.
+- **Observed:** CNA returns zero for all three NaN comparisons because both ordered IEEE comparisons
+  are false. The grouped NaN assertion is the sole expected failure among four controls.
+- **Expected/reference:** genuine Windows XNA 4.0 returns positive one for all three operand orders.
+  Its ordinary, infinite, signed-zero and equal-position results match CNA.
+- **Cause/suggested repair:** the implementation checks `<`, then `>`, then returns zero. XNA's
+  CurveKey comparison checks `<`, then equality, and otherwise returns positive one, so unordered
+  NaN positions are never reported as equal. Preserve that exact branch order.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1073-curve-members/*`. The focused build
+  and stability evidence are shared with ISSUE-138. No CNA source was modified and no upstream
+  message was sent.
+
+### CNA-DEMOS-ISSUE-097 -- Nearby CurveKey replacement can violate collection ordering
+
+- **Repair-campaign resolution (2026-10-19): FIXED_VALIDATED.** CNA commit
+  `d753d0997` fixes the root cause: Approximate position equality skipped required reinsertion. Separately, erasing before copying an aliased replacement read a shifted or destroyed CurveKey.
+  Genuine XNA passes all 28 independent [Curve oracle checks](repair-evidence/curve/README.md).
+  Native math: 886 passes/two unchanged fixture skips; aggregate Curve/content readers
+  92/92; registered Curve CTests 74/74. Native C17/Werror CurveSmoke and the extended
+  17-check C API demo pass against the repaired library. Targeted production collection
+  ASan/UBSan aliasing checks pass without diagnostics, replacing a proven invalid-vptr failure.
+  Both 95-demo math sweeps have only the five Curve repairs plus earlier oracle correction
+  116 as expected deltas; all unrelated failed assertions remain unchanged. All 732
+  enabled demo CTests pass. The original assertion is retained and its knownIssue marker
+  removed only after focused passes under both renderer labels. Evidence:
+  `build/linux-full/reports/repair-curve-*`. Historical observations below predate this repair.
+
+- **Area/API:** `CurveKeyCollection::setItemProperty`, the writable `Item` property and the
+  collection's ascending-position invariant.
+- **Reproduction:** `math.curve.key_collection` adds keys at positions zero and one half of
+  `MathHelper::MachineEpsilonFloat`, then replaces index zero with a key at three quarters of that
+  epsilon. The replacement position is greater than the following key, while remaining within
+  one machine epsilon of the old position.
+- **Observed:** the setter leaves the replacement at index zero. The resulting positions are
+  descending, with `0.75 * epsilon` before `0.5 * epsilon`. SOFTWARE and OPENGLES3-labelled runs
+  each pass the other nineteen controls and fail only the ascending-order invariant. Ordinary
+  duplicate insertion is stable, exact-position replacement stays in place, a larger position
+  change is reinserted correctly, and C++ CopyTo/Item/RemoveAt invalid inputs throw atomically.
+- **Cause observed in source:** `setItemProperty` compares the old and replacement positions with
+  `MathHelper::WithinEpsilon`. It assigns in place when that comparison succeeds and performs the
+  sorted remove-and-`Add` path otherwise. The in-place branch does not compare the new position to
+  either neighbour. This can contradict the public header's explicit promise to preserve position
+  ordering.
+- **Expected/reference:** every successful indexed replacement must leave positions in ascending
+  order. Genuine Windows XNA 4.0 reinserts this exact nearby replacement as positions
+  `0.5 * epsilon`, then `0.75 * epsilon`. Exact-position replacement may remain in place; any
+  changed position should use the sorted path as `Add`, or otherwise check both neighbours.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`; genuine XNA ran from the installed Windows XNA 4.0
+  assembly under Wine. The reproduction is renderer-independent and uses public collection values
+  only. Evidence:`/tmp/checkpoint-860-curve-key-collection-*` and
+  `/tmp/checkpoint-1073-curve-members/*`. No CNA source was modified and no upstream message was
+  sent.
+
+### CNA-DEMOS-ISSUE-002 -- `Curve::Evaluate` with Step keys compares the absolute position with 1.0
+
+- **Repair-campaign resolution (2026-10-19): FIXED_VALIDATED.** CNA commit
+  `d753d0997` fixes the root cause: Step compared the absolute position with one instead of the normalized segment fraction.
+  Genuine XNA passes all 28 independent [Curve oracle checks](repair-evidence/curve/README.md).
+  Native math: 886 passes/two unchanged fixture skips; aggregate Curve/content readers
+  92/92; registered Curve CTests 74/74. Native C17/Werror CurveSmoke and the extended
+  17-check C API demo pass against the repaired library. Targeted production collection
+  ASan/UBSan aliasing checks pass without diagnostics, replacing a proven invalid-vptr failure.
+  Both 95-demo math sweeps have only the five Curve repairs plus earlier oracle correction
+  116 as expected deltas; all unrelated failed assertions remain unchanged. All 732
+  enabled demo CTests pass. The original assertion is retained and its knownIssue marker
+  removed only after focused passes under both renderer labels. Evidence:
+  `build/linux-full/reports/repair-curve-*`. Historical observations below predate this repair.
+
+- **Area:** math -- `Microsoft::Xna::Framework::Curve` (`modules/math/src/Curve.cpp`, the
+  `CurveContinuity::Step` branch of the in-range evaluation, around line 288).
+- **Demo:** `math.curve.step_continuity` (marked `knownIssue`).
+- **Reproduction:**
+  ```cpp
+  Curve c;
+  c.getKeysProperty().Add(CurveKey(1.0f, 10.0f, 0.0f, 0.0f, CurveContinuity::Step));
+  c.getKeysProperty().Add(CurveKey(2.0f, 20.0f, 0.0f, 0.0f, CurveContinuity::Step));
+  c.Evaluate(1.5f);   // returns 20
+  ```
+- **Observed:** 20 -- the *next* key's value. The implementation returns `next.Value` whenever
+  `position >= 1.0f` and `prev.Value` otherwise, i.e. it compares the absolute curve position with
+  1.0 instead of the position's fraction within the segment. Segments that lie entirely below
+  position 1.0 behave as documented (keys at 0 and 0.5: `Evaluate(0.25)` returns the first key's
+  value), which is why the problem only appears for curves whose keys extend past 1.0.
+- **Expected/reference:** 10. Genuine Windows XNA 4.0 returns the preceding values0,1,2 at
+  positions0.5,1.5,2.5 for keys at0,1,2,3; CNA returns0,2,3. XNA also passes exactly through every
+  key. This agrees with the XNA 4.0 documentation: a position between Step keys returns the first
+  point.
+- **Cause/suggested repair:** compare the normalized segment fraction with one, or directly return
+  the preceding key for every position strictly before the next key. The current absolute
+  `position >= 1.0f` test accidentally works only in segments below one.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. The six-control workflow retains exactly the two later-segment
+  failures on both renderer labels; its exact SOFTWARE CTest passes the expected-failure contract.
+  Evidence:`/tmp/checkpoint-1073-curve-members/*`. No CNA source was modified and no upstream
+  message was sent.
+
+### CNA-DEMOS-ISSUE-036 -- Linear curve post-loop reads the first key's outgoing tangent
+
+- **Repair-campaign resolution (2026-10-19): FIXED_VALIDATED.** CNA commit
+  `d753d0997` fixes the root cause: Linear post-loop extrapolation used the first outgoing tangent instead of the last.
+  Genuine XNA passes all 28 independent [Curve oracle checks](repair-evidence/curve/README.md).
+  Native math: 886 passes/two unchanged fixture skips; aggregate Curve/content readers
+  92/92; registered Curve CTests 74/74. Native C17/Werror CurveSmoke and the extended
+  17-check C API demo pass against the repaired library. Targeted production collection
+  ASan/UBSan aliasing checks pass without diagnostics, replacing a proven invalid-vptr failure.
+  Both 95-demo math sweeps have only the five Curve repairs plus earlier oracle correction
+  116 as expected deltas; all unrelated failed assertions remain unchanged. All 732
+  enabled demo CTests pass. The original assertion is retained and its knownIssue marker
+  removed only after focused passes under both renderer labels. Evidence:
+  `build/linux-full/reports/repair-curve-*`. Historical observations below predate this repair.
+
+- **Area:** math, `Curve::Evaluate`, `modules/math/src/Curve.cpp` (PostLoop Linear branch).
+- **Demo:** `math.curve.loop_types` (marked `knownIssue`).
+- **Environment:** Linux, GCC 14.2, pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`.
+- **Reproduction:** two keys `(0, 0)` and `(1, 1)`, ComputeTangents(Linear), then set the last
+  key's TangentOut to 3 and PostLoop to Linear. Evaluate at position 2.
+- **Observed:** 2, from `last.Value + first.TangentOut * (position - last.Position)`.
+- **Expected/reference:** 4, from the last key's value1 plus its outgoing tangent3 times distance1.
+  Genuine Windows XNA 4.0 returns4 at position2 and1.75 at position1.25. Its other four post-loop
+  and five pre-loop modes match the focused CNA results.
+- **Investigation:** the prior demo expected 2 after computing Linear tangents on a two-key
+  ramp. The last outgoing tangent is then zero, so even that original expectation was wrong:
+  XNA would hold at 1. The corrected demo sets distinct endpoint slopes explicitly and checks
+  the intended contract; first-key incoming extrapolation and negative CycleOffset/Oscillate
+  checks remain independent. No CNA source was modified.
+- **Related upstream record:** [CNA-BUG-064](https://libcna.com/known-issues/bugs/cna-bug-064.html)
+  also describes this post-loop error and the Step error already tracked here as ISSUE-002.
+- **Validation:** the updated seventeen-control demo executes on SOFTWARE and OPENGLES3 with
+  exactly one failure (actual2, expected4). Its exact SOFTWARE CTest passes the expected-failure
+  contract; ten runs per label are byte-stable with empty stderr. Genuine XNA ran from the
+  installed Windows XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1073-curve-members/*`.
+
 
 ### CNA-DEMOS-ISSUE-155 -- MathTypeConverter comments contradict its conversion policy
 

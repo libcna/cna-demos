@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MS-PL
 // Managing curve keys: CurveKeyCollection keeps keys sorted by position.
-#include <stdexcept>
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
@@ -8,6 +7,8 @@
 #include "Microsoft/Xna/Framework/CurveKey.hpp"
 #include "Microsoft/Xna/Framework/CurveKeyCollection.hpp"
 #include "Microsoft/Xna/Framework/MathHelper.hpp"
+#include "System/ArgumentException.hpp"
+#include "System/ArgumentOutOfRangeException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 
@@ -58,7 +59,7 @@ namespace
         {
             keys.CopyTo(shortCopy, -1);
         }
-        catch (const std::out_of_range&)
+        catch (const System::ArgumentOutOfRangeException&)
         {
             negativeCopyRejected = true;
         }
@@ -66,7 +67,7 @@ namespace
         {
             keys.CopyTo(shortCopy, 1);
         }
-        catch (const std::out_of_range&)
+        catch (const System::ArgumentException&)
         {
             shortCopyRejected = true;
         }
@@ -104,7 +105,7 @@ namespace
         {
             orderedKeys.setItemProperty(-1, CurveKey(-1.0f, -1.0f));
         }
-        catch (const std::out_of_range&)
+        catch (const System::ArgumentOutOfRangeException&)
         {
             negativeReplacementRejected = true;
         }
@@ -112,7 +113,7 @@ namespace
         {
             orderedKeys.setItemProperty(orderedKeys.getCountProperty(), CurveKey(3.0f, 30.0f));
         }
-        catch (const std::out_of_range&)
+        catch (const System::ArgumentOutOfRangeException&)
         {
             pastEndReplacementRejected = true;
         }
@@ -131,7 +132,7 @@ namespace
         {
             static_cast<void>(orderedKeys.getItemProperty(-1));
         }
-        catch (const std::out_of_range&)
+        catch (const System::ArgumentOutOfRangeException&)
         {
             negativeReadRejected = true;
         }
@@ -139,7 +140,7 @@ namespace
         {
             static_cast<void>(orderedKeys.getItemProperty(orderedKeys.getCountProperty()));
         }
-        catch (const std::out_of_range&)
+        catch (const System::ArgumentOutOfRangeException&)
         {
             pastEndReadRejected = true;
         }
@@ -147,7 +148,7 @@ namespace
         {
             orderedKeys.RemoveAt(-1);
         }
-        catch (const std::out_of_range&)
+        catch (const System::ArgumentOutOfRangeException&)
         {
             negativeRemoveRejected = true;
         }
@@ -155,7 +156,7 @@ namespace
         {
             orderedKeys.RemoveAt(orderedKeys.getCountProperty());
         }
-        catch (const std::out_of_range&)
+        catch (const System::ArgumentOutOfRangeException&)
         {
             pastEndRemoveRejected = true;
         }
@@ -203,7 +204,4 @@ CNA_DEMOS_CONSOLE(CurveKeyCollectionDemo, {
              "Curve::IsConstant", "Curve::Clone", "CurveKey::Position", "CurveKey::Value",
              "Curve::Keys", "Curve::Evaluate"},
     .tags = {"curve", "collection"},
-    .restrictions = "CNA-DEMOS-ISSUE-097 records that a nearby-position indexed replacement can violate the "
-                    "collection's promised ascending order.",
-    .knownIssue = "CNA-DEMOS-ISSUE-097",
 })

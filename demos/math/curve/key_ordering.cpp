@@ -51,6 +51,4 @@ CNA_DEMOS_CONSOLE(CurveKeyOrdering, {
                    "infinities, signed zero and NaN.",
     .apis = {"CurveKey::CompareTo", "CurveKey::Position"},
     .tags = {"curve", "keyframe", "ordering", "ieee-754"},
-    .restrictions = "CNA-DEMOS-ISSUE-137 records CompareTo returning zero instead of XNA's positive result for NaN.",
-    .knownIssue = "CNA-DEMOS-ISSUE-137",
 })

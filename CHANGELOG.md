@@ -6,6 +6,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Closed Curve findings 002/036/097/137/138 after CNA `d753d0997`: preserved all
+  assertions, added native/C API regressions, and verified genuine XNA plus targeted
+  ASan/UBSan aliasing coverage. Both 95-demo math sweeps have only expected deltas;
+  all 732 enabled CTests pass. Removed only the five repaired knownIssue markers.
 - Closed 23 documentation-only CNA findings with public-contract corrections in CNA
   `66918da04` and `60b6b747f`. All 732 enabled demo CTests pass; 28 focused scenarios on
   each renderer exactly preserve baseline outcomes and assertions. Historical IDs remain.

@@ -87,5 +87,4 @@ CNA_DEMOS_CONSOLE(CurveLoopTypes, {
              "CurveLoopType::CycleOffset", "CurveLoopType::Oscillate", "CurveLoopType::Linear", "Curve::Keys",
              "Curve::Evaluate", "CurveKey::TangentIn", "CurveKey::TangentOut"},
     .tags = {"curve", "loop", "animation"},
-    .knownIssue = "CNA-DEMOS-ISSUE-036",
 })

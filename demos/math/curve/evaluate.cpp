@@ -64,6 +64,4 @@ CNA_DEMOS_CONSOLE(CurveEvaluate, {
              "CurveKeyCollection::Add", "CurveKey::CurveKey", "Curve::ComputeTangents", "Curve::Evaluate",
              "CurveKeyCollection::Count"},
     .tags = {"curve", "animation", "keyframe", "boundaries", "ieee-754"},
-    .restrictions = "CNA-DEMOS-ISSUE-138 records NaN and exact duplicate-position evaluation differences.",
-    .knownIssue = "CNA-DEMOS-ISSUE-138",
 })

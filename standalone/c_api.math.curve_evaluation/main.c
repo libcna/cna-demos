@@ -169,6 +169,25 @@ int main(int argc, char** argv)
 
     cna_demo_check(
         &demo,
+        cna_curve_key_set_continuity(&key0, CNA_CURVE_CONTINUITY_STEP) == CNA_RESULT_SUCCESS &&
+            cna_curve_key_set_continuity(&key1, CNA_CURVE_CONTINUITY_STEP) == CNA_RESULT_SUCCESS &&
+            cna_curve_key_collection_set(keys, 0, key0) == CNA_RESULT_SUCCESS &&
+            cna_curve_key_collection_set(keys, 1, key1) == CNA_RESULT_SUCCESS &&
+            cna_curve_evaluate(curve, 0.5f, &value) == CNA_RESULT_SUCCESS && value == 0.0f &&
+            cna_curve_evaluate(curve, 1.5f, &value) == CNA_RESULT_SUCCESS && value == 20.0f &&
+            cna_curve_evaluate(curve, 2.0f, &value) == CNA_RESULT_SUCCESS && value == 4.0f,
+        "Step holds the preceding value in both segments and switches at the next key");
+
+    cna_demo_check(
+        &demo,
+        cna_curve_key_set_tangent_out(&key2, 5.0f) == CNA_RESULT_SUCCESS &&
+            cna_curve_key_collection_set(keys, 2, key2) == CNA_RESULT_SUCCESS &&
+            cna_curve_set_post_loop(curve, CNA_CURVE_LOOP_LINEAR) == CNA_RESULT_SUCCESS &&
+            cna_curve_evaluate(curve, 3.0f, &value) == CNA_RESULT_SUCCESS && value == 9.0f,
+        "Linear post-loop uses the distinct last outgoing tangent through the C API");
+
+    cna_demo_check(
+        &demo,
         cna_curve_destroy(curve) == CNA_RESULT_SUCCESS &&
             cna_curve_evaluate(curve, 0.0f, &value) == CNA_RESULT_INVALID_HANDLE &&
             cna_curve_key_collection_get_count(keys, &count) == CNA_RESULT_SUCCESS && count == 3U &&

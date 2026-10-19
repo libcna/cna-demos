@@ -52,5 +52,4 @@ CNA_DEMOS_CONSOLE(CurveStepContinuity, {
     .apis = {"CurveKey::CurveKey", "CurveKey::Continuity", "CurveContinuity::Step", "CurveContinuity::Smooth",
              "CurveKeyCollection::Item", "CurveKeyCollection::Add"},
     .tags = {"curve", "step", "keyframe"},
-    .knownIssue = "CNA-DEMOS-ISSUE-002",
 })
