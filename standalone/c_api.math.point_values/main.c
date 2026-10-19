@@ -40,7 +40,7 @@ int main(int argc, char** argv)
         cna_point_init_xy(3, -2, &point) == CNA_RESULT_SUCCESS && point_is(point, 3, -2) &&
             cna_point_not_equals(point, zero, &predicate) == CNA_RESULT_SUCCESS &&
             predicate == CNA_TRUE &&
-            cna_point_get_hash_code(point, &hash) == CNA_RESULT_SUCCESS && hash == (3 ^ -2),
+            cna_point_get_hash_code(point, &hash) == CNA_RESULT_SUCCESS && hash == 1,
         "authored coordinates participate in inequality and the canonical component hash");
 
     memset(text, 0xA5, sizeof(text));
@@ -103,6 +103,14 @@ int main(int argc, char** argv)
                 CNA_RESULT_OVERFLOW &&
             point_is(result, 77, 88),
         "zero-divisor and signed-overflow division failures preserve the caller's point");
+
+    cna_demo_check(
+        &demo,
+        cna_point_get_hash_code((CNA_Point){INT32_MAX, 1}, &hash) == CNA_RESULT_SUCCESS &&
+            hash == INT32_MIN &&
+            cna_point_get_hash_code((CNA_Point){INT32_MIN, -1}, &hash) == CNA_RESULT_SUCCESS &&
+            hash == INT32_MAX,
+        "Point hashes use XNA's unchecked coordinate sum at both signed boundaries");
 
     return cna_demo_finish(&demo);
 }

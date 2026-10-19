@@ -40,6 +40,4 @@ CNA_DEMOS_CONSOLE(MatrixTranspose, {
                    "transpose of a rotation is its inverse.",
     .apis = {"Matrix::Transpose", "Matrix::Invert", "Matrix::M12"},
     .tags = {"matrix", "transpose", "orthonormal"},
-    .restrictions = "CNA-DEMOS-ISSUE-139 records corruption when Transpose uses the same input and output matrix.",
-    .knownIssue = "CNA-DEMOS-ISSUE-139",
 })

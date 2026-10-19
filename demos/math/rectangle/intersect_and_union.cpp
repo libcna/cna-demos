@@ -79,6 +79,4 @@ CNA_DEMOS_CONSOLE(RectangleIntersectAndUnion, {
                    "input-alias forms, including touching, disjoint and Empty boundaries.",
     .apis = {"Rectangle::Intersects", "Rectangle::Intersect", "Rectangle::Union"},
     .tags = {"rectangle", "collision", "2d"},
-    .restrictions = "CNA-DEMOS-ISSUE-125 records Rectangle::Union output-alias corruption.",
-    .knownIssue = "CNA-DEMOS-ISSUE-125",
 })

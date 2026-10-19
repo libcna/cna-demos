@@ -74,6 +74,4 @@ CNA_DEMOS_CONSOLE(RectangleEdges, {
              "Rectangle::ToString", "Rectangle::Equals", "Rectangle::GetHashCode", "Rectangle::op_Equality",
              "Rectangle::op_Inequality", "Rectangle::X", "Rectangle::Y", "Rectangle::Width", "Rectangle::Height"},
     .tags = {"rectangle", "bounds", "ui"},
-    .restrictions = "CNA-DEMOS-ISSUE-124 records Rectangle hash values that differ from XNA.",
-    .knownIssue = "CNA-DEMOS-ISSUE-124",
 })

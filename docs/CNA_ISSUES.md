@@ -336,26 +336,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   demo and renderer label reproduce only the documented Matrix failures with empty stderr. No CNA
   source was modified and no upstream message was sent.
 
-### CNA-DEMOS-ISSUE-139 -- Aliased Matrix Transpose corrupts off-diagonal elements
-
-- **Area/API:** `Microsoft::Xna::Framework::Matrix::Transpose` output overload.
-- **Demo/reproduction:** run `math.matrix.transpose`. Transpose one asymmetric matrix through the
-  value form, a separate output matrix and the same object as input and output.
-- **Observed:** the ordinary value and separate-output forms are correct. With
-  `Matrix::Transpose(aliased, aliased)`, CNA writes `M12` before it later reads that location for
-  `M21`, and similarly corrupts other off-diagonal pairs. The alias assertion is the sole expected
-  failure among four controls.
-- **Expected/reference:** genuine Windows XNA 4.0 accepts `Matrix.Transpose(ref m, out m)` and
-  returns the exact transpose, so using one variable for both arguments is part of the observable
-  ref/out behavior. Its ordinary result matches CNA.
-- **Cause/suggested repair:** the output implementation assigns directly across the diagonal from
-  its input reference. Cache all16 inputs or build a temporary result and assign it after every
-  read, as CNA already does for alias-safe Matrix multiplication.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1074-matrix-members/*`. The focused build
-  and stability evidence are shared with ISSUE-140. No CNA source was modified and no upstream
-  message was sent.
 
 
 ### CNA-DEMOS-ISSUE-135 -- BoundingFrustum identity text preserves derived negative zeros
@@ -574,51 +554,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   renderer label reproduce only the documented assertions with empty stderr. No CNA source was
   modified and no upstream message was sent.
 
-### CNA-DEMOS-ISSUE-125 -- Rectangle Union corrupts bounds when output aliases the offset input
 
-- **Area/API:** output overload of `Microsoft::Xna::Framework::Rectangle::Union`.
-- **Demo/reproduction:** run `math.rectangle.intersect_and_union`. Union `(0,0,12,12)` with
-  `(10,10,5,5)` into a separate output, then alias the output with the offset input in either
-  argument position. Adjacent controls cover value/output parity, Intersect aliasing, disjoint and
-  edge-touch behavior and Union with Empty.
-- **Observed:** CNA writes `result.X/Y` before reading the aliased input's Right/Bottom. Moving the
-  offset input to `(0,0)` therefore shrinks its observed far edge and produces `(0,0,12,12)` instead
-  of `(0,0,15,15)`. The workflow retains this one grouped expected failure among ten controls.
-- **Expected/reference:** genuine Windows XNA 4.0 returns `(0,0,15,15)` through the value, separate
-  output and both input-alias calls. Intersect likewise permits either input alias, touching edges
-  do not intersect, a disjoint output is Empty and Union includes Empty's origin.
-- **Cause/suggested repair:** cache both inputs' left/top/right/bottom values before assigning any
-  result field, as the current Intersect output implementation already does.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1064-rectangle-combination/*`. The clean
-  warning-free three-job build, exact known-issue CTest, metadata701/0 and self-tests5/5 plus4/4
-  pass; ten runs per renderer label reproduce only the documented assertion with empty stderr.
-  No CNA source was modified and no upstream message was sent.
-
-### CNA-DEMOS-ISSUE-124 -- Point and Rectangle hashes use XOR instead of XNA's unchecked sums
-
-- **Area/API:** `Microsoft::Xna::Framework::Point::GetHashCode` and `Rectangle::GetHashCode`.
-- **Demo/reproduction:** run `math.point.basics` and `math.rectangle.edges_and_center`. The Point
-  samples are `(3,7)`, `(5,-2)`, `(INT_MAX,1)` and `(INT_MIN,-1)`; Rectangle adds ordinary,
-  signed and wrapping four-field samples beside its constructor, edge, center, emptiness,
-  identity and text controls.
-- **Observed:** CNA XORs the public fields. Point `(3,7)` therefore hashes to4 instead of10, with
-  three of its four focused samples differing. Rectangle `(1,2,3,4)` hashes to4 instead of10 and
-  four of its five samples differ. Each workflow retains one grouped expected failure, among ten
-  Point and thirteen Rectangle controls; equal values still receive equal hashes.
-- **Expected/reference:** genuine Windows XNA 4.0 computes the unchecked 32-bit sum of all public
-  fields. The four Point samples return10,3,`INT_MIN` and `INT_MAX`; the five Rectangle samples
-  return10,34,8,`INT_MIN` and `INT_MAX`. The adjacent value behavior matches.
-- **Cause/suggested repair:** replace both XOR expressions with explicitly wrapping 32-bit
-  addition so overflow is defined in C++ and matches CLR unchecked arithmetic.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1063-point-value-contract/*` and
-  `/tmp/checkpoint-1065-rectangle-value-boundaries/*`. The clean warning-free three-job builds,
-  both exact known-issue CTests, metadata701/0 and self-tests5/5 plus4/4 pass; ten runs per demo
-  and renderer label reproduce only the two documented assertions with empty stderr. No CNA source
-  was modified and no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-123 -- Vector Dot and Cross lose XNA's wide product cancellation
 
@@ -3297,6 +3233,101 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-139 -- Aliased Matrix Transpose corrupts off-diagonal elements
+
+- **Repair-campaign resolution (2026-10-19): FIXED_VALIDATED.** CNA `0b03b7b21`
+  repairs Matrix transpose aliasing and its Plane.Transform consumer. Original assertions are retained;
+  knownIssue markers were removed only after both focused renderer passes.
+  See the [genuine XNA and native evidence](repair-evidence/matrix-residual/README.md)
+  and [complete shared regression checkpoint](repair-evidence/integer-values/REGRESSION_CHECKPOINT.md):
+  732 enabled CTests accepted, six exact visual references and both complete
+  719-ID renderer sweeps with exactly 27 cumulative expected changes and no
+  unrelated differences. Historical evidence follows.
+
+- **Area/API:** `Microsoft::Xna::Framework::Matrix::Transpose` output overload.
+- **Demo/reproduction:** run `math.matrix.transpose`. Transpose one asymmetric matrix through the
+  value form, a separate output matrix and the same object as input and output.
+- **Observed:** the ordinary value and separate-output forms are correct. With
+  `Matrix::Transpose(aliased, aliased)`, CNA writes `M12` before it later reads that location for
+  `M21`, and similarly corrupts other off-diagonal pairs. The alias assertion is the sole expected
+  failure among four controls.
+- **Expected/reference:** genuine Windows XNA 4.0 accepts `Matrix.Transpose(ref m, out m)` and
+  returns the exact transpose, so using one variable for both arguments is part of the observable
+  ref/out behavior. Its ordinary result matches CNA.
+- **Cause/suggested repair:** the output implementation assigns directly across the diagonal from
+  its input reference. Cache all16 inputs or build a temporary result and assign it after every
+  read, as CNA already does for alias-safe Matrix multiplication.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1074-matrix-members/*`. The focused build
+  and stability evidence are shared with ISSUE-140. No CNA source was modified and no upstream
+  message was sent.
+
+### CNA-DEMOS-ISSUE-125 -- Rectangle Union corrupts bounds when output aliases the offset input
+
+- **Repair-campaign resolution (2026-10-19): FIXED_VALIDATED.** CNA `5a44d2c50`
+  repairs Rectangle Union input/output aliasing. Original assertions are retained;
+  knownIssue markers were removed only after both focused renderer passes.
+  See the [genuine XNA and native evidence](repair-evidence/integer-values/README.md)
+  and [complete shared regression checkpoint](repair-evidence/integer-values/REGRESSION_CHECKPOINT.md):
+  732 enabled CTests accepted, six exact visual references and both complete
+  719-ID renderer sweeps with exactly 27 cumulative expected changes and no
+  unrelated differences. Historical evidence follows.
+
+- **Area/API:** output overload of `Microsoft::Xna::Framework::Rectangle::Union`.
+- **Demo/reproduction:** run `math.rectangle.intersect_and_union`. Union `(0,0,12,12)` with
+  `(10,10,5,5)` into a separate output, then alias the output with the offset input in either
+  argument position. Adjacent controls cover value/output parity, Intersect aliasing, disjoint and
+  edge-touch behavior and Union with Empty.
+- **Observed:** CNA writes `result.X/Y` before reading the aliased input's Right/Bottom. Moving the
+  offset input to `(0,0)` therefore shrinks its observed far edge and produces `(0,0,12,12)` instead
+  of `(0,0,15,15)`. The workflow retains this one grouped expected failure among ten controls.
+- **Expected/reference:** genuine Windows XNA 4.0 returns `(0,0,15,15)` through the value, separate
+  output and both input-alias calls. Intersect likewise permits either input alias, touching edges
+  do not intersect, a disjoint output is Empty and Union includes Empty's origin.
+- **Cause/suggested repair:** cache both inputs' left/top/right/bottom values before assigning any
+  result field, as the current Intersect output implementation already does.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1064-rectangle-combination/*`. The clean
+  warning-free three-job build, exact known-issue CTest, metadata701/0 and self-tests5/5 plus4/4
+  pass; ten runs per renderer label reproduce only the documented assertion with empty stderr.
+  No CNA source was modified and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-124 -- Point and Rectangle hashes use XOR instead of XNA's unchecked sums
+
+- **Repair-campaign resolution (2026-10-19): FIXED_VALIDATED.** CNA `5a44d2c50`
+  repairs Point and Rectangle wrapped 32-bit hash sums. Original assertions are retained;
+  knownIssue markers were removed only after both focused renderer passes.
+  See the [genuine XNA and native evidence](repair-evidence/integer-values/README.md)
+  and [complete shared regression checkpoint](repair-evidence/integer-values/REGRESSION_CHECKPOINT.md):
+  732 enabled CTests accepted, six exact visual references and both complete
+  719-ID renderer sweeps with exactly 27 cumulative expected changes and no
+  unrelated differences. Historical evidence follows.
+
+- **Area/API:** `Microsoft::Xna::Framework::Point::GetHashCode` and `Rectangle::GetHashCode`.
+- **Demo/reproduction:** run `math.point.basics` and `math.rectangle.edges_and_center`. The Point
+  samples are `(3,7)`, `(5,-2)`, `(INT_MAX,1)` and `(INT_MIN,-1)`; Rectangle adds ordinary,
+  signed and wrapping four-field samples beside its constructor, edge, center, emptiness,
+  identity and text controls.
+- **Observed:** CNA XORs the public fields. Point `(3,7)` therefore hashes to4 instead of10, with
+  three of its four focused samples differing. Rectangle `(1,2,3,4)` hashes to4 instead of10 and
+  four of its five samples differ. Each workflow retains one grouped expected failure, among ten
+  Point and thirteen Rectangle controls; equal values still receive equal hashes.
+- **Expected/reference:** genuine Windows XNA 4.0 computes the unchecked 32-bit sum of all public
+  fields. The four Point samples return10,3,`INT_MIN` and `INT_MAX`; the five Rectangle samples
+  return10,34,8,`INT_MIN` and `INT_MAX`. The adjacent value behavior matches.
+- **Cause/suggested repair:** replace both XOR expressions with explicitly wrapping 32-bit
+  addition so overflow is defined in C++ and matches CLR unchecked arithmetic.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1063-point-value-contract/*` and
+  `/tmp/checkpoint-1065-rectangle-value-boundaries/*`. The clean warning-free three-job builds,
+  both exact known-issue CTests, metadata701/0 and self-tests5/5 plus4/4 pass; ten runs per demo
+  and renderer label reproduce only the two documented assertions with empty stderr. No CNA source
+  was modified and no upstream message was sent.
+
 
 ### CNA-DEMOS-ISSUE-136 -- MathHelper Min and Max lose a NaN first operand
 

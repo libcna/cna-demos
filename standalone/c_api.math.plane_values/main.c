@@ -144,5 +144,19 @@ int main(int argc, char** argv)
             plane_is(transformed, -1.0f, 0.0f, 0.0f, 0.0f),
         "matrix translation raises a plane while quaternion rotation turns its normal");
 
+    cna_demo_check(
+        &demo,
+        cna_plane_transform_matrix(floor, raise_two, &transformed) == CNA_RESULT_SUCCESS &&
+            transformed.normal.x == 0.0f && transformed.normal.y == 1.0f &&
+            transformed.normal.z == 0.0f && transformed.d == -4.0f,
+        "translating an already offset plane preserves its normal and adds the displacement");
+    transformed = floor;
+    cna_demo_check(
+        &demo,
+        cna_plane_transform_matrix(transformed, raise_two, &transformed) == CNA_RESULT_SUCCESS &&
+            transformed.normal.x == 0.0f && transformed.normal.y == 1.0f &&
+            transformed.normal.z == 0.0f && transformed.d == -4.0f,
+        "an aliased Plane transform retains the same nonzero-offset result");
+
     return cna_demo_finish(&demo);
 }

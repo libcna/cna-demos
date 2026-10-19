@@ -112,7 +112,7 @@ int main(int argc, char** argv)
             cna_rectangle_not_equals(rectangle, result, &predicate) == CNA_RESULT_SUCCESS &&
             predicate == CNA_TRUE &&
             cna_rectangle_get_hash_code(rectangle, &hash) == CNA_RESULT_SUCCESS &&
-            hash == (1 ^ 2 ^ 10 ^ 8),
+            hash == 21,
         "field equality, inequality and hashing observe the complete rectangle");
 
     memset(text, 0xA5, sizeof(text));
@@ -156,6 +156,23 @@ int main(int argc, char** argv)
             cna_rectangle_union(rectangle, overlap, &result) == CNA_RESULT_SUCCESS &&
             rectangle_is(result, 1, 2, 14, 13),
         "overlap, disjoint intersection and union return their exact canonical bounds");
+
+    cna_demo_check(
+        &demo,
+        cna_rectangle_get_hash_code((CNA_Rectangle){INT32_MAX, 1, 0, 0}, &hash) == CNA_RESULT_SUCCESS &&
+            hash == INT32_MIN &&
+            cna_rectangle_get_hash_code((CNA_Rectangle){INT32_MIN, -1, 0, 0}, &hash) == CNA_RESULT_SUCCESS &&
+            hash == INT32_MAX,
+        "Rectangle hashes use XNA's unchecked four-field sum at both signed boundaries");
+    CNA_Rectangle alias_left = {10, 10, 5, 5}, alias_right = alias_left;
+    const CNA_Rectangle origin = {0, 0, 12, 12};
+    cna_demo_check(
+        &demo,
+        cna_rectangle_union(alias_left, origin, &alias_left) == CNA_RESULT_SUCCESS &&
+            rectangle_is(alias_left, 0, 0, 15, 15) &&
+            cna_rectangle_union(origin, alias_right, &alias_right) == CNA_RESULT_SUCCESS &&
+            rectangle_is(alias_right, 0, 0, 15, 15),
+        "Union permits either C input value to share the output storage");
 
     return cna_demo_finish(&demo);
 }

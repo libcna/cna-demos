@@ -60,6 +60,4 @@ CNA_DEMOS_CONSOLE(PointBasics, {
              "Point::op_Equality", "Point::op_Inequality", "Point::GetHashCode", "Point::op_Addition",
              "Point::op_Subtraction", "Point::op_Multiply", "Point::op_Division"},
     .tags = {"integer", "grid", "pixel", "value-semantics"},
-    .restrictions = "CNA-DEMOS-ISSUE-124 records Point hash values that differ from XNA.",
-    .knownIssue = "CNA-DEMOS-ISSUE-124",
 })
