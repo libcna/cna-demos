@@ -40,3 +40,11 @@ and avatar catalogs/descriptions passes156 tests with one unavailable compiled
 effect fixture skipped (157total,7.739s; `repair-color-native-consumers-cpu.log`).
 This selection also matches a few named packed-value graphics controls; it is
 not evidence of a full graphics renderer regression run. Native build is warning-free.
+
+The subsequent exact1,412-test native consumer inventory also passes:1,408PASS,
+the same four fixture/capability skips as containment,282.277s
+(`repair-color-native-consumers.log`). It includes content/model/glTF, converters,
+avatar catalog/renderer/service controls, vertex/effect consumers, existing math
+and audio consumers. It ran on a private display with a separate XDG profile;
+the executable/DSO stayed frozen through self-spawning catalog tests. No live
+desktop, external online-service or unavailable hardware validation is claimed.

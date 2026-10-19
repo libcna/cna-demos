@@ -78,3 +78,8 @@ native unsigned __int128. That build failure and the following missing-executabl
 launch are retained. The corrected probe uses C++23/Wall/Wextra/Werror, compatible
 with that supported extension, and builds without warnings. No dependency change
 or behavioral test suppression was made. No lifecycle fix or closure is claimed.
+
+The tests are now also integrated into the real CnaTests target. Its warning-free
+13-step rebuild and private-display run reproduce the same result:50tests,
+39PASS/eleven new intendedFAIL/zero skips (1.063s;
+`repair-lifecycle-native-before{,-build}.log`). Runtime production remains unchanged.
