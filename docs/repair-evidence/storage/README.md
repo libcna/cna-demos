@@ -53,3 +53,25 @@ Sharp Runtime's StandingApprovals.md has been read completely. Any eventual
 private-layout change requires its measured layout/migration/full-rebuild gates;
 all Sharp compilation/test work is limited to two jobs. No dependency edit,
 platform-wide FileShare implementation claim or storage closure is made here.
+
+## Fresh native reproduction
+
+`StorageContractsProbe.cpp` uses CNA's real Begin/End selector and container-open
+path under a new isolated XDG root. It builds warning-free with C++23 and
+Wall/Wextra/Wpedantic/Werror. Its170 checks match the genuine probe except for two
+direct FileStream sharing checks: the required four-argument constructor does not
+yet exist in Sharp Runtime, so those two cannot be expressed on its current API.
+
+Current native result:29PASS/141FAIL. All119 incompatible sharing combinations
+are incorrectly admitted;25 compatible combinations pass. Both shorter-overload
+exclusivity checks fail; two-argument Append throws because CNA supplies ReadWrite
+access. All18 post-disposal access/precedence checks fail, and the rejected-operation
+filesystem invariant fails: disposed calls actually create/delete probe files.
+Live properties/filesystem and one-shot disposal state/event controls pass.
+Reports: `repair-storage-contracts-native-corrected-before{,-build}.log`.
+
+The first probe did not catch the unexpected Append exception and terminated;
+`repair-storage-contracts-native-before.log` is retained, as is its isolated fixture.
+The corrected probe reports that exception as a failed assertion and continues all
+independent checks; its own named fixtures are removed without recursive deletion.
+No product modification, suppression or storage closure is claimed.

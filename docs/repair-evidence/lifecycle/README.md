@@ -83,3 +83,34 @@ The tests are now also integrated into the real CnaTests target. Its warning-fre
 13-step rebuild and private-display run reproduce the same result:50tests,
 39PASS/eleven new intendedFAIL/zero skips (1.063s;
 `repair-lifecycle-native-before{,-build}.log`). Runtime production remains unchanged.
+
+Five further collection tests preserve ownership through an Added callback removing
+the object, release old ownership even when Removed throws, preserve ownership of
+a new registration created inside Removed, exercise nested removal during Clear,
+and retain an owned Clear event argument until dispatch returns. The standalone
+values suite now has49tests:39 old controls pass and all10 new witnesses fail on
+unchanged production (`repair-collection-ownership-before{,-build}.log`). These five
+additional tests are not yet in the previously built native CnaTests executable.
+
+`CollectionMutationOracle.cs` passes all3 genuine XNA checks
+(`repair-collection-mutation-xna{,-build}.log`). Clear uses a live index loop:
+removing its first item from the first callback produces first,first,third events
+and then empties the collection. Neither a snapshot nor fail-fast enumeration
+would match. No mutation-version field or associated ABI change is needed.
+Game.Dispose's original component snapshot is a separate contract; it must retain
+ownership while components remove themselves or each other. Existing GameTest
+controls also pass19/19 privately (3.265s; `repair-lifecycle-game-controls-before.log`).
+
+The C forwarding layer currently promises one-shot disposal based on the incorrect
+canonical assumption. Its callback adapter, public comment and repeated-disposal
+smoke expectation must be reviewed with the underlying fix, not left inconsistent
+with corrected C++ events. No C runtime behavior has yet been changed.
+
+`ComponentCDisposalProbe.c` independently verifies this against the actual frozen
+external C ABI: strict C17/Wall/Wextra/Wpedantic/Werror build, private display,
+11checks/seven passes/four failures. Missing self-removal and second explicit
+callback/event are observed; handle cleanup succeeds and destruction does not
+invoke extra managed callbacks. Reports `repair-component-c-disposal-corrected-before*`.
+The initial probe's cleanup check assumed the earlier count had already reached2;
+its five-failure report is retained. The corrected cleanup control compares counts
+immediately before and after release, independently of the four actual failures.
