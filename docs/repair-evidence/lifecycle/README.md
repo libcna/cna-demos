@@ -7,6 +7,13 @@ dispatch/suppression and identity, repeated explicit disposal/finalizer silence,
 collection index ordering/null Clear events, and launch parsing/duplicate Add.
 This does not yet validate the separate live-Game removal/ownership path.
 
+The separate `ComponentDisposalOracle.cs` now exercises a genuine live Game
+(without Run/device creation): self-removal before repeated Disposed events,
+Game's original-component snapshot even when one callback removes another
+component, guarded reentrant disposal, and a later Dispose after a handler throws.
+See `repair-component-disposal-xna.log` for the measured result. Native lifetime
+and sanitizer coverage must still be added before repairing this path.
+
 Current CNA still contains all four reported causes:
 
 - 141: GameComponent::Dispose(bool) returns when disposed_ is set, suppressing
