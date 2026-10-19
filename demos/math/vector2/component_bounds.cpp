@@ -88,6 +88,4 @@ CNA_DEMOS_CONSOLE(Vector2ComponentBounds, {
     .apis = {"Vector2::Clamp", "Vector2::Min", "Vector2::Max", "Vector2::Divide",
              "Vector2::Reflect"},
     .tags = {"vector", "bounds", "precision"},
-    .restrictions = "CNA-DEMOS-ISSUE-122 records reversed Clamp and signed-zero tie differences.",
-    .knownIssue = "CNA-DEMOS-ISSUE-122",
 })

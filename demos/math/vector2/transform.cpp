@@ -173,6 +173,4 @@ CNA_DEMOS_CONSOLE(Vector2TransformDemo, {
              "Matrix::CreateTranslation", "Matrix::CreateScale", "Quaternion::CreateFromAxisAngle",
              "Vector2::Distance"},
     .tags = {"2d", "rotation", "pivot", "arrays"},
-    .restrictions = "CNA-DEMOS-ISSUE-121 records rejection of XNA's negative-length no-op.",
-    .knownIssue = "CNA-DEMOS-ISSUE-121",
 })

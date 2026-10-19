@@ -357,26 +357,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   and stability evidence are shared with ISSUE-140. No CNA source was modified and no upstream
   message was sent.
 
-### CNA-DEMOS-ISSUE-136 -- MathHelper Min and Max lose a NaN first operand
-
-- **Area/API:** `Microsoft::Xna::Framework::MathHelper::Min` and `MathHelper::Max`.
-- **Demo/reproduction:** run `math.math_helper.scalar_functions`. Call each helper with NaN as the
-  first and second operand beside ordinary values and both signed-zero orders.
-- **Observed:** CNA returns the numeric second operand when the first operand is NaN; both
-  `Min(NaN, 7)` and `Max(NaN, 7)` return7. A NaN second operand propagates normally. The grouped
-  assertion is the sole expected failure among nine controls.
-- **Expected/reference:** genuine Windows XNA 4.0 returns NaN for all four operand orders. Its
-  ordinary and signed-zero results match CNA, including selection of the second operand for equal
-  positive/negative zeros.
-- **Cause/suggested repair:** CNA implements both helpers as a single comparison and ternary. A
-  comparison with a NaN first operand is false, so it selects the numeric second operand. Detect a
-  NaN in either operand before the ordered comparison and propagate it as XNA does.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1072-math-helper-members/*`. The clean
-  warning-free three-job build, all three exact SOFTWARE CTests, metadata708/0 and self-tests5/5
-  plus4/4 pass; ten runs per demo and renderer label reproduce only the documented grouped
-  assertion with empty stderr. No CNA source was modified and no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-135 -- BoundingFrustum identity text preserves derived negative zeros
 
@@ -670,107 +650,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   renderer label reproduce only the four documented assertions
   with empty stderr. No CNA source was modified and no upstream message was sent.
 
-### CNA-DEMOS-ISSUE-122 -- Vector2/3/4 bounds differ at reversed ranges and signed-zero ties
 
-- **Area/API:** `Microsoft::Xna::Framework::Vector2`, `Vector3` and `Vector4` `Clamp`, `Min` and `Max`,
-  including their output overloads.
-- **Demo/reproduction:** run `math.vector2.component_bounds`, `math.vector3.clamp_min_max` and
-  `math.vector4.component_bounds`.
-  Clamp a mixed value between per-component minimum10 and maximum0, then call Min and Max with
-  all-positive/all-negative zero vectors in both orders. NaN bounds are adjacent controls;
-  `math.vector3.arithmetic` and `math.vector3.reflect` separately retain the matching Vector3
-  division and reflection boundaries.
-- **Observed:** CNA resolves the reversed Clamp interval to its maximum `(0,0)` rather than its
-  minimum `(10,10)`. CNA Min and Max also preserve their first operand when equal zeros differ only
-  by sign, opposite XNA's second-operand result. These are the only expected failures on each
-  tested renderer label: two among seven controls in Vector2, two among six in Vector3 and two
-  among eight in Vector4.
-- **Expected/reference:** genuine Windows XNA 4.0 resolves both reversed components to the supplied
-  minimum in value and output Clamp forms. Both Min and Max select their second operand when the
-  comparison is equal: positive-then-negative order therefore returns negative zero, and reversing
-  the operands returns positive zero. Value and output forms agree. XNA and CNA match on the three
-  distinct NaN Clamp placements and every division/reflection control.
-- **Cause/suggested repair:** CNA's shared `ClampScalar` composes `std::max(value,min)` then
-  `std::min(...,max)`, which returns the maximum for reversed bounds; XNA caps against maximum first
-  and then floors against minimum. CNA's direct `std::min`/`std::max` preserve the first operand on
-  equality, whereas XNA's ordered comparisons fall through to the second. Preserve those orders
-  explicitly rather than relying on the standard algorithms' tie policy. The duplicated vector
-  implementations expose the same behavior and should be repaired consistently.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1050-vector2-component-bounds/*` and
-  `/tmp/checkpoint-1052-vector3-identity-bounds/*` and
-  `/tmp/checkpoint-1059-vector4-component-bounds/*`. Clean warning-free three-job builds, exact
-  known-issue CTests, metadata698/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer
-  label reproduce only the documented assertions with empty stderr. No CNA source was modified and
-  no upstream message was sent.
 
-### CNA-DEMOS-ISSUE-121 -- Vector2/3/4 range transforms reject XNA's negative-length no-op
-
-- **Area/API:** range overloads of `Microsoft::Xna::Framework::Vector2`, `Vector3` and `Vector4`
-  `Transform` for Matrix and Quaternion plus the Vector2/3 `TransformNormal` forms.
-- **Demo/reproduction:** run `math.vector2.transform`, `math.vector3.transform_array` and
-  `math.vector4.transform`. Apply each
-  range overload with valid zero source/destination indices and `length=-1` to a guarded destination
-  array. Adjacent controls cover full arrays, nonempty subranges, both directions of same-array
-  overlap, ordinary invalid source/destination windows and zero length at one-past-end indices.
-- **Observed:** CNA throws `std::out_of_range` for all three negative-length calls before writing.
-  Each array workflow retains exactly this grouped expected failure: one among sixteen Vector2,
-  ten Vector3 and twelve Vector4 controls. Every other value, alias, array, overlap, guard and
-  refusal result matches the XNA reference.
-- **Expected/reference:** genuine Windows XNA 4.0 accepts `length=-1` for all three overload
-  families as an empty range and leaves every destination element unchanged. It also accepts zero
-  length with both indices exactly one past the array ends, while rejecting the separately tested
-  negative source index and overlong positive source/destination windows before any write.
-- **Cause/suggested repair:** the duplicated Vector2/3/4 local `CheckArrayRange` explicitly rejects
-  `length < 0`, whereas XNA reaches a zero-iteration loop for the observed valid-index calls.
-  Preserve the positive-window validation and the one-past-end zero case while matching the
-  observed negative-length no-op consistently across the three implementations.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1049-vector2-transform-arrays/*` and
-  `/tmp/checkpoint-1054-vector3-transform-arrays/*` and
-  `/tmp/checkpoint-1062-vector4-transforms/*`. Warning-free three-job builds, exact known-issue
-  CTests, metadata701/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer label
-  reproduce only the one grouped assertion with empty stderr. No CNA source was modified and no
-  upstream message was sent.
-
-### CNA-DEMOS-ISSUE-120 -- Equal signed-zero math values have unequal hashes
-
-- **Area/API:** `Microsoft::Xna::Framework::Vector2`, `Vector3`, `Vector4`, `Quaternion`, `Matrix`
-  and `CurveKey` typed/boxed/operator equality and `GetHashCode`.
-- **Demo/reproduction:** run `math.vector2.toolbox_2d`, `math.vector3.equality_and_string` and
-  `math.vector4.value_identity`, `math.quaternion.value_identity`, `math.matrix.identity` and
-  `math.curve.key_value_identity`. Compare UnitX/Identity with otherwise identical values
-  containing `-0.0f`, compare each all-positive-zero value with a negative-zero component, and
-  compare two CurveKeys differing only by Position's zero sign. Ordinary construction and
-  equality/hash pairs are adjacent positive controls.
-- **Observed:** CNA correctly treats positive and negative zero as equal through every tested
-  equality form, but hashes their raw IEEE-754 bits. Quaternion Identity hashes to `1065353216`
-  while its signed-X-zero equal hashes to `-1082130432`; zero hashes to0 while its signed-W-zero
-  equal hashes to `-2147483648`. Vector2 exhibits the equivalent UnitX/Y-zero and origin/X-zero
-  mismatches, and Vector3 and Vector4 do the same for their tested UnitX and origin zero signs.
-  Matrix Identity likewise hashes differently after only M12 changes from positive to negative
-  zero, and CurveKey does the same for Position. Each demo retains exactly one expected hash
-  failure, among five Quaternion, fourteen Vector2, seven Vector3, seven Vector4, seven Matrix and
-  six CurveKey controls.
-- **Expected/reference:** genuine Windows XNA 4.0 treats all tested pairs as equal and gives each
-  pair equal hashes. The CurveKey pair both hash to `-1077936128`; the vector/quaternion unit pairs
-  both hash to `1065353216`, their zero pairs to0, and both Matrix Identity variants to
-  `-33554432`. The equality/hash invariant therefore holds regardless of zero's sign bit.
-- **Cause/suggested repair:** CNA's repeated `FloatHash` helpers copy each float's raw bits, while
-  float equality equates both zeros. Canonicalize either zero sign to the same hash before combining
-  components/fields and apply the rule consistently to every affected value type.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1044-quaternion-signed-zero-hash/*` and
-  `/tmp/checkpoint-1047-vector2-signed-zero-hash/*` and
-  `/tmp/checkpoint-1052-vector3-identity-bounds/*`,
-  `/tmp/checkpoint-1058-vector4-value-identity/*`, `/tmp/checkpoint-1073-curve-members/*` and
-  `/tmp/checkpoint-1074-matrix-members/*`. Warning-free three-job builds, exact known-issue CTests,
-  metadata through710/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer label
-  reproduce only each demo's one hash assertion with empty stderr. No CNA source was modified and
-  no upstream message was sent.
 
 
 ### CNA-DEMOS-ISSUE-118 -- Vector and Quaternion magnitude operations lose extreme finite ranges
@@ -3416,6 +3297,169 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-136 -- MathHelper Min and Max lose a NaN first operand
+
+- **Repair-campaign resolution (2026-10-19): FIXED_VALIDATED.** CNA `eef23e6f8`
+  repairs MathHelper first-NaN propagation, retaining payload bits.
+  The [genuine XNA oracle](repair-evidence/bounds/README.md) passes 6,401 checks.
+  Native regressions and all original focused scenarios pass; assertions are
+  preserved. The [shared complete checkpoint](repair-evidence/bounds/REGRESSION_CHECKPOINT.md)
+  records strict C ABI checks, both 95-demo math sweeps, all 732 enabled CTests,
+  six exact visual references and both complete 719-ID renderer sweeps. It also
+  explicitly retains and explains the unrelated pre-existing 030 assertion delta
+  in OPENGLES3; no comparator failure was hidden. Historical evidence follows.
+
+- **Area/API:** `Microsoft::Xna::Framework::MathHelper::Min` and `MathHelper::Max`.
+- **Demo/reproduction:** run `math.math_helper.scalar_functions`. Call each helper with NaN as the
+  first and second operand beside ordinary values and both signed-zero orders.
+- **Observed:** CNA returns the numeric second operand when the first operand is NaN; both
+  `Min(NaN, 7)` and `Max(NaN, 7)` return7. A NaN second operand propagates normally. The grouped
+  assertion is the sole expected failure among nine controls.
+- **Expected/reference:** genuine Windows XNA 4.0 returns NaN for all four operand orders. Its
+  ordinary and signed-zero results match CNA, including selection of the second operand for equal
+  positive/negative zeros.
+- **Cause/suggested repair:** CNA implements both helpers as a single comparison and ternary. A
+  comparison with a NaN first operand is false, so it selects the numeric second operand. Detect a
+  NaN in either operand before the ordered comparison and propagate it as XNA does.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1072-math-helper-members/*`. The clean
+  warning-free three-job build, all three exact SOFTWARE CTests, metadata708/0 and self-tests5/5
+  plus4/4 pass; ten runs per demo and renderer label reproduce only the documented grouped
+  assertion with empty stderr. No CNA source was modified and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-122 -- Vector2/3/4 bounds differ at reversed ranges and signed-zero ties
+
+- **Repair-campaign resolution (2026-10-19): FIXED_VALIDATED.** CNA `eef23e6f8`
+  repairs vector Clamp ordering and Min/Max operand selection.
+  The [genuine XNA oracle](repair-evidence/bounds/README.md) passes 6,401 checks.
+  Native regressions and all original focused scenarios pass; assertions are
+  preserved. The [shared complete checkpoint](repair-evidence/bounds/REGRESSION_CHECKPOINT.md)
+  records strict C ABI checks, both 95-demo math sweeps, all 732 enabled CTests,
+  six exact visual references and both complete 719-ID renderer sweeps. It also
+  explicitly retains and explains the unrelated pre-existing 030 assertion delta
+  in OPENGLES3; no comparator failure was hidden. Historical evidence follows.
+
+- **Area/API:** `Microsoft::Xna::Framework::Vector2`, `Vector3` and `Vector4` `Clamp`, `Min` and `Max`,
+  including their output overloads.
+- **Demo/reproduction:** run `math.vector2.component_bounds`, `math.vector3.clamp_min_max` and
+  `math.vector4.component_bounds`.
+  Clamp a mixed value between per-component minimum10 and maximum0, then call Min and Max with
+  all-positive/all-negative zero vectors in both orders. NaN bounds are adjacent controls;
+  `math.vector3.arithmetic` and `math.vector3.reflect` separately retain the matching Vector3
+  division and reflection boundaries.
+- **Observed:** CNA resolves the reversed Clamp interval to its maximum `(0,0)` rather than its
+  minimum `(10,10)`. CNA Min and Max also preserve their first operand when equal zeros differ only
+  by sign, opposite XNA's second-operand result. These are the only expected failures on each
+  tested renderer label: two among seven controls in Vector2, two among six in Vector3 and two
+  among eight in Vector4.
+- **Expected/reference:** genuine Windows XNA 4.0 resolves both reversed components to the supplied
+  minimum in value and output Clamp forms. Both Min and Max select their second operand when the
+  comparison is equal: positive-then-negative order therefore returns negative zero, and reversing
+  the operands returns positive zero. Value and output forms agree. XNA and CNA match on the three
+  distinct NaN Clamp placements and every division/reflection control.
+- **Cause/suggested repair:** CNA's shared `ClampScalar` composes `std::max(value,min)` then
+  `std::min(...,max)`, which returns the maximum for reversed bounds; XNA caps against maximum first
+  and then floors against minimum. CNA's direct `std::min`/`std::max` preserve the first operand on
+  equality, whereas XNA's ordered comparisons fall through to the second. Preserve those orders
+  explicitly rather than relying on the standard algorithms' tie policy. The duplicated vector
+  implementations expose the same behavior and should be repaired consistently.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1050-vector2-component-bounds/*` and
+  `/tmp/checkpoint-1052-vector3-identity-bounds/*` and
+  `/tmp/checkpoint-1059-vector4-component-bounds/*`. Clean warning-free three-job builds, exact
+  known-issue CTests, metadata698/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer
+  label reproduce only the documented assertions with empty stderr. No CNA source was modified and
+  no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-121 -- Vector2/3/4 range transforms reject XNA's negative-length no-op
+
+- **Repair-campaign resolution (2026-10-19): FIXED_VALIDATED.** CNA `9786d4c93`
+  repairs vector range validation, empty windows and exact exception ordering.
+  The [genuine XNA oracle](repair-evidence/issue-121/README.md) passes 200 checks.
+  Native regressions and all original focused scenarios pass; assertions are
+  preserved. The [shared complete checkpoint](repair-evidence/bounds/REGRESSION_CHECKPOINT.md)
+  records strict C ABI checks, both 95-demo math sweeps, all 732 enabled CTests,
+  six exact visual references and both complete 719-ID renderer sweeps. It also
+  explicitly retains and explains the unrelated pre-existing 030 assertion delta
+  in OPENGLES3; no comparator failure was hidden. Historical evidence follows.
+
+- **Area/API:** range overloads of `Microsoft::Xna::Framework::Vector2`, `Vector3` and `Vector4`
+  `Transform` for Matrix and Quaternion plus the Vector2/3 `TransformNormal` forms.
+- **Demo/reproduction:** run `math.vector2.transform`, `math.vector3.transform_array` and
+  `math.vector4.transform`. Apply each
+  range overload with valid zero source/destination indices and `length=-1` to a guarded destination
+  array. Adjacent controls cover full arrays, nonempty subranges, both directions of same-array
+  overlap, ordinary invalid source/destination windows and zero length at one-past-end indices.
+- **Observed:** CNA throws `std::out_of_range` for all three negative-length calls before writing.
+  Each array workflow retains exactly this grouped expected failure: one among sixteen Vector2,
+  ten Vector3 and twelve Vector4 controls. Every other value, alias, array, overlap, guard and
+  refusal result matches the XNA reference.
+- **Expected/reference:** genuine Windows XNA 4.0 accepts `length=-1` for all three overload
+  families as an empty range and leaves every destination element unchanged. It also accepts zero
+  length with both indices exactly one past the array ends, while rejecting the separately tested
+  negative source index and overlong positive source/destination windows before any write.
+- **Cause/suggested repair:** the duplicated Vector2/3/4 local `CheckArrayRange` explicitly rejects
+  `length < 0`, whereas XNA reaches a zero-iteration loop for the observed valid-index calls.
+  Preserve the positive-window validation and the one-past-end zero case while matching the
+  observed negative-length no-op consistently across the three implementations.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1049-vector2-transform-arrays/*` and
+  `/tmp/checkpoint-1054-vector3-transform-arrays/*` and
+  `/tmp/checkpoint-1062-vector4-transforms/*`. Warning-free three-job builds, exact known-issue
+  CTests, metadata701/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer label
+  reproduce only the one grouped assertion with empty stderr. No CNA source was modified and no
+  upstream message was sent.
+
+### CNA-DEMOS-ISSUE-120 -- Equal signed-zero math values have unequal hashes
+
+- **Repair-campaign resolution (2026-10-19): FIXED_VALIDATED.** CNA `bf209dcbe`
+  repairs six signed-zero hash helpers and the exact wrapped CurveKey field sum.
+  The [genuine XNA oracle](repair-evidence/issue-120/README.md) passes 212 checks.
+  Native regressions and all original focused scenarios pass; assertions are
+  preserved. The [shared complete checkpoint](repair-evidence/bounds/REGRESSION_CHECKPOINT.md)
+  records strict C ABI checks, both 95-demo math sweeps, all 732 enabled CTests,
+  six exact visual references and both complete 719-ID renderer sweeps. It also
+  explicitly retains and explains the unrelated pre-existing 030 assertion delta
+  in OPENGLES3; no comparator failure was hidden. Historical evidence follows.
+
+- **Area/API:** `Microsoft::Xna::Framework::Vector2`, `Vector3`, `Vector4`, `Quaternion`, `Matrix`
+  and `CurveKey` typed/boxed/operator equality and `GetHashCode`.
+- **Demo/reproduction:** run `math.vector2.toolbox_2d`, `math.vector3.equality_and_string` and
+  `math.vector4.value_identity`, `math.quaternion.value_identity`, `math.matrix.identity` and
+  `math.curve.key_value_identity`. Compare UnitX/Identity with otherwise identical values
+  containing `-0.0f`, compare each all-positive-zero value with a negative-zero component, and
+  compare two CurveKeys differing only by Position's zero sign. Ordinary construction and
+  equality/hash pairs are adjacent positive controls.
+- **Observed:** CNA correctly treats positive and negative zero as equal through every tested
+  equality form, but hashes their raw IEEE-754 bits. Quaternion Identity hashes to `1065353216`
+  while its signed-X-zero equal hashes to `-1082130432`; zero hashes to0 while its signed-W-zero
+  equal hashes to `-2147483648`. Vector2 exhibits the equivalent UnitX/Y-zero and origin/X-zero
+  mismatches, and Vector3 and Vector4 do the same for their tested UnitX and origin zero signs.
+  Matrix Identity likewise hashes differently after only M12 changes from positive to negative
+  zero, and CurveKey does the same for Position. Each demo retains exactly one expected hash
+  failure, among five Quaternion, fourteen Vector2, seven Vector3, seven Vector4, seven Matrix and
+  six CurveKey controls.
+- **Expected/reference:** genuine Windows XNA 4.0 treats all tested pairs as equal and gives each
+  pair equal hashes. The CurveKey pair both hash to `-1077936128`; the vector/quaternion unit pairs
+  both hash to `1065353216`, their zero pairs to0, and both Matrix Identity variants to
+  `-33554432`. The equality/hash invariant therefore holds regardless of zero's sign bit.
+- **Cause/suggested repair:** CNA's repeated `FloatHash` helpers copy each float's raw bits, while
+  float equality equates both zeros. Canonicalize either zero sign to the same hash before combining
+  components/fields and apply the rule consistently to every affected value type.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1044-quaternion-signed-zero-hash/*` and
+  `/tmp/checkpoint-1047-vector2-signed-zero-hash/*` and
+  `/tmp/checkpoint-1052-vector3-identity-bounds/*`,
+  `/tmp/checkpoint-1058-vector4-value-identity/*`, `/tmp/checkpoint-1073-curve-members/*` and
+  `/tmp/checkpoint-1074-matrix-members/*`. Warning-free three-job builds, exact known-issue CTests,
+  metadata through710/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer label
+  reproduce only each demo's one hash assertion with empty stderr. No CNA source was modified and
+  no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-115 -- Matrix decomposition loses XNA reflection and zero-scale results
 

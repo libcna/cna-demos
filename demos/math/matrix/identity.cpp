@@ -73,6 +73,4 @@ CNA_DEMOS_CONSOLE(MatrixIdentity, {
              "Matrix::M31", "Matrix::M32", "Matrix::M33", "Matrix::M34",
              "Matrix::M41", "Matrix::M42", "Matrix::M43", "Matrix::M44"},
     .tags = {"matrix", "identity"},
-    .restrictions = "CNA-DEMOS-ISSUE-120 records unequal hashes for equal matrices that differ only by a zero sign.",
-    .knownIssue = "CNA-DEMOS-ISSUE-120",
 })

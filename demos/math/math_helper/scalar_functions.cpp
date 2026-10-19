@@ -82,6 +82,4 @@ CNA_DEMOS_CONSOLE(MathHelperScalars, {
              "MathHelper::Distance", "MathHelper::MachineEpsilonFloat", "MathHelper::WithinEpsilon",
              "MathHelper::ClosestMSAAPower"},
     .tags = {"scalar", "clamp", "interpolation", "boundaries", "ieee-754"},
-    .restrictions = "CNA-DEMOS-ISSUE-136 records MathHelper Min/Max losing a NaN first operand.",
-    .knownIssue = "CNA-DEMOS-ISSUE-136",
 })

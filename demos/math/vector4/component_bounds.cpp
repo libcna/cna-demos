@@ -20,13 +20,13 @@ namespace
         const Vector4 low(-2.0f, 3.0f, 8.0f, -9.0f);
         const Vector4 high(1.0f, 7.0f, 6.0f, -4.0f);
         const Vector4 value(2.0f, 5.0f, 7.0f, -6.0f);
-        Vector4 ordinaryOutput;
-        Vector4::Clamp(value, low, high, ordinaryOutput);
-        ctx.Check(Vector4::Clamp(value, low, high) == Vector4(1.0f, 5.0f, 6.0f, -6.0f) &&
-                      ordinaryOutput == Vector4(1.0f, 5.0f, 6.0f, -6.0f) &&
+        Vector4 mixedOutput;
+        Vector4::Clamp(value, low, high, mixedOutput);
+        ctx.Check(Vector4::Clamp(value, low, high) == Vector4(1.0f, 5.0f, 8.0f, -6.0f) &&
+                      mixedOutput == Vector4(1.0f, 5.0f, 8.0f, -6.0f) &&
                       Vector4::Min(low, high) == Vector4(-2.0f, 3.0f, 6.0f, -9.0f) &&
                       Vector4::Max(low, high) == Vector4(1.0f, 7.0f, 8.0f, -4.0f),
-                  "ordinary Clamp, Min and Max select each component independently");
+                  "Clamp, Min and Max independently handle mixed ordered and reversed component bounds");
 
         const Vector4 reversedMinimum(10.0f);
         const Vector4 reversedMaximum = Vector4::Zero;
@@ -119,6 +119,4 @@ CNA_DEMOS_CONSOLE(Vector4ComponentBounds, {
              "Vector4::op_Subtraction", "Vector4::op_Multiply", "Vector4::op_Division",
              "Vector4::op_UnaryNegation"},
     .tags = {"vector", "bounds", "operators", "precision"},
-    .restrictions = "CNA-DEMOS-ISSUE-122 records reversed Clamp and signed-zero tie differences.",
-    .knownIssue = "CNA-DEMOS-ISSUE-122",
 })

@@ -159,6 +159,4 @@ CNA_DEMOS_CONSOLE(Toolbox2D, {
              "Vector2::op_Addition", "Vector2::op_Division", "Vector2::op_Equality", "Vector2::op_Inequality",
              "Vector2::op_Multiply", "Vector2::op_Subtraction", "Vector2::op_UnaryNegation"},
     .tags = {"vector", "2d", "math", "gameplay"},
-    .restrictions = "CNA-DEMOS-ISSUE-120 records unequal hashes for equal signed-zero Vector2 values.",
-    .knownIssue = "CNA-DEMOS-ISSUE-120",
 })

@@ -135,5 +135,15 @@ int main(int argc, char** argv)
             hash == equal_hash,
         "equality and hashing observe all five fields");
 
+    cna_demo_check(
+        &demo,
+        cna_curve_key_get_hash_code(
+            (CNA_CurveKey){-0.0f, 1, 2, 3, CNA_CURVE_CONTINUITY_SMOOTH}, &hash) == CNA_RESULT_SUCCESS &&
+            (uint32_t)hash == UINT32_C(0xbfc00000) &&
+            cna_curve_key_get_hash_code(
+                (CNA_CurveKey){0, 1, 2, 3, CNA_CURVE_CONTINUITY_STEP}, &equal_hash) == CNA_RESULT_SUCCESS &&
+            (uint32_t)equal_hash == UINT32_C(0xbfc00001),
+        "signed zero is canonical and CurveKey uses XNA's wrapped field-hash sum");
+
     return cna_demo_finish(&demo);
 }

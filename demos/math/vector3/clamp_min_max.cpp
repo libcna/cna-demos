@@ -75,6 +75,4 @@ CNA_DEMOS_CONSOLE(Vector3ClampMinMax, {
                    "Min/Max tie behavior.",
     .apis = {"Vector3::Clamp", "Vector3::Min", "Vector3::Max"},
     .tags = {"bounds", "component-wise", "precision"},
-    .restrictions = "CNA-DEMOS-ISSUE-122 records reversed Clamp and signed-zero tie differences.",
-    .knownIssue = "CNA-DEMOS-ISSUE-122",
 })

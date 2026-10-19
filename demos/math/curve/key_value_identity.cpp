@@ -58,6 +58,11 @@ namespace
                       positiveZero.GetHashCode() == negativePositionZero.GetHashCode(),
                   "equal keys differing only by Position's zero sign receive the same hash");
 
+        ctx.Check(positiveZero.GetHashCode() == static_cast<std::size_t>(0xbfc00000u) &&
+                      CurveKey(0, 1, 2, 3, CurveContinuity::Step).GetHashCode() ==
+                          static_cast<std::size_t>(0xbfc00001u),
+                  "CurveKey combines all five field hashes with XNA's wrapped 32-bit sum");
+
         const CurveKey nanValue(1.0f, std::numeric_limits<float>::quiet_NaN());
         ctx.Check(nanValue != nanValue && !nanValue.Equals(nanValue),
                   "a NaN field follows XNA float equality and makes even self-comparison unequal");
@@ -74,6 +79,4 @@ CNA_DEMOS_CONSOLE(CurveKeyValueIdentity, {
              "CurveKey::GetHashCode", "CurveKey::op_Equality", "CurveKey::op_Inequality",
              "CurveContinuity::Smooth", "CurveContinuity::Step"},
     .tags = {"curve", "keyframe", "value-semantics", "ieee-754"},
-    .restrictions = "CNA-DEMOS-ISSUE-120 includes CurveKey's unequal hashes for equal signed-zero positions.",
-    .knownIssue = "CNA-DEMOS-ISSUE-120",
 })

@@ -49,6 +49,4 @@ CNA_DEMOS_CONSOLE(QuaternionValueIdentity, {
              "Quaternion::GetHashCode", "Quaternion::op_Equality", "Quaternion::op_Inequality",
              "Quaternion::X", "Quaternion::Y", "Quaternion::Z", "Quaternion::W"},
     .tags = {"quaternion", "equality", "hash", "precision"},
-    .restrictions = "CNA-DEMOS-ISSUE-120 records unequal hashes for equal signed-zero values.",
-    .knownIssue = "CNA-DEMOS-ISSUE-120",
 })

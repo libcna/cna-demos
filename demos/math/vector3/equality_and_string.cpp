@@ -53,6 +53,4 @@ CNA_DEMOS_CONSOLE(Vector3EqualityAndString, {
     .apis = {"Vector3::Equals", "Vector3::op_Equality", "Vector3::op_Inequality", "Vector3::GetHashCode",
              "Vector3::ToString"},
     .tags = {"equality", "hash", "format"},
-    .restrictions = "CNA-DEMOS-ISSUE-120 records unequal hashes for equal signed-zero Vector3 values.",
-    .knownIssue = "CNA-DEMOS-ISSUE-120",
 })

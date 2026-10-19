@@ -166,6 +166,4 @@ CNA_DEMOS_CONSOLE(Vector4Transform, {
     .apis = {"Vector4::Transform", "Matrix::CreateScale", "Matrix::CreateTranslation",
              "Quaternion::CreateFromAxisAngle"},
     .tags = {"vector", "matrix", "quaternion", "arrays"},
-    .restrictions = "CNA-DEMOS-ISSUE-121 records rejection of XNA's negative-length no-op.",
-    .knownIssue = "CNA-DEMOS-ISSUE-121",
 })

@@ -60,6 +60,4 @@ CNA_DEMOS_CONSOLE(Vector4ValueIdentity, {
              "Vector4::UnitZ", "Vector4::UnitW", "Vector4::X", "Vector4::Y", "Vector4::Z", "Vector4::W",
              "Vector4::Equals", "Vector4::GetHashCode", "Vector4::op_Equality", "Vector4::op_Inequality"},
     .tags = {"vector", "constructor", "equality", "hash"},
-    .restrictions = "CNA-DEMOS-ISSUE-120 records signed-zero Vector4 hash inconsistency.",
-    .knownIssue = "CNA-DEMOS-ISSUE-120",
 })
