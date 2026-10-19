@@ -12,7 +12,17 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
-Latest repair checkpoint: Curve IDs 002/036/097/137/138 are Resolved by CNA
+Latest checkpoint: perspective 117 is Resolved by CNA `2a245b91f`. Native math has
+889 passes/two unchanged fixture skips; all 98 Matrix CTests pass. Both 95-demo math
+sweeps now have 52 passes/43 unrelated expected failures, with no unexplained delta.
+All 732 enabled CTests pass (557.06s), 48 skipped/three disabled unchanged; all six
+visual references are exact. Inventory: 37 final dispositions (six runtime findings,
+23 documentation corrections, seven already fixed, one demo oracle correction),
+118 remaining. Next: Quaternion inverse/division 119; genuine XNA 41/41 confirmed.
+Extreme Distance finding 118 has caller-dependent genuine-XNA results requiring
+separate investigation; expectations are unchanged. See CNA's authoritative handoff.
+
+Previous repair checkpoint: Curve IDs 002/036/097/137/138 are Resolved by CNA
 `d753d0997`, with native/C ABI regressions and targeted production-TU ASan/UBSan
 validation. All original assertions remain; five knownIssue markers are removed.
 Both full 95-demo math sweeps have 51 passes/44 unrelated expected failures, with

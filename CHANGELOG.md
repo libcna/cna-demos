@@ -6,6 +6,9 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Closed perspective finding 117 against CNA `2a245b91f`: public Pi boundary and
+  exact XNA exception contracts, with native and C ABI regressions. All 732 enabled
+  CTests pass; both full math sweeps preserve unrelated outcomes; six visuals are exact.
 - Closed Curve findings 002/036/097/137/138 after CNA `d753d0997`: preserved all
   assertions, added native/C API regressions, and verified genuine XNA plus targeted
   ASan/UBSan aliasing coverage. Both 95-demo math sweeps have only expected deltas;

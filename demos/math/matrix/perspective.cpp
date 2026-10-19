@@ -2,7 +2,6 @@
 // Perspective projection matrices: field of view, width/height, off-centre.
 #include <cmath>
 #include <limits>
-#include <stdexcept>
 
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/MathChecks.hpp"
@@ -10,16 +9,24 @@
 #include "Microsoft/Xna/Framework/Matrix.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
 #include "Microsoft/Xna/Framework/Vector4.hpp"
+#include "System/ArgumentException.hpp"
+#include "System/ArgumentOutOfRangeException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 
 namespace
 {
     template<typename F>
-    bool ThrowsInvalidArgument(F&& action)
+    bool ThrowsRangeArgument(F&& action, const char* parameter)
     {
         try { action(); }
-        catch (const std::invalid_argument&) { return true; }
+        catch (const System::ArgumentOutOfRangeException& error)
+        {
+            return error.getParamNameProperty() == parameter;
+        }
+        // A broader framework exception is a failed contract check, not a reason to
+        // abort the remaining controls. Genuine XNA specifies both type and ParamName.
+        catch (const System::ArgumentException&) { return false; }
         return false;
     }
 
@@ -56,16 +63,16 @@ namespace
 
         // XNA validates angular and depth ordering, while leaving width/aspect degeneracy to
         // ordinary IEEE-754 division. Keep both halves visible: they are easy to over-normalize.
-        ctx.Check(ThrowsInvalidArgument([] { (void) Matrix::CreatePerspectiveFieldOfView(0.0f, 1.0f, 1.0f, 10.0f); }),
+        ctx.Check(ThrowsRangeArgument([] { (void) Matrix::CreatePerspectiveFieldOfView(0.0f, 1.0f, 1.0f, 10.0f); }, "fieldOfView"),
                   "a zero field of view is refused");
-        ctx.Check(ThrowsInvalidArgument([] { (void) Matrix::CreatePerspectiveFieldOfView(MathHelper::Pi, 1.0f, 1.0f, 10.0f); }),
+        ctx.Check(ThrowsRangeArgument([] { (void) Matrix::CreatePerspectiveFieldOfView(MathHelper::Pi, 1.0f, 1.0f, 10.0f); }, "fieldOfView"),
                   "a field of view equal to Pi is refused");
-        ctx.Check(ThrowsInvalidArgument([] { (void) Matrix::CreatePerspectiveFieldOfView(1.0f, 1.0f, 0.0f, 10.0f); }) &&
-                      ThrowsInvalidArgument([] { (void) Matrix::CreatePerspectiveFieldOfView(1.0f, 1.0f, 1.0f, 0.0f); }) &&
-                      ThrowsInvalidArgument([] { (void) Matrix::CreatePerspectiveFieldOfView(1.0f, 1.0f, 10.0f, 10.0f); }),
+        ctx.Check(ThrowsRangeArgument([] { (void) Matrix::CreatePerspectiveFieldOfView(1.0f, 1.0f, 0.0f, 10.0f); }, "nearPlaneDistance") &&
+                      ThrowsRangeArgument([] { (void) Matrix::CreatePerspectiveFieldOfView(1.0f, 1.0f, 1.0f, 0.0f); }, "farPlaneDistance") &&
+                      ThrowsRangeArgument([] { (void) Matrix::CreatePerspectiveFieldOfView(1.0f, 1.0f, 10.0f, 10.0f); }, "nearPlaneDistance"),
                   "field-of-view projection refuses nonpositive or unordered depth planes");
-        ctx.Check(ThrowsInvalidArgument([] { (void) Matrix::CreatePerspective(2.0f, 2.0f, -1.0f, 10.0f); }) &&
-                      ThrowsInvalidArgument([] { (void) Matrix::CreatePerspectiveOffCenter(-1.0f, 1.0f, -1.0f, 1.0f, 10.0f, 1.0f); }),
+        ctx.Check(ThrowsRangeArgument([] { (void) Matrix::CreatePerspective(2.0f, 2.0f, -1.0f, 10.0f); }, "nearPlaneDistance") &&
+                      ThrowsRangeArgument([] { (void) Matrix::CreatePerspectiveOffCenter(-1.0f, 1.0f, -1.0f, 1.0f, 10.0f, 1.0f); }, "nearPlaneDistance"),
                   "size and off-centre projections enforce the same depth-plane contract");
 
         const Matrix zeroAspect = Matrix::CreatePerspectiveFieldOfView(1.0f, 0.0f, 1.0f, 10.0f);
@@ -97,6 +104,4 @@ CNA_DEMOS_CONSOLE(MatrixPerspective, {
                    "validated depth/angle boundaries versus IEEE-754 dimension and aspect behavior.",
     .apis = {"Matrix::CreatePerspectiveFieldOfView", "Matrix::CreatePerspective", "Matrix::CreatePerspectiveOffCenter"},
     .tags = {"matrix", "projection", "camera", "frustum"},
-    .restrictions = "CNA-DEMOS-ISSUE-117 records acceptance of MathHelper::Pi as a field of view.",
-    .knownIssue = "CNA-DEMOS-ISSUE-117",
 })

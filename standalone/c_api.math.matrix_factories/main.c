@@ -175,6 +175,16 @@ int main(int argc, char** argv)
 
     cna_demo_check(
         &demo,
+        cna_matrix_create_perspective_field_of_view(
+            CNA_MATH_PI, 2.0f, 1.0f, 11.0f, &result) == CNA_RESULT_INVALID_ARGUMENT &&
+            matrix_is(result, before) &&
+            cna_matrix_create_perspective_field_of_view(
+                nextafterf(CNA_MATH_PI, 0.0f), 2.0f, 1.0f, 11.0f, &result) ==
+                CNA_RESULT_SUCCESS && result.m22 > 0.0f,
+        "the public Pi boundary is refused atomically while its preceding float is accepted");
+
+    cna_demo_check(
+        &demo,
         cna_matrix_create_scale_scalar(2.0f, &result) == CNA_RESULT_SUCCESS &&
             near(result.m11, 2.0f) && near(result.m22, 2.0f) && near(result.m33, 2.0f) &&
             cna_matrix_create_scale_xyz(2.0f, 3.0f, 4.0f, &result) == CNA_RESULT_SUCCESS &&

@@ -835,27 +835,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   over-strict demo oracle, not a second CNA issue. No CNA source was modified and no upstream
   message was sent.
 
-### CNA-DEMOS-ISSUE-117 -- Perspective accepts Pi despite XNA's strict field-of-view bound
-
-- **Area/API:** `Microsoft::Xna::Framework::Matrix::CreatePerspectiveFieldOfView`.
-- **Demo/reproduction:** run `math.matrix.perspective`. Alongside valid equivalent-frustum and
-  depth controls, call the value overload with `fieldOfView = MathHelper::Pi`, aspect1 and positive
-  ordered near/far planes. Zero FOV and all depth-plane refusal controls remain positive controls.
-- **Observed:** CNA accepts Pi and returns a matrix. This is the sole expected failure among twelve
-  checks on ten SOFTWARE and ten OPENGLES3-labelled runs; stdout is stable and stderr empty.
-- **Expected/reference:** genuine Windows XNA 4.0 throws `ArgumentOutOfRangeException` with
-  `ParamName=fieldOfView` for both zero and exactly `MathHelper.Pi`. It accepts zero/negative
-  aspect, zero width/height and collapsed off-centre spans as IEEE-754 inputs, and propagates NaN
-  FOV; CNA matches all those adjacent distinctions and all near/far refusals.
-- **Cause observed:** CNA checks `fieldOfView >= 3.141593f`. That rounded literal is greater than
-  the public float `MathHelper::Pi`, leaving the exact documented/XNA upper endpoint accepted.
-  Comparing against the public Pi value would close the observed one-float gap.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1030-matrix-perspective-boundaries/*`.
-  Exact known-issue CTest, metadata693/0 and self-tests5/5 plus4/4 pass. No CNA source was modified
-  and no upstream message was sent.
-
 
 ### CNA-DEMOS-ISSUE-115 -- Matrix decomposition loses XNA reflection and zero-scale results
 
@@ -3485,6 +3464,40 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-117 -- Perspective accepts Pi despite XNA's strict field-of-view bound
+
+- **Repair-campaign resolution (2026-10-19): FIXED_VALIDATED.** CNA `2a245b91f`
+  uses the public Pi boundary and exact XNA ArgumentOutOfRangeException/ParamName
+  contracts in all three perspective factories. Validation order, IEEE behavior, and
+  refused output preservation are retained. Genuine XNA passes all 96
+  [oracle checks](repair-evidence/issue-117/README.md). Native math: 889 passes/two
+  unchanged fixture skips; registered Matrix CTests: 98/98. Native C17/Werror smoke
+  and the extended 14-check C demo pass. Both 95-demo math sweeps preserve every
+  unrelated outcome/assertion; the original perspective demo passes all 12 checks
+  under both labels. All 732 enabled CTests pass (48 skipped/three disabled unchanged),
+  and all six visual references match exactly. The knownIssue marker is removed only
+  after these passes; assertions remain. Historical observations below predate this fix.
+
+- **Area/API:** `Microsoft::Xna::Framework::Matrix::CreatePerspectiveFieldOfView`.
+- **Demo/reproduction:** run `math.matrix.perspective`. Alongside valid equivalent-frustum and
+  depth controls, call the value overload with `fieldOfView = MathHelper::Pi`, aspect1 and positive
+  ordered near/far planes. Zero FOV and all depth-plane refusal controls remain positive controls.
+- **Observed:** CNA accepts Pi and returns a matrix. This is the sole expected failure among twelve
+  checks on ten SOFTWARE and ten OPENGLES3-labelled runs; stdout is stable and stderr empty.
+- **Expected/reference:** genuine Windows XNA 4.0 throws `ArgumentOutOfRangeException` with
+  `ParamName=fieldOfView` for both zero and exactly `MathHelper.Pi`. It accepts zero/negative
+  aspect, zero width/height and collapsed off-centre spans as IEEE-754 inputs, and propagates NaN
+  FOV; CNA matches all those adjacent distinctions and all near/far refusals.
+- **Cause observed:** CNA checks `fieldOfView >= 3.141593f`. That rounded literal is greater than
+  the public float `MathHelper::Pi`, leaving the exact documented/XNA upper endpoint accepted.
+  Comparing against the public Pi value would close the observed one-float gap.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1030-matrix-perspective-boundaries/*`.
+  Exact known-issue CTest, metadata693/0 and self-tests5/5 plus4/4 pass. No CNA source was modified
+  and no upstream message was sent.
+
 
 ### CNA-DEMOS-ISSUE-138 -- Curve evaluation loses NaN and exact duplicate-position behavior
 
