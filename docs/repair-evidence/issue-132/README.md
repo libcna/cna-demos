@@ -14,7 +14,29 @@ eighteen finite/nonfinite factors. Logs: `repair-color-fixed-point-xna{,-build}.
 `ColorFixedPointProbe.cpp` reproduces162 exact native failures among the same1782
 checks against the unchanged Color implementation; strict warning-as-error build
 passes. Reports: `repair-color-fixed-point-native-before{,-build}.log`.
-No production or demo change for132 has been made. Next add CNA-native failing
-regressions before implementing the measured repair. Existing rounding/packing
-controls must remain; do not replace the fixed-point contract with isolated
-nonfinite branches.
+Three new CNA-native tests fail before the repair (968total,963PASS,two unchanged
+skips,three failures; `repair-color-native-before*`). Two new strict C17/Werror
+stages fail against the actual pre-Color external C ABI, while all four original
+stages pass (`repair-color-c-before*`). These failures are retained.
+
+The local repair uses the existing packed rounding helper for Lerp's factor and
+bounded unsigned products for Multiply. It does not change constructors, packing,
+API surface or public layout. The old native NaN Lerp alpha expectation is exactly
+corrected from0 to255 based on genuine XNA; no assertion is removed. The matching
+native1782-check probe now passes every check. Full native math passes966 tests
+with two unchanged missing-fixture skips (`repair-color-native-corrected.log`).
+An initial post-fix invocation from the demos cwd could not load eight native
+fixtures; `repair-color-native-after.log` preserves that harness mistake. The
+unchanged suite passes from the required CNA root.
+
+The actual Color.cpp translation unit plus both Color test files pass64/64 under
+ASan/UBSan/float-cast-overflow with leak detection; warning-as-error instrumented
+build passes (`repair-color-sanitizer*`). External demos remain frozen on the
+preceding containment checkpoint, so no external Color pass or closure is claimed.
+
+Registered Color/original XNA packing tests pass70/70 (11.07s). An additional
+non-desktop consumer selection covering packed values, converters, vertex colors
+and avatar catalogs/descriptions passes156 tests with one unavailable compiled
+effect fixture skipped (157total,7.739s; `repair-color-native-consumers-cpu.log`).
+This selection also matches a few named packed-value graphics controls; it is
+not evidence of a full graphics renderer regression run. Native build is warning-free.
