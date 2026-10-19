@@ -111,6 +111,4 @@ CNA_DEMOS_CONSOLE(BoundingSphereContainmentBoundaries, {
     .apis = {"BoundingSphere::Contains", "ContainmentType::Contains", "ContainmentType::Intersects",
              "ContainmentType::Disjoint"},
     .tags = {"bounds", "sphere", "containment", "collision"},
-    .restrictions = "CNA-DEMOS-ISSUE-129 records BoundingSphere boundary-classification differences.",
-    .knownIssue = "CNA-DEMOS-ISSUE-129",
 })

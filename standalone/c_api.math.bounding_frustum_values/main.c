@@ -108,11 +108,11 @@ int main(int argc, char** argv)
             containment == CNA_CONTAINMENT_CONTAINS &&
             cna_bounding_frustum_contains_point(
                 frustum, (CNA_Vector3){0.0f, 0.0f, 0.0f}, &containment) == CNA_RESULT_SUCCESS &&
-            containment == CNA_CONTAINMENT_INTERSECTS &&
+            containment == CNA_CONTAINMENT_CONTAINS &&
             cna_bounding_frustum_contains_point(
                 frustum, (CNA_Vector3){0.0f, 0.0f, 2.0f}, &containment) == CNA_RESULT_SUCCESS &&
             containment == CNA_CONTAINMENT_DISJOINT,
-        "interior, boundary and exterior points produce all containment classifications");
+        "interior and boundary points are contained while exterior points are disjoint");
 
     memset(corners, 0xA5, sizeof(corners));
     memcpy(before_corners, corners, sizeof(corners));
@@ -159,9 +159,9 @@ int main(int argc, char** argv)
         &demo,
         cna_bounding_frustum_intersects_ray(
             frustum, (CNA_Ray){{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f}},
-            &hit, &distance) == CNA_RESULT_NOT_SUPPORTED &&
-            hit == CNA_TRUE && near(distance, 77.0f),
-        "the documented native boundary-origin ray case is refused atomically");
+            &hit, &distance) == CNA_RESULT_SUCCESS &&
+            hit == CNA_TRUE && distance == 0.0f,
+        "a boundary-origin ray returns a hit at zero, matching genuine XNA");
 
     cna_demo_check(
         &demo,

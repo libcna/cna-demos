@@ -102,6 +102,4 @@ CNA_DEMOS_CONSOLE(BoundingBoxContains, {
     .apis = {"BoundingBox::Contains", "ContainmentType::Contains", "ContainmentType::Intersects",
              "ContainmentType::Disjoint"},
     .tags = {"bounds", "containment", "collision"},
-    .restrictions = "CNA-DEMOS-ISSUE-127 records distant-frustum misclassification as Intersects.",
-    .knownIssue = "CNA-DEMOS-ISSUE-127",
 })

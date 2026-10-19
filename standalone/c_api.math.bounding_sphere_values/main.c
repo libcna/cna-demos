@@ -95,7 +95,7 @@ int main(int argc, char** argv)
                 CNA_RESULT_SUCCESS && containment == CNA_CONTAINMENT_CONTAINS &&
             cna_bounding_sphere_contains_point(
                 outer, (CNA_Vector3){5.0f, 0.0f, 0.0f}, &containment) == CNA_RESULT_SUCCESS &&
-            containment == CNA_CONTAINMENT_INTERSECTS,
+            containment == CNA_CONTAINMENT_DISJOINT,
         "sphere containment covers box, frustum, nested sphere and boundary-point semantics");
     cna_demo_check(
         &demo,
@@ -163,8 +163,8 @@ int main(int argc, char** argv)
             cna_bounding_sphere_intersects_sphere(
                 (CNA_BoundingSphere){{0.0f, 0.0f, 0.0f}, 2.0f},
                 (CNA_BoundingSphere){{4.0f, 0.0f, 0.0f}, 2.0f}, &predicate) ==
-                CNA_RESULT_SUCCESS && predicate == CNA_TRUE,
-        "sphere intersection includes a box, frustum and externally tangent sphere");
+                CNA_RESULT_SUCCESS && predicate == CNA_FALSE,
+        "sphere intersection includes overlapping box and frustum but excludes external sphere tangency");
     cna_demo_check(
         &demo,
         cna_bounding_sphere_intersects_ray(

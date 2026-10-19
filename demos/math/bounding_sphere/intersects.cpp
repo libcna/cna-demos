@@ -97,6 +97,4 @@ CNA_DEMOS_CONSOLE(BoundingSphereIntersects, {
                    "value and output forms, including exact contact and miss boundaries.",
     .apis = {"BoundingSphere::Intersects", "BoundingSphere::BoundingSphere"},
     .tags = {"collision", "sphere"},
-    .restrictions = "CNA-DEMOS-ISSUE-129 records exact sphere-tangency classification.",
-    .knownIssue = "CNA-DEMOS-ISSUE-129",
 })

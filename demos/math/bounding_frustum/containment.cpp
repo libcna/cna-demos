@@ -128,6 +128,4 @@ CNA_DEMOS_CONSOLE(BoundingFrustumContainment, {
     .apis = {"BoundingFrustum::Contains", "ContainmentType::Contains",
              "ContainmentType::Intersects", "ContainmentType::Disjoint"},
     .tags = {"frustum", "containment", "bounding-volume", "culling"},
-    .restrictions = "CNA-DEMOS-ISSUE-133 records point-boundary and equal-instance containment differences.",
-    .knownIssue = "CNA-DEMOS-ISSUE-133",
 })

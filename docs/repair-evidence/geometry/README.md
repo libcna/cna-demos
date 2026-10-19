@@ -210,3 +210,21 @@ passes1408 tests/four unchanged skips (1412total,272.475s), including original
 avatar golden controls. Strict pre-fix C ABI fails four exact stages, including
 the added squared-vector stage; actual post-fix C ABI/external validation remains
 pending. No change to native ray/frustum implementation or exception.
+
+## External containment validation: retained first failures
+
+The first rebuilt external C ABI passes all four new containment/squared stages,
+but two legacy GeometrySmoke stages fail (`repair-containment-c-after-GeometrySmoke.log`).
+The first focused demo run likewise exposes old C surface expectations. These
+are three exact contradictions of the already passing genuine ContainmentOracle:
+sphere surface point is Disjoint, external sphere tangency is false, and a
+frustum boundary point is Contains. Both native C smoke and standalone C demos
+now assert those exact values with the original assertion counts retained. The
+existing geometric enclosure helper/tolerance is not broadened or changed.
+Strict C17/Werror GeometrySmoke and VertexValueSmoke then both pass against the
+actual rebuilt external C API (`repair-containment-c-corrected-*`).
+
+The focused driver initially also incorrectly required exit0 for the two known
+131 failures; the executable correctly returns1. Its next run requires exactly
+exit1/FAILED/issue131 for those two, and exit0/PASSED for every other scenario.
+Original logs remain intact. No unexpected failure is reclassified as expected.

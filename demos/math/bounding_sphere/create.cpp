@@ -25,7 +25,13 @@ namespace
         ctx.Print("CreateFromPoints       = {}", fromPoints.ToString());
         for (const Vector3& p : points)
         {
-            ctx.Check(fromPoints.Contains(p) != ContainmentType::Disjoint, "every input point is inside the sphere");
+            // Genuine XNA Contains(point) excludes the spherical surface. This
+            // construction check asks for geometric enclosure, including that surface.
+            const double x = static_cast<double>(p.X) - fromPoints.Center.X;
+            const double y = static_cast<double>(p.Y) - fromPoints.Center.Y;
+            const double z = static_cast<double>(p.Z) - fromPoints.Center.Z;
+            ctx.Check(x*x + y*y + z*z <= static_cast<double>(fromPoints.Radius) * fromPoints.Radius,
+                      "every input point lies inside or on the constructed sphere");
         }
 
         // A box's bounding sphere: centre of the box, radius = half the diagonal.
