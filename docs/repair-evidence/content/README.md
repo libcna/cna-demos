@@ -231,6 +231,20 @@ process-wide registry. Initializing those serializers with that stack object wou
 introduce dangling retained context, not fix the contract. Per-operation namespace
 aliases and relocation paths must also remain isolated when repairing owner lifetime.
 
+Further089 source constraints (no patch selected): the two per-operation fields
+are `referenceRelocationPath_` and `aliases_`; their CNAEXT accessors are public,
+so a stable callback owner must not silently lose the active operation's state or
+leak it between nested/concurrent operations. Reader/Writer currently return their
+temporary `serializer_`, and namespace scans pass that same temporary to callbacks.
+Raw registry `FindTypeSerializer` functions are noexcept; do not make them invoke
+throwing user initialization. Initialization must permit published self/mutual
+lookups without holding the nonrecursive registry mutex across a user callback.
+Built-in registration is itself recursive and marks its flag before completing;
+check lock ordering before adding any once/initialization gate. CNA's explicit
+registration consumes a unique_ptr and has no cloning factory: genuine failed
+singleton reconstruction cannot be imitated by inventing fresh user instances.
+That boundary needs an explicit, evidence-backed translation, not an assumed retry.
+
 `IntermediateCollisionOracle.cs` passes11/11 on genuine XNA4. The real private
 registration entry rejects a distinct target with the same XML shortcut using
 exact InvalidOperationException. Its diagnostic identifies XmlTypeName and the
