@@ -73,3 +73,20 @@ do not substitute FNA's convenient deduplication for the measured35-check result
 
 Next: add corresponding native before/after tests. Keep011,012,039,
 043,045 and087 open until their own repairs and full relevant gates finish.
+
+## ISSUE-039 native baseline
+
+Three native cases are now prepared in ContentManagerXnbTests.cpp and were linked
+against the frozen048 dependency closure, without rebuilding checkpoint binaries.
+Result:twoPASS/oneFAIL,3ms. Both lvalue and rvalue RootDirectory setters wrongly
+accept same-root and different-root assignment while an asset is cached, and mutate
+the root. Positive controls confirm cache preservation and reload after Unload;
+failed Load and uncached ReadAsset correctly leave root assignment available.
+
+The first Werror compilation exposed six pre-existing ignored-nodiscard results in
+the reused fixture. Exception assertions now explicitly discard the value, and the
+initial cached-load control is strengthened to assert its exact value. No exception
+assertion is removed or relaxed. The corrected compilation passes Werror; the
+original compile failure remains in `repair-content-root-native-before-build.log`.
+Actual baseline results: `repair-content-root-werror-native-before.log`.
+No039 production repair or post-fix pass is claimed yet.
