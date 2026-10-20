@@ -21,7 +21,5 @@ CNA_DEMOS_STANDALONE({
     .tags = {"c", "binding", "storage", "save-game"},
     .needs = CnaDemos::Need::CApi,
     .deterministic = true,
-    .restrictions = "Standalone C program; built only when CNA has its C API (CNA_BUILD_C_API=ON). "
-                    "ISSUE-056: the underlying FileStream reports position -1 after a short EOF read.",
-    .knownIssue = "CNA-DEMOS-ISSUE-056",
+    .restrictions = "Standalone C program; built only when CNA has its C API (CNA_BUILD_C_API=ON).",
 })

@@ -67,7 +67,7 @@ namespace
         container->CreateDirectory("empty");
         (void)container->CreateFile("fixture.bin");
 
-        // Disposing is raised once, before the container closes -- the last moment to write.
+        // Disposing is raised once; IsDisposed is already true inside the callback.
         int disposing = 0;
         container->Disposing.Add([&disposing](System::Object*, const System::EventArgs&) { ++disposing; });
         ctx.Check(!container->getIsDisposedProperty(), "an open container is not disposed");
@@ -144,5 +144,4 @@ CNA_DEMOS_CONSOLE(Lifetime, {
              "StorageContainer::GetFileNames", "StorageContainer::OpenFile",
              "StorageDevice::BeginOpenContainer", "StorageDevice::EndOpenContainer"},
     .tags = {"storage", "dispose", "event", "lifetime"},
-    .knownIssue = "CNA-DEMOS-ISSUE-151",
 })

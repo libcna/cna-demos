@@ -127,6 +127,4 @@ CNA_DEMOS_CONSOLE(TitleContainerOpenStream, {
     .apis = {"TitleContainer::OpenStream", "TitleLocation::Path", "TitleLocation::setPathProperty"},
     .tags = {"file", "stream", "title"},
     .assets = {"textures/checker.png"},
-    .restrictions = "CNA-DEMOS-ISSUE-145 records absolute-name acceptance and non-XNA exceptions for missing or empty names.",
-    .knownIssue = "CNA-DEMOS-ISSUE-145",
 })

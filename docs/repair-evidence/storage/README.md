@@ -24,8 +24,11 @@ preservation, directory errors and cleanup; the existing runtime smoke retains i
 missing-path and successful-byte controls. ldd binds
 the actual external C ABI DSO; both libraries' hashes match before/after execution.
 Reports `repair-storage-c-after-*`, `repair-storage-c-libraries*.log` and manifest.
-The full external demo build is still running. Focused SOFTWARE/OPENGLES3, marker
-updates and full renderer/visual/CTest regression remain required before closure.
+The full external demo build now passes warning-free. Ten focused scenarios on each
+of SOFTWARE/OPENGLES3 give9PASS/one unchanged152FAIL; title10/lifetime14 checks and
+the actual C save child's38 checks remain unchanged. Both DSOs still match the C ABI
+validation manifest. Only then removed056/145/151 markers; marker rebuild is running.
+Full renderer/visual/CTest regression remains required before closure.
 FileShare152 remains open; the platform-policy question has no answer yet.
 
 ### Invalid paths and error preservation
