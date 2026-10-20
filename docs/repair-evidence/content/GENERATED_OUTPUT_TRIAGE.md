@@ -52,3 +52,51 @@ identity and cannot represent an arbitrary processor-written text report.
 No production change or API/schema design is committed here. ISSUE-047 remains
 **CONFIRMED_OPEN**. Next: minimize host-level manifest/publication/clean scenarios
 and select the smallest correct output representation before implementing it.
+
+## Manifest baseline and proposed minimal representation
+
+The same permanent source now contains11 cases. The extended baseline52851
+gives **eight PASS/three FAIL**: the original two bridge failures plus a direct
+manifest failure for a valid processor result whose report is under the separate
+output root. Constructing that result directly deliberately isolates the manifest
+from the earlier registration failure. The compiled primary artifact is a real
+CNB Curve, not arbitrary bytes. `MakeContentBuildManifestEntry` refuses the report
+as escaping the source root, confirming the second root-cause boundary.
+
+The new source-backed deployment control passes its actual byte-change
+fingerprint and missing-input checks. Outside-root support and a deployment
+destination overwriting authored source are refused, with authored bytes intact.
+All seven earlier cases retain their original assertions. The new generated
+case also specifies the required manifest round trip, root-relative identities,
+no physical-path leak, no invented input dependency, unchanged direct fingerprint
+when generated output is modified/deleted, and changed fingerprint when authored
+input changes. Those post-registration assertions are not yet reached in the
+failing baseline; no pass is claimed for them.
+
+The first strict compile caught two omitted aggregate initializers for
+`ContentDependency::sourceRoot`. Explicit empty aliases fixed the compile; the
+failed log is retained. Corrected strict build is warning-free, all four frozen
+native binaries/three frozen sources are unchanged, and private fixtures are
+gone. Reports: `repair-content-generated-output-manifest-before-corrected*`;
+initial compiler log: `repair-content-generated-output-manifest-before-build.log`.
+
+Source inspection suggests a narrow representation without a new XNA API:
+
+1. Preserve primary/named-input provenance and existing source-backed deployments.
+   Only a canonical file under an explicitly nonempty configured output root
+   gains generated-output authority; unrelated paths remain refused.
+2. Distinguish output-root provenance in the persisted deployment record. Keep
+   its source path relative to the output root and its source-root alias empty.
+   Do not add a synthetic input dependency or external capability.
+3. Version the manifest change, include provenance in the definition fingerprint,
+   and validate generated records separately from input-backed records.
+4. Retain output digest verification, publication snapshots, ownership-safe clean
+   and authored-source protection. Existing publication/clean loops already
+   enumerate deployment outputs, but require actual host-level tests before
+   claiming the new route works end to end.
+
+This is a proposed implementation boundary, not an implemented or validated
+repair. The locally installed XNA SDK XML has an empty AddOutputFile summary,
+so it supplies no additional evidence for path handling; the baseline expectation
+is the explicit CNA public contract and real processor use case. No genuine-XNA
+runtime claim is made.
