@@ -414,3 +414,17 @@ Matching corrected native baseline gives fourPASS/eightFAIL in2ms, with controls
 ensuring no target serializer or global XML alias is introduced. The initial native
 abstract-fixture setup failures are retained separately. No046 runtime change yet.
 Reports `repair-intermediate-external-alias-{verified-xna,corrected-native-before}*`.
+
+Follow-up: CNAde1b6e259 corrects148 per-section fixup ordering and cyclic fixture
+teardown. The actual Reader/Serializer TUs plus the entire intermediate corpus and
+18 section/order cases now pass **27/27 ASan/UBSan/leak checks**,1567ms, exit0;
+the previous failing22-case log remains. Native baseline freeze was released only
+after the517/content-consumer/XML gates and final four-hash audit completed and
+this isolated sanitizer finished using its archives.
+
+The046 candidate now reuses the existing namespace/generic spelling resolver with
+a private external-identity mode, validates the complete identity without requiring
+a target serializer, and canonicalizes both table identities and pending fixups.
+Surrounding TargetType whitespace remains refused. No global alias or public API
+is added. Native rebuild and39-case sanitizer compilation are running; no046 pass
+or issue closure is claimed yet.
