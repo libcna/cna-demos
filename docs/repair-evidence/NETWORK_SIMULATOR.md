@@ -39,7 +39,7 @@ normal/clamp cases (one Stopwatch-tick allowance only for floating-to-integer
 truncation). It uses private reflection deliberately; it does **not** run a network
 session, transport, Xbox LIVE or hardware. Native NetworkSimulatorTest7/7 passes2ms.
 
-## Prepared demo correction (not yet runtime-validated)
+## Runtime-validated demo correction (full regression still pending)
 
 The sender applies each phase's settings before sending; a separate recovery marker
 returns that same sender to zero loss. Exact24 reliable deliveries, zero unreliable
@@ -56,6 +56,12 @@ The assertion count is unchanged. This threshold has a distribution-based reason
 not an arbitrary wider tolerance chosen from a failed run.
 
 A separate build-probe executable compiled with the actual frozen dependency
-closure and Werror; no319-checkpoint binary was rebuilt. Its two-process execution
-must wait for the ongoing serial CTest to finish, avoiding competing SystemLink
-sessions. No knownIssue change or030 closure yet. Reports `repair-network-*`.
+closure and Werror; no319-checkpoint binary was rebuilt. After the isolated serial
+CTest completed, one two-process run on SOFTWARE and one on OPENGLES3 both passed
+all six checks, without competing SystemLink sessions. The seven deterministic
+simulator tests and four sender/receiver ENet integration tests then passed11/11
+(164ms). Reports: `repair-network-corrected-driver.log`,
+`repair-network-corrected-{SOFTWARE,OPENGLES3}.log`, and
+`repair-network-sender-receiver-native.{log,xml}` under build/linux-full/reports.
+No knownIssue change or030 closure yet: the next complete regression checkpoint
+must validate the rebuilt executable together with the pending content repairs.
