@@ -1,5 +1,52 @@
 # Next content-runtime batch: source audit, not repair closure
 
+## Ownership integration audit (2026-10-21; no production edits)
+
+Read-only audit against CNA `fd97482067a289669699a90df60402a437a45e5f`, while
+ISSUE-057's frozen external regression runs. This is an implementation map, not
+a new runtime pass or a selected final architecture.
+
+- `ContentReader.hpp::RecordDisposable` recognizes shared pointers through
+  `ContentTypeReader.hpp::detail::DisposableReference`, invokes an explicit
+  recorder, but still has no manager fallback. The erased read route in
+  `ContentReader.cpp` already forwards `DisposableResult` through that same seam.
+  Preserve explicit-recorder exception propagation and partial-read retention.
+- The genuine Windows XNA `ContentManager.cs::RecordDisposableObject` simply
+  appends to its ordered list. Do not introduce identity deduplication: the
+  permanent `RepeatedMaterializationsAreNotIdentityDeduplicated` regression and
+  the108-check reference oracle already protect repeated materializations.
+  XNA `Unload` clears both tables in `finally`, even after a disposal exception;
+  `Dispose(bool)` invalidates both tables in its own `finally`. Current CNA's
+  `Unload` only clears its asset cache and `Dispose(true)` lacks that exceptional
+  finalization. Generic `Load<T>` also still throws `std::runtime_error` when
+  disposed, whereas its SoundEffect specialization already throws the exact
+  `System::ObjectDisposedException`.
+- Default recording at the XNB reader alone will not cover generic `Load<T>`'s
+  CNB and loose/CNJ return paths. `ContentSoundEffectLoaders.cpp` has its own
+  intentionally uncached move-only specialization with XNB, CNB and loose routes.
+  Audit each ownership transfer; do not equate cache membership with all assets
+  acquired by a manager or erase the documented independent-sound-owner policy.
+- `GraphicsResource::ShareResourceIdentityWith` is not a drop-in ownership fix.
+  Its shared `Dispose(bool)` sets alias flags and raises alias events, but does
+  not invoke each derived texture wrapper's disposal to release its `renderer_`.
+  It also couples ordinary explicit disposal, contrary to the existing independent
+  texture-copy contract. `Texture2D` copy/move operations deliberately preserve
+  per-wrapper device registration; moves transfer registration. Manager-scoped
+  invalidation must preserve these lifetimes, avoid stale wrapper addresses and
+  release native renderer references, not merely make `IsDisposed` return true.
+- C `ContentManagerLoadTexture2d` currently moves the ordinary loaded value into
+  a new owned handle. C `ContentManagerLoadEffect` hands out the exact cached
+  shared pointer. `docs/c-api/CONTENT.md` promises independently owned resource
+  handles survive manager unload/destruction. Before enabling manager ownership,
+  establish and test that independent boundary for texture, font/atlas, cube,
+  sound and effect adapters; no blanket cache-disposal patch is safe here.
+
+Existing permanent tests remain the starting oracle: ten manager-lifecycle cases,
+four Texture2D value-wrapper cases and the genuine108-check XNA probe. Additional
+coverage must verify the other acquisition routes and C-owned handle lifetime,
+not weaken those tests to accommodate a shared-pointer-only implementation.
+No ISSUE-011 disposition changed and no ownership production patch is applied.
+
 ## Value-wrapper ownership baseline (2026-10-20)
 
 Permanent `ContentTextureOwnershipTests.cpp` adds four isolated native cases,
