@@ -1,6 +1,37 @@
 # ISSUE-109: model encoder / decoder validation symmetry
 
-## Current baseline and local candidate
+## Final validated repair
+
+Resolved by CNA commit `68e0acb67732efdb8a0b737ab6f43181444dee65` on2026-10-20.
+The localized encoder repair and native regressions are committed; the decoder,
+schema and valid serialization layout remain unchanged. All five historical
+invalid-input families now fail at the encoder with ContentLoadException.
+
+Native final gate5396 exits0: focused54/54 and full10798=10697PASS/101unchangedSKIP
+in1,148,296ms. Independent XML comparison preserves every10791 predecessor
+outcome and admits exactly the seven new passing regressions. Two duplicated
+child-process log records are not counted as extra tests; XML has10798 unique cases.
+The private-display, owner-UID, zero-capability, broadcast-capable scope peaks at
+2,598,830,080 bytes with zero high/max/OOM events. The full configured build passes
+with138 retained legacy/vendor warnings, not a warning-free result.
+
+Actual encoder/decoder production TUs and both native test TUs pass61/61 under
+ASan/UBSan/leak checks; linked dependencies are not fully instrumented. The
+completed external18-stage gate retains both719 renderer outcomes,95 math demos
+per renderer, six zero-pixel references,146 focused scenarios and CTest684PASS/
+48unchangedSKIP/three disabled. The strengthened model demo retains29 controls
+and the same five invalid inputs; its obsolete restriction was removed only
+after passes. There is no knownIssue/expected-failure delta for this already
+passing diagnostic demo.
+
+Independent closure audit58861 exits0 and rechecks330 current file hashes,
+including319 external artifacts, four native binaries and all four instrumented
+translation units. Report: `repair-model-encoder-closure-audit.json`, errors empty.
+Earlier failed runs remain preserved below; they were not converted to expected
+failures. All following baseline/candidate/running-state descriptions are
+historical checkpoints, superseded by this final result.
+
+## Historical baseline and local candidate
 
 The public `EncodeModelToCnb` contract requires `ContentLoadException` for
 internally inconsistent models, including out-of-range indices. This is a

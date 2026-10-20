@@ -12,24 +12,32 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
-Current repair phase F (2026-10-20): all155 historical IDs retained,90 final/65
+Current repair phase F (2026-10-20): all155 historical IDs retained,91 final/64
 pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
-Latest: cache-policy build61683 COMPLETE0, configure/build successful, one
-compiler worker, shared base `/rv`, three ISSUE-109 source hashes unchanged and
-four final binary hashes recorded. Final diagnostic audit:138 warnings,
-122 pre-campaign owned-test call sites/16 vendor,zero errors/newer owned sites.
-No warning-free claim. Final native usernet gate5396 now RUNNING alone in its
-own MemoryHigh4GiB/Max6GiB/Swap0 scope, private display, owner UID/zero capabilities,
-dummy interface and explicit limited-broadcast route. Focused54/54 PASS with
-empty audit errors; full10798 RUNNING. Expected10697PASS/101unchangedSKIP with
-per-test comparison against the completed predecessor. Do not close109 or launch
-another heavy workload before this gate completes. External18-stage checkpoint
-is complete. Next: audit5396, commit/close109 only if green, then run047 host
-baseline. Three109 CNA source/test edits and two prepared047 demo fixtures remain
-uncommitted. Counts90FINAL/65PENDING unchanged.
+Latest: ISSUE-109 RESOLVED by CNA68e0acb67732efdb8a0b737ab6f43181444dee65.
+Native5396 COMPLETE0:10798=10697PASS/101unchangedSKIP, focused54/54. Independent
+XML comparison preserves all10791 previous outcomes plus seven new passes.
+ASan/UBSan/leak61/61 on actual encoder/decoder and both test TUs; dependencies
+not fully instrumented. External18-stage checkpoint complete: both719 sweeps,
+math95 each/six exact visuals/focus146/CTest684PASS/48sameSKIP/three disabled.
+Independent closure audit58861 verifies330 current file hashes, errors empty.
+Native peak2,598,830,080 bytes,zero OOM. Complete one-worker build passed with138
+retained legacy/vendor warnings; no warning-free claim. No knownIssue-count
+delta for109's already-passing diagnostic demo. Historical issue body preserved.
+
+047 real-host baseline92605 COMPLETE0 in a bounded serial scope: warning-free
+strict build, five expected authorization failures/one passing invalid-input
+control, original Python exit1 retained. Canonical binaries/109 sources unchanged.
+Initial51013 audit failure preserved: the host intentionally retains its empty
+shared staging root. Auditor now removes only that owned empty non-symlink root,
+still refusing any leftover reservation/content; no test/assertion change.
+Both private temporary parents cleaned. No job remains live. Next commit the
+two validated047 fixtures and evidence, then implement root provenance/path
+preservation per GENERATED_OUTPUT_TRIAGE.md. No047 production change yet.
+Counts91FINAL/64PENDING;109 closure metadata is being finalized. No push or merge.
 
 ### Earlier checkpoint (superseded for live jobs and next actions)
 
