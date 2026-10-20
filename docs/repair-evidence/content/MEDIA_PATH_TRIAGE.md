@@ -3,6 +3,19 @@
 2026-10-20. Read-only follow-up while the separate root-batch builds/tests run.
 Neither015 nor028 is closed or repaired by this entry.
 
+Follow-up: genuine WaveBank path oracle now14/14PASS; current native streaming
+probe6/6PASS, strict warning-free build and four native root-artifact hashes exact.
+The initial reference compile refused direct access to internal TitleLocation;
+the next refused GameTime without the Game assembly. Both setup logs remain. The
+final fixture uses reflection through the already referenced Framework Curve type,
+without changing any path/exception expectation. Reports
+`repair-wave-bank-path-reflection-framework-xna-*` and `repair-wave-bank-path-native-*`.
+No native audio engine is created in the genuine probe: inspected AudioEngine's
+static constructor only initializes its managed dictionary/lock. The native probe
+uses dummy audio and valid bank metadata without playing a cue. These are limited
+path witnesses, not full audio or physical-hardware validation. Earlier preparation
+notes below are historical; the unmeasured lazy-path concern still requires triage.
+
 ## Reference provenance
 
 The installed genuine XNA4 Framework assembly has SHA-256

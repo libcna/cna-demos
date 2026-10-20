@@ -1866,6 +1866,15 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-028 -- A streaming WaveBank opens a relative path from the working directory
 
+- **Repair triage (2026-10-20, not closed):** genuine XNA's two WaveBank constructors
+  use `Path.GetFullPath`, not TitleLocation. A genuine14-control pre-native-header
+  oracle and current native6-control streaming probe confirm cwd lookup. The historical
+  title-root expectation below is therefore incorrect; do not redirect streaming
+  lookup to the title directory merely to satisfy it. A separate source-only concern
+  about preserving the resolved path across later cwd changes still needs minimization.
+  Missing-file exception timing and non-streaming path differences are not claimed
+  repaired. See [reference triage](repair-evidence/content/MEDIA_PATH_TRIAGE.md).
+
 - **Area:** audio -- `WaveBank(AudioEngine*, streamingWaveBankFilename, offset, packetSize)` opens
   the file with a plain file stream (`ParseXwbStreamingHeader`), so a relative name is resolved
   against the working directory; the settings file (`AudioEngine`), the in-memory `WaveBank` and

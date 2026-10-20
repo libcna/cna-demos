@@ -17,6 +17,13 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+13:51 UTC: all native root gates complete, pipeline562=561PASS/one unchangedSKIP
+858.214s. Root013/014 runtime/tests committed CNA bbe2bda7b. External41603 RUNNING(2),
+~923/1183; no other test jobs. Next roots146 content/354 C API focus and external16/12
+probes, then full gates.028 genuine14/native6 path probes pass; initial cwd lookup is
+correct XNA behavior, unlike historical expectation. No028 closure or media patch;
+unmeasured lazy-path concern remains documented. Counts77/78 unchanged.
+
 13:44 UTC: root module1993 passes1989/four unchangedSKIP; consumers1412/runtime241/
 XML/link outcomes exact, hashes match. Pipeline85718 RUNNING(1), external41603
 RUNNING(2),1183 scheduled steps (~705). All compiled sources frozen. Next content146,

@@ -2,6 +2,7 @@
 // Genuine XNA ISSUE-028 path resolution before native audio is reached.
 using System;
 using System.IO;
+using System.Reflection;
 using System.Runtime.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -37,7 +38,11 @@ static class WaveBankPathOracle
     {
         string original = Directory.GetCurrentDirectory();
         string relative = "cna-xna-wave-path-" + Guid.NewGuid().ToString("N");
-        string title = Path.Combine(TitleLocation.Path, relative);
+        // Unlike CNA's extension, genuine XNA's TitleLocation type is internal.
+        Type titleLocation = typeof(Curve).Assembly.GetType("Microsoft.Xna.Framework.TitleLocation", true);
+        string titlePath = (string)titleLocation.GetProperty("Path",
+            BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic).GetValue(null, null);
+        string title = Path.Combine(titlePath, relative);
         string working = Path.Combine(title, "working");
         if (Directory.Exists(title)) throw new IOException("Private fixture directory already exists");
         Directory.CreateDirectory(title);
