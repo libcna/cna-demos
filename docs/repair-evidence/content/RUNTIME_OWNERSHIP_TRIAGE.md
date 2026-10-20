@@ -1,5 +1,54 @@
 # Next content-runtime batch: source audit, not repair closure
 
+## Ordered-disposal candidate and additional runtime evidence (2026-10-21)
+
+Uncommitted candidate on CNA8d73b19c0 / demos9e62467 now implements the ordered
+manager registry, reader fallback, disposed exceptions and exceptional cleanup.
+It deliberately does not claim to finish ISSUE-011. Native source tests include
+the original ten lifecycle cases and one callback-mutation test, where Dispose
+loads more content: enumeration must fail safely and clear records, matching the
+List enumeration in genuine XNA ContentManager.Unload rather than keeping an
+invalid vector iterator across user code.
+
+Driver40668 is terminal: canonical CnaTests build0/709535ms; focus101PASS/1274ms,
+with90 prior outcomes exactly equal to the057 full native XML and11 new cases.
+Strict original external-fixture compile0/5761ms/zero diagnostics; run exit1 is
+retained,14 cases now11PASS/3FAIL/265ms. Eight original manager failures improve;
+all15 remaining texture failure messages exactly match the pre-repair baseline.
+Both original C++ files and the108-check genuine C# oracle are byte-identical to
+005899e9. The wider incremental native build emitted51 warnings in unchanged
+tests (volatile/nodiscard), not zero diagnostics. Peak4302471168,high2858,max0,
+OOM0. Reports: `repair-content-ownership-registry-candidate-*`.
+
+Driver5983 adds four strictly compiled tests in `ContentNestedOwnershipTests.cpp`:
+model shared buffers/effect now PASS; direct XNB font atlas, loose PNG texture and
+move-only SoundEffect/instance ownership still FAIL (nine assertions). Initial
+resource reads/instance creation pass, isolating the failed post-Unload contract.
+The fixture correctly reads Dxt3 block bytes or Color bytes according to the
+actual font atlas format; it does not assume a renderer's decompression choice.
+Peak539287552,all memory events0. No all-renderer or sanitizer pass claimed.
+
+Before this new native fixture, the unchanged native `ContentModelEffectSmoke.c`
+and exploratory `ContentModelLifetimeProbe.c` both compile strictly and PASS
+against the unchanged057 external C library, SHA256
+9730dd4a990b011cce60659211a063a89605a997349f0d2dc778ce0ab23d1782, checked before/after.
+The exploratory probe proves baseline generic routes, effect Apply and actual
+Model.Draw calls work before and after manager Unload/Destroy. It is NOT yet an
+approved compatibility oracle: CONTENT.md explicitly promises independent texture
+lifetime, while models.h promises repeated loads share the cached model graph.
+The owner has been asked whether model/effect resources should follow XNA/C++
+disposal or gain independently owned lifetimes with a corrected sharing contract.
+The native C smoke file is unchanged. No pass against the candidate C API is
+claimed; that library has not been rebuilt yet. Reports:
+`repair-content-ownership-nested-candidate-*`.
+
+Next work remains value-wrapper lifetime tracking, direct atlas/non-XNB recording,
+SoundEffect cascade and the C boundary. A bare flag/raw-pointer list is insufficient:
+registration must keep real resources alive, moves and callback destruction must
+not leave stale addresses, explicit texture disposal remains independent, and
+Dispose(false) must not invalidate returned wrappers. No ownership helper design
+has yet been implemented. No issue closure or knownIssue change;93FINAL/62PENDING.
+
 ## Refreshed ownership baseline after ISSUE-057 (2026-10-21)
 
 On CNA `31a580d2eb51794824499638609e113a95670901` (staging source repair

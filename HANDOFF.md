@@ -12,6 +12,36 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+LATEST011:40668 TERMINAL exit1,not a crash. Native build0/709535ms;
+focus101PASS (90prior exact057 XML outcomes +11new). Strict original-fixture
+build0/zero diagnostics; original14 improve3PASS/11FAIL ->11PASS/3FAIL, all15
+remaining texture failure messages unchanged. Original two C++ fixtures and
+genuine108-check C# oracle byte-identical to005899e9. Native build emitted51
+warnings in unchanged tests; peak4302471168/high2858/max0/OOM0.
+5983 TERMINAL exit1: strict new nested fixture4=1PASS(model)/3FAIL(atlas,loose
+texture,moved SoundEffect),nine assertions, all pre-unload operations pass.
+Unmodified C model smoke and exploratory lifetime probe both PASS against
+hash-verified unchanged057 external C API library, not the current candidate.
+Nested/C peak539287552/events0. No heavy job live. See CNA top handoff for exact
+next value-wrapper tracking work, nonblocking C contract question and uncommitted
+file inventory. No new commit/closure/push;93FINAL/62PENDING. Launch notes below
+are superseded, not live jobs. Do not rerun completed drivers blindly.
+
+Active011 production candidate after resume (uncommitted,not closed): CNA modifies
+ContentManager/ContentReader headers and implementations for ordered disposal,
+default recording and exception/finalization semantics; adds11 native ownership
+tests. Original14 external cases and genuine oracle unchanged. Driver40668 is
+RUNNING under bounded private scope cna-repair-ownership-registry-candidate.scope;
+poll/revalidate the actual session, never restart merely from this note. It builds
+CnaTests, runs manager/reader focus and recompiles the original14 external cases.
+Reports repair-content-ownership-registry-candidate-*; no results claimed yet.
+Production candidate/native test are frozen during the build. New demos-only
+ContentNestedOwnershipTests.cpp and exploratory ContentModelLifetimeProbe.c are
+uncompiled. The latter's post-Unload C model/effect policy awaits a nonblocking
+owner choice, not an approved assertion. Native C smoke remains unchanged.
+Continue from CNA's top handoff, including value-wrapper/direct-atlas/non-XNB and
+C lifetime requirements;93FINAL/62PENDING, no011 closure or marker change.
+
 Active011 baseline after057: CNA31a580d2eb51794824499638609e113a95670901 /
 demosaf858e41d4c8756096fc00874913802714413c0f. Driver42827 COMPLETE0: strict
 current-library build5384ms/zero diagnostics; native14=3PASS/11FAIL,normal exit1
