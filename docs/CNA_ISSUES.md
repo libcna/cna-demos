@@ -109,6 +109,16 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-149 -- intermediate null reads report broader exceptions than XNA
 
+- **Repair-campaign correction (2026-10-20; still open):** fresh genuine XNA direct
+  deserialization returns a null reference for `<Asset Null="true" />`. The historical
+  corpus's `Accept<T>` helper catches deserialization and subsequent reserialization
+  together; its `ArgumentNullException("value")` comes from the latter operation.
+  Do not make CNA throw that exception while reading. The value-member null case really
+  throws `NullReferenceException`. The new `docs/repair-evidence/content/IntermediateEnvelopeOracle.cs`
+  separates both operations and passes16/16 checks. Correct CNA's null-root refusal
+  and the demo's read expectation together, preserving the independent null-write rejection.
+  The original finding below is retained as historical evidence, not the corrected contract.
+
 - **Area/API:** `IntermediateSerializer::Deserialize<T>` while reading `Null="true"` on a value
   member or on the root Asset.
 - **Demo/reproduction:** run `content.custom.intermediate_serializer`. The focused null controls
@@ -131,6 +141,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   execution or upstream message is claimed.
 
 ### CNA-DEMOS-ISSUE-148 -- intermediate XML substrate disagrees on envelope node forms
+
+- **Repair-campaign verification (2026-10-20; still open):** fresh genuine XNA confirms
+  the processing-instruction acceptance, both self-closing-section rejections and
+  in-memory BOM rejection. Expanded paired empty sections remain accepted. See the
+  direct `IntermediateEnvelopeOracle.cs` and its16-check combined148/149 evidence.
 
 - **Area/API:** `IntermediateSerializer::Deserialize<T>` and its `System::Xml::XmlReader`
   substrate while reading the XNA intermediate document envelope.

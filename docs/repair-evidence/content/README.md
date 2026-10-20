@@ -63,3 +63,34 @@ Local .NET11 reference corroborates the measured default: System.Private.Xml
 `System/Xml/Core/XmlEncodedRawTextWriter.cs:1631–1655` calls
 `XmlConvert.CreateInvalidCharException` when checking is enabled;
 `System/Xml/XmlConvert.cs:1624–1627` defaults that helper to ArgumentException.
+
+## ISSUE-148/149: distinguish deserialization from reserialization
+
+`IntermediateEnvelopeOracle.cs` freshly measures direct reads and subsequent writes
+separately. Its final genuine XNA run passes16/16 checks. The earlier diagnostic run
+is also retained. Reports `repair-intermediate-envelope-{direct,asserted}-xna*`.
+Processing instructions are accepted; self-closing Resources/ExternalReferences
+and an in-memory BOM are rejected; expanded paired sections and Null=false remain
+valid. A null value-type member raises exact NullReferenceException.
+
+**The historical null-root read expectation was wrong.** Direct XNA deserialization
+of `<Asset Null="true" />` succeeds and returns null. Only reserializing that null
+raises ArgumentNullException("value"). CNA's original oracle `Accept<T>` in
+`tools/xna-pipeline-oracle/intermediate/IntermediateOracle.cs:506–529` combines both
+operations in one try/catch, marking the entire round trip rejected. Its manifest
+is evidence of round-trip rejection, not proof of a failed read. Keep that historical
+manifest intact; add separate direct-read coverage and correct the demo's two read
+checks, while retaining its independent null-write rejection. CNA's current read
+refusal still needs a real runtime fix, not a change merely to satisfy the old demo.
+
+The first fresh setup passed an empty relocation string; genuine XNA rejected that
+path before any behavior case. The original setup failure and wrapper exit143 remain
+in `repair-intermediate-envelope-xna*`. Only the verified owned probe1396356 and
+debugger1396535 were stopped. The corrected probe uses null relocation (matching
+the original corpus default) and catches setup errors explicitly. No production
+code or golden corpus was changed by these measurements.
+
+Two new native direct-read149 tests now both fail against unchanged CNA (15ms),
+after a successful test-only build: null roots are refused instead of returned,
+and null value members have the wrong exception category. The Null=false positive
+control passes. Reports `repair-intermediate-null-native-before{,-build}.log`.
