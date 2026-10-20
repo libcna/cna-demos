@@ -2366,11 +2366,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-043 -- GetTypeReader confuses the target type name with the reader factory key
 
-- **Current local candidate (2026-10-20; not closed):** actual registry-TU11/11
+- **Campaign repair CNA252e9bca1 (2026-10-20; FIXED_PENDING_REGRESSION):** actual registry-TU11/11
   and ASan/UBSan/leak11/11 pass. Canonical content1929 gives1925PASS/four unchanged
   skips; full pipeline552 gives551PASS/one unchanged skip. Exact previous outcomes
-  and all four native artifact hashes match. Broader consumers and external demo
-  build are still running; the runtime candidate is not yet committed.
+  and all four native artifact hashes match. Broader consumers1412/runtime241,
+  default XML and original XML6 all retain their prior outcomes. Native validation
+  is complete; external demo build/focus are pending and the marker remains.
 - **Campaign verification (2026-10-20; still open):** eight new native registry
   regressions give onePASS/sevenFAIL. Distinct reader/target identities reproduce
   the defect; coverage also preserves lazy construction, withdrawal/replacement

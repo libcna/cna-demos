@@ -425,3 +425,11 @@ Broader1412/runtime241/XML runs continue on the same frozen build; external
 972-step rebuild continues separately. Prepared146 focused comparisons require
 only043's two lookup failures to disappear from the preceding039/045 focused
 reports, with all check counts and unrelated failures unchanged.
+
+043 is now committed as CNA252e9bca1 after the remaining native gates:
+consumers1412=1408PASS/four unchangedSKIP183.079s; runtime241=238PASS/three unchanged
+SKIP10.238s; default XML4PASS/two unchanged fixtureSKIP; original XML6/6PASS12ms.
+All exact previous-outcome comparisons and four final native hashes match,
+`errors: []`. Native freeze is released, but compiled content sources remain
+unchanged while the complete external rebuild continues. Status remains
+FIXED_PENDING_REGRESSION; no043 marker or final disposition change yet.
