@@ -917,7 +917,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-089 -- Intermediate serializers never receive their Initialize callback
 
-- **Repair committed (2026-10-20), FIXED_PENDING_REGRESSION:** CNA `5d32ca58b`
+- **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `5d32ca58b`
   gives registered serializers one persistent callback owner, published one-time
   initialization, and separate nested/concurrent document state. Seven native
   regressions and all affected559/1965/consumer/runtime/XML gates pass, with
@@ -925,12 +925,15 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   failures; the standalone tool's current20 ordered controls all pass unchanged.
   A helper's stale historical18 count was corrected by read-only comparison against
   the preceding20-label logs; original failure retained. Marker089 removed after
-  these passes; full regression pending, not yet Resolved. Explicit C++ unique_ptr
+  these passes. Full719 sweeps preserve every unrelated predecessor result; final
+  CTest684PASS/48 unchangedSKIP/three disabled, all735 outcomes and319 artifact hashes
+  match. Six exact visuals and both95 math sets pass. The separate C API root-contract
+  delta remains explicitly unresolved; this is not a global green checkpoint. Explicit C++ unique_ptr
   registration cannot reconstruct XNA's reflection-created instances after failure;
   its no-copy/no-retry ownership boundary is documented, not claimed equivalent.
-  See [permanent evidence](repair-evidence/content/README.md).
+  See [validated checkpoint](repair-evidence/content/INITIALIZATION_CHECKPOINT.md).
 
-- **Current verification (2026-10-20; confirmed open):** genuine initialization21
+- **Pre-repair verification (2026-10-20; then confirmed open):** genuine initialization21
   and publication/cycle/failure15 pass. Strict native initialization21 gives4PASS/
   17FAIL; two owner-isolation cases retain10 owner/init failures while their nested
   and concurrent per-operation context controls pass. Additional fresh-process

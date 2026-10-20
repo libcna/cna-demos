@@ -12,12 +12,24 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
-Current repair phase F (2026-10-20): all155 historical IDs retained,75 final/80
+Current repair phase F (2026-10-20): all155 historical IDs retained,76 final/79
 pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
-11:48 correction: first native012 build13213 stopped before compilation at strict
+Latest11:52 UTC:089 CLOSED FIXED_VALIDATED, CNA5d32ca58b/marker4c03e74. Both719
+SW622/46/48/3,GLES661/48/7/3; only089 improves from087. Both95 math/six exact visuals
+PASS. Final CTest684PASS/48 unchangedSKIP/three disabled650.59s, all735 outcomes and
+319 artifact hashes exact. Original C root-contract residual remains strict (overall
+driver1); global048 and039/045/043/103 pending unchanged. See
+`docs/repair-evidence/content/INITIALIZATION_CHECKPOINT.md` for local closure and the
+explicit unique_ptr failure/recovery extension boundary. External freeze released only
+after audits. Only active43298 native012 build RUNNING(2); no compiled source edits.
+Prepared native1985/559/consumer/XML/link gates and146 focused renderer comparator.
+012 markers remain; runtime/tests uncommitted in CNA.013 confirmed from current manifest
+output but not repaired. No pushes/merges. Earlier75/80 and running089 entries superseded.
+
+11:47 correction: first native012 build13213 stopped before compilation at strict
 platform audit (SDL cleanup calls in content tests). No audit relaxation. Native
 concurrency fixture uses existing Headless platform seam; actual-TU sanitizer20/20
 passes. Demos retains separately validated default-SDL fixture/cleanup. Audit81files/
