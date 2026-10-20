@@ -155,3 +155,32 @@ different from the repository owner or any retained capability, checks all four
 binary/three source hashes against86497, and still requires all10798 exact
 outcomes. Do not start simultaneous native full runs sharing the genuine XNA
 oracle build directories. No process has been stopped.
+
+## External final checkpoint completed after resume
+
+External8261 is **COMPLETE0**. All18 driver stages exit0. CTest has735 registered,
+732 enabled:684PASS,48 unchangedSKIP,three disabled,964.43s. The audit compares
+all735 outcomes directly with the completed XML checkpoint as well as the earlier
+effective-parameters checkpoint. All319 frozen artifact hashes and three source
+hashes match before/after validation.
+
+Both719 renderer sweeps match the XML checkpoint exactly, including check counts,
+knownIssue metadata and failing-assertion multisets: SOFTWARE627PASS/41FAIL/48SKIP/
+three manual,OPENGLES3 666/43/7/3. Original-baseline comparisons still have exactly
+70 status improvements and no unexplained delta. Both95 math comparisons, all146
+post-metadata content controls (model29/29 per renderer), catalog/metadata and
+three Python test suites pass. All six visual references differ by zero pixels
+at zero tolerance. This does not claim a new expected-failure reduction for109,
+whose formerly diagnostic demo was already PASS.
+
+Independent summary: `repair-model-encoder-external-checkpoint-audit.json`,
+errors empty. External artifact freeze is released, but no new heavy job starts
+while the surviving native full job86497 is active after OOM. That run already has
+the documented namespace-capability failure, so ISSUE109 remains open.
+
+Before the next final native run, after86497 actually ends, correct the persisted
+native ccache base/launchers and rebuild with one worker. The external CMake cache
+already has `/rv`; only the native cache needs correction. Record any resulting
+native binary-hash changes rather than pretending old frozen binaries still
+match. Then run the complete unprivileged usernet gate with unchanged source
+hashes and all10798 expected outcomes. Do not omit the permission case.

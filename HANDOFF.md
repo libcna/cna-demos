@@ -17,6 +17,18 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+External8261 COMPLETE0 after resume:all18 stages,CTest684PASS/48sameSKIP/three
+disabled964.43s;735 exact outcomes against XML,319 artifacts/three sources exact.
+Both719/math95/six zero-pixel visuals/146 focus complete; independent
+repair-model-encoder-external-checkpoint-audit.json errors[]. External freeze
+released. Native86497 still live, already has root-capability permission failure.
+No new heavy job until it ends. Then fix native cached ccache base/launchers to
+/rv (external already correct),rebuild one-worker,record new hashes,run complete
+unprivileged usernet gate. Prepared usernet driver currently expects old hashes:
+adapt only to the verified cache rebuild; preserve all source/outcome checks.
+No109 closure;90/65 unchanged. Memory after resume remains healthy (~16GiB
+available at latest check;Codex RSS~373MiB),no process stopped/restarted.
+
 OOM recovery19:59: kernel killed Codex12082 (~8.6GB anonymous RSS); resumed process
 ~570MB,host16GiB available/no swap. Both original jobs86497/8261 re-polled LIVE;
 native genuine XNA differential stage and externalCTest past551/735 survived.
