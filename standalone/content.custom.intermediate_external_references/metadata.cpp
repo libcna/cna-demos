@@ -14,5 +14,4 @@ CNA_DEMOS_STANDALONE({
     .tags = {"content", "custom", "xml", "external-reference", "relocation", "cnaext"},
     .restrictions = "Build-time XML reference records only; requires CNA::ContentPipelineBuild. "
                     "Does not import referenced files, track build dependencies or publish compiled assets.",
-    .knownIssue = "CNA-DEMOS-ISSUE-046",
 })

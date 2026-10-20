@@ -334,7 +334,7 @@ namespace
             report_.Check(maxSentRate_ > 0 && maxReceivedRate_ > 0,
                           "the host measures positive sent and received bandwidth during the exchange");
             report_.Check(phases_[2].received[1].size() == BurstPackets,
-                          "reliable packets are never lost (CNA-DEMOS-ISSUE-030: CNA drops them too)");
+                          "reliable packets are never lost (regression for CNA-DEMOS-ISSUE-030)");
         }
 
         // --- the sender (second process) ------------------------------------------------------
