@@ -58,6 +58,4 @@ CNA_DEMOS_CONSOLE(ColorPremultiplied, {
                    "and Vector4 straight-to-premultiplied alpha conversions and their clamping/rounding.",
     .apis = {"Color::FromNonPremultiplied", "Color::Multiply", "Color::op_Multiply"},
     .tags = {"color", "alpha", "blending", "transparency", "boundary"},
-    .restrictions = "CNA-DEMOS-ISSUE-132 records Color::Multiply zeroing positive-infinite products instead of saturating.",
-    .knownIssue = "CNA-DEMOS-ISSUE-132",
 })

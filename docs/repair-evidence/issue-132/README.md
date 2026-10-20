@@ -1,4 +1,4 @@
-# ISSUE-132 preparation (not yet repaired)
+# ISSUE-132 native repair; full external regression pending
 
 Source audit of genuine XNA Color.Lerp/Multiply and PackUtils finds that the
 nonfinite differences are part of a broader fixed-point factor contract.
@@ -48,3 +48,13 @@ avatar catalog/renderer/service controls, vertex/effect consumers, existing math
 and audio consumers. It ran on a private display with a separate XDG profile;
 the executable/DSO stayed frozen through self-spawning catalog tests. No live
 desktop, external online-service or unavailable hardware validation is claimed.
+
+After the preceding containment checkpoint closed, the external demos and actual
+C ABI were rebuilt against Color repair `1ad0a3916`, without lifecycle production
+changes. Build warning-free; strict C17/Werror ColorSmoke passes all six stages.
+All six focused color scenarios pass under both renderer labels, preserving
+7/9 checks in the two repaired math demos and all construction/packing/named-color
+and actual C controls. Reports `repair-color-c-after*`, `repair-color-focused*`.
+Only then were the two132 knownIssue/restriction markers removed; assertions stay
+unchanged. Marker rebuild and complete frozen external regression follow. No final
+Color closure yet.

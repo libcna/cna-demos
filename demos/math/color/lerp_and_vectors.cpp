@@ -48,6 +48,4 @@ CNA_DEMOS_CONSOLE(ColorLerpAndVectors, {
                    "to normalized Vector3/Vector4 values and round-trips them.",
     .apis = {"Color::Lerp", "Color::ToVector3", "Color::ToVector4"},
     .tags = {"color", "interpolation", "vector", "boundary"},
-    .restrictions = "CNA-DEMOS-ISSUE-132 records Color::Lerp treating NaN as transparent black instead of amount zero.",
-    .knownIssue = "CNA-DEMOS-ISSUE-132",
 })
