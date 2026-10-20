@@ -133,6 +133,28 @@ Reports: `repair-title-paths-xna{,-build}.log`,
 `repair-title-paths-native-before{,-build}.log`. Both new fixture roots were removed;
 no runtime source or demo assertion is changed by these probes.
 
+Four native `TitleContainerPathTests.cpp` regressions now independently retain the
+same contracts. The strict standalone C++23 build is warning-free; two positive/
+missing-file controls pass and two argument/directory groups fail on unchanged
+CNA (217ms, `repair-title-native-tests-before*`). Each test restores both cwd and
+TitleLocation and removes only its uniquely named fixture. These tests are not
+yet integrated into a rebuilt CnaTests executable or included in a repair commit.
+The C title-read adapter additionally catches every std::exception as I/O and
+still documents absolute names: its argument-category mapping must be reviewed
+with the underlying145 repair, not hidden by changing demo expectations.
+
+`TitlePathNormalizationOracle.cs` additionally records32 genuine cleaned paths,
+absolute classifications and public open outcomes (`repair-title-normalization-xna*`,
+warning-free build). This is a diagnostic measurement, not32 asserted passes.
+XNA cleans before validating: `bad*/../seed.bin` can become an admissible seed;
+`child//../seed.bin` collapses the empty component, not `child`, and consequently
+looks for `child/seed.bin`. A blanket `lexically_normal()` is not equivalent.
+Nonempty input cleaned to the title directory raises InvalidOperationException,
+not the initial empty-input ArgumentNullException. Windows-specific trailing-space,
+NUL/newline and case results are recorded separately from portable lexical rules;
+do not infer native Unix filesystem parity from a Windows open outcome. The probe
+removed its unique fixture and did not change production code.
+
 ## Native151 regression coverage prepared before its repair
 
 `StorageContainerLifetimeTests.cpp` adds three native tests: live identity and
