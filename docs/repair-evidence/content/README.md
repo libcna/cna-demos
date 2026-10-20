@@ -1,6 +1,8 @@
 # Content repair evidence
 
-## Current validation checkpoint (2026-10-20; not final closure)
+## Completed checkpoint (2026-10-20)
+
+146/147/149 are FIXED_VALIDATED; see [the full checkpoint](CHECKPOINT.md).
 
 CNA repairs146/149 are committed as7c4431fdf and9dd0826bf; Sharp147 isaf1b0bea
 (current Sharp99c2f79c). Full native content504:503PASS/one unchanged XACT fixture
@@ -28,9 +30,11 @@ Full SOFTWARE719:614PASS/54FAIL/48SKIP/three manual, strict57 improvements versu
 campaign HEAD (59 versus Complete1128), differences[]. Metadata/tools and all six
 zero-pixel-difference visuals pass; the GLES font image was also inspected. Full
 OPENGLES3 likewise passes strict57 improvements/differences[]:653PASS/56FAIL/seven
-SKIP/three manual. Final isolated serial CTest is running.319 frozen executable/
+SKIP/three manual. Final isolated serial CTest accepts all732 enabled tests, zero
+unexpected failures,48same skips/three disabled,747.99s.319 frozen executable/
 DSO/tool hashes are in `repair-content-binaries.sha256`; external binaries must not
-be rebuilt until the final audit.146/147/149 are not yet closed.
+rebuilt only after the final audit. All319 hashes passed before/after CTest;
+the external freeze is now released and146/147/149 are closed.
 
 The sections below retain the chronological reproduction and intermediate results.
 

@@ -83,38 +83,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `d23e139de9e5c15511b6be745de290896a69ee37`; evidence is under
   `/tmp/checkpoint-1104-runtime-public-headers/*`. Open; no CNA source was modified.
 
-### CNA-DEMOS-ISSUE-149 -- intermediate null reads report broader exceptions than XNA
-
-- **Repair-campaign correction (2026-10-20; still open):** fresh genuine XNA direct
-  deserialization returns a null reference for `<Asset Null="true" />`. The historical
-  corpus's `Accept<T>` helper catches deserialization and subsequent reserialization
-  together; its `ArgumentNullException("value")` comes from the latter operation.
-  Do not make CNA throw that exception while reading. The value-member null case really
-  throws `NullReferenceException`. The new `docs/repair-evidence/content/IntermediateEnvelopeOracle.cs`
-  separates both operations and passes16/16 checks. Correct CNA's null-root refusal
-  and the demo's read expectation together, preserving the independent null-write rejection.
-  The original finding below is retained as historical evidence, not the corrected contract.
-
-- **Area/API:** `IntermediateSerializer::Deserialize<T>` while reading `Null="true"` on a value
-  member or on the root Asset.
-- **Demo/reproduction:** run `content.custom.intermediate_serializer`. The focused null controls
-  also prove `Null="false"` reads ordinary content, `Null="true"` wins over supplied text and a
-  null root passed to `Serialize` is refused before output with `ArgumentNullException`.
-- **Observed:** CNA safely refuses both invalid read forms, but reports `InvalidContentException`.
-  The value-member diagnostic explicitly names the non-nullable type; the root diagnostic says the
-  value cannot be null.
-- **Expected/reference:** the checked-in genuine-XNA corpus records `NullReferenceException` for
-  `Null="true"` on an `Int32` member and `ArgumentNullException` for `<Asset Null="true" />`.
-  CNA's `docs/xna-intermediate-xml-format.md` sections3,11 and12 preserve these expected categories
-  and identify the value-member refusal as a deliberate divergence.
-- **Cause/suggested repair:** `IntermediateReader::ReadObjectCore` substitutes its own
-  `InvalidContentException` for a null value type, and `IntermediateSerializer::DeserializeObject`
-  throws another when the loaded root is null. Match the two XNA exception categories without
-  weakening the existing pre-return refusal or diagnostics.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Focused evidence is under
-  `/tmp/checkpoint-1094-intermediate-null-semantics/*`. No CNA source was modified, and no fresh XNA
-  execution or upstream message is claimed.
 
 ### CNA-DEMOS-ISSUE-148 -- intermediate XML substrate disagrees on envelope node forms
 
@@ -146,52 +114,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   Focused evidence is under `/tmp/checkpoint-1093-intermediate-envelope-syntax/*`. No CNA or
   sharp-runtime source was modified, and no fresh XNA execution or upstream message is claimed.
 
-### CNA-DEMOS-ISSUE-147 -- intermediate NUL character reports XmlException instead of ArgumentException
 
-- **Area/API:** `IntermediateSerializer::Serialize<char16_t>` through the content-pipeline
-  character serializer and `System::Xml::XmlWriter::WriteString`.
-- **Demo/reproduction:** run `content.custom.intermediate_text_values`. After exact string/character
-  output, round trip, CDATA/entity normalization and invalid character-width checks, serialize
-  `u'\0'` as an intermediate XML root value.
-- **Observed:** CNA refuses the unrepresentable NUL before producing a document, but the underlying
-  sharp-runtime XML writer throws `System::Xml::XmlException` with a clear NUL diagnostic. This is
-  the sole expected failure among twelve checks; the rejection itself is a passing safety control.
-- **Expected/reference:** the checked-in genuine-XNA corpus records `System.ArgumentException`
-  with the .NET XML writer's invalid-character diagnostic for the same character serialization.
-  CNA's `docs/xna-intermediate-xml-format.md` section 4 also names `ArgumentException`.
-- **Cause/suggested repair:** sharp-runtime's `XmlWriter::ThrowIfContainsNul` deliberately throws
-  `XmlException`, while its non-NUL invalid-XML-character validation uses `ArgumentException`.
-  Align the NUL path with .NET's/XNA's public exception category while preserving pre-write
-  rejection and the useful diagnostic.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` with the current sharp-runtime dependency on Linux.
-  Focused evidence is under `/tmp/checkpoint-1089-intermediate-text-values/*`. The reference is
-  CNA's checked-in genuine-XNA corpus; no fresh XNA execution, CNA/sharp-runtime source
-  modification or upstream message is claimed.
-
-### CNA-DEMOS-ISSUE-146 -- OpaqueDataDictionary reports the wrong null-value exception
-
-- **Area/API:** `Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::Add`
-  through its inherited `NamedValueDictionary<ContentObject>` surface.
-- **Demo/reproduction:** run `content.custom.opaque_data_dictionary`. After building an ordered
-  `int`/`string`/`Vector3` processor-parameter sheet and verifying its exact intermediate XML,
-  call `Add("Empty", ContentObject{})`. The surrounding controls cover typed/default lookup,
-  replacement order, XML round trip, invalid keys, duplicate keys and unknown dynamic types.
-- **Observed:** CNA refuses the empty box without modifying the dictionary, but throws
-  `System::ArgumentException` with `value` as the parameter. This is the sole expected failure
-  among fifteen checks; the final XML remains byte-identical to the original document.
-- **Expected/reference:** XNA's measured intermediate-serialization corpus records
-  `OpaqueDataDictionary.Add(key, null)` as `System.ArgumentNullException`. CNA's own
-  `docs/xna-intermediate-xml-format.md` section 10 preserves that result, while the implementation
-  and public header currently promise and throw the broader base exception.
-- **Cause/suggested repair:** `OpaqueDataDictionary::AddItem` and `SetItem` explicitly throw
-  `System::ArgumentException` when `ContentObject::Empty()` is true. Throw
-  `System::ArgumentNullException("value")` at both entry points and update the header contract;
-  retain the existing pre-mutation check.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Focused evidence is under
-  `/tmp/checkpoint-1085-opaque-data/*`. The XML oracle is CNA's checked-in genuine-XNA corpus;
-  no fresh XNA execution, CNA source modification or upstream message is claimed.
 
 ### CNA-DEMOS-ISSUE-131 -- BoundingFrustum ray intersection omits outside entry and boundary start
 
@@ -2769,6 +2692,131 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-149 -- intermediate null reads report broader exceptions than XNA
+
+- **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
+  CNA `9dd0826bf` permits null-root reads and preserves value-null NullReferenceException.
+  The historical direct-read oracle is corrected by demo `9bb033e`: the genuine
+  ArgumentNullException(value) belongs to subsequent null-root serialization.
+  Read assertions and the independent write refusal are retained, not relaxed.
+  Demo marker commit `71e6992`; native content503PASS/one same SKIP of504,
+  broader consumers unchanged, actual production-TU ASan/UBSan/leak9/9.
+  Both full719 renderer sweeps have exact57 cumulative demo improvements versus
+  campaign HEAD (59 versus Complete1128), plus two149 assertion improvements;
+  strict comparisons have no unexpected deltas. All732 enabled CTests accepted,
+  zero unexpected failures,48same skips/three disabled,747.99s. Six pixel-exact
+  visuals and319 frozen hashes before/after pass. See
+  [complete content checkpoint](repair-evidence/content/CHECKPOINT.md).
+  Historical evidence follows;148 remains open.
+
+- **Repair-campaign correction (2026-10-20; still open):** fresh genuine XNA direct
+  deserialization returns a null reference for `<Asset Null="true" />`. The historical
+  corpus's `Accept<T>` helper catches deserialization and subsequent reserialization
+  together; its `ArgumentNullException("value")` comes from the latter operation.
+  Do not make CNA throw that exception while reading. The value-member null case really
+  throws `NullReferenceException`. The new `docs/repair-evidence/content/IntermediateEnvelopeOracle.cs`
+  separates both operations and passes16/16 checks. Correct CNA's null-root refusal
+  and the demo's read expectation together, preserving the independent null-write rejection.
+  The original finding below is retained as historical evidence, not the corrected contract.
+
+- **Area/API:** `IntermediateSerializer::Deserialize<T>` while reading `Null="true"` on a value
+  member or on the root Asset.
+- **Demo/reproduction:** run `content.custom.intermediate_serializer`. The focused null controls
+  also prove `Null="false"` reads ordinary content, `Null="true"` wins over supplied text and a
+  null root passed to `Serialize` is refused before output with `ArgumentNullException`.
+- **Observed:** CNA safely refuses both invalid read forms, but reports `InvalidContentException`.
+  The value-member diagnostic explicitly names the non-nullable type; the root diagnostic says the
+  value cannot be null.
+- **Expected/reference:** the checked-in genuine-XNA corpus records `NullReferenceException` for
+  `Null="true"` on an `Int32` member and `ArgumentNullException` for `<Asset Null="true" />`.
+  CNA's `docs/xna-intermediate-xml-format.md` sections3,11 and12 preserve these expected categories
+  and identify the value-member refusal as a deliberate divergence.
+- **Cause/suggested repair:** `IntermediateReader::ReadObjectCore` substitutes its own
+  `InvalidContentException` for a null value type, and `IntermediateSerializer::DeserializeObject`
+  throws another when the loaded root is null. Match the two XNA exception categories without
+  weakening the existing pre-return refusal or diagnostics.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Focused evidence is under
+  `/tmp/checkpoint-1094-intermediate-null-semantics/*`. No CNA source was modified, and no fresh XNA
+  execution or upstream message is claimed.
+
+
+### CNA-DEMOS-ISSUE-147 -- intermediate NUL character reports XmlException instead of ArgumentException
+
+- **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
+  Sharp Runtime `af1b0bea` repairs default-checking XML writer and direct LINQ
+  character-data exception categories. Genuine Framework4 and .NET8 writer21/21
+  and LINQ74/74 pass; the full dependency gate passes18,146/18,146 across41.
+  Demo marker commit `71e6992`; native content503PASS/one same SKIP of504,
+  broader consumers unchanged, actual production-TU ASan/UBSan/leak9/9.
+  Both full719 renderer sweeps have exact57 cumulative demo improvements versus
+  campaign HEAD (59 versus Complete1128), plus two149 assertion improvements;
+  strict comparisons have no unexpected deltas. All732 enabled CTests accepted,
+  zero unexpected failures,48same skips/three disabled,747.99s. Six pixel-exact
+  visuals and319 frozen hashes before/after pass. See
+  [complete content checkpoint](repair-evidence/content/CHECKPOINT.md).
+  Historical evidence follows;148 remains open.
+
+- **Area/API:** `IntermediateSerializer::Serialize<char16_t>` through the content-pipeline
+  character serializer and `System::Xml::XmlWriter::WriteString`.
+- **Demo/reproduction:** run `content.custom.intermediate_text_values`. After exact string/character
+  output, round trip, CDATA/entity normalization and invalid character-width checks, serialize
+  `u'\0'` as an intermediate XML root value.
+- **Observed:** CNA refuses the unrepresentable NUL before producing a document, but the underlying
+  sharp-runtime XML writer throws `System::Xml::XmlException` with a clear NUL diagnostic. This is
+  the sole expected failure among twelve checks; the rejection itself is a passing safety control.
+- **Expected/reference:** the checked-in genuine-XNA corpus records `System.ArgumentException`
+  with the .NET XML writer's invalid-character diagnostic for the same character serialization.
+  CNA's `docs/xna-intermediate-xml-format.md` section 4 also names `ArgumentException`.
+- **Cause/suggested repair:** sharp-runtime's `XmlWriter::ThrowIfContainsNul` deliberately throws
+  `XmlException`, while its non-NUL invalid-XML-character validation uses `ArgumentException`.
+  Align the NUL path with .NET's/XNA's public exception category while preserving pre-write
+  rejection and the useful diagnostic.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` with the current sharp-runtime dependency on Linux.
+  Focused evidence is under `/tmp/checkpoint-1089-intermediate-text-values/*`. The reference is
+  CNA's checked-in genuine-XNA corpus; no fresh XNA execution, CNA/sharp-runtime source
+  modification or upstream message is claimed.
+
+
+### CNA-DEMOS-ISSUE-146 -- OpaqueDataDictionary reports the wrong null-value exception
+
+- **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
+  CNA `7c4431fdf` repairs shared key validation, exact null-value exceptions and setter
+  hook dispatch; genuine dictionary14/14 and hook7/7 references pass.
+  Demo marker commit `71e6992`; native content503PASS/one same SKIP of504,
+  broader consumers unchanged, actual production-TU ASan/UBSan/leak9/9.
+  Both full719 renderer sweeps have exact57 cumulative demo improvements versus
+  campaign HEAD (59 versus Complete1128), plus two149 assertion improvements;
+  strict comparisons have no unexpected deltas. All732 enabled CTests accepted,
+  zero unexpected failures,48same skips/three disabled,747.99s. Six pixel-exact
+  visuals and319 frozen hashes before/after pass. See
+  [complete content checkpoint](repair-evidence/content/CHECKPOINT.md).
+  Historical evidence follows;148 remains open.
+
+- **Area/API:** `Microsoft::Xna::Framework::Content::Pipeline::OpaqueDataDictionary::Add`
+  through its inherited `NamedValueDictionary<ContentObject>` surface.
+- **Demo/reproduction:** run `content.custom.opaque_data_dictionary`. After building an ordered
+  `int`/`string`/`Vector3` processor-parameter sheet and verifying its exact intermediate XML,
+  call `Add("Empty", ContentObject{})`. The surrounding controls cover typed/default lookup,
+  replacement order, XML round trip, invalid keys, duplicate keys and unknown dynamic types.
+- **Observed:** CNA refuses the empty box without modifying the dictionary, but throws
+  `System::ArgumentException` with `value` as the parameter. This is the sole expected failure
+  among fifteen checks; the final XML remains byte-identical to the original document.
+- **Expected/reference:** XNA's measured intermediate-serialization corpus records
+  `OpaqueDataDictionary.Add(key, null)` as `System.ArgumentNullException`. CNA's own
+  `docs/xna-intermediate-xml-format.md` section 10 preserves that result, while the implementation
+  and public header currently promise and throw the broader base exception.
+- **Cause/suggested repair:** `OpaqueDataDictionary::AddItem` and `SetItem` explicitly throw
+  `System::ArgumentException` when `ContentObject::Empty()` is true. Throw
+  `System::ArgumentNullException("value")` at both entry points and update the header contract;
+  retain the existing pre-mutation check.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Focused evidence is under
+  `/tmp/checkpoint-1085-opaque-data/*`. The XML oracle is CNA's checked-in genuine-XNA corpus;
+  no fresh XNA execution, CNA source modification or upstream message is claimed.
+
 
 ### CNA-DEMOS-ISSUE-151 -- disposed StorageContainer remains fully usable
 
