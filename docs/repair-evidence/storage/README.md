@@ -27,8 +27,11 @@ Reports `repair-storage-c-after-*`, `repair-storage-c-libraries*.log` and manife
 The full external demo build now passes warning-free. Ten focused scenarios on each
 of SOFTWARE/OPENGLES3 give9PASS/one unchanged152FAIL; title10/lifetime14 checks and
 the actual C save child's38 checks remain unchanged. Both DSOs still match the C ABI
-validation manifest. Only then removed056/145/151 markers; marker rebuild is running.
-Full renderer/visual/CTest regression remains required before closure.
+validation manifest. Only then removed056/145/151 markers; marker rebuild passed.
+Both full renderer sweeps now have exact55 improvements/differences[] versus the
+campaign baseline; all six visuals are pixel-exact. Final isolated serial CTest
+is running against frozen binaries. See [CHECKPOINT.md](CHECKPOINT.md); closure
+still requires its completion and the post-run hash audit.
 FileShare152 remains open; the platform-policy question has no answer yet.
 
 ### Invalid paths and error preservation
