@@ -2356,6 +2356,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-046 -- Intermediate XML cannot read its own aliased external TargetType
 
+- **Repair campaign (2026-10-20; full regression pending):** CNAf421948fe resolves
+  external target identities in the node's namespace scope and canonicalizes both
+  table entries and pending fixups, including generic targets without serializers.
+  Genuine XNA15/15, native focus58/58 and actual-TU/corpus ASan/UBSan/leak44/44 pass.
+  Full552 native and external regression are pending; historical evidence below and
+  the knownIssue marker are retained. See `docs/repair-evidence/content/README.md`.
+
 - **Area:** IntermediateSerializer external-reference writing/reading and namespace resolution.
 - **Demo:** `content.custom.intermediate_external_references`; ten child checks, nine passing
   and one native emitted-XML round-trip failure. No graphics or referenced-file loading is needed.

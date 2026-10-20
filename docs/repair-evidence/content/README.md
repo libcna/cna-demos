@@ -428,3 +428,19 @@ a target serializer, and canonicalizes both table identities and pending fixups.
 Surrounding TargetType whitespace remains refused. No global alias or public API
 is added. Native rebuild and39-case sanitizer compilation are running; no046 pass
 or issue closure is claimed yet.
+
+Final046 repair is CNAf421948fe. Additional genuine assembly-name boundary cases
+found that qualified names accept leading type/trailing assembly whitespace, while
+unqualified and generic trailing whitespace is refused. The first extra reference
+expectation is retained14/15; corrected genuine15/15 passes. The initial candidate
+fails exactly those two valid qualified inputs (15PASS/twoFAIL of17); the final
+resolver distinguishes the CLR-qualified path instead of rejecting all outer spaces.
+
+Two native writer-roundtrip controls are added to the15 reference-matched reads.
+Final native focus58/58 passes706ms; actual Reader/Serializer TUs plus the entire
+intermediate corpus,18 section/order cases and17 external cases pass
+**44/44 ASan/UBSan/leak checks**,565ms, exit0. Earlier41/41 candidate run673ms is
+retained. The initial72-step native build has only the two unchanged material
+nodiscard warnings; the final12-step incremental build is warning-free. Full552
+content tests/123 suites are running against four frozen artifacts. No046 closure
+or demo marker removal until focused external and full regression gates finish.

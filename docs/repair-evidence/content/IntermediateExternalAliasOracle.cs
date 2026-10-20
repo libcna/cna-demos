@@ -57,6 +57,9 @@ static class IntermediateExternalAliasOracle
         Observe<Repair.External.GenericScene>("generic-alias-argument", "GenericScene", "System.Collections.Generic.List[R:Target]", "", null);
         Observe<Repair.External.GenericScene>("generic-local-alias", "GenericScene", "G:List[L:Target]", " xmlns:G=\"System.Collections.Generic\" xmlns:L=\"Repair.External\"", null);
         Observe<Repair.External.GenericScene>("generic-canonical", "GenericScene", "System.Collections.Generic.List[Repair.External.Target]", "", null);
+        Observe<Repair.External.Scene>("assembly-trailing-whitespace", "Scene", "Repair.External.Target, IntermediateExternalAliasOracle ", "", null);
+        Observe<Repair.External.Scene>("qualified-leading-whitespace", "Scene", " Repair.External.Target, IntermediateExternalAliasOracle", "", null);
+        Observe<Repair.External.GenericScene>("generic-trailing-whitespace", "GenericScene", "System.Collections.Generic.List[R:Target] ", "", "Cannot find type");
         Console.WriteLine("checks=" + checks + " failed=" + failed);
         return failed == 0 ? 0 : 1;
     }
