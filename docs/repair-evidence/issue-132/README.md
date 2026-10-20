@@ -1,4 +1,9 @@
-# ISSUE-132 native repair; full external regression pending
+# ISSUE-132 repaired and fully validated
+
+The historical preparation below is superseded by the
+[complete frozen checkpoint](CHECKPOINT.md): both full renderer sweeps have exactly
+48 cumulative intended changes and no unrelated delta, all732 enabled CTests are
+accepted, six visuals are pixel-exact and frozen hashes remain unchanged.
 
 Source audit of genuine XNA Color.Lerp/Multiply and PackUtils finds that the
 nonfinite differences are part of a broader fixed-point factor contract.

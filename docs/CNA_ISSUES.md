@@ -315,31 +315,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 
 
-### CNA-DEMOS-ISSUE-132 -- Color nonfinite interpolation and multiplication differ from XNA
-
-- **Area/API:** `Microsoft::Xna::Framework::Color::Lerp` and `Color::Multiply`/the XNA
-  `Color * float` operator.
-- **Demo/reproduction:** run `math.color.lerp_and_vectors` and
-  `math.color.premultiplied_alpha`. Lerp `(10,20,30,40)` toward `(110,220,130,240)` with a NaN
-  amount; multiply `(10,20,30,40)` by positive infinity. Adjacent controls cover negative, zero,
-  ordinary, large finite and both infinite endpoint factors plus NaN multiplication.
-- **Observed:** CNA returns transparent black for both cases. Each focused workflow retains that
-  sole expected failure, among seven and nine controls respectively.
-- **Expected/reference:** genuine Windows XNA 4.0 treats the NaN Lerp amount like zero and returns
-  the first color `(10,20,30,40)`. It saturates every positive-infinite multiplication product to
-  255, returning `(255,255,255,255)`. NaN multiplication maps to zero and the measured finite and
-  infinite Lerp clamps otherwise match CNA.
-- **Cause/suggested repair:** CNA's shared `SafeFloatToIntcs` helper maps every nonfinite channel
-  result to zero. Preserve the operation-specific XNA rules: make a NaN Lerp amount select the
-  first input, and saturate positive-infinite Multiply products to 255 while retaining zero for
-  NaN/negative results.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1070-color-members/*`. The warning-free
-  three-job build, all four exact SOFTWARE CTests, metadata705/0 and self-tests5/5 plus4/4 pass;
-  ten runs per demo and renderer label reproduce only the two documented assertions with empty
-  stderr. No CNA source was modified and no upstream message was sent.
-
 ### CNA-DEMOS-ISSUE-131 -- BoundingFrustum ray intersection omits outside entry and boundary start
 
 - **Area/API:** `Microsoft::Xna::Framework::Ray::Intersects(BoundingFrustum)` and the delegated
@@ -2952,6 +2927,45 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-132 -- Color nonfinite interpolation and multiplication differ from XNA
+
+- **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
+  CNA `1ad0a3916`; demo marker commit `e7eafac`. Genuine XNA quantizes the factor
+  before channel arithmetic, so the repair also preserves finite fixed-point behavior.
+  Positive-infinite multiplication leaves zero channels zero; the historical positive-
+  channel example below is retained, not generalized to all channels. Genuine/native
+  1782/1782 checks, native regressions and actual C ABI pass; both original7/9 demo
+  assertion counts remain. All732 enabled CTests accepted, both719-ID renderer sweeps
+  have exactly48 cumulative intended changes and no unrelated differences; six visual
+  references are pixel-exact. Actual Color.cpp sanitizer64/64 passes.
+  See [permanent evidence](repair-evidence/issue-132/README.md) and
+  [the complete checkpoint](repair-evidence/issue-132/CHECKPOINT.md).
+  Historical evidence follows.
+
+- **Area/API:** `Microsoft::Xna::Framework::Color::Lerp` and `Color::Multiply`/the XNA
+  `Color * float` operator.
+- **Demo/reproduction:** run `math.color.lerp_and_vectors` and
+  `math.color.premultiplied_alpha`. Lerp `(10,20,30,40)` toward `(110,220,130,240)` with a NaN
+  amount; multiply `(10,20,30,40)` by positive infinity. Adjacent controls cover negative, zero,
+  ordinary, large finite and both infinite endpoint factors plus NaN multiplication.
+- **Observed:** CNA returns transparent black for both cases. Each focused workflow retains that
+  sole expected failure, among seven and nine controls respectively.
+- **Expected/reference:** genuine Windows XNA 4.0 treats the NaN Lerp amount like zero and returns
+  the first color `(10,20,30,40)`. It saturates every positive-infinite multiplication product to
+  255, returning `(255,255,255,255)`. NaN multiplication maps to zero and the measured finite and
+  infinite Lerp clamps otherwise match CNA.
+- **Cause/suggested repair:** CNA's shared `SafeFloatToIntcs` helper maps every nonfinite channel
+  result to zero. Preserve the operation-specific XNA rules: make a NaN Lerp amount select the
+  first input, and saturate positive-infinite Multiply products to 255 while retaining zero for
+  NaN/negative results.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1070-color-members/*`. The warning-free
+  three-job build, all four exact SOFTWARE CTests, metadata705/0 and self-tests5/5 plus4/4 pass;
+  ten runs per demo and renderer label reproduce only the two documented assertions with empty
+  stderr. No CNA source was modified and no upstream message was sent.
+
 
 ### CNA-DEMOS-ISSUE-133 -- BoundingFrustum boundary and equal-instance containment differ from XNA
 
