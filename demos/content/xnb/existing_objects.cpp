@@ -161,5 +161,4 @@ CNA_DEMOS_CONSOLE(ExistingObjects, {
              "ContentTypeReaderManager::GetTypeReader", "ContentTypeReaderManager::AddTypeCreator", "ContentManager::Load"},
     .tags = {"content", "xnb", "reader", "existing-instance", "ownership"},
     .assets = {"loadouts/existing_slots.xnb"},
-    .knownIssue = "CNA-DEMOS-ISSUE-043",
 })

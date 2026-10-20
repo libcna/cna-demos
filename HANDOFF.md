@@ -12,33 +12,45 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
-Current repair checkpoint (2026-10-20):141–144 FIXED_VALIDATED, runtime031693a9f/
-b086814f9, demo oracles61d344e. All155 IDs retained:62 final/93 pending. Full719
-SW609/59/48/3 and GLES648/61/7/3 have52 cumulative intended status improvements
-(54 versus Complete1128). SW strict comparison is exact; GLES retains one030
-unreliable-outage assertion fluctuation and exit1, investigated against unchanged
-source and the independently scheduled frozen CTest.030 remains open, no relaxed
-oracle. Full isolated CTest732accepted/zero unexpected failures,48skips/three
-disabled,911.46s; six pixel-exact visuals, three binary hashes reverified.
-See docs/repair-evidence/lifecycle/CHECKPOINT.md. External freeze RELEASED.
+Current repair phase F (2026-10-20): all155 historical IDs retained,74 final/81
+pending. The authoritative live state and complete machine-readable matrix are
+`../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
+Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
-NEXT: storage056/151 native repairs are committed (Sharp1c0fc9b5/CNA5865ae938),
-external closure pending. Title145 committedcbb77e3c8 includes lower-layer prerequisites
-through Sharp58c6cba1 (full18144/18144, zero failures/skips, warning-free build).
-Native focused17/17 and actual TitleContainer/FileStream-TU ASan/UBSan/leak13/13 pass;
-consumers1408PASS/four same skips, runtime241total238PASS/three same skips.
-Genuine title30/30; actual C ABI RuntimeGameSmoke/StorageSmoke/title13/13 now pass,
-with the original five C title failures retained as pre-fix evidence. Complete
-external build63979 and marker rebuild65070 now pass warning-free. Focused ten per
-renderer9PASS/one same152FAIL; original title10/lifetime14/C-save38 checks retained.
-Markers removed only afterward in de6bcde. External binaries FROZEN; full math,
-metadata/tools and six exact visuals pass. Full two-renderer regression3249 running,
-followed by isolated serial CTest before any closure or external rebuild.
-No external storage closure yet. Next content146 genuine14/14 and native1PASS/two
-pre-fix FAIL establish null-value/empty-key contracts; production unchanged.
-Follow CNA's CNA_DEMOS_REPAIR_HANDOFF.md for exact native job/commit/build state;
-never count these pending external repairs as resolved yet. FileShare152 platform
-policy question remains pending. No push or merge. The paragraphs below are history.
+Last accepted complete checkpoint:048, CNA3a1437725, closure demos6633f80.
+Both719 sweeps preserve exact prior results with60 cumulative improvements against
+campaign-start HEAD/62 against Complete1128: SW617PASS/51FAIL/48SKIP/three manual,
+GLES656/53/7/3. Six pixel-exact visuals and both95 math sets pass. Final isolated
+CTest has735 inventory/732 enabled,684PASS/48 unchangedSKIP/three disabled; all319
+artifact hashes match. See `docs/repair-evidence/content/EFFECTIVE_PARAMETERS.md`.
+
+New committed repairs are still pending complete external regression:
+039/045 CNA583af2a5e,043 CNA252e9bca1,103 CNA68a3c7b1f. Native043 completes1929
+content cases,552 pipeline,1412 consumers/runtime241/XML and actual-TU sanitizer11,
+with exact prior outcomes and four matching hashes. C103 native/evidence probes
+pass44/44 on both renderers; existing C API controls pass as recorded in
+`docs/repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md`. Marker103 remains;
+043 is removed only after its original13 checks pass both renderers.
+
+The039/045 full sweep exposed a retained C root-directory contract conflict:
+the C docs/test promise live root mutation, but genuine XNA/C++ refuses it.
+The original C demo skips later103 checks after the new refusal. No oracle has
+been weakened; the owner contract question is pending. Do not call this a green
+checkpoint or silently classify the C expectation as wrong. Both failed sweeps
+and final319 hashes are retained; their external freeze has been released.
+
+NEXT: full external rebuild54284 and marker rebuild14100 pass warning-free;
+initial and marker-updated146 exact focus each give63PASS/ten unchangedFAIL per
+renderer. All counts/unrelated failures remain exact.319 external artifacts are
+FROZEN for full job8777 (math, metadata/tools, visuals, both719 sweeps). The C root
+contract regression remains a reported failure, not an allowed delta. Continue the
+independent087 ownership/dispatch batch: genuine53/53 reference controls plus18/18
+value controls; native19 givesfivePASS/fourteenFAIL with all17 prior outcomes
+unchanged. No087 production change yet. See CNA's live handoff for exact commands,
+active jobs and freezes; limit campaign compiler/test workers to THREE, private
+GPU only. Sharp99c2f79c/EasyGLf4d6afa/MetaGLdd3b300 are unchanged and clean.
+FileShare152/vendor148 owner questions remain pending. Nothing pushed or merged.
+The paragraphs below are historical and superseded by this section.
 
 Latest closure (2026-10-20):024/128/130/135 FIXED_VALIDATED;126 verified duplicate
 of024. All155 IDs retained,54 final/101 pending. Frozen runtimee1377c437/a8a60bf03:

@@ -433,3 +433,15 @@ All exact previous-outcome comparisons and four final native hashes match,
 `errors: []`. Native freeze is released, but compiled content sources remain
 unchanged while the complete external rebuild continues. Status remains
 FIXED_PENDING_REGRESSION; no043 marker or final disposition change yet.
+
+043 external whole build54284 now succeeds (972 scheduled steps), warning-free.
+Strict146 focus99460 gives63PASS/ten unchangedFAIL per renderer; all original
+check counts and unrelated failure multisets match. ExistingObjects passes all13
+controls both renderers, removing precisely two lookup failures. Only then is
+its043 marker removed. Nine-step incremental build14100 is warning-free and
+repeated marker-aware146 focus84481 has identical expected results, errors[].
+All319 external artifacts are frozen in `repair-reader-lookup-binaries.sha256`;
+full math/metadata/tools/visuals/both719 regression8777 is running. The separate
+C root-contract failure is not waived by the comparator. No full checkpoint or
+043 closure is claimed yet.103 generator consistency also passes:3197 routes in57
+files current, four generator regressions pass2.604s, no generated edits.
