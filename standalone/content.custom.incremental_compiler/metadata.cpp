@@ -20,6 +20,5 @@ CNA_DEMOS_STANDALONE({
              "CNA::Content::Pipeline::ContentProcessorContext::Parameters"},
     .tags = {"content", "custom", "pipeline", "incremental", "dependencies", "cnaext"},
     .restrictions = "Requires CNA::ContentCompiler. Creates and removes original temporary score inputs and compiler output. "
-                    "Checks concurrent factory calls only for disjoint roots; no dynamic-plugin or crash-consistency claim. "
-                    "CNA-DEMOS-ISSUE-106 records the pre-built overload's FX-only diagnostic for other registry-affecting options.",
+                    "Checks concurrent factory calls only for disjoint roots; no dynamic-plugin or crash-consistency claim.",
 })

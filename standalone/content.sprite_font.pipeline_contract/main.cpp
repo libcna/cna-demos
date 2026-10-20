@@ -224,10 +224,11 @@ namespace
         oversized.characterRegions = {{u'\0', static_cast<SharpRuntime::charcs>(0xFFFFu)}};
         check(Refuses([&] { (void)Pipeline::ParseFontDescription("<broken>", "memory"); }),
               "malformed SpriteFont XML is refused before import");
-        const std::vector<SharpRuntime::charcs> invertedExpansion =
-            Pipeline::ExpandCharacterRegions(inverted);
-        check(invertedExpansion.empty(),
-              "an inverted programmatic range currently disappears silently (CNA-DEMOS-ISSUE-108)");
+        bool invertedRefused = false;
+        try { (void)Pipeline::ExpandCharacterRegions(inverted); }
+        catch (const std::runtime_error&) { invertedRefused = true; }
+        check(invertedRefused,
+              "an inverted programmatic range is refused with std::runtime_error (CNA-DEMOS-ISSUE-108)");
         check(Refuses([&] { (void)Pipeline::ExpandCharacterRegions(oversized); }),
               "a programmatic character set above the 8192-glyph limit is refused");
 

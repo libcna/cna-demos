@@ -244,15 +244,27 @@ namespace
                       noneCompressed == compressionProbe && noneRestored == compressionProbe,
                   "compression identity, names and the no-compression copy path are exact");
 
-        // CNA-DEMOS-ISSUE-110: the public contract says both checks happen for every codec, but
-        // the None branch returns before either one. CnbDocument validates these fields first, so
-        // ordinary container loading remains bounded; the defect is observable through this
-        // direct public helper call.
-        const auto wrongSizeNone = DecompressCnbChunk(
-            compressionProbe, CnbCompression::None, compressionProbe.size() + 1u, 1u,
-            "CNA-DEMOS-ISSUE-110 probe");
-        ctx.Check(wrongSizeNone == compressionProbe,
-                  "CNA-DEMOS-ISSUE-110: direct None decompression currently bypasses declared-size and allocation-limit checks");
+        // Protect the direct helper independently of the container parser's validation.
+        const auto refusesNone = [&](std::uint64_t declared, std::uint64_t ceiling)
+        {
+            try
+            {
+                (void)DecompressCnbChunk(compressionProbe, CnbCompression::None,
+                                        declared, ceiling, "CNA-DEMOS-ISSUE-110 probe");
+            }
+            catch (const ContentLoadException& error)
+            {
+                return std::string(error.what()).find("CNA-DEMOS-ISSUE-110 probe") !=
+                       std::string::npos;
+            }
+            return false;
+        };
+        const bool bothRefused = refusesNone(compressionProbe.size() + 1u, 1u);
+        const bool mismatchRefused = refusesNone(compressionProbe.size() + 1u,
+                                                compressionProbe.size() + 1u);
+        const bool ceilingRefused = refusesNone(compressionProbe.size(), 1u);
+        ctx.Check(bothRefused && mismatchRefused && ceilingRefused,
+                  "CNA-DEMOS-ISSUE-110: direct None decompression enforces exact size and allocation limits");
 
         const bool zstdAvailable = IsCnbCompressionSupported(CnbCompression::Zstd);
         bool codecBehavior = !IsCnbCompressionSupported(CnbCompression::ReservedLz4) &&

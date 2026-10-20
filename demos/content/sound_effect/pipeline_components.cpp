@@ -276,5 +276,4 @@ CNA_DEMOS_CONSOLE(SoundEffectPipelineComponents, {
              "CNA::Content::Pipeline::RegisterSoundEffectContentPipeline"},
     .tags = {"content", "pipeline", "audio", "wav", "cnb", "importer", "processor", "writer"},
     .assets = {"sounds/tone_660.wav"},
-    .knownIssue = "CNA-DEMOS-ISSUE-105",
 })

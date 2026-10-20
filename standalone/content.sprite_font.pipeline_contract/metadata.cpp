@@ -38,5 +38,5 @@ CNA_DEMOS_STANDALONE({
     .tags = {"content", "pipeline", "sprite-font", "truetype", "freetype", "font-sheet", "cnaext"},
     .assets = {"fonts/liberation_mono/pipeline.spritefont",
                "fonts/liberation_mono/LiberationMono-Regular.ttf"},
-    .restrictions = "Build-time tool in a separate process; requires CNA::ContentPipelineBuild with FreeType and uses the committed OFL font fixture. CNA-DEMOS-ISSUE-108: direct expansion silently ignores an inverted programmatic region despite its documented refusal. CPU conversion only; existing SpriteFont demos own runtime loading, measurement and rendering. No screenshot, manual visual assessment or genuine-XNA execution is claimed.",
+    .restrictions = "Build-time tool in a separate process; requires CNA::ContentPipelineBuild with FreeType and uses the committed OFL font fixture. CPU conversion only; existing SpriteFont demos own runtime loading, measurement and rendering. No screenshot, manual visual assessment or genuine-XNA execution is claimed.",
 })

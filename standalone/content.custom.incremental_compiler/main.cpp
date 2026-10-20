@@ -211,9 +211,9 @@ int main()
                       prebuiltXmaDiagnostic.str().find("ContentPipelineRegistryFactory") !=
                           std::string::npos &&
                       prebuiltXmaDiagnostic.str().find("--fx-compiler") != std::string::npos &&
-                      prebuiltXmaDiagnostic.str().find("--xma-encoder") == std::string::npos &&
+                      prebuiltXmaDiagnostic.str().find("--xma-encoder") != std::string::npos &&
                       imports == 0 && processes == 0 && writes == 0,
-                  "a pre-built registry refuses XMA selection before discovery, but its diagnostic names only FX options (ISSUE-106)");
+                  "a pre-built registry refuses XMA selection before discovery and names the selected option (regression for ISSUE-106)");
 
             // Two embedded compiler calls may overlap when their output roots are disjoint. Hold
             // both factories at the same gate so this proves actual overlap, and give each one a
