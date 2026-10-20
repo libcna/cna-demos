@@ -2065,6 +2065,17 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-030 -- `SimulatedPacketLoss` drops reliable packets for good
 
+- **Campaign verification (2026-10-20; final regression pending):** CNA
+  `01534c2e7f33d67191efe26c4434c874a244bfa3` repaired sender-side simulation and
+  Reliable exemption before the campaign baseline. Genuine XNA4 simulator27/27
+  proves the current demo's receiver-side setup and minimum-latency expectation
+  incorrect. Demo `0b4d2ce` corrects those assumptions, preserves exact packet
+  counts and all six checks; one staged SOFTWARE and one OPENGLES3 execution
+  pass6/6 each, native deterministic and ENet integration11/11. See
+  [permanent evidence](repair-evidence/NETWORK_SIMULATOR.md). The earlier strict
+  GLES assertion-delta failure is retained. Do not close or remove knownIssue
+  until the rebuilt full regression confirms the correction.
+
 - **Area:** net -- `ENetBackend` applies `NetworkSession::SimulatedPacketLoss` where AppData is
   handed to a local gamer, after ENet's reliable transport has delivered it
   (`ShouldDropForSimulatedLoss`, whatever the packet's `SendDataOptions`). A packet sent with
