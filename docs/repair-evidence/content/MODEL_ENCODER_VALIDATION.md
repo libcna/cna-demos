@@ -184,3 +184,32 @@ already has `/rv`; only the native cache needs correction. Record any resulting
 native binary-hash changes rather than pretending old frozen binaries still
 match. Then run the complete unprivileged usernet gate with unchanged source
 hashes and all10798 expected outcomes. Do not omit the permission case.
+
+## Completed invalid-environment gate and corrected network control
+
+Native86497 completed with10,798 cases:10,688PASS,105SKIP,fiveFAIL. Its complete
+audit is retained, including all four additional skips. Four permission-sensitive
+cases skip under the mapped-root credentials, and the original publication case
+fails because those credentials bypass its removed write permission. The other
+four failures are real two-process discovery/migration tests: the isolated
+loopback-only network had no route for limited broadcast255.255.255.255. The
+earlier single-process discovery control did not exercise that missing capability.
+This failed run is not a passing regression checkpoint.
+
+Corrected unchanged-binary control83742 passes all26 cases:13 discovery,
+eight real two-process cases, and all five permission-sensitive cases. The private
+namespace preserves UID/GID1000, drops all capability sets before executing tests,
+and adds a dummy interface192.0.2.1/24 with an explicit limited-broadcast route.
+No host network configuration is changed. No production/test source, assertion,
+timeout or retry is changed. The audit verifies all four original native binaries
+and three source hashes. Reports:
+`repair-model-encoder-broadcast-usernet-focused.{log,xml}`,
+`repair-model-encoder-broadcast-usernet-focused-audit.json`.
+
+The focused process ran in its own systemd scope with verified MemoryHigh4GiB,
+MemoryMax6GiB and MemorySwapMax0. After both original full jobs had terminated,
+cache-policy build61683 started serially with one compiler worker under those
+same verified limits in scope`cna-repair-model-cache-policy`. These limits apply
+to the launched workload, not to the Codex application itself. The final usernet
+driver now refuses a missing private broadcast route as well as wrong credentials.
+Await the build audit before starting the final full gate.

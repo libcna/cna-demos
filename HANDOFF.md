@@ -17,6 +17,19 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+Post-OOM native86497 COMPLETE1:10798=10688PASS/105SKIP/fiveFAIL; retain every
+outcome. Root capabilities explain one failure/four extra skips; missing private
+broadcast route explains four real two-process discovery/migration failures.
+Unchanged binaries pass corrected unprivileged broadcast+permission control83742
+26/26; four binary/three source hashes exact. No assertions/timeouts changed.
+Both previous full jobs now terminated. Cache-policy build61683 RUNNING serially,
+one compiler worker, verified systemd MemoryHigh4GiB/Max6GiB/Swap0. Existing native
+tree only; correct the persisted launchers to `/rv` without touching sources
+and verify the build audit when complete. Next full usernet gate must use cna-test0 dummy
+interface192.0.2.1/24 AND explicit255.255.255.255 broadcast route, preserve UID,
+drop capabilities, private display. Driver checks route. No109 closure;90/65.
+Details: MODEL_ENCODER_VALIDATION.md. Limits cover new workloads, not Codex itself.
+
 External8261 COMPLETE0 after resume:all18 stages,CTest684PASS/48sameSKIP/three
 disabled964.43s;735 exact outcomes against XML,319 artifacts/three sources exact.
 Both719/math95/six zero-pixel visuals/146 focus complete; independent
