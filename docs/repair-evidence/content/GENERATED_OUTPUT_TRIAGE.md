@@ -100,3 +100,34 @@ repair. The locally installed XNA SDK XML has an empty AddOutputFile summary,
 so it supplies no additional evidence for path handling; the baseline expectation
 is the explicit CNA public contract and real processor use case. No genuine-XNA
 runtime claim is made.
+
+## Prepared real-host fixture (not yet compiled or run)
+
+`GeneratedOutputCompiler.cpp` registers a real importer, processor and Curve
+writer with `RunContentCompiler`. The processor writes the supplied report payload
+under the host's configured output directory, closes it, then registers it through
+`XnaBridgeProcessorContext::AddOutputFile`. It neither replaces the host publisher
+nor mocks the manifest/cache/clean implementation.
+
+`generated_output_cli_tests.py <fixture-executable>` specifies five host scenarios:
+
+- Directory publication, no-op with byte-identical manifest/artifact, rebuild of
+  modified and deleted support files, then clean preserving input and unowned data.
+- Changed generated filename collects only the obsolete owned report.
+- Single-file compilation publishes its related report.
+- Clean refuses an edited report without partially deleting other owned files.
+- Invalid fixture input fails before any owned files are published.
+
+The Python source passes an AST syntax check and contains five cases. The C++
+fixture and all five runtime scenarios remain **NOT RUN**. Do not treat their
+expected assertions as evidence yet or infer that a source-contained host layout
+is supported: existing host guards deliberately prohibit self-discovering and
+authored-source-overwriting layouts. The earlier 11-case context/manifest baseline
+remains the measured baseline.
+
+After the current canonical build/final ISSUE-109 gate, compile this fixture
+strictly in the existing `build-probe` using the include/definition flags and link
+libraries of the existing `cna_custom_content_compiler_example` target. Use the
+shared ccache, one compiler worker and a bounded memory scope; do not overlap the
+ongoing canonical build. Retain the original failing host run before production
+repairs. These new fixture files are currently uncommitted preparation.

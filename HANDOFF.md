@@ -30,6 +30,13 @@ interface192.0.2.1/24 AND explicit255.255.255.255 broadcast route, preserve UID,
 drop capabilities, private display. Driver checks route. No109 closure;90/65.
 Details: MODEL_ENCODER_VALIDATION.md. Limits cover new workloads, not Codex itself.
 
+047 follow-up host fixture is prepared but NOT compiled/run:
+docs/repair-evidence/content/GeneratedOutputCompiler.cpp and
+generated_output_cli_tests.py (five cases; Python AST syntax passes).
+Both are uncommitted. They exercise the real compiler host, not a fake publisher;
+see GENERATED_OUTPUT_TRIAGE.md for exact intended coverage and compile target.
+Do not start their build during61683 or claim a new baseline before executing it.
+
 External8261 COMPLETE0 after resume:all18 stages,CTest684PASS/48sameSKIP/three
 disabled964.43s;735 exact outcomes against XML,319 artifacts/three sources exact.
 Both719/math95/six zero-pixel visuals/146 focus complete; independent
