@@ -222,7 +222,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   unsuitable root credentials and no broadcast route. All26 affected permission/
   discovery/two-process controls pass on unchanged binaries with corrected isolation.
   A one-worker cache-policy rebuild is running under a6GiB memory limit; its broader
-  compilation has18 retained vendor/test warnings. The complete native
+  compilation retains vendor/legacy-test warnings (see the current validation audit).
+  The complete native
   gate must still pass before closure. No committed runtime repair is claimed yet. See
   [current validation](repair-evidence/content/MODEL_ENCODER_VALIDATION.md).
 

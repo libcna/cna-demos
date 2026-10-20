@@ -242,3 +242,22 @@ warnings at418/420 for ignored `nodiscard` getters, bringing the running total
 to18. `git diff 688f3f23e -- <that test file>` is empty and both lines blame to
 d2336a91cd, establishing that these are unchanged pre-campaign test statements.
 They are retained, not suppressed or conflated with the16 Draco diagnostics.
+
+The subsequent64-warning snapshot consists of16 Draco diagnostics and48 ignored
+nodiscard-return diagnostics in tests. Six affected test files are unchanged
+against688f3f23e. BoundingBoxTests.cpp and CurveKeyCollectionTests.cpp have later
+campaign changes elsewhere, but the warning lines blame to75e94ed66 andcd211420e;
+both commits are verified ancestors of688f3f23e. Thus all48 diagnostic call sites
+predate this campaign and none belongs to the new model encoder/test changes.
+The full exact diagnostic list remains in the build log and final build audit;
+this is an interim count and does not change the test oracle or warning flags.
+
+The reusable read-only provenance audit now records an86-diagnostic snapshot:
+zero errors,70 owned-test warning call sites predating688f3f23e, zero newer owned
+call sites, and16 vendor diagnostics. It retains every diagnostic, source hash,
+baseline comparison and relevant blame ancestry in
+`repair-model-encoder-native-cache-warning-provenance-interim.json`.
+The checked driver `build-probe/repair-native-warning-provenance.mjs` can audit
+the completed log under a fresh report prefix; it does not compile or change flags.
+Call-site age alone does not prove every declaration/compiler option was identical;
+the report explicitly records that limitation. This remains an interim snapshot.

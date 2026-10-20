@@ -42,14 +42,21 @@ expected five host failures/one control pass without suppressing test exit1.
 The added nested-path case is supported by genuine XNA static IL: AddOutputFile
 records complete paths, not basenames; cleanup retains that identity. Eight-method
 extract/hash retained only in ignored reports. No XNA runtime pass is claimed.
-61683 currently has18 compiler warnings:16 in vendored Draco's PLY lambda captures
-and two old nodiscard calls in XnaMaterialContentTests.cpp (unchanged against
-688f3f23e), not model encoder diagnostics. Retain them in
+61683 retains vendor/test diagnostics. The read-only provenance snapshot now has86:
+70 pre-campaign owned-test call sites,16 vendor,zero errors/newer owned sites.
+Report: repair-model-encoder-native-cache-warning-provenance-interim.json.
+Re-run build-probe/repair-native-warning-provenance.mjs with a fresh final prefix
+after completion; call-site age does not prove all compiler/declaration options
+were identical. Retain the exact final list in
 the final build audit; do not claim this broader rebuild is warning-free.
 Both prepared drivers now fail closed unless their actual cgroup has memory.max
 no greater than6GiB and swap.max0. Guard-only checks PASS2 bounded/2 unbounded
 refusals; no compiler/CNA suite started. Launch final native gate through its own
 systemd scope with those limits, then private display/usernet broadcast setup.
+The prepared native driver explicitly passes shared ccache/base and one-worker
+CMake/CTest environment to test children. All errors remain in audit JSON; console
+output is bounded to counts/first ten errors/full audit path. Syntax passes;
+this is not a native test pass and does not change any expected outcomes.
 
 External8261 COMPLETE0 after resume:all18 stages,CTest684PASS/48sameSKIP/three
 disabled964.43s;735 exact outcomes against XML,319 artifacts/three sources exact.
