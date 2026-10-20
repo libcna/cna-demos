@@ -1881,8 +1881,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   no `Game` is required. Current `ReadAsset` already calls `BuiltinContent<T>::Register`; the
   historical suggestion above is stale. The actual cold defect is the registry's no-op without
   a Game declaration. Ordinary generic, move-only SoundEffect and erased external-reference
-  loads also bypass the virtual seam. A local candidate passes20 native controls and actual-TU
-  sanitizers; canonical build/regression validation is pending. No knownIssue marker removed.
+  loads also bypass the virtual seam. Repair CNA `d7ce398d8` passes20 native controls,
+  actual-TU sanitizers, canonical native subsystem gates and146 external focused cases.
+  Both012 witnesses pass on SOFTWARE/OPENGLES3; only their markers are removed after
+  proof, preserving every assertion and cold-process isolation. Full regression is pending.
   See [stream routing evidence](repair-evidence/content/STREAM_ROUTING.md).
 
 ### CNA-DEMOS-ISSUE-013 -- The content manifest lists the content pipeline's bookkeeping files

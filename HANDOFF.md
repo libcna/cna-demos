@@ -17,6 +17,20 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+12:31 UTC:012 runtime committed CNA d7ce398d8, all native gates/initial146 focus
+pass. Whole external build warning-free (two rescheduled segments fully reconciled),
+67PASS/six unchangedFAIL per renderer. Only two proven012 markers removed; all
+assertions and cold isolation retained. Marker rebuild10steps/zero warnings passes;
+96444 marker focus RUNNING(1), then full319-artifact gates. No012 closure yet,76/79.
+106 minimized probe21=16PASS/five diagnosticFAIL now confirmed, no runtime changes.
+
+12:21 UTC: only external012 rebuild runs. After native gates finished, deliberately
+interrupted single-worker79065 at563 body tasks (exit2; original log retained; no
+compiler error) and resumed75857 with permitted THREE workers,484 remaining
+scheduled steps. No source changes; nine hashes match. Audit will reconcile both
+segments, six repeated asset-copy/content tasks, zero warnings and source hashes.
+Resume log suffix *-external-build-rescheduled. HEADs CNA48de2373a/demos6ce3745.
+
 12:18 UTC:012 native pipeline559 COMPLETE0:558PASS/one unchangedSKIP, exact audit
 and four hashes PASS. All prepared native012 gates complete. Only externalbuild79065
 runs (~514/1043); no source/metadata changes.105/108 permanent minimized before probes

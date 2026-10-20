@@ -1,6 +1,6 @@
 # ISSUE-012 stream routing investigation
 
-2026-10-20. Issue remains open; CNA candidate uncommitted and full validation pending.
+2026-10-20. Issue remains open; CNA repair committed `d7ce398d8`, full validation pending.
 Pre-repair native binary revision: CNA `5d32ca58b` (status HEAD `56dca0b43`).
 Permanent fixtures: `ContentStreamRoutingTests.cpp`, `ResourceContentColdOracle.cs`;
 ordinary virtual-load/cache evidence also exists in `ContentOwnershipOracle.cs`.
@@ -53,7 +53,7 @@ No public exception subclass or API change is introduced.
 
 Twenty native regressions are installed. The obsolete native assertion that no Game
 means no builtin registration is corrected using the genuine14-control evidence, while
-retaining family isolation and declaration controls. Canonical native build is running;
+retaining family isolation and declaration controls. Canonical native gates now pass;
 neither external012 witness nor its knownIssue marker has been changed. Global C API
 RootDirectory contract blocker is separate and remains unresolved.
 
@@ -65,6 +65,37 @@ Its actual-five-TU sanitizer run passes20/20 without diagnostics. The evidence f
 retains separately validated default-SDL integration and its required foreign-thread
 cleanup. Native nonproduction audit remains81 classified files/1050 references and
 passes unchanged; the canonical build resumes with a new source hash manifest/log.
+
+## Canonical native checkpoint
+
+The resumed native build completes1205 printed steps with51 precisely matched
+pre-existing warnings and no new diagnostics. Nine source hashes match; four
+artifacts are frozen and checked before/after every gate. Canonical20 focus passes.
+The1985-case content module gives1981PASS/four unchangedSKIP and preserves the exact
+1965-case predecessor except the measured oracle rename and20 new regressions.
+Pipeline559 gives558PASS/one unchangedSDK-fixtureSKIP in852.057s. Consumers1412
+give1408PASS/four unchangedSKIP; runtime241 gives238PASS/three unchangedSKIP;
+default XML gives4PASS/two unchangedfixtureSKIP and original XML fixtures6/6PASS.
+All six link-footprint CTests pass in3.24s with no skips. Every exact audit has
+errors[] and all four post-gate hashes match. SOFTWARE/OPENGLES3 demos validation
+and full external regression remain pending; this is not issue closure.
+
+External build initially shares the three-worker budget with native gates. Once
+those finish, the single-worker Ninja is deliberately interrupted at563 completed
+body tasks (566 printed steps), without any compiler failure, and resumed with
+three workers. Both logs are preserved; the final audit must reconcile1040 unique
+body tasks, the initial configuration prelude and exactly six repeated independent
+asset-copy/content tasks. Nine source hashes remain unchanged throughout.
+
+The complete two-segment external build now passes:566+484 printed steps,
+1040 unique body tasks and exactly six repeated asset tasks, zero warnings,
+nine source hashes unchanged. Initial146 focus passes its exact audit:67PASS/six
+unchangedFAIL per renderer. Only the two012 witnesses improve; open_stream_override
+retains4 checks and resource_content_manager rises2->4 because its existing success
+branch now executes. The repair is committed after this proof. Only those two
+knownIssue markers are removed; every assertion and resource cold-process isolation
+is preserved. Ten-step marker rebuild is warning-free; marker-aware focus/full
+regression are pending. No new global acceptance or issue closure is claimed.
 
 Reports: `build/linux-full/reports/repair-content-stream-routing-*`, particularly expanded
 before/cold-candidate/routing-candidate audits, retained `*-sanitizer-context.log`, final

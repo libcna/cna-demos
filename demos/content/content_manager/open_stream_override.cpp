@@ -121,5 +121,4 @@ CNA_DEMOS_GAME(OpenStreamDemo, {
     .tags = {"content", "pack-file", "stream", "custom-manager", "xnb"},
     .frames = 1,
     .assets = {"xnb/textures/colour_wheel.xnb"},
-    .knownIssue = "CNA-DEMOS-ISSUE-012",
 })
