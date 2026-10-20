@@ -155,6 +155,12 @@ NUL/newline and case results are recorded separately from portable lexical rules
 do not infer native Unix filesystem parity from a Windows open outcome. The probe
 removed its unique fixture and did not change production code.
 
+The normalization witness now adds a fifth native test. The three successful
+clean-before-validation spellings and two exact missing-file outcomes are retained;
+the expanded unchanged-production run gives2PASS/three expectedFAIL,117ms
+(`repair-title-native-tests-expanded-before*`). In particular, accepting the
+two empty/dot-component cases is itself a wrong behavior, not a tolerance issue.
+
 ## Native151 regression coverage prepared before its repair
 
 `StorageContainerLifetimeTests.cpp` adds three native tests: live identity and
@@ -165,6 +171,22 @@ gives1PASS/two expectedFAIL (5ms; `repair-storage-lifetime-native-before*`).
 Fixtures use unique container names through real public acquisition and remove
 only their own named files/directories. These tests have not yet been rebuilt
 into CnaTests; no runtime151 repair or external checkpoint includes them yet.
+
+An additional genuine `StorageDisposingOracle.cs` passes7/7: inside the event,
+IsDisposed is already true, FileExists/listing throw ObjectDisposedException,
+backing files remain, and a previously opened stream still reads during and after
+disposal. This does not claim device-selection/constructor coverage (root injected).
+The matching fourth native test fails before repair, alongside the two earlier
+disposed-access failures; the live control still passes. The isolated151 candidate
+passes all4 (2ms). Reports `repair-storage-disposing-xna*`,
+`repair-storage-lifetime-native-event-*`, `repair-storage-lifetime-event-candidate*`.
+
+This also disproves an existing native C `StorageSmoke.c` expectation that its
+FileExists query succeeds inside Disposing. Correct that oracle with the151 repair:
+require INVALID_STATE and untouched output, and separately prove the backing file
+still exists via a fresh live container. The generic C exception barrier already
+maps ObjectDisposedException through InvalidOperationException to INVALID_STATE;
+do not add a redundant adapter guard or change the canonical event ordering.
 
 ## Unchanged Sharp Runtime baseline preparation
 
