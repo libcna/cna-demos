@@ -310,3 +310,62 @@ callable and returns a fresh reader. Actual registry TU plus the eleven focused
 tests now passes11/11, compared with4PASS/sevenFAIL before. The same tests have
 been added to CNA-native coverage. Sanitizer and canonical build/full regression
 are still pending; no043 closure or external improvement is claimed.
+
+### Retained full-sweep C contract regression
+
+The039/045 SOFTWARE719 sweep completes with619PASS/49FAIL/48SKIP/three manual, but
+the strict comparison fails: `c_api.content.content_manager` now fails its live-root
+mutation check instead of reaching its historical103 exception-identity witness.
+The failing conditional skips11 later child checks (54 ->43); the parent still
+reports failure, so status totals alone would hide this regression.103 is NOT
+resolved or validated by this run. The comparison JSON and full stdout are retained.
+
+The C demo follows an explicit public contract: CNA `CNA/C/content.h` and
+`docs/c-api/CONTENT.md` promise root changes preserving the existing cache, introduced
+by ef6a72525 (CBIND-028). CNA's C ContentSmoke test also relies on it. The route is
+currently a direct native-setter forwarder, so039's correct XNA/C++ guard exposes
+this conflict. No C API oracle has been weakened or changed. An owner contract
+question is pending: unify the C API with measured XNA/C++ and correct its docs/tests,
+or preserve its documented behavior as an intentional C-only extension. Neither
+answer is presumed. GLES and independent043 native validation continue;039/045
+remain pending and this is not an accepted full checkpoint.
+
+Both full sweeps now finish: GLES658PASS/51FAIL/sevenSKIP/three manual retains the
+same C contract conflict. All319 hashes match after both sweeps and the independent
+before-fix probes below. The failed external freeze is released; neither039 nor045
+is closed, and no final CTest pass is claimed.
+
+043 canonical build succeeds with51 existing warnings (no new diagnostic against
+the preceding52-warning set). Whole module1929 gives1925PASS/four unchangedSKIP:
+all1918 previous outcomes and11 new lookup passes match, differences[]. Four native
+hashes match. Actual-TU ASan/UBSan/leak11/11 passes; full552 pipeline is running.
+No external043 result or closure yet.
+
+###103 isolated eight-route exception regression
+
+`ContentExceptionIdentityProbe.c` exercises only public C calls, creates a fresh
+manager, and neither loads a successful asset nor changes roots. A four-byte
+`XNB\n` file consistently reaches ContentLoadException in Texture2D, TextureCube,
+SoundEffect, Effect, Model, ObjectDictionary, SpriteFont and ForeignObject routes.
+Every route checks IO result, null outputs, retained structured IO/message,
+canonical exception type and empty argument parameter. Setup/inventory controls
+bring the total to44. Both renderers give36PASS/eightFAIL, exclusively the missing
+canonical type: `repair-content-exception-all-before-{SOFTWARE,OPENGLES3}.log`.
+Strict C17/Wall/Wextra/Wpedantic/Werror compilation passes. A self-contained
+CNA-native version also gives44 checks/eight failures; reports
+`repair-content-exception-native-before{,-build}.log`.
+
+The initial six-route missing-file probe is retained separately: eight failures
+of34 include SoundEffect returning NotSupported, unlike the other five native
+ContentLoadException routes. Its loose-audio path throws before the common XNB
+boundary. This is not lack of audio hardware and not evidence that103 is fixed;
+it needs separate native-layer investigation. The minimized malformed envelope
+isolates the metadata defect without relaxing the expected canonical type.
+
+The local candidate rethrows ContentLoadException from eight C catch arms to the
+existing shared exception barrier, which already maps that type to IO and records
+canonical metadata. No new translator or root-setter policy is introduced.
+CNA-native CMake regression and fixture are added, but the two existing build
+configurations do not enable its CTest target. Manual native-source runs must not
+be reported as CTest registration execution. External C API target rebuild is
+running; no after-fix result, repair commit or103 closure is claimed yet.

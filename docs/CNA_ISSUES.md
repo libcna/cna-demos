@@ -463,6 +463,17 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-103 -- C content loaders discard canonical `ContentLoadException` identity
 
+- **Repair-campaign status (2026-10-20): CONFIRMED_OPEN.** An independent public-C
+  reproduction avoids the live-root contract conflict exposed by039. A four-byte
+  invalid XNB reaches all eight loaders: Texture2D, TextureCube, SoundEffect,
+  Effect, Model, ObjectDictionary, SpriteFont and ForeignObject. Both SOFTWARE and
+  OPENGLES3 give36 passing controls/eight failed canonical-type checks of44.
+  IO result/category/message, null outputs and empty argument parameter remain
+  correct. The CNA-native C17/Werror regression reproduces the same failure.
+  See [permanent probe](repair-evidence/content/ContentExceptionIdentityProbe.c)
+  and [current evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
+  A local common-barrier repair is being built, not yet validated or committed;
+  the original demo marker remains. The historical reproduction below is retained.
 - **Area/API:** the C exception-detail contract in `CNA/C/core.h` and the typed
   `cna_content_manager_load_*` routes, observed through
   `cna_content_manager_load_texture2d`.
