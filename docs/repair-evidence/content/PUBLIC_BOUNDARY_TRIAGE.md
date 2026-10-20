@@ -4,6 +4,10 @@
 ISSUE-012 canonical build runs. No production changes for these findings yet.
 Probes link the unchanged external089 `build/linux-full/CNA/libcna.so` and its
 existing link closure, not the native tree being rebuilt. Strict C++23/Werror.
+Later105/108 probes instead link the completed, frozen canonical012 native
+artifacts: neither target implementation changed in012. All four native hashes
+match before and after each probe. These results do not depend on the concurrent
+external rebuild.
 
 ## ISSUE-013: runtime manifest bookkeeping
 
@@ -51,6 +55,14 @@ named-only and all-named-only sets need explicit negative tests; preserve explic
 selection, one ordinary candidate among named-only entries and ordinary ambiguity.
 HasImporterForSource is a separate discovery predicate, not default-route resolution.
 
+`NamedOnlyRoutingProbe.cpp` now independently verifies25 controls:19PASS/sixFAIL.
+Both importer and processor fail the sole-named-only exclusion, report a false
+ambiguity for an all-named-only set, and include ineligible names in mixed-set
+ambiguity diagnostics. Positive controls preserve explicit selection, rejection of
+unknown/wrong-route names, sole ordinary selection, ordinary ambiguity, stable
+candidate ordering and case-insensitive discovery (including named-only discovery).
+Reports `repair-content-named-routing-before-{build.log,audit.json}` and `.log`.
+
 ## ISSUE-108: programmatic font regions
 
 Current089 standalone font pipeline output explicitly confirms an inverted
@@ -59,6 +71,14 @@ loop without rejecting end<start; the XML parser already rejects that input. Pub
 declaration promises std::runtime_error. Preserve sorted/deduplicated output, default
 character inclusion and glyph-count ceilings when validating the direct public input.
 No genuine-XNA claim is needed for this CNA extension contract.
+
+`FontRegionBoundaryProbe.cpp` verifies12 controls:8PASS/fourFAIL. Sole, leading,
+trailing and full-endpoint inverted ranges are all silently accepted; an outside
+fallback can mask the invalid input. Positive controls preserve empty direct input,
+sorted deduplication, no input mutation, fallback inclusion/deduplication, inclusive
+U+FFFF termination and the exact8192-glyph ceiling/oversize exception. No font file,
+rasterizer, renderer or device is required. Reports
+`repair-content-font-regions-before-{build.log,audit.json}` and `.log`.
 
 012 compilation/source freeze remains intact. These issues remain open; no demo
 markers/assertions or production code have been changed for them.

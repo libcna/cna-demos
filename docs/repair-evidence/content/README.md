@@ -1,5 +1,12 @@
 # Content repair evidence
 
+Current2026-10-20 status:089 is locally closed; see `INITIALIZATION_CHECKPOINT.md`
+for complete evidence and the retained unrelated C-root contract residual.012 is
+still pending full external regression; `STREAM_ROUTING.md` records its candidate.
+`PUBLIC_BOUNDARY_TRIAGE.md` and four standalone C++ probes preserve current before
+evidence for013/105/108/110.105's25 controls give19PASS/sixFAIL;108's12 give8PASS/fourFAIL.
+Neither finding has a runtime repair yet. Older progress entries below are historical.
+
 ## ISSUE-012: stream routing baseline (2026-10-20)
 
 `ResourceContentColdOracle.cs` now passes14/14 against genuine XNA4 in the private

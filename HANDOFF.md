@@ -17,6 +17,33 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+12:18 UTC:012 native pipeline559 COMPLETE0:558PASS/one unchangedSKIP, exact audit
+and four hashes PASS. All prepared native012 gates complete. Only externalbuild79065
+runs (~514/1043); no source/metadata changes.105/108 permanent minimized before probes
+now25=19PASS/sixFAIL and12=8PASS/fourFAIL, strict warning-free, frozen native hashes
+unchanged. See PUBLIC_BOUNDARY_TRIAGE.md.012 still pending external146 focus/full gates.
+
+12:14 UTC:012 consumers/runtime/XML and all six link-footprint CTests COMPLETE0,
+exact predecessor outcomes/four-artifact hashes match. Only pipeline94252 and
+externalbuild79065 remain running (one worker each). No source/metadata changes.
+Next:559 pipeline audit, external build audit, then146 initial focus before markers.
+76 final/79 pending; full campaign estimate remains uncertain60–140 active hours.
+
+12:07 update:012 canonical module4214 COMPLETE0,1981PASS/four unchangedSKIP of1985,
+20 focus PASS, exact outcome audit/four hashes PASS. Consumers7409 RUNNING(1),
+pipeline94252 RUNNING(1), externalbuild79065 RUNNING(1), THREE workers. No source/
+metadata edits. Next free slot: six link-footprint CTests; then external build audit
+and146 focus when build finishes.012 still open/uncommitted; counts76/79 unchanged.
+
+Live12:04 UTC: HEADs CNAaa005dae6/demosdb2716f.012 canonical native build COMPLETE0,
+1205 steps/51 same warnings/no new diagnostics/nine source hashes exact. Four native
+artifacts frozen; module4214 RUNNING(1)20focus+1985cases, pipeline94252 RUNNING(1)559
+cases. External79065 RUNNING(1)1043-step build on same frozen sources. THREE workers;
+no compiled source/metadata edits. Native012 runtime/tests still uncommitted, markers
+unchanged.013 and110 new strict before probes committed (16:8PASS/8FAIL;11:4PASS/7FAIL),
+105/108 source+current witnesses confirmed, no product changes for those findings.
+CNA live handoff has prepared gates/next commands.76 final/79 pending unchanged.
+
 Latest11:52 UTC:089 CLOSED FIXED_VALIDATED, CNA5d32ca58b/marker4c03e74. Both719
 SW622/46/48/3,GLES661/48/7/3; only089 improves from087. Both95 math/six exact visuals
 PASS. Final CTest684PASS/48 unchangedSKIP/three disabled650.59s, all735 outcomes and
