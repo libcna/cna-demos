@@ -2,6 +2,42 @@
 
 ## ISSUE-089: initialization cycle and failure baseline (2026-10-20)
 
+Candidate validation11:00 UTC (not a closure): four actual implementation TUs
+(`IntermediateSerializer`, `ContentTypeSerializer`, `IntermediateWriter`,
+`IntermediateReader`) pass the21 basic,11 cycle and6 failure controls, plus the
+original two owner-isolation cases. Expanded owner coverage adds registration
+during a writer callback and simultaneous first use of a new worker; all four
+cases pass. Normal and ASan/UBSan/leak variants have exact audits errors[], no
+diagnostics, warning-free builds (production policy for implementation TUs,
+Wall/Wextra/Werror for test TUs). Linked libraries are not all instrumented.
+Reports `repair-intermediate-initialization-candidate{,-sanitizer}{,-extended}-*`.
+
+Seven equivalent CNA-native GTests are installed: basic lifetime/cache, cycles,
+fresh-process failed initialization, and four isolation/late/concurrent cases.
+The failure case re-executes a child so a deliberately failed registry does not
+contaminate other tests. All7 pass in normal and sanitized actual-TU fixture builds;
+a separate fresh-process first-use run also passes1/1 in both variants, covering
+cold built-in discovery without a prior warmup. Reports
+`repair-intermediate-initialization-native-fixtures{,-sanitizer}-*`.
+Canonical whole native build is running; no native full regression or issue closure
+is claimed. The candidate retains a registry-owned callback owner, scopes document
+state per thread/operation, and publishes workers before callbacks without holding
+the registry lock while running user code.
+
+Canonical follow-up11:05 UTC:79-step whole build passes. Its two material-test
+nodiscard warnings exactly match the prior048 build of those TUs; the initial
+audit wrongly compared against087's51-warning build, which did not compile those
+material tests. Failed audit and two gate setup failures (missing freeze manifest,
+no test launched) remain. Corrected provenance/accounting audit passes, nine source
+hashes match, four native artifacts are frozen. Canonical7/pipeline559 and content
+module1965 gates are running; no full native regression or089 closure yet.
+
+The explicit unique_ptr-registration boundary below remains deliberate and visible:
+the candidate retains and propagates a failed initialization instead of retrying
+that same object. It does not claim XNA's fresh reflected singleton reconstruction,
+and introduces no factory/clone API. Raw published lookup remains usable on the
+captured failed owner, as the six measured failure controls verify.
+
 `IntermediateInitializationEdgesProbe.cpp` adds native counterparts of the already
 measured genuine15 publication/cycle/failure controls. Two fresh processes avoid
 cross-contamination from a deliberately throwing initializer. Strict C++23 build

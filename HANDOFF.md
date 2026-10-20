@@ -66,7 +66,14 @@ Independent089 has permanent21-control before evidence (fourPASS/seventeenFAIL)
 and two owner-isolation cases (ten owner/initialization assertion failures; nested/
 concurrent context controls pass), plus native cycle11 (onePASS/tenFAIL) and failure6
 (onePASS/fiveFAIL). Genuine21/15 retained, including fresh-owner recovery that cannot
-be faked by retrying an explicitly registered unique_ptr instance. No089 implementation yet. See CNA's live handoff
+be faked by retrying an explicitly registered unique_ptr instance. An uncommitted
+089 candidate now passes actual-TU21/11/6 controls plus four isolation/late/cold
+cases, normal and ASan/UBSan/leak. Seven CNA-native GTests and a fresh-process
+cold-start control also pass both modes. Canonical79-step build passes with two
+previously documented material warnings; native559 pipeline and1965 module gates
+are running on four frozen artifacts. No089 full-regression pass or closure yet.
+External087 final CTest still runs; do not overlap native consumers/SystemLink.
+See CNA's live handoff
 for exact commands, jobs and freezes; limit campaign compiler/test workers to THREE,
 private GPU only. Sharp99c2f79c/EasyGLf4d6afa/MetaGLdd3b300 freshly verified clean.
 FileShare152/vendor148 owner questions remain pending. Nothing pushed or merged.

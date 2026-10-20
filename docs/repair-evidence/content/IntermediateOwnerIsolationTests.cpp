@@ -26,6 +26,20 @@ namespace
         std::string text, path;
         int slot = -1;
     };
+    struct ColdOwnerPayload
+    {
+        static constexpr std::string_view XnaTypeName = "Repair.ColdOwnerPayload";
+        std::string text, path;
+    };
+    struct LateOwnerPayload
+    {
+        static constexpr std::string_view XnaTypeName = "Repair.LateOwnerPayload";
+        std::string text, path;
+    };
+    struct RegisteringOwnerPayload
+    {
+        static constexpr std::string_view XnaTypeName = "Repair.RegisteringOwnerPayload";
+    };
     template <typename T>
     std::string Write(const T& value, const std::string& path)
     {
@@ -80,6 +94,71 @@ namespace
             return value;
         }
     };
+
+    class RegisteringSerializer final : public I::ContentTypeSerializer<RegisteringOwnerPayload>
+    {
+    public:
+        IsolationSerializer<LateOwnerPayload>* late = nullptr;
+    protected:
+        void Serialize(I::IntermediateWriter& output, const RegisteringOwnerPayload&,
+                       const ContentSerializerAttribute&) override
+        {
+            auto candidate = std::make_unique<IsolationSerializer<LateOwnerPayload>>();
+            late = candidate.get();
+            (void)I::IntermediateSerializer::RegisterTypeSerializer(std::move(candidate));
+            ContentSerializerAttribute format;
+            format.setElementNameProperty("Late");
+            output.WriteObject<LateOwnerPayload>({"late", "late.xml"}, format);
+        }
+        RegisteringOwnerPayload Deserialize(I::IntermediateReader&, const ContentSerializerAttribute&,
+                                           RegisteringOwnerPayload) override { return {}; }
+    };
+
+TEST(IntermediateOwnerIsolationTest, WorkerRegisteredDuringWriteIsInitializedBeforeItsPayload)
+{
+    using S = I::IntermediateSerializer;
+    auto candidate = std::make_unique<RegisteringSerializer>();
+    auto* serializer = candidate.get();
+    (void)S::RegisterTypeSerializer(std::move(candidate));
+    const auto xml = Write(RegisteringOwnerPayload{}, "late.xml");
+    EXPECT_NE(xml.find("<Late>late</Late>"), std::string::npos);
+    ASSERT_NE(serializer->late, nullptr);
+    EXPECT_EQ(serializer->late->initializations.load(), 1);
+    ASSERT_NE(serializer->late->owner.load(), nullptr);
+    EXPECT_EQ(&serializer->late->owner.load()->GetTypeSerializer(System::Type::From<LateOwnerPayload>()), serializer->late);
+}
+
+TEST(IntermediateOwnerIsolationTest, SimultaneousFirstOperationsInitializeNewWorkerOnce)
+{
+    using S = I::IntermediateSerializer;
+    auto candidate = std::make_unique<IsolationSerializer<ColdOwnerPayload>>();
+    auto* serializer = candidate.get();
+    (void)S::RegisterTypeSerializer(std::move(candidate));
+    std::barrier gate(3);
+    std::array<std::string, 2> output;
+    std::array<std::exception_ptr, 2> errors;
+    auto run = [&](int slot)
+    {
+        gate.arrive_and_wait();
+        try
+        {
+            const auto path = "cold/" + std::to_string(slot) + ".xml";
+            output[slot] = Write(ColdOwnerPayload{"same", path}, path);
+        }
+        catch (...) { errors[slot] = std::current_exception(); }
+    };
+    std::thread first(run, 0), second(run, 1);
+    gate.arrive_and_wait();
+    first.join();
+    second.join();
+    EXPECT_EQ(errors[0], nullptr);
+    EXPECT_EQ(errors[1], nullptr);
+    EXPECT_FALSE(output[0].empty());
+    EXPECT_EQ(output[0], output[1]);
+    EXPECT_EQ(serializer->initializations.load(), 1);
+    ASSERT_NE(serializer->owner.load(), nullptr);
+    EXPECT_EQ(&serializer->owner.load()->GetTypeSerializer(System::Type::From<ColdOwnerPayload>()), serializer);
+}
 
 TEST(IntermediateOwnerIsolationTest, NestedOperationRestoresOuterContextAndKeepsOwner)
 {
