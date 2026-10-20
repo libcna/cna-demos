@@ -369,3 +369,23 @@ CNA-native CMake regression and fixture are added, but the two existing build
 configurations do not enable its CTest target. Manual native-source runs must not
 be reported as CTest registration execution. External C API target rebuild is
 running; no after-fix result, repair commit or103 closure is claimed yet.
+
+103 repair is now committed as CNA68a3c7b1f. The external C API target build
+completes successfully with no warnings. Native and permanent evidence probes
+each pass44/44 on both SOFTWARE and OPENGLES3. Exact comparison preserves all44
+assertion labels and removes precisely eight canonical-type failures per renderer.
+Existing ErrorSmoke/CoreExtSmoke/GeneratedRoutesSmoke/ContentReaderSmoke pass both
+renderers; ContentModelEffectSmoke successfully loads a real model and exercises
+its Effect routes on OPENGLES3. All six probe/smoke sources compile as strict
+C17/Wall/Wextra/Wpedantic/Werror, as does the separate model/effect source.
+
+The first helper returns1 solely because it looks for native `checks=44 failures=0`
+in the demo harness, whose actual summary is `== PASSED (44 checks)`. Every binary
+exits0. Its failed audit and raw logs are retained. Corrected read-only audit
+recognizes the two exact output formats, verifies all44 original labels and eight
+improvements, and returns `errors: []`; it does not rerun or rewrite evidence.
+Reports `repair-content-exception-{after-*,corrected-audit.json,model-effect-*}`.
+This is focused validation, not closure or a CTest execution claim. The original
+marker and root-contract conflict remain. A complete external rebuild against
+the stable043 candidate and committed103 repair has started for subsequent
+focused demo validation; native043 pipeline continues independently.
