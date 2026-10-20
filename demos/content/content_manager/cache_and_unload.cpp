@@ -111,5 +111,4 @@ CNA_DEMOS_GAME(CacheAndUnloadDemo, {
     .frames = 3,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb", "textures/checker.png"},
-    .knownIssue = "CNA-DEMOS-ISSUE-039",
 })

@@ -199,5 +199,4 @@ CNA_DEMOS_CONSOLE(AssetPrecedence, {
     .tags = {"content", "cache", "xnb", "cnb", "cnj", "resolution"},
     .assets = {"resolution/rules.xnb"},
     .restrictions = "CNA filesystem format priority; original authored XNB, private temporary files, no packaged-asset or genuine-XNA comparison.",
-    .knownIssue = "CNA-DEMOS-ISSUE-045",
 })

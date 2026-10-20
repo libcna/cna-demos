@@ -273,3 +273,40 @@ consumes the exact integer73 without a dispatch index. Repeated genuine lookups
 return the same table reader. CNA deliberately documents fresh unique_ptr ownership;
 the043 repair must retain that documented C++ ownership surface. Reports
 `repair-reader-lookup-xna{,-build}.log`. No service or physical-device coverage claimed.
+
+## External039/045 focus and next lookup candidate
+
+External build6996 completes successfully without warnings (1037 scheduled steps).
+Initial strict146 focus11347 retains two kinds of failures rather than accepting
+them: the ReadAsset ownership demo catches raw EOF where the measured XNA boundary
+now correctly throws ContentLoadException, aborting before its behavior checks;
+the comparison helper incorrectly counts printed failure lines as all checks in
+the two repaired in-process demos. DemoContext::Check prints only failures, while
+the JSON `checks` field still records every assertion. Both repaired demos already
+PASS with their original5/14 check counts on both renderers.
+
+The ownership demo catch is changed to exact ContentLoadException, not broadened.
+Reader name, zero recorded resources, one stream open/destruction and every later
+assertion remain unchanged;011 stays open and marked. The helper now requires
+exactly one fewer printed failure for each repaired in-process witness AND the
+unchanged total JSON check count. All unrelated printed assertions/failure multisets
+remain exact. Original failed reports are retained.
+
+After removing only039/045 markers, the11-step incremental external build96000 is
+warning-free. Strict146 focus61606 passes:62PASS/11 unchangedFAIL on each renderer,
+`errors: []`, with all original counts preserved. Both cache/root screenshots are
+inspected: expected text and checkerboard, identical SHA256 and zero differing
+pixels across SOFTWARE/OPENGLES3.319 external artifacts are frozen in
+`repair-content-runtime-binaries.sha256`. Initial sandbox hashing failed EPERM
+before writing the manifest; the authorized read-only repeat completed successfully.
+Both95 math, metadata/tool gates and six exact zero-difference visuals pass; full
+719 renderer sweeps and final CTest remain pending.039/045 are NOT closed yet.
+
+The separate043 local registry candidate associates a returned reader's target
+name with its actual factory registration, publishes only while that registration
+is still current, and invalidates associations on withdrawal/replacement/clear.
+Factories remain lazy and invoked outside the lock; each call still copies the
+callable and returns a fresh reader. Actual registry TU plus the eleven focused
+tests now passes11/11, compared with4PASS/sevenFAIL before. The same tests have
+been added to CNA-native coverage. Sanitizer and canonical build/full regression
+are still pending; no043 closure or external improvement is claimed.

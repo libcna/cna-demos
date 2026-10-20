@@ -1695,6 +1695,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-011 -- `ContentManager::Unload` does not dispose loaded assets
 
+- **Campaign oracle correction (2026-10-20; still open):** the short-input branch
+  of `read_asset_ownership` now catches exact ContentLoadException at ReadAsset,
+  as measured in genuine XNA91 and repaired by045. The reader-name, stream lifetime,
+  zero-record and all ownership assertions remain unchanged. Strict146 content
+  regression retains this issue's original failures and marker on both renderers;
+  [evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
+
 - **Campaign verification (2026-10-20; still open):** seven new native ownership
   regressions give twoPASS/fiveFAIL against the stable current library. Missing
   default disposal, partial-read retention and exceptional-Unload cleanup are
@@ -2295,6 +2302,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-039 -- ContentManager permits changing the root with loaded assets
 
+- **Focused renderer validation (2026-10-20; final regression pending):** the
+  original five checks pass on SOFTWARE and OPENGLES3 against CNA583af2a5e.
+  The marker is removed only after both passes; strict146 content comparison
+  preserves every other count/failure. Full renderer sweeps/CTest remain required.
+
 - **Campaign repair (2026-10-20; full regression pending):** CNA `583af2a5e`
   guards both setters before mutation. Genuine91 checks, actual-TU sanitizer23,
   focused33 and full native content1918 (1914PASS/four unchanged skips) validate
@@ -2387,6 +2399,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   A library fix should preserve the distinction between target identity and reader factory name.
 
 ### CNA-DEMOS-ISSUE-045 -- Truncated XNB leaks EndOfStreamException through ContentManager::Load
+
+- **Focused renderer validation (2026-10-20; final regression pending):** the
+  original14 checks pass on SOFTWARE and OPENGLES3 against CNA583af2a5e.
+  The marker is removed after both passes; the separate ReadAsset demo's exact
+  exception catch is corrected from genuine XNA evidence without weakening any
+  ownership check. Strict146 content comparison passes; full checkpoint pending.
 
 - **Campaign repair (2026-10-20; full regression pending):** CNA `583af2a5e`
   shares typed/erased header bounds validation and wraps content-boundary I/O only.

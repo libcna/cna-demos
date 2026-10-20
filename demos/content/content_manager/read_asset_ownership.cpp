@@ -18,7 +18,6 @@
 #include "Microsoft/Xna/Framework/TitleContainer.hpp"
 #include "System/ArgumentNullException.hpp"
 #include "System/IDisposable.hpp"
-#include "System/IO/EndOfStreamException.hpp"
 #include "System/IO/MemoryStream.hpp"
 #include "System/ObjectDisposedException.hpp"
 
@@ -167,7 +166,7 @@ namespace
                 ++truncatedRecordCalls;
             });
         }
-        catch (const System::IO::EndOfStreamException& error)
+        catch (const ContentLoadException& error)
         {
             exactReadRefused = std::string(error.what()).find(TilesReaderName) != std::string::npos;
         }
