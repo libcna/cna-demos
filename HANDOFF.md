@@ -32,13 +32,16 @@ Details: MODEL_ENCODER_VALIDATION.md. Limits cover new workloads, not Codex itse
 
 047 follow-up host fixture is prepared but NOT compiled/run:
 docs/repair-evidence/content/GeneratedOutputCompiler.cpp and
-generated_output_cli_tests.py (five cases; Python AST syntax passes).
+generated_output_cli_tests.py (six cases; Python AST syntax passes).
 Both are uncommitted. They exercise the real compiler host, not a fake publisher;
 see GENERATED_OUTPUT_TRIAGE.md for exact intended coverage and compile target.
 Do not start their build during61683 or claim a new baseline before executing it.
 Prepared driver build-probe/repair-content-generated-output-host-before.mjs passes
 Node syntax check only; it guards the completed cache-build audit and retains the
-expected four host failures/one control pass without suppressing test exit1.
+expected five host failures/one control pass without suppressing test exit1.
+The added nested-path case is supported by genuine XNA static IL: AddOutputFile
+records complete paths, not basenames; cleanup retains that identity. Eight-method
+extract/hash retained only in ignored reports. No XNA runtime pass is claimed.
 61683 currently has18 compiler warnings:16 in vendored Draco's PLY lambda captures
 and two old nodiscard calls in XnaMaterialContentTests.cpp (unchanged against
 688f3f23e), not model encoder diagnostics. Retain them in

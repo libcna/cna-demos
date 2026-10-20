@@ -1768,6 +1768,15 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-047 -- AddOutputFile refuses a generated file in the configured output directory
 
+- **Campaign verification (2026-10-20; still open):** the current11-case native
+  context/manifest baseline has8PASS/3FAIL, including independent rejection of a
+  legitimate output-root manifest record. Genuine XNA4 IL now confirms that extra
+  output paths retain subdirectories through registration and cleanup; CNA's
+  unconditional basename mapping must not lose that identity when root authorization
+  is repaired. Six real-host regression scenarios are prepared but NOT compiled/run.
+  No runtime repair or genuine-XNA execution pass is claimed. See
+  [current triage and reference evidence](repair-evidence/content/GENERATED_OUTPUT_TRIAGE.md).
+
 - **Area:** XNA pipeline adapter `ContentProcessorContext::AddOutputFile`, forwarded by
   `XnaBridgeProcessorContext` to canonical `ContentProcessorContext::AddDeploymentFile`.
 - **Demo:** `content.custom.xna_pipeline_components` (knownIssue; expected failure).
