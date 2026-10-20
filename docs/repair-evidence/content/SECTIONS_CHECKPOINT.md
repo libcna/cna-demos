@@ -80,3 +80,9 @@ Remaining048,089 and partial148 are not closed by this checkpoint.
 Reports: `build/linux-full/reports/repair-sections-*`,
 `repair-external-alias-final-sanitizer.log`, and `repair-network-*`.
 No vendor changes, extra platforms, service passes, pushes or merges are claimed.
+
+Post-closure housekeeping2026-10-20: removed only the three task-owned, rebuildable
+executables `build-probe/repair-sections-san`, `repair-sections-san-corpus` and
+`repair-sections-san-corpus-external` (473873792 bytes total). Each was verified
+as a regular file and unused by live processes. Source, build/run logs, reports
+and reusable object/cache files remain; current native/external freezes are untouched.
