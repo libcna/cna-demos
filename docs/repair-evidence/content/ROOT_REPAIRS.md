@@ -4,6 +4,32 @@
 Before evidence is preserved in `PUBLIC_BOUNDARY_TRIAGE.md`,
 `ManifestBookkeepingProbe.cpp` and `ColdContentRootProbe.cpp`.
 
+## Current validation,13:59 UTC
+
+14:03 update: corrected146 focus completes0,68PASS/five unchangedFAIL per renderer,
+exact audit errors[]; all319 frozen external hashes match. Additive demo committed
+1f8ae67. Full combined gates24685 run; math95 per renderer and six exact visuals
+already pass, both719 and CTest pending. No closure yet.
+
+Runtime/tests committed as CNA bbe2bda7b. Canonical1141-step build passes with45
+exactly prior warnings; module1993=1989PASS/four unchangedSKIP, pipeline562=561PASS/
+one unchangedSKIP (858.214s), consumers1412=1408/4,runtime241=238/3,XML4/2 and6/6,
+all six link-footprint tests pass. Four native artifacts and three sources match.
+
+External1183-step build passes with zero warnings and all eight source hashes exact.
+Strict external manifest16/16 and cold-root12/12 both pass against rebuilt libcna.so.
+C API354 focus exactly matches012, including all25 original C foundations controls;
+the documented stored-codec C ABI regression is gone, with no oracle relaxation.
+The original unrelated C RootDirectory residual remains explicit.
+
+Content focus's first audit incorrectly expected passing DemoContext labels in the
+log; those are counted, not printed. The corrected audit compares the original
+manifest source byte-for-byte after removing just the new four-check block and
+comment correction, alongside runtime13->17 and exact failure/status comparisons.
+An initial correction included one extra newline and refused before running tests;
+both failed audit logs remain. Corrected focus78820 is running. No product failure
+has been waived; full regression/closure is still pending.
+
 ## ISSUE-013
 
 RefreshContentManifest excludes exactly the pipeline lock and build-manifest names

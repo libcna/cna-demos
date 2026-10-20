@@ -17,6 +17,20 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+14:03 UTC: corrected146 focus passes exactly (68PASS/five unchangedFAIL each),319
+post-focus hashes match. Manifest regression committed1f8ae67. Full combined24685
+RUNNING(1),both95 math/six zero-pixel visuals pass; both719/CTest pending. No other
+jobs or compiled source changes. Ownership011 review must preserve documented
+independent texture-copy/C-handle disposal contracts. Six candidate IDs remain open.
+
+13:59 UTC: external1183-step build passes without warnings/source changes.354 C API
+focus exact to012 (including original C foundations25/25); external manifest16/16
+and cold-root12/12 pass.319 artifacts frozen. Content focus78820 runs with corrected
+audit: ordinary demo passing labels are not printed, so source preservation is
+checked byte-for-byte after removing only the four-check addition/comment correction.
+Both earlier audit failures retained; no product assertion changed. Next146 audit,
+hashes, demo commit and full gates. No additional closure yet;77/78 unchanged.
+
 13:51 UTC: all native root gates complete, pipeline562=561PASS/one unchangedSKIP
 858.214s. Root013/014 runtime/tests committed CNA bbe2bda7b. External41603 RUNNING(2),
 ~923/1183; no other test jobs. Next roots146 content/354 C API focus and external16/12
