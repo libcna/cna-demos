@@ -29,7 +29,11 @@ Native focused17/17 and actual TitleContainer/FileStream-TU ASan/UBSan/leak13/13
 consumers1408PASS/four same skips, runtime241total238PASS/three same skips.
 Genuine title30/30; actual C ABI RuntimeGameSmoke/StorageSmoke/title13/13 now pass,
 with the original five C title failures retained as pre-fix evidence. Complete
-external build63979 running before focused two-renderer tests and marker removal.
+external build63979 and marker rebuild65070 now pass warning-free. Focused ten per
+renderer9PASS/one same152FAIL; original title10/lifetime14/C-save38 checks retained.
+Markers removed only afterward in de6bcde. External binaries FROZEN; full math,
+metadata/tools and six exact visuals pass. Full two-renderer regression3249 running,
+followed by isolated serial CTest before any closure or external rebuild.
 No external storage closure yet. Next content146 genuine14/14 and native1PASS/two
 pre-fix FAIL establish null-value/empty-key contracts; production unchanged.
 Follow CNA's CNA_DEMOS_REPAIR_HANDOFF.md for exact native job/commit/build state;
