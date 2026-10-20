@@ -83,3 +83,28 @@ default `game` directory. The probe now exits without that unnecessary reset,
 and its entire newly created fixture is verified absent afterward. The two empty
 directories left by the earlier reset were removed non-recursively; the original
 aborted run's evidence fixture remains retained.
+
+## Sharing must reject before mutation; write-only opens must preserve data
+
+`FileShareEdgesOracle.cs` adds15/15 genuine .NET Framework4 checks, including
+Create/Truncate rejection without changing existing bytes, normalized path aliases,
+an independent child process before/after Close, idempotent release and failed-
+constructor cleanup. The child really opens the file; no simulated lock or retry is
+used (`repair-file-share-edges-xna{,-build}.log`). This is Wine/.NET4 validation,
+not a claim of runtime testing on a physical Windows host.
+
+Four of these controls also expose a related lower-layer data-loss defect before
+any repair: `FileStreamWriteOnlyProbe.cpp` fails4/4 against unchanged Sharp Runtime
+for FileMode.Open and OpenOrCreate with FileAccess.Write. Opening the existing file
+truncates it before any write; overwriting one byte therefore destroys the remaining
+bytes. The fstream `out`-only mode implicitly truncates, unlike the public file mode.
+The strict C++23/Wall/Wextra/Wpedantic/Werror build passes, and its exact new fixture
+is removed afterward (`repair-file-stream-write-only-before{,-build}.log`).
+Preserve these controls in the152 lower-layer file-opening repair; adding a sharing
+check after a truncating open would still corrupt data on a rejected operation.
+
+The inspected local modern .NET Unix SafeFileHandle implementation explicitly uses
+advisory flock: exclusive for None, shared for other policies, with documented
+weaker granularity than Windows. That platform limitation is evidence, not proof
+that all144 genuine Windows access/share combinations have been implemented on Unix.
+Do not claim cross-process Windows parity from a process-local reservation table.
