@@ -35,7 +35,8 @@ and the protected base setter inserts missing keys while validating key before v
 The expanded native suite gives1PASS/four expectedFAIL (five tests,7ms) before any
 production change. Reports `repair-named-dictionary-hooks-xna*`,
 `repair-opaque-hooks-native-before*`. The original three-test evidence is retained.
-Prepared runtime patch is unapplied while the external storage build runs.
+After freezing the external storage binaries and completing the native content
+baseline, the narrow runtime patch is applied; post-fix validation is pending.
 
 ## ISSUE-147: XML writer NUL exception identity
 
@@ -57,12 +58,34 @@ now assert the measured exception, and a new test requires byte-identical existi
 content after rejection at all six direct mutation doors. WriteElementString keeps
 its separate existing rejection control; no new atomicity claim is made for its
 compound start/write/end operation. Sharp reports
-`build-probe/cna-repair-xml-nul-before{,-build}.log`. Production remains unchanged.
+`build-probe/cna-repair-xml-nul-before{,-build}.log`. The subsequent writer repair
+passes49/49 tests; full dependency validation is still pending.
 
 Local .NET11 reference corroborates the measured default: System.Private.Xml
 `System/Xml/Core/XmlEncodedRawTextWriter.cs:1631–1655` calls
 `XmlConvert.CreateInvalidCharException` when checking is enabled;
 `System/Xml/XmlConvert.cs:1624–1627` defaults that helper to ArgumentException.
+
+`XLinqNulOracle.cs` passes74/74 against both genuine Framework4 and .NET8.0.31:
+fourteen content doors,
+four NUL placements plus ordinary content, and four standalone attribute namespace
+controls. The initial65/65 probe was expanded; its71/75 failure disproved an assumed
+namespace rejection because standalone XAttribute omits its namespace URI in .NET.
+The corrected74-check probe retains that measured behavior. Reports
+`repair-xlinq-nul-{xna,expanded-xna,namespace-xna}*`. CNA's underlying Sharp port
+emits a standalone attribute's namespace URI, so its existing URI guard stays;
+the content-value category repair does not claim to fix that formatting difference.
+
+Native LINQ evidence-backed19-test suite gives7PASS/twelve FAIL before repair.
+After a shared character-data guard correction, twenty tests pass, including a new
+namespace-output preservation control. The new fixture initially reversed the C++
+XName constructor arguments (19/20); changing it to documented XName::Get order
+corrected the fixture, not the oracle. All logs remain. Two full dependency gates
+failed earlier: an unrelated watcher callback barrier, then stale LINQ categories.
+The watcher barrier test is corrected without sleeps/retries; a separate complete
+stress run still has two other rename-event failures (678/680), explicitly not fixed.
+Full dependency validation remains required before147 can be closed.
+The modern .NET build/run reports are `repair-xlinq-nul-net8{,-build}.log`.
 
 ## ISSUE-148/149: distinguish deserialization from reserialization
 
@@ -94,3 +117,8 @@ Two new native direct-read149 tests now both fail against unchanged CNA (15ms),
 after a successful test-only build: null roots are refused instead of returned,
 and null value members have the wrong exception category. The Null=false positive
 control passes. Reports `repair-intermediate-null-native-before{,-build}.log`.
+
+Full native content baseline:504 tests/117 suites in1306.990s,497PASS/one existing
+XACT fixture SKIP/exactly six new expected failures (four146, two149). No other
+failure. Reports `repair-content-native-before*`. Only after this run completed
+were dictionary/null runtime repairs applied; full post-fix validation is pending.
