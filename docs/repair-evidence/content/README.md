@@ -164,3 +164,24 @@ as XMLDeclaration, and its placement check erroneously restricts both. A narrow
 vendor repair versus preserving the repository's documented unchanged-vendor
 policy was asked asynchronously; no answer or permission is inferred. No vendor
 file has been modified, and unrelated campaign work continues.
+
+## ISSUE-090: initialization callback deadlock
+
+`CompilerInitializationOracle.cs` passes8/8 on genuine XNA4. The real internal
+compiler constructor discovers attributed writers; its build-host lookup creates
+the initialization context. Inside Initialize, the PUBLIC GetTypeWriter(string)
+completes, preserves cached writer identity and runs once per compiler-owned writer.
+Reflection supplies only the unavailable build-host entry, not replacement behavior.
+
+Initial setup attempts are retained: manual AddTypeWriter duplicated a writer that
+the genuine constructor had already discovered; public GetTypeWriter outside an
+initialization context failed its dependency-stack precondition. Neither is a CNA
+defect or a passing reference result. Reports `repair-compiler-{shape,initialization}-*`.
+
+`CompilerInitializationProbe.cpp` strictly builds with C++23/Wall/Wextra/Werror
+against the current native CNA's actual static ContentPipelineBuild closure. It
+passes the built-in lookup control, prints ENTER Initialize and deadlocks in the
+nested lookup. A single five-second process deadline terminates this isolated
+reproduction (SIGTERM/ETIMEDOUT, nonzero); it is not a retry or a pass. Nine required
+post-fix checks cover lookup/callback/cache, duplicate/frozen registration and
+independent compilers. Production remains unchanged; no090 closure is claimed.
