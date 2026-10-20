@@ -17,6 +17,12 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+109 demo/evidence committed86e7a89 after all146 post-metadata checks pass exactly;
+model29/29 each. Full8261 now runs719 sweeps after successful both95 math and
+six zero-pixel visuals. Native95074 still live in genuine XNA compilation.
+No demo source edits remain. Two CNA109 runtime/test files remain uncommitted;
+both native/external artifacts and their frozen sources must stay unchanged.
+
 109 current jobs:95074 native full10798 (canonical35 alreadyPASS),8261 external
 post-metadata146 then both719/math95/six visuals/CTest. Initial146 exact69PASS/
 four knownFAIL per renderer; model29/29 with all inputs/controls retained under
