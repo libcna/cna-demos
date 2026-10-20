@@ -276,6 +276,30 @@ calling Initialize. A native monodis attempt crashed before useful output; that 
 is retained. No089 production repair is applied yet; callback timing and lifetime
 must not be guessed from the initially incomplete hypothesis.
 
+### ISSUE-088: shortcut priority is not a duplicate-name error
+
+`IntermediateNamePriorityOracle.cs` passes12/12 genuine XNA checks. An explicit
+XML shortcut may equal another target's full type name, in either registration
+order. All four emitted aliases and exact public round trips pass, with stable
+typed serializer identities. Reports `repair-intermediate-name-priority-asserted-xna*`;
+the initial diagnostic is also retained.
+
+This disproved two over-strict newly written native rejection expectations. The
+first all-name preflight candidate passed its five tests and actual-TU ASan/UBSan/
+leak checks, but was rejected on compatibility evidence, not committed as a repair.
+Its source, tests and sanitizer log remain as `repair-intermediate-registry-overstrict-*`.
+The corrected tests require both allowed shadowing orders and exact round trips,
+while preserving duplicate-shortcut/additional-alias rejection and first-target
+registration behavior. Against the original library they still give one PASS/
+four FAIL (2ms): shared-name lookup also reinterprets a canonical type identity
+as another XML alias. Reports `repair-intermediate-registry-priority-before*`.
+
+The current local candidate therefore keeps full type names and aliases in
+separate private maps: XML spelling resolves aliases first, canonical identity
+resolves full names first with the existing array-alias fallback. All collision
+checks precede registry mutation. No public API or object layout changes. Native,
+external and actual-TU sanitizer builds are running; this is not an088 closure.
+
 Initial setup attempts are retained: manual AddTypeWriter duplicated a writer that
 the genuine constructor had already discovered; public GetTypeWriter outside an
 initialization context failed its dependency-stack precondition. Neither is a CNA
