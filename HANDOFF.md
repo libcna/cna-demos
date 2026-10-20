@@ -17,6 +17,35 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+11:48 correction: first native012 build13213 stopped before compilation at strict
+platform audit (SDL cleanup calls in content tests). No audit relaxation. Native
+concurrency fixture uses existing Headless platform seam; actual-TU sanitizer20/20
+passes. Demos retains separately validated default-SDL fixture/cleanup. Audit81files/
+1050refs unchanged PASS. Restart43298 RUNNING(2), *native-build-platform.log and
+*source-platform.sha256. External08967911 still isolated CTest. Older build status below
+is superseded. No source changes during rebuild; no new closure.
+
+Latest11:45 UTC:012 actual-five-TU candidate20/20 normal and ASan/UBSan/leak passes,
+including nested/concurrent routing. First expanded sanitizer report retains a528-byte
+SDL TLS leak; fixture-owned foreign threads now perform SDL's documented cleanup, no
+suppression.20 native regressions installed, one genuine-evidence no-Game oracle corrected.
+Canonical CNA build13213 RUNNING(2); source freeze applies, runtime still uncommitted.
+External08967911 RUNNING(1) serial CTest; both719 sweeps/predecessor audits complete,
+only089 improves and C root residual remains explicit. Do not rebuild external or start
+another SystemLink suite. Details: `docs/repair-evidence/content/STREAM_ROUTING.md`
+and CNA live handoff.75/80 final/pending unchanged; no012 marker removed.
+
+Live update11:34 UTC: CNA56dca0b43/demos4c03e74.089 runtime5d32ca58b committed,
+all native gates pass (1965 module,559 pipeline,1412 consumers,241 runtime,XML).
+External build/marker focus pass:65PASS/eight unchangedFAIL per renderer,20/20
+standalone controls. Full external67911 RUNNING on319 frozen artifacts; both95
+math/prehash gates pass. Do not rebuild external. Original C root-contract delta
+remains a strict failure, not waived.089 is still pending final regression,75/80
+totals unchanged.012 genuine cold resource14/14 and original native1/4 baseline
+are committed; expanded eight-case before witness89871 runs before any012 production
+patch. See CNA handoff for exact jobs, candidate constraints and next steps.
+Older089 "uncommitted/running native" paragraphs below are superseded by this update.
+
 Last accepted complete checkpoint:048, CNA3a1437725, closure demos6633f80.
 Both719 sweeps preserve exact prior results with60 cumulative improvements against
 campaign-start HEAD/62 against Complete1128: SW617PASS/51FAIL/48SKIP/three manual,
