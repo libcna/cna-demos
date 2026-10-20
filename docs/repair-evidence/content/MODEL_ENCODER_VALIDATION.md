@@ -129,3 +129,29 @@ unchanged frozen native artifacts and three unchanged source hashes, zero
 sanitizer diagnostics and zero failed/skipped cases. Reports:
 `repair-model-encoder-hardening-sanitizer-{audit.json,build.log,run.log}`.
 The two full regression jobs86497/8261 are still running.
+
+## Correct the namespace credentials without changing the permission test
+
+While86497 is still running, its
+`ContentPipelineCliTest.MultiOutputFailureLeavesTheOldManifestAndRecoversSafely`
+has failed: mapping the invoking user to root retained namespace capabilities,
+so the compiler could write the deliberately non-writable fixture directory.
+This is an unsuitable test environment, not a reason to change the test.
+That full run remains running and its eventual results must be retained; it
+cannot be used as a passing checkpoint.
+
+A focused unchanged-binary run46590 uses `unshare --user --map-current-user
+--keep-caps --net`, enables only that namespace's loopback, then executes through
+`setpriv --bounding-set=-all --inh-caps=-all --ambient-caps=-all`. Its recorded
+UID/GID are1000/1000 and all five capability sets are zero. The original publication
+permission test plus all13 discovery tests pass **14/14**, without source,
+assertion, timeout or retry changes. Evidence:
+`repair-model-encoder-network-user-isolated.{log,xml}`.
+
+After86497 actually terminates, run
+`build-probe/repair-model-encoder-usernet-native-gates.mjs` under this corrected
+namespace and the usual private graphics display. The new driver refuses a UID
+different from the repository owner or any retained capability, checks all four
+binary/three source hashes against86497, and still requires all10798 exact
+outcomes. Do not start simultaneous native full runs sharing the genuine XNA
+oracle build directories. No process has been stopped.

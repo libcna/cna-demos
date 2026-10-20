@@ -17,6 +17,27 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+OOM recovery19:59: kernel killed Codex12082 (~8.6GB anonymous RSS); resumed process
+~570MB,host16GiB available/no swap. Both original jobs86497/8261 re-polled LIVE;
+native genuine XNA differential stage and externalCTest past551/735 survived.
+Nothing stopped/restarted. No new heavy job until both finish; then heavy jobs
+serially,one compiler worker,bounded log output,check memory before launch.
+Frozen artifacts/sources remain unchanged.109 has a known namespace-permission
+failure in86497; use the prepared corrected usernet gate only after it terminates.
+Three109 CNA source/test edits remain uncommitted; current total90FINAL/65PENDING.
+
+86497 remains live but already has one permission-fixture failure: map-root-user
+retained capabilities and bypassed the test's intentionally unwritable directory.
+Do not close109 from this run. Corrected isolation46590 preserves UID/GID1000 and
+drops all capabilities after private-loopback setup; original permission+13
+discovery tests PASS14/14 on unchanged binary. After86497 actually terminates,
+use repair-model-encoder-usernet-native-gates.mjs under that corrected namespace
+and private display; never overlap full runs sharing oracle build directories.
+8261 finalCTest remains running; no processes stopped, no rebuilds.
+047 extended manifest baseline52851:11 cases=8PASS/3FAIL, strict clean build,
+four native/three source hashes exact. Permanent tests/proposal/evidence in
+GENERATED_OUTPUT_TRIAGE.md; no047 production change,90FINAL/65PENDING unchanged.
+
 109 extended sanitizer52903 COMPLETE0:61/61 PASS, actual encoder+decoder/both
 test TUs instrumented, zero warnings/findings; four native artifacts/three source
 hashes exact. Full native86497/external8261 remain running. No109 closure.
