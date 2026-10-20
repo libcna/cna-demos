@@ -315,31 +315,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 
 
-### CNA-DEMOS-ISSUE-133 -- BoundingFrustum boundary and equal-instance containment differ from XNA
-
-- **Area/API:** `Microsoft::Xna::Framework::BoundingFrustum::Contains(Vector3)` and
-  `BoundingFrustum::Contains(BoundingFrustum)`.
-- **Demo/reproduction:** run `math.bounding_frustum.containment`. Test identity-frustum interior,
-  exterior and exact-plane points through value/output forms, then compare self and a distinct
-  frustum constructed from the same identity Matrix. Adjacent controls cover boxes, spheres,
-  nested, overlapping and distant frusta.
-- **Observed:** CNA returns Intersects for a point exactly on a plane instead of Contains. Because
-  its point loop stops at the first exact plane, `(2,0,0)` is also Intersects instead of Disjoint
-  even though a side plane excludes it. A distinct equal-matrix frustum is Intersects while the
-  pointer-identical object is Contains. Two grouped assertions fail among eight controls.
-- **Expected/reference:** genuine Windows XNA 4.0 returns Contains for the boundary point,
-  Disjoint for the boundary-plane point excluded by another plane, and Contains for both self and
-  a distinct geometrically equal frustum.
-- **Cause/suggested repair:** point containment should continue across exact planes and return
-  Contains after all six nonpositive classifications; it must not treat equality as an early
-  Intersects result. Frustum containment also needs geometric equality/complete containment rather
-  than relying on a pointer-only fast path before treating boundary-plane corners as overlap.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1071-bounding-frustum-members/*`. The
-  focused build and stability evidence are shared with ISSUE-135. No CNA source was modified and
-  no upstream message was sent.
-
 ### CNA-DEMOS-ISSUE-132 -- Color nonfinite interpolation and multiplication differ from XNA
 
 - **Area/API:** `Microsoft::Xna::Framework::Color::Lerp` and `Color::Multiply`/the XNA
@@ -391,54 +366,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   builds, exact SOFTWARE CTests, metadata through708/0 and self-tests5/5 plus4/4 pass; ten runs per
   demo and renderer label reproduce only the documented assertions with empty stderr. No CNA
   source was modified and no upstream message was sent.
-
-### CNA-DEMOS-ISSUE-129 -- BoundingSphere boundary classifications differ from XNA
-
-- **Area/API:** `Microsoft::Xna::Framework::BoundingSphere::Contains` for points, spheres and
-  frusta, plus `BoundingSphere::Intersects(BoundingSphere)` value/output forms.
-- **Demo/reproduction:** run `math.bounding_sphere.containment_boundaries` and
-  `math.bounding_sphere.intersects`. Test a point exactly on a radius-five surface, a larger
-  concentric sphere, an identity frustum against a distant sphere, and two externally tangent
-  spheres. Adjacent controls cover interiors, crossings, gaps, boxes, rays and planes.
-- **Observed:** CNA calls the surface point Intersects, says the larger concentric sphere is
-  Contains, calls the distant frustum Intersects and reports exact external sphere tangency as an
-  intersection. The containment workflow retains three expected failures among six controls and
-  the intersection workflow one among ten.
-- **Expected/reference:** genuine Windows XNA 4.0 classifies those cases as Disjoint, Intersects,
-  Disjoint and false respectively. Its corresponding output forms agree with the value forms.
-- **Cause/suggested repair:** point containment needs XNA's inclusive exterior comparison; sphere
-  containment must require the outer radius to cover the inner radius before applying the squared
-  difference; frustum containment needs a real separation test instead of its constant-zero
-  distance placeholder; sphere intersection uses strict distance below the summed radii.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1067-bounding-sphere-members/*`. After the
-  configure-only vendored-Draco warning, the clean warning-free three-job build, all four exact
-  SOFTWARE CTests, metadata702/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer
-  label reproduce only the four containment/intersection assertions with empty stderr. No CNA
-  source was modified and no upstream message was sent.
-
-### CNA-DEMOS-ISSUE-127 -- BoundingBox Contains misclassifies a distant frustum as Intersects
-
-- **Area/API:** `Microsoft::Xna::Framework::BoundingBox::Contains(BoundingFrustum)`.
-- **Demo/reproduction:** run `math.bounding_box.contains`. Classify an identity-matrix frustum
-  against an enclosing box `[-2,2]`, a half-width clipping box and a distant box `[10,11]`, beside
-  point/box/sphere value and output controls.
-- **Observed:** CNA returns Contains, Intersects and Intersects respectively. The distant frustum
-  has no overlap but is reported as Intersects, producing the sole grouped failure among eight
-  controls.
-- **Expected/reference:** genuine Windows XNA 4.0 returns Contains, Intersects and Disjoint. The
-  adjacent point, box and sphere classifications, including exact tangency, all match.
-- **Cause/suggested repair:** the implementation examines only frustum corners and returns
-  Intersects as soon as a second corner is outside. First reject separation through the frustum's
-  plane-based box intersection/containment test, then use the corner pass only to distinguish a
-  fully contained frustum from a partial intersection.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1066-bounding-box-members/*`. The clean
-  warning-free three-job build, all four exact SOFTWARE CTests, metadata701/0 and self-tests5/5
-  plus4/4 pass; ten runs per demo and renderer label reproduce only the two documented BoundingBox
-  assertions with empty stderr. No CNA source was modified and no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-114 -- Releasing a nonterminal SoundEffect loop drops its authored tail
 
@@ -3025,6 +2952,119 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-133 -- BoundingFrustum boundary and equal-instance containment differ from XNA
+
+- **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
+  CNA `5ab1c7729`, with genuine-boundary C regression companion `99d790167`.
+  Correct convex separation and genuine arithmetic/storage boundaries are preserved,
+  including distinct value/output overload behavior where measured in Microsoft XNA.
+  Original behavior assertions remain. Three adjacent old C expectations contradicted
+  genuine XNA; their exact expected values were corrected without reducing checks.
+  See [genuine/native evidence](repair-evidence/geometry/README.md) and
+  [the complete containment checkpoint](repair-evidence/geometry/CONTAINMENT_CHECKPOINT.md).
+  All732 enabled CTests accepted; both719-ID renderer sweeps have exactly46 cumulative
+  intended changes and no unrelated differences; six visual references are pixel-exact.
+  Owner-reserved ISSUE-131 remains open; its ray method body and exception are unchanged.
+  Historical evidence follows.
+
+- **Area/API:** `Microsoft::Xna::Framework::BoundingFrustum::Contains(Vector3)` and
+  `BoundingFrustum::Contains(BoundingFrustum)`.
+- **Demo/reproduction:** run `math.bounding_frustum.containment`. Test identity-frustum interior,
+  exterior and exact-plane points through value/output forms, then compare self and a distinct
+  frustum constructed from the same identity Matrix. Adjacent controls cover boxes, spheres,
+  nested, overlapping and distant frusta.
+- **Observed:** CNA returns Intersects for a point exactly on a plane instead of Contains. Because
+  its point loop stops at the first exact plane, `(2,0,0)` is also Intersects instead of Disjoint
+  even though a side plane excludes it. A distinct equal-matrix frustum is Intersects while the
+  pointer-identical object is Contains. Two grouped assertions fail among eight controls.
+- **Expected/reference:** genuine Windows XNA 4.0 returns Contains for the boundary point,
+  Disjoint for the boundary-plane point excluded by another plane, and Contains for both self and
+  a distinct geometrically equal frustum.
+- **Cause/suggested repair:** point containment should continue across exact planes and return
+  Contains after all six nonpositive classifications; it must not treat equality as an early
+  Intersects result. Frustum containment also needs geometric equality/complete containment rather
+  than relying on a pointer-only fast path before treating boundary-plane corners as overlap.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1071-bounding-frustum-members/*`. The
+  focused build and stability evidence are shared with ISSUE-135. No CNA source was modified and
+  no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-129 -- BoundingSphere boundary classifications differ from XNA
+
+- **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
+  CNA `5ab1c7729`, with genuine-boundary C regression companion `99d790167`.
+  Correct convex separation and genuine arithmetic/storage boundaries are preserved,
+  including distinct value/output overload behavior where measured in Microsoft XNA.
+  Original behavior assertions remain. Three adjacent old C expectations contradicted
+  genuine XNA; their exact expected values were corrected without reducing checks.
+  See [genuine/native evidence](repair-evidence/geometry/README.md) and
+  [the complete containment checkpoint](repair-evidence/geometry/CONTAINMENT_CHECKPOINT.md).
+  All732 enabled CTests accepted; both719-ID renderer sweeps have exactly46 cumulative
+  intended changes and no unrelated differences; six visual references are pixel-exact.
+  Owner-reserved ISSUE-131 remains open; its ray method body and exception are unchanged.
+  Historical evidence follows.
+
+- **Area/API:** `Microsoft::Xna::Framework::BoundingSphere::Contains` for points, spheres and
+  frusta, plus `BoundingSphere::Intersects(BoundingSphere)` value/output forms.
+- **Demo/reproduction:** run `math.bounding_sphere.containment_boundaries` and
+  `math.bounding_sphere.intersects`. Test a point exactly on a radius-five surface, a larger
+  concentric sphere, an identity frustum against a distant sphere, and two externally tangent
+  spheres. Adjacent controls cover interiors, crossings, gaps, boxes, rays and planes.
+- **Observed:** CNA calls the surface point Intersects, says the larger concentric sphere is
+  Contains, calls the distant frustum Intersects and reports exact external sphere tangency as an
+  intersection. The containment workflow retains three expected failures among six controls and
+  the intersection workflow one among ten.
+- **Expected/reference:** genuine Windows XNA 4.0 classifies those cases as Disjoint, Intersects,
+  Disjoint and false respectively. Its corresponding output forms agree with the value forms.
+- **Cause/suggested repair:** point containment needs XNA's inclusive exterior comparison; sphere
+  containment must require the outer radius to cover the inner radius before applying the squared
+  difference; frustum containment needs a real separation test instead of its constant-zero
+  distance placeholder; sphere intersection uses strict distance below the summed radii.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1067-bounding-sphere-members/*`. After the
+  configure-only vendored-Draco warning, the clean warning-free three-job build, all four exact
+  SOFTWARE CTests, metadata702/0 and self-tests5/5 plus4/4 pass; ten runs per demo and renderer
+  label reproduce only the four containment/intersection assertions with empty stderr. No CNA
+  source was modified and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-127 -- BoundingBox Contains misclassifies a distant frustum as Intersects
+
+- **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
+  CNA `5ab1c7729`, with genuine-boundary C regression companion `99d790167`.
+  Correct convex separation and genuine arithmetic/storage boundaries are preserved,
+  including distinct value/output overload behavior where measured in Microsoft XNA.
+  Original behavior assertions remain. Three adjacent old C expectations contradicted
+  genuine XNA; their exact expected values were corrected without reducing checks.
+  See [genuine/native evidence](repair-evidence/geometry/README.md) and
+  [the complete containment checkpoint](repair-evidence/geometry/CONTAINMENT_CHECKPOINT.md).
+  All732 enabled CTests accepted; both719-ID renderer sweeps have exactly46 cumulative
+  intended changes and no unrelated differences; six visual references are pixel-exact.
+  Owner-reserved ISSUE-131 remains open; its ray method body and exception are unchanged.
+  Historical evidence follows.
+
+- **Area/API:** `Microsoft::Xna::Framework::BoundingBox::Contains(BoundingFrustum)`.
+- **Demo/reproduction:** run `math.bounding_box.contains`. Classify an identity-matrix frustum
+  against an enclosing box `[-2,2]`, a half-width clipping box and a distant box `[10,11]`, beside
+  point/box/sphere value and output controls.
+- **Observed:** CNA returns Contains, Intersects and Intersects respectively. The distant frustum
+  has no overlap but is reported as Intersects, producing the sole grouped failure among eight
+  controls.
+- **Expected/reference:** genuine Windows XNA 4.0 returns Contains, Intersects and Disjoint. The
+  adjacent point, box and sphere classifications, including exact tangency, all match.
+- **Cause/suggested repair:** the implementation examines only frustum corners and returns
+  Intersects as soon as a second corner is outside. First reject separation through the frustum's
+  plane-based box intersection/containment test, then use the corner pass only to distinguish a
+  fully contained frustum from a partial intersection.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1066-bounding-box-members/*`. The clean
+  warning-free three-job build, all four exact SOFTWARE CTests, metadata701/0 and self-tests5/5
+  plus4/4 pass; ten runs per demo and renderer label reproduce only the two documented BoundingBox
+  assertions with empty stderr. No CNA source was modified and no upstream message was sent.
+
 
 ### CNA-DEMOS-ISSUE-135 -- BoundingFrustum identity text preserves derived negative zeros
 
