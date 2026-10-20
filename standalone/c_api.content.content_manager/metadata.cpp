@@ -33,7 +33,5 @@ CNA_DEMOS_STANDALONE({
     .assets = {"textures/checker.png", "textures/sprite_strip.png", "fonts/pixel_font.cnb",
                "effects/c_api_basic_effect.cnj"},
     .restrictions = "Standalone C program (one C game per process); built only when CNA has its C API "
-                    "(CNA_BUILD_C_API=ON). CNA-DEMOS-ISSUE-103: ContentManager C routes convert "
-                    "ContentLoadException to a plain IO error before the exception barrier records its type.",
-    .knownIssue = "CNA-DEMOS-ISSUE-103",
+                    "(CNA_BUILD_C_API=ON).",
 })
