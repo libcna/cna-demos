@@ -135,4 +135,32 @@ TEST_F(ReaderTargetLookupCompatibilityTest, UnreturnedConstructedReaderDoesNotUs
     EXPECT_NE(Resolve(), nullptr);
     EXPECT_EQ(ContentTypeReaderManager{}.GetTypeReader(System::Type::From<OtherValue>()), nullptr);
 }
+
+TEST_F(ReaderTargetLookupCompatibilityTest, DirectCanonicalNameFactoryAssociationRemainsSupported)
+{
+    ContentTypeReaderManager::AddTypeCreator("CNA.Repair.Target",
+        [] { return std::make_unique<LookupReader<LookupValue>>(); });
+    const LookupReader<LookupValue> association;
+    auto reader = Resolve();
+    EXPECT_NE(dynamic_cast<LookupReader<LookupValue>*>(reader.get()), nullptr);
+}
+
+TEST_F(ReaderTargetLookupCompatibilityTest, ManualFactoryKeyAssociationRemainsSupported)
+{
+    Register();
+    ContentTypeReaderManager::AssociateTargetType(System::Type::From<LookupValue>(), key);
+    auto reader = Resolve();
+    EXPECT_NE(dynamic_cast<LookupReader<LookupValue>*>(reader.get()), nullptr);
+}
+
+TEST_F(ReaderTargetLookupCompatibilityTest, ThrowingFactoryDoesNotPublishTarget)
+{
+    ContentTypeReaderManager::AddTypeCreator(key,
+        []() -> std::unique_ptr<ContentTypeReaderBase> {
+            const LookupReader<LookupValue> unreturned;
+            throw System::InvalidOperationException("factory refusal");
+        });
+    EXPECT_THROW((void)ContentTypeReaderManager::CreateReader(key), System::InvalidOperationException);
+    EXPECT_EQ(Resolve(), nullptr);
+}
 }

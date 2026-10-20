@@ -246,3 +246,30 @@ writer fixture correction is committed as CNA1ec77a734; runtime039/045 and its
 regressions are CNA583af2a5e. Full native pipeline552 job66736 and external build6996
 are running. Both issues remain FIXED_PENDING_REGRESSION, not closed. No new native
 rebuild during the remaining pipeline/consumer/hash gates.
+
+The full552 pipeline now finishes successfully in1212.106s:551PASS/one unchanged
+XACT skip. The exact per-test comparison against048 reports `errors: []`, and
+all four frozen artifacts match after the run. Broader1412 consumers also finish
+with1408PASS/four unchanged skips in234.190s; runtime241 gives238PASS/three unchanged
+skips11.223s. Default XML gives4PASS/two unchanged skips; with the original sample
+fixtures all six pass in4ms. All four exact consumer comparisons have `errors: []`,
+and all four final native hashes match. Native freeze is released. External039/045
+is still building; no external pass is claimed and production edits must wait.
+
+Three more043 compatibility controls are prepared alongside the original eight:
+direct same-name factories, explicit manual factory-key associations and a factory
+that constructs a reader but throws without returning it. These retain documented
+CNA registration behavior and prohibit publishing an unsuccessful factory result.
+The expanded eleven-case lookup probe compiles with Wall/Wextra/Werror and gives
+fourPASS/sevenFAIL in0ms: all original eight outcomes remain unchanged and the
+three new controls pass. Reports `repair-reader-lookup-before{,-build}.log`.
+The earlier32-case combined baseline remains unchanged evidence, not overwritten
+by this addition. No043 production repair is present yet.
+
+`ReaderTargetLookupOracle.cs` now passes5/5 against genuine Microsoft.Xna.Framework
+4.0 (strict C#4/x86, warnings-as-errors): the root Initialize resolves a differently
+named item reader, preserves TargetType, resolves itself, and the implicit raw read
+consumes the exact integer73 without a dispatch index. Repeated genuine lookups
+return the same table reader. CNA deliberately documents fresh unique_ptr ownership;
+the043 repair must retain that documented C++ ownership surface. Reports
+`repair-reader-lookup-xna{,-build}.log`. No service or physical-device coverage claimed.
