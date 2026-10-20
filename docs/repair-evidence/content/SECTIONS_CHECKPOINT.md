@@ -22,8 +22,11 @@ GLES gate without erasing that result; see [registry evidence](REGISTRY_CHECKPOI
   Native focused58/58 passes706ms. Full native552/123 suites completes with
   551PASS/one unchanged XACT SKIP,973.298s: all517 previous outcomes unchanged,
   all35 added section/order/external identity cases PASS. Four native hashes match
-  afterward. Original-fixture XML consumers6/6PASS4ms. Broader consumers remain
-  running; no full consumer pass is inferred from the content gate.
+  afterward. Original-fixture XML consumers6/6PASS4ms. Broader1412 consumers give
+  1408PASS/four unchanged SKIP187.433s; runtime241 gives238PASS/three unchanged
+  SKIP; default XML gives fourPASS/two unchanged fixture SKIP. Exact comparisons
+  preserve every prior outcome. Final four hashes match, and only then is the
+  native freeze released for the separate048 repair. The external freeze remains.
 - Network030 was fixed in CNA01534c2e7 before the initial campaign revision.
   Demo0b4d2ce corrects sender-side configuration and the mistaken minimum-latency
   expectation using actual XNA4 simulator27/27 evidence. Exact packet counts and
