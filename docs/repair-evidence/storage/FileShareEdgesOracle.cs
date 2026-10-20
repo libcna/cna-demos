@@ -72,6 +72,19 @@ static class FileShareEdgesOracle
                 Check(bytes.Length == 4 && bytes[0] == 9 && bytes[1] == 2 && bytes[3] == 4,
                       mode + " write-only overwrite does not truncate remaining bytes");
             }
+            using (var created = File.Create(path + ".created"))
+                Check(Refuses(path + ".created", FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
+                      "File.Create defaults to exclusive sharing");
+            using (var reader = File.OpenRead(path)) {
+                Check(!Refuses(path, FileMode.Open, FileAccess.Read, FileShare.Read), "File.OpenRead permits readers");
+                Check(Refuses(path, FileMode.Open, FileAccess.Write, FileShare.ReadWrite), "File.OpenRead refuses writers on Windows");
+            }
+            foreach (FileAccess access in new[] {FileAccess.Read, FileAccess.Write, FileAccess.ReadWrite}) {
+                Type caught = null;
+                try { using (var directory = new FileStream(Path.Combine(args[0], "child"), FileMode.Open, access)) {} }
+                catch (Exception error) { caught = error.GetType(); }
+                Check(caught == typeof(UnauthorizedAccessException), "directory open category " + access);
+            }
             Console.WriteLine("checks=" + checks + " failed=" + failed);
             return failed == 0 ? 0 : 1;
         }

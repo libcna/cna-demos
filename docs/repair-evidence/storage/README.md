@@ -93,6 +93,15 @@ constructor cleanup. The child really opens the file; no simulated lock or retry
 used (`repair-file-share-edges-xna{,-build}.log`). This is Wine/.NET4 validation,
 not a claim of runtime testing on a physical Windows host.
 
+The expanded oracle now passes21/21 (`repair-file-open-edges-xna*`, warning-free):
+File.Create defaults to exclusive sharing, File.OpenRead permits readers but not
+writers on Windows, and opening an existing directory in each of Read/Write/
+ReadWrite reports UnauthorizedAccessException. The directory result identifies
+the lower-layer prerequisite for Title145's InvalidOperationException translation;
+do not emulate FileStream's missing directory check only in the CNA caller.
+StorageContainer.CreateFile delegates to File.Create in genuine XNA, so its default
+must also stay exclusive when adding the FileStream sharing overload.
+
 Four of these controls also expose a related lower-layer data-loss defect before
 any repair: `FileStreamWriteOnlyProbe.cpp` fails4/4 against unchanged Sharp Runtime
 for FileMode.Open and OpenOrCreate with FileAccess.Write. Opening the existing file

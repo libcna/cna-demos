@@ -17,6 +17,15 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-152 -- StorageContainer ignores the requested FileShare policy
 
+- **Repair-campaign clarification (2026-10-20):** genuine XNA/.NET execution disproves
+  the historical ReadWrite-default suggestion below. Both shorter StorageContainer
+  OpenFile overloads are exclusive (`FileShare.None`), two-argument Append uses write
+  access, and File.Create is exclusive. Direct three-argument FileStream and File.OpenRead
+  instead use read sharing. The expanded opening/lifetime oracle passes21/21. Actual
+  Windows and modern Unix .NET sharing matrices differ (25 versus81 admitted pairs out
+  of144); the original exclusive-open demo remains valid on both. The platform policy
+  is being resolved separately, with no relaxed demo assertion or152 closure. Evidence:
+  `docs/repair-evidence/storage/README.md` and its genuine oracle sources.
 - **Area/API:** `StorageContainer::OpenFile(file, mode, access, fileShare)` in
   `modules/storage/src/StorageContainer.cpp`; the C `cna_storage_container_open_file_share` route
   inherits the same implementation.
