@@ -3,8 +3,8 @@
  * Content from C: an owned ContentManager rooted at the demos' assets loads a PNG texture and a
  * compiled SpriteFont. A loaded font comes back as two owned handles -- the font and the atlas
  * texture it draws from -- and the font has to be destroyed before its atlas.
- * Root changes preserve old cache entries and redirect new loads. Both original resources remain
- * usable after unloading and destroying the content manager.
+ * Root changes are refused while assets are cached, matching XNA; unload before changing roots.
+ * Independently owned resources remain usable after unloading and destroying the content manager.
  *
  * Arguments: [--automated] [--frames N] [--screenshot PATH]. Exit code 0 passed, 1 failed.
  */
@@ -145,16 +145,62 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
             "the loaded stock effect applies through the ordinary Effect interface");
     }
 
-    /* This C setter explicitly preserves cached assets while changing uncached resolution.
-       Its StringView is copied during the call, so the caller can reuse the source bytes. */
+    /* The owner selected the XNA/C++ root contract for ISSUE-039/103: reject any
+       assignment while loaded, preserve state, then permit it after explicit Unload. */
     {
         char root_source[] = "assets/textures";
         char root_copy[64];
         uint64_t root_bytes = 0U, copied = 0U;
         CNA_Handle cached = CNA_INVALID_HANDLE, fresh = CNA_INVALID_HANDLE;
+        const char* refused_roots[] = {"assets", "assets/textures", ""};
+        for (size_t i = 0U; i < sizeof(refused_roots) / sizeof(refused_roots[0]); ++i) {
+            CNA_ErrorInfo error_info = {0};
+            char exception_type[128] = {0};
+            static const char expected_type[] = "System.InvalidOperationException";
+            uint64_t exception_bytes = UINT64_MAX, exception_copied = UINT64_MAX;
+            result = cna_content_manager_set_root_directory(state->content, view(refused_roots[i]));
+            cna_demo_check(state->demo, result == CNA_RESULT_INVALID_STATE,
+                           "a loaded manager refuses same, different and empty root assignments");
+            error_info.struct_size = (uint32_t)sizeof(error_info);
+            error_info.struct_version = UINT32_C(1);
+            cna_demo_check(state->demo,
+                cna_error_get_last_info(&error_info) == CNA_RESULT_SUCCESS &&
+                    error_info.result == CNA_RESULT_INVALID_STATE &&
+                    error_info.category == CNA_ERROR_CATEGORY_STATE && error_info.message_byte_length > 0U,
+                "a refused root assignment retains structured state diagnostics");
+            cna_demo_check(state->demo,
+                cna_error_get_last_exception_type_size_ext(&exception_bytes) == CNA_RESULT_SUCCESS &&
+                    exception_bytes == sizeof(expected_type) - 1U &&
+                    cna_error_copy_last_exception_type_ext(exception_type, sizeof(exception_type),
+                                                         &exception_copied) == CNA_RESULT_SUCCESS &&
+                    exception_copied == exception_bytes &&
+                    memcmp(exception_type, expected_type, sizeof(expected_type) - 1U) == 0,
+                "a refused root assignment retains canonical InvalidOperationException");
+            memset(root_copy, '#', sizeof(root_copy));
+            cna_demo_check(state->demo,
+                cna_content_manager_copy_root_directory(state->content, root_copy, sizeof(root_copy), &copied) ==
+                    CNA_RESULT_SUCCESS && copied == sizeof("assets") - 1U &&
+                    memcmp(root_copy, "assets", sizeof("assets") - 1U) == 0 && root_copy[6] == '#',
+                "a refused root assignment leaves the original root unchanged");
+        }
         if (cna_demo_check_result(state->demo,
+                cna_content_manager_load_texture2d(state->content, view("textures/checker"), &cached),
+                "load the previously cached logical name after refused root changes")) {
+            memset(&info, 0, sizeof(info));
+            info.struct_size = (uint32_t)sizeof(info);
+            info.struct_version = UINT32_C(1);
+            cna_demo_check(state->demo, cna_texture2d_get_info(cached, &info) == CNA_RESULT_SUCCESS &&
+                           info.width == 64U && info.height == 64U,
+                           "the retained cache entry still describes the original checker");
+            cna_demo_check_result(state->demo, cna_texture2d_destroy(cached), "release the extra cached texture handle");
+        }
+        /* Its StringView is copied during a successful call, not retained by reference. */
+        if (cna_demo_check_result(state->demo,
+                cna_content_manager_unload(state->content),
+                "explicitly unload cached assets before changing the root") &&
+            cna_demo_check_result(state->demo,
                 cna_content_manager_set_root_directory(state->content, view(root_source)),
-                "change the C manager root without unloading cached assets")) {
+                "change the C manager root after unloading cached assets")) {
             root_changed = 1;
             memset(root_source, '?', sizeof(root_source) - 1U);
             result = cna_content_manager_get_root_directory_size(state->content, &root_bytes);
@@ -174,18 +220,6 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
             cna_demo_check(state->demo, result == CNA_RESULT_SUCCESS && copied == sizeof("assets") - 1U &&
                            memcmp(root_copy, "assets", sizeof("assets") - 1U) == 0 && root_copy[6] == '#',
                            "the game keeps the copied root when the caller-owned source changes later");
-            /* textures/checker would not exist under assets/textures; this name is already cached. */
-            if (cna_demo_check_result(state->demo,
-                    cna_content_manager_load_texture2d(state->content, view("textures/checker"), &cached),
-                    "load the previously cached logical name after changing roots")) {
-                memset(&info, 0, sizeof(info));
-                info.struct_size = (uint32_t)sizeof(info);
-                info.struct_version = UINT32_C(1);
-                cna_demo_check(state->demo, cna_texture2d_get_info(cached, &info) == CNA_RESULT_SUCCESS &&
-                               info.width == 64U && info.height == 64U,
-                               "the retained cache entry still describes the original checker");
-                cna_demo_check_result(state->demo, cna_texture2d_destroy(cached), "release the extra cached texture handle");
-            }
             if (cna_demo_check_result(state->demo,
                     cna_content_manager_load_texture2d(state->content, view("sprite_strip"), &fresh),
                     "an uncached logical name resolves under the new root")) {

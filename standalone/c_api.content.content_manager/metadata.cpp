@@ -8,8 +8,9 @@ CNA_DEMOS_STANDALONE({
                    "compiled SpriteFont and an authored stock Effect, measures and draws text with "
                    "cna_sprite_batch_draw_string after unloading and destroying the manager, and releases "
                    "the independently owned resources in the documented order. Checks that a live font "
-                   "prevents an early atlas release and still draws visible text afterwards; root changes preserve cached "
-                   "names, redirect new loads and copy the caller's root string. Also checks stable game-owned manager "
+                   "prevents an early atlas release and still draws visible text afterwards; loaded managers refuse root "
+                   "changes without losing cached names, and changes after Unload copy the caller's string and redirect "
+                   "new loads. Also checks stable game-owned manager "
                    "borrowing, copied configuration and invalidation at game destruction. A real missing-asset failure "
                    "also checks the structured canonical exception identity needed by higher-level bindings.",
     .apis = {"cna_game_get_content_manager_ext", "cna_game_set_content_manager_ext", "cna_content_manager_create", "cna_content_manager_load_texture2d",
