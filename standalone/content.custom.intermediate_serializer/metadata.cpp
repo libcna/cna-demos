@@ -26,7 +26,6 @@ CNA_DEMOS_STANDALONE({
     .tags = {"content", "custom", "xml", "serialization", "pipeline", "cnaext"},
     .restrictions = "Build-time tool in a separate process; requires CNA::ContentPipelineBuild. An unavailable "
                     "tool is reported as NOT RUN. ISSUE-148: CNA rejects an in-element processing instruction and "
-                    "accepts self-closing empty sections and an in-memory UTF-8 BOM that XNA rejects. ISSUE-149: "
-                    "value-member and root-read nulls use InvalidContentException instead of XNA's categories.",
+                    "accepts self-closing empty sections and an in-memory UTF-8 BOM that XNA rejects.",
     .knownIssue = "CNA-DEMOS-ISSUE-148",
 })

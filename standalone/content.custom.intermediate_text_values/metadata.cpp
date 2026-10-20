@@ -12,7 +12,5 @@ CNA_DEMOS_STANDALONE({
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentTypeDescriptor::Field"},
     .tags = {"content", "custom", "xml", "serialization", "strings", "unicode", "formatting", "pipeline", "cnaext"},
     .restrictions = "Build-time tool in a separate process; requires CNA::ContentPipelineBuild. Exercises "
-                    "UTF-8 XML text and XNA's UTF-16 code-unit character contract, not locale conversion. "
-                    "ISSUE-147: NUL output throws XmlException instead of XNA's ArgumentException.",
-    .knownIssue = "CNA-DEMOS-ISSUE-147",
+                    "UTF-8 XML text and XNA's UTF-16 code-unit character contract, not locale conversion.",
 })

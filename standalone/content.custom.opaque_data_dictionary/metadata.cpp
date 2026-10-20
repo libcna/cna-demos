@@ -16,7 +16,5 @@ CNA_DEMOS_STANDALONE({
              "Microsoft::Xna::Framework::Content::Pipeline::NamedValueDictionary::Keys",
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateSerializer::Deserialize"},
     .tags = {"content", "custom", "xml", "serialization", "dictionary", "pipeline", "cnaext"},
-    .restrictions = "Build-time tool in a separate process; requires CNA::ContentPipelineBuild. "
-                    "CNA-DEMOS-ISSUE-146 records the null-value exception mismatch.",
-    .knownIssue = "CNA-DEMOS-ISSUE-146",
+    .restrictions = "Build-time tool in a separate process; requires CNA::ContentPipelineBuild.",
 })
