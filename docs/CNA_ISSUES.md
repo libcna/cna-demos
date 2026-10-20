@@ -948,6 +948,14 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-057 -- Content staging scavenger warns during normal concurrent lifecycle
 
+- **Refreshed baseline (2026-10-21), CONFIRMED_OPEN:** CNA `ee92c1eaa`
+  still reproduces the defect after047 closure: unchanged probes give1000 concurrent
+  owners/5640 scans,3093 missing-owner warnings plus64 unreadable,22 incomplete and39
+  invalid-directory diagnostics,zero owner errors/removals and an empty final parent.
+  The1000-owner sequential control has zero errors/diagnostics. Strict builds pass;
+  original failing concurrent exit1 retained, no production/test-oracle changes.
+  The bounded scope peaks at141,725,696 bytes with zero OOM. See the baseline below.
+
 - **Campaign verification (2026-10-20), CONFIRMED_OPEN:** current CNA dbfe6b4c1
   reproduces3,241 missing-owner warnings in one fixed1,000-owner concurrent run;
   all owners succeed, no removal occurs and the private parent ends empty. The

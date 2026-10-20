@@ -1,6 +1,28 @@
 # ISSUE-057: concurrent staging lifecycle baseline
 
-Current CNA `dbfe6b4c1` still reproduces the historical warning race. The
+## Refreshed baseline after ISSUE-047 (2026-10-21)
+
+CNA `ee92c1eaa95ffad3aec1aa0c9d4c77c0e4fb8407`, demos
+`1abd9ec6b14e44f6e2e77739e90a926b8dd4aec2`: both permanent probe sources remain
+unchanged. Strict Clang C++23/O2/Wall/Wextra/Werror builds pass using shared ccache
+and one compiler worker. One fixed concurrent run gives1000 owners/5640 scans,
+zero owner errors/removals,3093 missing-owner warnings,64 unreadable/oversized,
+22 incomplete reads and39 vanished/invalid-directory diagnostics. Its normal exit1
+is retained. The paired1000-owner sequential control exits0 with zero diagnostics
+or errors. Both initially empty private parents finish empty and are removed with
+non-recursive empty-directory removal only. No production root is scanned.
+
+Driver66458 COMPLETE0 accepts exactly that failing concurrent baseline and passing
+sequential control, verifies unchanged source hashes and records four stages.
+Peak141,725,696 bytes,zero high/max/OOM events; no heavy job remains live.
+Reports: `build/linux-full/reports/repair-content-staging-after047-before-*`;
+driver: `build-probe/repair-content-staging-after047-before.mjs`.
+ISSUE-057 remains **CONFIRMED_OPEN**. No runtime fix, changed probe assertion,
+sleep, diagnostic suppression or retry has been introduced.
+
+## Earlier retained baseline
+
+CNA `dbfe6b4c1` reproduced the historical warning race. The
 unchanged staging header has SHA-256
 `76992cf40699e95e8460973213749c8cb423cdda66cbd33a1342682fcc1ba1bd`.
 The historical probes are now preserved as `ContentStagingConcurrencyProbe.cpp`

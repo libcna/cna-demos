@@ -40,6 +40,18 @@ malformed-state controls. Its read-only design note is committed separately from
 047 (design note commitcd07666); no staging implementation or test-oracle change yet. ISSUE-131 is reserved
 to the owner. The campaign is not complete:63 IDs still need final dispositions.
 
+The057 refresh is now COMPLETE0 (driver66458): unchanged probes,strict builds,
+1000 concurrent owners/5640 scans with3093 missing-owner warnings (normal exit1),
+plus64 unreadable/22 incomplete/39 invalid-directory diagnostics; zero owner
+errors/removals. Sequential1000 has zero diagnostics/errors. Both private parents
+end empty; source hashes unchanged; scope peak141,725,696 bytes,zero OOM. No heavy
+job is live. Next action is the cross-process/thread lifecycle repair and stronger
+regression controls, not another identical baseline. Do not suppress malformed
+metadata or simply ignore live-PID candidates. Any persistent coordination marker
+must have an explicit narrow contract and exact cleanup/safety tests; none has yet
+been introduced. Source checkpoint CNAee92c1eaa; evidence prefix
+repair-content-staging-after047-before. Totals remain92FINAL/63PENDING.
+
 ### Retained pre-closure validation chronology
 
 Earlier candidate/running statements below are historical, superseded by the
