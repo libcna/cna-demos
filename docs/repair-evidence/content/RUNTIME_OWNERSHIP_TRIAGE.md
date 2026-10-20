@@ -1,5 +1,33 @@
 # Next content-runtime batch: source audit, not repair closure
 
+## Value-wrapper ownership baseline (2026-10-20)
+
+Permanent `ContentTextureOwnershipTests.cpp` adds four isolated native cases,
+linked against the current frozen XML checkpoint libraries, not replacement
+implementations. Strict C++23/Wall/Wextra/Werror compilation passes. On private
+OPENGLES3/Mesa 25.0.7 the result is **one PASS / three FAIL**. All 15 failed
+assertions are precisely missing manager-triggered disposal: `IsDisposed` stays
+false, `GetData` still succeeds, and the weak renderer reference remains alive.
+All original-pixel, cache-sharing, independent-manager, copy/move and explicit
+wrapper-disposal controls pass. Protected `Dispose(false)` correctly leaves the
+returned texture usable and later explicit disposal does not retry ownership.
+All three frozen native checkpoint binaries retain their SHA-256 values.
+
+This narrows the required fix beyond just recording `shared_ptr<IDisposable>`.
+The repair must invalidate actual surviving value wrappers and release their
+renderer ownership, including cache results and moved/copied wrappers, without
+changing ordinary CNA wrapper `Dispose` into global disposal. Independently owned
+C handles must retain their documented lifetime. In particular,
+`CnaCApiEffects.cpp::ContentManagerLoadEffect` currently hands out the exact cached
+`shared_ptr<Effect>`; blindly enabling manager disposal would break that C
+contract. An appropriate independent ownership boundary must be validated there.
+No production repair or ISSUE-011 closure is claimed by this baseline.
+
+Reports: `build/linux-full/reports/repair-content-texture-ownership-before-*`
+(`audit.json`, `assertions.json`, strict build and unmodified failure log/XML).
+The probe used the existing `build-probe/` directory and shared ccache with one
+compiler, alongside the two active XML regression jobs.
+
 ## Ownership lifecycle baseline (2026-10-20,14:08 UTC)
 
 Genuine `ContentOwnershipOracle.cs` now passes108/108: the original91 checks remain

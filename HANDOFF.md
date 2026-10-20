@@ -17,6 +17,13 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+Next ownership batch gained four native value-wrapper controls:
+ContentTextureOwnershipTests.cpp gives onePASS/threeFAIL on private OPENGLES3;
+all15 failures are missing manager-triggered disposal/resource release. Pixel,
+copy/move, independent-manager and Dispose(false) controls pass. Strict build
+and three frozen native hashes verified; no production change or011 closure.
+See RUNTIME_OWNERSHIP_TRIAGE.md. Jobs37179/74592 remain live; no artifact rebuild.
+
 Active final gates37179(native full) and74592(external both719/math/visual/CTest).
 Do not rebuild native three test binaries or external319 artifacts during them.
 Canonical build27083 and marker build68007 complete with no compiler warnings.
