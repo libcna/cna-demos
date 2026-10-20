@@ -86,7 +86,7 @@ aborted run's evidence fixture remains retained.
 
 ## Sharing must reject before mutation; write-only opens must preserve data
 
-`FileShareEdgesOracle.cs` adds15/15 genuine .NET Framework4 checks, including
+`FileShareEdgesOracle.cs` initially added15/15 genuine .NET Framework4 checks, including
 Create/Truncate rejection without changing existing bytes, normalized path aliases,
 an independent child process before/after Close, idempotent release and failed-
 constructor cleanup. The child really opens the file; no simulated lock or retry is
@@ -169,6 +169,48 @@ clean-before-validation spellings and two exact missing-file outcomes are retain
 the expanded unchanged-production run gives2PASS/three expectedFAIL,117ms
 (`repair-title-native-tests-expanded-before*`). In particular, accepting the
 two empty/dot-component cases is itself a wrong behavior, not a tolerance issue.
+
+### Directory prerequisite and relative-URI diagnostic (2026-10-20)
+
+The sharing-edge witness now has36/36 genuine checks. Its18 directory cases cover
+every FileMode/FileAccess pair: invalid combinations throw ArgumentException first;
+valid CreateNew throws IOException, other valid directory opens throw
+UnauthorizedAccessException. The native pre-fix matrix fails. Sharp Runtime repair
+551ced42 preserves this precedence without changing public layout or implementing
+FileShare. Its full build is warning-free and all18,141 tests across41 executables
+pass, with no failures/skips. Reports: `repair-file-open-directory-matrix-xna*` and
+Sharp `build-probe/cna-repair-directory-*`. CNA145 is not closed by this prerequisite.
+
+`RelativeUriOracle.cs` records36 genuine constructor outcomes, not36 asserted passes.
+Empty and whitespace-only references are accepted unchanged by Relative and
+RelativeOrAbsolute, rejected by Absolute. NUL/newline in relative strings are
+accepted by URI validation itself. The old Framework4 length boundary is65520
+UTF-16 code units; do not assume the current .NET snapshot has the same limit.
+Reports: `repair-relative-uri-xna{,-build}.log`. This reveals why directly inserting
+the current Sharp Uri guard into TitleContainer would incorrectly reject a cleaned
+empty relative path. Sharp repair82b57541 now passes the full18,142-test gate across
+41 executables, zero failures/skips, with a warning-free full build. Its new matrix
+fails against the exact pre-fix Uri.cpp compiled directly from committed551ced42;
+initial harness compiler errors are separately retained, not claimed as runtime evidence.
+
+The expanded `TitlePathsOracle.cs` passes28/28 genuine checks, adding cleaned-empty
+paths and ASCII/astral UTF-16 length boundaries. Reports: `repair-title-expanded-xna*`.
+The first native title repair passes all15 title/storage-focused tests, then a new
+sixth path test exposes the missing old Framework4 length bound:5PASS/1FAIL,
+`repair-title-length-before*`. This bound belongs in CNA's XNA compatibility layer,
+not modern Sharp Uri. The original five path tests and all existing checks stay.
+
+`TitlePathNormalizationOracle.cs` now records inner exception types and actual
+loaded assembly identity. The GAC XNA4 DLL has SHA256
+`8b7aa4c4939f243b21432747281cc8aacdcda56191a16d9eaa036b4136cf0da4`.
+Its OpenStream IL_0076–0084 recognizes only FileNotFoundException and
+DirectoryNotFoundException as missing-file categories; ArgumentException is not
+included, despite the available decompiled Windows source listing it. Thus an
+underlying path ArgumentException is wrapped as InvalidOperationException, agreeing
+with the NUL/newline Windows measurements. Follow the actual assembly, not that
+decompilation discrepancy. Reports: `repair-title-normalization-{inner,assembly}-xna*`,
+`repair-title-genuine-il.log`, `repair-title-genuine-assembly.sha256`. These remain
+platform-specific file-input observations, not a claim of identical Unix filenames.
 
 ## Native151 regression coverage prepared before its repair
 

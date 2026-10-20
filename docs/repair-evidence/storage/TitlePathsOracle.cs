@@ -46,6 +46,14 @@ static class TitlePathsOracle
             Reject<FileNotFoundException>(name + "/missing.bin");
             Reject<FileNotFoundException>(name + "/missing/child.bin");
             Reject<InvalidOperationException>(name + "/child");
+            foreach (string cleanedEmpty in new[] {".", "./", name + "/..", name + "/../"})
+                Reject<InvalidOperationException>(cleanedEmpty);
+            Reject<ArgumentException>(new string('a', 65520));
+            Reject<InvalidOperationException>(new string('a', 65519));
+            string astral = char.ConvertFromUtf32(0x1F600);
+            string astralLong = new System.Text.StringBuilder().Insert(0, astral, 32760).ToString();
+            Reject<ArgumentException>(astralLong);
+            Reject<InvalidOperationException>(astralLong.Substring(2));
             Console.WriteLine("checks=" + checks + " failed=" + failed);
             return failed == 0 ? 0 : 1;
         }

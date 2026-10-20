@@ -9,6 +9,8 @@ static class TitlePathNormalizationOracle
 {
     static int Main()
     {
+        Console.WriteLine("framework=" + typeof(TitleContainer).Assembly.FullName);
+        Console.WriteLine("frameworkPath=" + typeof(TitleContainer).Assembly.Location);
         MethodInfo clean = typeof(TitleContainer).GetMethod("GetCleanPath", BindingFlags.Static | BindingFlags.NonPublic);
         MethodInfo absolute = typeof(TitleContainer).GetMethod("IsPathAbsolute", BindingFlags.Static | BindingFlags.NonPublic);
         if (clean == null || absolute == null) return 2;
@@ -37,7 +39,10 @@ static class TitlePathNormalizationOracle
                     using (Stream stream = TitleContainer.OpenStream(path))
                         result = "OPEN:" + stream.ReadByte();
                 }
-                catch (Exception error) { result = error.GetType().Name; }
+                catch (Exception error) {
+                    result = error.GetType().Name;
+                    if (error.InnerException != null) result += ":inner=" + error.InnerException.GetType().Name;
+                }
                 Console.WriteLine(Convert.ToBase64String(Encoding.UTF8.GetBytes(path)) + "\t" +
                     Convert.ToBase64String(Encoding.UTF8.GetBytes(normalized)) + "\t" + rooted + "\t" + result);
             }

@@ -79,11 +79,17 @@ static class FileShareEdgesOracle
                 Check(!Refuses(path, FileMode.Open, FileAccess.Read, FileShare.Read), "File.OpenRead permits readers");
                 Check(Refuses(path, FileMode.Open, FileAccess.Write, FileShare.ReadWrite), "File.OpenRead refuses writers on Windows");
             }
+            foreach (FileMode mode in new[] {FileMode.CreateNew, FileMode.Create, FileMode.Open,
+                                             FileMode.OpenOrCreate, FileMode.Truncate, FileMode.Append})
             foreach (FileAccess access in new[] {FileAccess.Read, FileAccess.Write, FileAccess.ReadWrite}) {
                 Type caught = null;
-                try { using (var directory = new FileStream(Path.Combine(args[0], "child"), FileMode.Open, access)) {} }
+                try { using (var directory = new FileStream(Path.Combine(args[0], "child"), mode, access)) {} }
                 catch (Exception error) { caught = error.GetType(); }
-                Check(caught == typeof(UnauthorizedAccessException), "directory open category " + access);
+                bool invalid = (mode == FileMode.Append && access != FileAccess.Write) ||
+                    (access == FileAccess.Read && (mode == FileMode.CreateNew || mode == FileMode.Create || mode == FileMode.Truncate));
+                Type expected = invalid ? typeof(ArgumentException) :
+                    mode == FileMode.CreateNew ? typeof(IOException) : typeof(UnauthorizedAccessException);
+                Check(caught == expected, "directory category " + mode + "/" + access + " expected=" + expected + " actual=" + caught);
             }
             Console.WriteLine("checks=" + checks + " failed=" + failed);
             return failed == 0 ? 0 : 1;
