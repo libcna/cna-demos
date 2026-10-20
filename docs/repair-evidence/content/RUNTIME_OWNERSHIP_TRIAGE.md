@@ -42,22 +42,27 @@ in the pending048 build.
 
 ## Reference preparation
 
-`ContentOwnershipOracle.cs` is **prepared, not yet compiled or executed**. It uses
+`ContentOwnershipOracle.cs` now **passes35/35 against genuine XNA4.0**. It uses
 the real XNA ContentManager and ContentReader with an authored in-memory XNB and
-public custom type readers. Planned checks cover inline/shared callback order,
+public custom type readers. Executed checks cover inline/shared callback order,
 alias fixups, default ownership, partial-load retention, disposal-failure cleanup,
 stream closure, virtual OpenStream routing, cache/root transitions and truncated
 header/body exception boundaries. No GPU, online service or replacement manager
-implementation is involved; only the public stream source is overridden.
+implementation is involved; only the public stream source is overridden. The
+actual SDK framework DLL is used in the existing private Wine reference prefix;
+the C#4/x86 warning-as-error build and run both exit0. Reports:
+`build/linux-full/reports/repair-content-ownership-xna{-build,}.log`.
 
 The local shipped-XNA decompilation additionally warns against an attractive but
 incorrect assumption: RecordDisposableObject appends to its list without identity
 deduplication. Unload calls each recorded disposable in order, stops on the first
-exception, and clears both lists in finally. The prepared oracle must measure this
-before implementation. A supplied callback similarly must not be silently
-deduplicated. Source paths are under
+exception, and clears both lists in finally. The genuine oracle now confirms this,
+including three disposal calls when a custom reader returns one identity for
+three separate materializations. A shared alias fixup itself adds no callback.
+Caller recorder exceptions remain InvalidOperationException and do not transfer
+ownership back to the manager; truncated header/body failures instead become
+ContentLoadException. Source paths are under
 `../xna4-decomp/reference/xna4/decompiled/windows/Microsoft.Xna.Framework/`.
 
-Next: execute the genuine probe when a worker is free, preserve any expectation
-corrections, then add corresponding native before/after tests. Keep011,012,039,
+Next: add corresponding native before/after tests. Keep011,012,039,
 043,045 and087 open until their own repairs and full relevant gates finish.

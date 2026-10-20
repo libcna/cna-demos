@@ -50,9 +50,13 @@ Only after these passes are046/030 markers removed (demos3d1f833). The final mar
 build is warning-free and319 artifacts frozen. Both95-case math sweeps preserve
 the exact48 expected improvements; metadata/tools and all six pixel-exact visual
 references pass. The GLES font capture was also inspected. Both complete719-demo
-sweeps, final isolated serial CTest and native consumer/hash audits must finish
-before closure. Expected cumulative improvements are60 versus
-initial HEAD and62 versus Complete1128; these full results are not yet claimed.
+sweeps now both pass strict comparison: SOFTWARE617PASS/51FAIL/48SKIP/three manual;
+OPENGLES3 656PASS/53FAIL/7SKIP/three manual. Both have exactly60 demo improvements
+versus initial HEAD (62 versus Complete1128), with `differences: []`; unrelated
+assertion failure multisets are unchanged. Final isolated serial CTest is running.
+Its inventory has735 cases,732 enabled/three disabled;046/030 now have WILL_FAIL
+false. All319 hashes match immediately before it. Closure still awaits its result
+and the final319-hash audit.
 
 Reports: `build/linux-full/reports/repair-sections-*`,
 `repair-external-alias-final-sanitizer.log`, and `repair-network-*`.
