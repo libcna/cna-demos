@@ -1,5 +1,19 @@
 # Content repair evidence
 
+## ISSUE-012: stream routing baseline (2026-10-20)
+
+`ContentStreamRoutingTests.cpp` runs without a Game, routing opt-in or manual
+built-in registration. Four strict native cases giveonePASS/threeFAIL against
+the frozen native tree (uncommitted089 initialization does not change these paths).
+Direct ReadAsset and its original exception propagation pass. Ordinary Load does
+not call the override, and a cold ResourceContentManager cannot find CurveReader.
+The cold case preserves additional cache and explicit-withdrawal controls for the
+repair; they cannot execute until the first load succeeds and are not claimed
+validated now. No012 production patch. Reports
+`repair-content-stream-routing-native-before-*`, actual test exit1, exact audit
+errors[], warning-free strict build. Genuine virtual Load/cache evidence remains
+in ContentOwnershipOracle; dedicated cold-resource reference evidence is next.
+
 ## ISSUE-089: initialization cycle and failure baseline (2026-10-20)
 
 Candidate validation11:00 UTC (not a closure): four actual implementation TUs
