@@ -78,3 +78,11 @@ XML gives fourPASS/two same fixture SKIP. Original XML fixtures pass6/6 in14ms.
 Exact comparisons have no differences and all four final hashes match. Only then
 is the native freeze released for candidate039/045. External048 artifacts remain
 frozen while full renderer95510 and subsequent final CTest/audit are pending.
+
+Full renderer95510 now completes0: SOFTWARE617PASS/51FAIL/48SKIP/three manual,
+OPENGLES3 656PASS/53FAIL/seven SKIP/three manual. Both strict719-demo comparisons
+retain exactly60 improvements against the initial HEAD (62 against Complete1128),
+with no unexpected differences. Only the048 child failure additionally disappears;
+the parent retains047. The GLES font screenshot was also visually inspected.
+Final isolated serial CTest59450 is running after all319 pre-test hashes passed.
+No closure or external freeze release until that gate and post-test audit finish.

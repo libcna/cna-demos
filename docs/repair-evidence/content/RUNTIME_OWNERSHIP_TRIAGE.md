@@ -140,3 +140,20 @@ aliases disposed without invoking each texture wrapper's native-resource release
 Simply sharing that identity would therefore be insufficient to prove immediate
 resource release at ContentManager::Unload. Preserve ordinary copy semantics and
 validate both invalidation and actual ownership release; no graphics edits yet.
+
+## Genuine dispatch contract:39/39
+
+`ContentDispatchOracle.cs` now passes39/39 against genuine XNA4, with a strict
+C#4/x86 warning-as-error build. Reports `repair-content-dispatch-xna{-build,}.log`.
+Nine typed, erased, explicit-reader and raw-object modes preserve exact payload
+and identity. Every newly materialized IDisposable is recorded, including raw
+reads; an existing instance is not recorded. All four existing-instance overloads
+reject a reader that returns a replacement, with exact InvalidOperationException
+and no disposal callback. A null serialized type index returns null, not the
+provided existing instance. A reader-produced null is accepted and not recorded.
+
+This prevents an incorrect087 repair that merely records every erased return:
+existing-instance, raw, null and identity rules must be handled together at the
+reader invocation boundary. FNA's raw path bypasses recording, unlike this measured
+XNA contract. These are reference measurements, not a claim that CNA already passes;
+no011/087 implementation or closure is included in the039/045 build underway.
