@@ -148,11 +148,8 @@ function(cna_demos_add_standalone)
             target_link_libraries(${_exe} PRIVATE m) # <math.h>
         endif()
     else()
-        # Match the browser's ISSUE-016 workaround: build-time/optional module archives can
-        # otherwise pull a second runtime into a standalone before libcna.so is encountered.
-        target_link_libraries(${_exe} PRIVATE
-            "$<$<TARGET_EXISTS:cna_shared>:$<TARGET_FILE:cna_shared>>"
-            CNA ${ARG_LIBRARIES})
+        # CNA owns safe shared-runtime ordering through build-time/optional sidecars.
+        target_link_libraries(${_exe} PRIVATE CNA ${ARG_LIBRARIES})
     endif()
     set_target_properties(${_exe} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CNA_DEMOS_OUTPUT_DIR}")
     cna_demos_apply_warnings(${_exe})

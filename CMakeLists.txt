@@ -147,17 +147,9 @@ add_executable(cna-demos
     src/app/Cli.cpp
     src/app/Browser.cpp
 )
-# libcna.so first. In a shared CNA build (CNA_SHARED_LIBRARY, CNA's default on
-# Linux) the static CNA libraries some categories add -- CNA_GamerServices,
-# CNA_Net -- otherwise come first on the link line, and the CNA module archives
-# they depend on then supply a second copy of CNA inside the executable: two
-# copies of every static object, destroyed twice at exit. CNA's own examples
-# link CNA ahead of CNA_GamerServices for the same reason. Naming the `CNA`
-# umbrella first is not enough here: CMake places its libcna.so after the
-# dependency closure of those static libraries, so the file itself is named.
-# Without a shared CNA the generator expression is empty.
+# ISSUE-016: shared-runtime ordering is CNA's responsibility, including the
+# static sidecars reached through the category/object-library graph.
 target_link_libraries(cna-demos PRIVATE
-    "$<$<TARGET_EXISTS:cna_shared>:$<TARGET_FILE:cna_shared>>"
     cna_demos_framework ${CNA_DEMOS_CATEGORY_TARGETS})
 set_target_properties(cna-demos PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CNA_DEMOS_OUTPUT_DIR}")
 cna_demos_apply_warnings(cna-demos)

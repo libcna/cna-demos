@@ -1458,45 +1458,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment:** CNA 0.1.0, Linux.
 - **Status:** open (low impact); not reported upstream yet.
 
-### CNA-DEMOS-ISSUE-016 -- Linking `CNA_GamerServices` after another library duplicates CNA in the executable
-
-- **Area:** build system -- `CNA_GamerServices` and `CNA_Net` with a shared CNA
-  (`CNA_SHARED_LIBRARY`, `cmake/SharedRuntimeLibrary.cmake`).
-- **Demos:** every `gamer_services.*` demo (the first one to exist exposed it); the fix is in
-  cna-demos' top-level `CMakeLists.txt`, with a comment pointing here.
-- **Environment:** CMake 4.4 (pip), GCC 14, lld, Linux, `CNA_SHARED_LIBRARY=ON` (CNA's default here).
-- **Reproduction:** an executable links a static library `framework` that links `CNA`, plus an
-  OBJECT library that links `framework` and `CNA::GamerServices` (the usual shape of a project
-  with more than one target). Run any program that adds a `GamerServicesComponent` and exits.
-- **Observed:** `double free or corruption (!prev)` at exit, in the destructor of
-  `SamplerState::PointWrap` (`GraphicsResource::~GraphicsResource`), run once by the executable
-  and once by `libcna.so`. `CNA_GamerServices` is not inside `libcna.so` and links CNA's module
-  archives (`cna_runtime`, `cna_storage`, ...) directly; CMake places it ahead of `libcna.so` on the
-  link line, so the linker takes CNA's graphics, runtime and storage objects from those archives:
-  the executable carries a second CNA (3,225 `Graphics` symbols in `cna-demos`) whose static objects
-  libcna.so's own references then bind to. Naming the `CNA` umbrella first does not help -- it is
-  an INTERFACE library and CMake orders its `libcna.so` after the archives' dependency closure.
-  CNA's examples avoid it only because each links exactly `CNA CNA_GamerServices` (their CMake
-  comment says the duplicate runtime "aborted every one of these demos at device creation").
-- **Workaround in cna-demos:** the executable names the `libcna.so` file itself first on its link
-  line (`$<TARGET_FILE:cna_shared>`), so the archives behind it contribute only what libcna.so
-  lacks (0 duplicated code symbols afterwards).
-- **Expected:** a consumer cannot get two copies of CNA by linking CNA's own targets in any order.
-  Possible fixes: link the `CNA` umbrella (not the module archives) from `CNA_GamerServices` and
-  `CNA_Net` when CNA is shared, or build them into `libcna.so` too.
-- **Additional reproduction (2026-10-11):** `content.custom.xna_pipeline_components` linked
-  `CNA::ContentPipelineBuild` and `cna_demos_framework` through the standalone helper on
-  Linux/GCC 14/CMake 3.31.6. Its seven pipeline checks passed, then exit aborted in
-  TouchPanel::gestures_' deque destructor. GDB shows executable-owned destruction reached
-  from libcna.so's global finalizers; nm confirmed TouchPanel::GetState and gestures_ were
-  defined in the executable as well. Evidence: `/tmp/cna-xna-pipeline-{gdb,unbuffered}.log`
-  and `/tmp/cna-xna-pipeline-duplicate-symbols-{before,after}.txt`.
-  The standalone C++ helper now uses the same shared-library-first workaround as the browser.
-  The duplicate definitions disappear and both renderer-selected tool runs exit successfully.
-  This extends the existing issue to ContentPipelineBuild; no new issue number or expected
-  failure hides it. The C API linking path is unchanged.
-- **Status:** open (medium: a silent ODR violation that crashes at exit); not reported upstream yet.
-
 ### CNA-DEMOS-ISSUE-017 -- `Achievement::EarnedOnline` is always true
 
 - **Area:** gamer services -- `Achievement` (`Achievement.cpp` sets `earnedOnline_(true)` in its
@@ -2296,6 +2257,55 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-016 -- Linking `CNA_GamerServices` after another library duplicates CNA in the executable
+
+- **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `470b12a5d` repairs shared-runtime
+  dependency ordering and scoped needed-library state. Both demo-local first-DSO
+  workarounds are removed; historical evidence below is retained. Native31/31,
+  33 actual linker/consumer variants, four CMake versions and Clang pass. Both719
+  renderer sweeps exactly match the preceding checkpoint, six exact visuals pass,
+  and CTest finishes684PASS/48 unchangedSKIP/three disabled with319 hashes verified.
+  The separate original C RootDirectory residual remains explicit; this is not a
+  globally green campaign claim. Linux SOFTWARE/OPENGLES3 runtime coverage only.
+  See [repair evidence](repair-evidence/build/MIXED_RUNTIME_LINKAGE.md).
+
+- **Area:** build system -- `CNA_GamerServices` and `CNA_Net` with a shared CNA
+  (`CNA_SHARED_LIBRARY`, `cmake/SharedRuntimeLibrary.cmake`).
+- **Demos:** every `gamer_services.*` demo (the first one to exist exposed it); the fix is in
+  cna-demos' top-level `CMakeLists.txt`, with a comment pointing here.
+- **Environment:** CMake 4.4 (pip), GCC 14, lld, Linux, `CNA_SHARED_LIBRARY=ON` (CNA's default here).
+- **Reproduction:** an executable links a static library `framework` that links `CNA`, plus an
+  OBJECT library that links `framework` and `CNA::GamerServices` (the usual shape of a project
+  with more than one target). Run any program that adds a `GamerServicesComponent` and exits.
+- **Observed:** `double free or corruption (!prev)` at exit, in the destructor of
+  `SamplerState::PointWrap` (`GraphicsResource::~GraphicsResource`), run once by the executable
+  and once by `libcna.so`. `CNA_GamerServices` is not inside `libcna.so` and links CNA's module
+  archives (`cna_runtime`, `cna_storage`, ...) directly; CMake places it ahead of `libcna.so` on the
+  link line, so the linker takes CNA's graphics, runtime and storage objects from those archives:
+  the executable carries a second CNA (3,225 `Graphics` symbols in `cna-demos`) whose static objects
+  libcna.so's own references then bind to. Naming the `CNA` umbrella first does not help -- it is
+  an INTERFACE library and CMake orders its `libcna.so` after the archives' dependency closure.
+  CNA's examples avoid it only because each links exactly `CNA CNA_GamerServices` (their CMake
+  comment says the duplicate runtime "aborted every one of these demos at device creation").
+- **Workaround in cna-demos:** the executable names the `libcna.so` file itself first on its link
+  line (`$<TARGET_FILE:cna_shared>`), so the archives behind it contribute only what libcna.so
+  lacks (0 duplicated code symbols afterwards).
+- **Expected:** a consumer cannot get two copies of CNA by linking CNA's own targets in any order.
+  Possible fixes: link the `CNA` umbrella (not the module archives) from `CNA_GamerServices` and
+  `CNA_Net` when CNA is shared, or build them into `libcna.so` too.
+- **Additional reproduction (2026-10-11):** `content.custom.xna_pipeline_components` linked
+  `CNA::ContentPipelineBuild` and `cna_demos_framework` through the standalone helper on
+  Linux/GCC 14/CMake 3.31.6. Its seven pipeline checks passed, then exit aborted in
+  TouchPanel::gestures_' deque destructor. GDB shows executable-owned destruction reached
+  from libcna.so's global finalizers; nm confirmed TouchPanel::GetState and gestures_ were
+  defined in the executable as well. Evidence: `/tmp/cna-xna-pipeline-{gdb,unbuffered}.log`
+  and `/tmp/cna-xna-pipeline-duplicate-symbols-{before,after}.txt`.
+  The standalone C++ helper now uses the same shared-library-first workaround as the browser.
+  The duplicate definitions disappear and both renderer-selected tool runs exit successfully.
+  This extends the existing issue to ContentPipelineBuild; no new issue number or expected
+  failure hides it. The C API linking path is unchanged.
+- **Status:** open (medium: a silent ODR violation that crashes at exit); not reported upstream yet.
 
 ### CNA-DEMOS-ISSUE-001 -- `libcna.so` fails to link with CMake 3.28 (duplicate symbols)
 

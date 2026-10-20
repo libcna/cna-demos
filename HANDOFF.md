@@ -12,10 +12,39 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
-Current repair phase F (2026-10-20): all155 historical IDs retained,84 final/71
+Current repair phase F (2026-10-20): all155 historical IDs retained,85 final/70
 pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
+
+Latest completed checkpoint: ISSUE-016 FIXED_VALIDATED, CNA470b12a5d. Both demo
+link workarounds removed; no assertion changed. Full38847 completed with both719
+sweeps exactly matching the roots predecessor, both95 math/six exact visuals pass,
+CTest684PASS/48 unchangedSKIP/three disabled in990.96s and319 verified frozen hashes.
+The enclosing driver exits1 only for the retained original C RootDirectory residual;
+no claim of a globally green campaign. See MIXED_RUNTIME_LINKAGE.md.
+Artifact freeze released. Next canonical C-root validation and ISSUE148 substrate.
+Sharp148 PI parser candidate remains uncommitted;569 XML/350 XML.Linq pass.
+An unrelated test-scheduling failure is repaired with a four-reader latch, not
+a Process runtime change;100 fixed repetitions and whole Diagnostics pass.
+Full41-component Sharp gate39469 is running with the original private SOAP fixture.
+No new push; the only published campaign checkpoint remains frustum900d0db3b.
+
+15:58 UTC: approved C RootDirectory contract correction committed CNA124281bff /
+demosdab9d4f. Actual strict-C native test and actual demo67 checks pass both renderers;
+the original54 check labels remain with two authorized semantic mappings plus13
+additions. See `docs/repair-evidence/content/C_ROOT_CONTRACT.md`. No marker removed
+or issue closed yet; canonical rebuild waits for frozen016 regression38847.
+016 SOFTWARE719 is exact to predecessor; OPENGLES3 running. Counts84/71 unchanged.
+
+ISSUE-016 repair committed in CNA `470b12a5d`; both demo-local link workarounds
+removed, no assertions changed. Full external regression38847 is running on319
+frozen artifacts. Native31/31 and33 linker/consumer cases pass; see pending
+`docs/repair-evidence/build/MIXED_RUNTIME_LINKAGE.md`. The only changed external
+artifact (FBX tool) is explained by an exact-hash control and needed-library audit.
+Counts84final/71pending unchanged. Next close016 only after final gates, then
+implement the owner-approved XNA C RootDirectory documentation/demo correction.
+Separate requested frustum publication completed at900d0db3b; no further push.
 
 14:38 UTC: ISSUE-001 closes on actual four-version/native/external/fresh focused
 proof.50-step external build has only prior Draco warning;319 artifacts identical
