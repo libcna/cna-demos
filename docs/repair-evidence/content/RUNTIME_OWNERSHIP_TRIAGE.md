@@ -27,6 +27,13 @@ in the pending048 build.
 - 043: CreateReaderForTargetTypeEXT still sends the associated target name directly
   to a factory table keyed by reader name. Distinct target/reader identities remain
   necessary in a minimized regression, unlike the existing same-name control.
+  CNA explicitly documents fresh unique_ptr instances and a native test requires
+  them, whereas genuine XNA caches readers process-wide. Do not silently change
+  that documented C++ ownership surface as part of a target-name mapping repair.
+  A factory's actual key is known when CreateRegisteredReader creates the table
+  reader; any association must also respect factory removal, clear operations,
+  constructor callbacks and lock order. Do not eagerly instantiate every factory
+  merely to discover its target.
 - 045: LoadXnbAsset invokes ParseXnbHeader outside an exception-wrapping boundary.
   Genuine XNA's stream/header and object-body boundaries wrap IOException in
   ContentLoadException; do not indiscriminately wrap caller callback exceptions.
