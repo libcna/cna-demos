@@ -1,6 +1,8 @@
 # ISSUE-048 minimized reproduction — 2026-10-20
 
-Status: native repair built and focused validated; complete regression pending.
+Status: **FIXED_VALIDATED**, CNA `3a1437725`, final checkpoint2026-10-20.
+All155 historical IDs retained:74 final/81 pending. The chronological intermediate
+results below are retained; the final audit at the end supersedes pending entries.
 
 The public ContentBuildResult contract promises effective processor parameters.
 RunImportAndProcess correctly drops unknown/unconvertible parameters in
@@ -86,3 +88,22 @@ with no unexpected differences. Only the048 child failure additionally disappear
 the parent retains047. The GLES font screenshot was also visually inspected.
 Final isolated serial CTest59450 is running after all319 pre-test hashes passed.
 No closure or external freeze release until that gate and post-test audit finish.
+
+## Final closure
+
+Isolated serial CTest59450 completes0 in1427.54s:735 inventory,732 enabled,
+684 accepted Passed outcomes plus48 unchanged skips,three unchanged disabled.
+Every test status matches the prior sections checkpoint; all319 artifact hashes
+match both before and after. `repair-effective-parameters-ctest-final-audit.json`
+reports `errors: []`. This is an expected-failure-aware pass, not a claim that all
+historical failures disappeared. External freeze is released only after this audit.
+
+Both full renderer sweeps and native gates above are complete. The only additional
+change is the048 assertion becoming PASS; all36 checks and047 remain. No demo
+marker or assertion needs removal. This metadata/cache-identity repair has no new
+resource-lifetime mechanism requiring a dedicated sanitizer run; relevant earlier
+content lifetime sanitizer evidence remains separately recorded, not attributed
+to048. Runtime snapshot3a1437725 and unchanged behavior sources from demos3d1f833
+are the tested artifacts; later039/045 candidates are excluded from this checkpoint.
+Totals:41 runtime findings fixed,23 documentation corrections,eight already-fixed,
+one duplicate and one demo-expectation correction. No push or merge.

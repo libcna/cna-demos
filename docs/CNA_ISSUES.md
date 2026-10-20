@@ -2523,12 +2523,14 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-048 -- Lenient builds report dropped parameters as effective
 
-- **Campaign update (2026-10-20; full regression pending):** CNA `3a1437725`
+- **Resolved (2026-10-20; FIXED_VALIDATED):** CNA `3a1437725`
   returns actual effective parameters while separately preserving requested
   manifest/cache identity. Native251/552 gates and broader1412/runtime241/XML
   consumers preserve every prior result. Strict56 focused renderer executions
   remove only this failed assertion; all36 child checks remain and ISSUE-047
-  remains visible. Complete renderer sweeps/final CTest are still pending; see
+  remains visible. Both719 renderer sweeps, math95, six exact visuals and final
+  isolated732-enabled CTest pass their strict comparisons. All319 artifact hashes
+  agree before/after CTest,48 skips unchanged; see
   [parameter evidence](repair-evidence/content/EFFECTIVE_PARAMETERS.md).
 
 - **Area:** native `ContentPipeline::Build`, `ContentBuildResult::parameters` and XNA processor
@@ -2570,7 +2572,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   smoke runs. Exact comparisons with ORIGINAL 441-config add only this assertion (31/32 -> 32/33),
   retain every prior failure and match focused adapter checks. Normalized stderr is unchanged;
   all 30 selected runtime hashes match. Archives: `reports/checkpoint-441-contracts-*`.
-- **Status:** open; an observable public metadata/contract discrepancy, not a demo failure.
+- **Status:** Resolved by CNA `3a1437725`; historical metadata defect and evidence
+  retained. ISSUE-047 remains open and its marker is unchanged.
 
 ### CNA-DEMOS-ISSUE-050 -- Owner-only C game operations enter the foreign-thread queue
 
