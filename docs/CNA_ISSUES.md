@@ -244,51 +244,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   and `7a2cfc151a43ead9fc54e24ff18133dfc76d095a00e38836da0c2fa6b2220464`.
   No CNA source was modified and no upstream message was sent.
 
-### CNA-DEMOS-ISSUE-111 -- Direct XNA XNB writer ignores its build environment platform and profile
-
-- **Campaign status (2026-10-20): Resolved.** CNA `6823af99a` honors explicit
-  platform/profile, preserves compression and default-overload behavior, and
-  versions the writer identity to invalidate incorrect cached output. Four native
-  regressions and exact external33/33 controls pass. Complete native, both719-demo
-  renderer sweeps,732 enabled CTests and319-artifact hash audits pass; see
-  [checkpoint](repair-evidence/content/SECTIONS_CHECKPOINT.md). Demo marker removed
-  in `ce04195`; original assertions and historical evidence below remain.
-
-- **Area/API:** `CNA::Content::Pipeline::RegisterXnaXnbOutput`, specifically the registered
-  canonical writer's environment-aware `ContentTypeWriter::Write` overload.
-- **Demo/reproduction:** `content.custom.xml_xnb_pipeline` creates a default XNB compiler, adds its
-  existing `VitalWriter`, and directly calls `RegisterXnaXnbOutput` with container options that
-  retain the default Windows/Reach target while requesting LZX compression. It resolves the
-  resulting `CnaDemos.XmlVital` writer and calls the environment overload with Windows Phone,
-  HiDef and a private output directory. The emitted XNB is loaded through `VitalReader` as a
-  positive control.
-- **Observed:** the XNB is valid, compressed and restores the exact value63, but its header reports
-  `Windows/Reach`; the demo prints that exact pair and retains one labeled failed assertion. Ten
-  serial SOFTWARE and ten serial OPENGLES3-labelled runs each pass26 controls and fail only this
-  assertion plus established ISSUE-090. Their normalized stdout SHA-256 is
-  `f043f692ac5ad687634516a2ecdbdb7ed2cf3d4fa142c8946f7cf5b0e6e8e695`; normalized stderr SHA-256
-  is `d4de1e8a60e84e94cd4430995e7b9d160df8c9e3010e6bd39aa0fdc4cec57dad`.
-- **Expected/contract:** the public `RegisterXnaXnbOutput` declaration says its registration
-  options configure the container while platform and profile come from the build environment at
-  write time. The environment overload should map `targetPlatform` and `targetProfile` into the
-  compiler request, while retaining registration-time compression, reader-name and limit options.
-- **Cause observed in source:** `XnaObjectXnbWriter::Write(..., environment)` forwards only
-  `environment.outputDirectory`. It chooses `CompileOptions::targetPlatform` from
-  `options_.platform` and `targetProfile` from `options_.graphicsProfile`. This also contradicts
-  the implementation comment that calls platform/profile build properties.
-- **Scope/status:** open against clean isolated CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`. The same demo proves complete direct writer
-  registration, collision preservation, idempotence, stable identity/schema, compression and
-  runtime loading. Its end-to-end CLI path remains correct because the registry factory receives
-  command-line platform/profile in the registration options. No CNA source was modified, no
-  upstream message was sent and no genuine-XNA, GPU or visual behavior is claimed. Evidence:
-  `/tmp/checkpoint-994-authoritative-*`.
-- **Additional evidence:** Focused995 adds five passing `RegisterXnaXmlSourceContentPipeline`
-  controls around the same writer. The current demo passes31/33 controls, retaining only
-  ISSUE-090/111. Ten serial runs per renderer label share normalized stdout SHA-256
-  `2be8ac174e57aa7e88203f9a6fc49adcb3064b25343b3cffc24b3e8e71b944d7` and stderr SHA-256
-  `df194fd20910f4cf1206a8a06e8a4429fa6194cb7ada323069f3b791395e6d89`.
-
 ### CNA-DEMOS-ISSUE-110 -- Direct uncompressed-chunk helper bypasses its size contract
 
 - **Area/API:** `CNA::Content::Cnb::DecompressCnbChunk` with
@@ -870,215 +825,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `d23e139de9e5c15511b6be745de290896a69ee37`. The reproduction uses actual public C handles and is
   deterministic on both exercised renderers. Evidence:`/tmp/checkpoint-817-ibl-*`. No CNA source
   was modified, no upstream message was sent, and no PBR draw or visual result is claimed.
-
-### CNA-DEMOS-ISSUE-090 -- ContentTypeWriter Initialize deadlocks when retrieving a nested writer
-
-- **Campaign status (2026-10-20): Resolved.** CNA `7864dd5b1` invokes Initialize
-  outside the compiler lock, with duplicate/frozen validation before and after
-  callbacks. Genuine XNA8/8, bounded native9/9 and four native callback regressions
-  pass. Complete regression and frozen-artifact audit pass; see
-  [checkpoint](repair-evidence/content/SECTIONS_CHECKPOINT.md). Demo marker removed
-  in `ce04195`; the original deadlock reproduction and assertions remain.
-
-- **Area/API:** `ContentCompiler::AddTypeWriter`, `ContentTypeWriter::Initialize` and
-  `ContentCompiler::GetTypeWriter` in the build-time XNB compiler façade.
-- **Reproduction:** `content.custom.xml_xnb_pipeline` registers a focused writer whose
-  `Initialize(ContentCompiler&)` follows the documented contract by calling `GetTypeWriter` for
-  the built-in string writer it intends to cache. The attempt runs on a worker thread with a
-  one-second watchdog so the demo reports the failure instead of hanging its test process.
-- **Observed:** `AddTypeWriter` never returns and the watchdog records the one failed invariant.
-  The demo first completes thirty-one positive controls through the same public pipeline and focused
-  compiler probes: its main
-  writer is initialized, resolves a nested custom writer later from `Write`, receives Windows
-  Phone/HiDef target context, declines requested LZX compression, while a default writer accepts
-  requested LZX and produces a compressed payload that the runtime restores; it emits ordinary,
-  typed/raw, dynamically dispatched, shared-resource and external-reference values, loads them through game
-  readers, including ordinary/shared/external nulls, skips an unchanged source and rebuilds an
-  edited one; raw null, missing dynamic and foreign explicit writers are refused at their intended
-  boundaries; its compiler inventory/freeze and direct XNB-registration contracts also pass.
-  SOFTWARE and OPENGLES3 each pass31/33 controls; the second failure is independently labeled
-  ISSUE-111. Their outputs and intended diagnostics are identical after normalizing the private
-  temporary path.
-- **Cause observed in source:** `ContentCompiler::AddWriter` acquires its non-recursive `mutex_`
-  before invoking `facade->Initialize(*this)`. `GetTypeWriter` immediately tries to acquire the
-  same mutex, so the same thread waits on a lock it already owns. CNA's public documentation says
-  `Initialize` is called to retrieve and cache nested type writers, making this a direct contract
-  failure rather than unsupported re-entrancy invented by the demo.
-- **Expected:** a writer's `Initialize` callback can query already registered writers from the
-  supplied compiler and complete registration. Registration should preserve its duplicate/frozen
-  checks without holding a non-recursive lock across a callback documented to re-enter the
-  compiler.
-- **Scope/status:** open against clean isolated CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`. The reproduction is deterministic,
-  build-time-only and independent of graphics. The demo manually removes its private files before
-  starting the deadlock probe and flushes its result before terminating the focused process, since
-  the blocked thread cannot be joined. Evidence: `/tmp/checkpoint-773-xnb-writer-*`. No CNA source
-  was modified and no upstream message was sent.
-
-### CNA-DEMOS-ISSUE-089 -- Intermediate serializers never receive their Initialize callback
-
-- **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `5d32ca58b`
-  gives registered serializers one persistent callback owner, published one-time
-  initialization, and separate nested/concurrent document state. Seven native
-  regressions and all affected559/1965/consumer/runtime/XML gates pass, with
-  actual-TU sanitizer coverage. Both focused renderer suites pass65/eight unchanged
-  failures; the standalone tool's current20 ordered controls all pass unchanged.
-  A helper's stale historical18 count was corrected by read-only comparison against
-  the preceding20-label logs; original failure retained. Marker089 removed after
-  these passes. Full719 sweeps preserve every unrelated predecessor result; final
-  CTest684PASS/48 unchangedSKIP/three disabled, all735 outcomes and319 artifact hashes
-  match. Six exact visuals and both95 math sets pass. The separate C API root-contract
-  delta remains explicitly unresolved; this is not a global green checkpoint. Explicit C++ unique_ptr
-  registration cannot reconstruct XNA's reflection-created instances after failure;
-  its no-copy/no-retry ownership boundary is documented, not claimed equivalent.
-  See [validated checkpoint](repair-evidence/content/INITIALIZATION_CHECKPOINT.md).
-
-- **Pre-repair verification (2026-10-20; then confirmed open):** genuine initialization21
-  and publication/cycle/failure15 pass. Strict native initialization21 gives4PASS/
-  17FAIL; two owner-isolation cases retain10 owner/init failures while their nested
-  and concurrent per-operation context controls pass. Additional fresh-process
-  cycle11 and failure6 probes giveonePASS/tenFAIL andonePASS/fiveFAIL respectively.
-  No runtime repair yet. See [permanent evidence](repair-evidence/content/README.md).
-
-- **Area/API:** `ContentTypeSerializer::Initialize`, `IntermediateSerializer`, custom serializer
-  registration and the namespace-scanning pass.
-- **Reproduction:** register the custom `TypedEnvelopeSerializer`. Its `Initialize` override records
-  the call and caches the described Attack serializer from the supplied IntermediateSerializer.
-  Serialize an envelope whose `ScanChildren` override reports that Attack as a dynamic child, then
-  deserialize the emitted document.
-- **Observed:** `ScanChildren`, Serialize and Deserialize all run, the scan reserves the
-  `CnaDemos` namespace, and the nested `<Encounter Type="CnaDemos:Attack">` round-trips exactly.
-  `Initialize` is never called, so the serializer must perform a fallback lookup during Serialize.
-  SOFTWARE and OPENGLES3/Xvfb each pass16 of18 child controls and fail this invariant plus the
-  independent established ISSUE-088 invariant; stdout is byte-identical and stderr is empty.
-- **Cause observed in source:** `ContentTypeSerializerBase::InvokeInitialize` exists and the public
-  `Initialize` documentation says it retrieves and caches nested serializers. A source-wide search
-  finds no production caller. `RegisterTypeSerializer` installs the object without initializing it,
-  and `SerializeObject`/`DeserializeObject` construct a pass but never invoke initialization.
-- **Expected:** each registered custom serializer must receive `Initialize` with the active
-  IntermediateSerializer before child scanning or serialization/deserialization, with lifecycle
-  semantics that permit its documented nested-serializer cache. The demo's scan fallback is only
-  diagnostic; it does not make the failed callback pass.
-- **Scope/status:** open against clean isolated CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`. The issue is deterministic, build-time-only and
-  independent of graphics. Evidence: `/tmp/checkpoint-770-intermediate-scan-*`. No CNA source was
-  modified and no upstream message was sent. ISSUE-088 remains the demo's primary knownIssue
-  marker.
-
-### CNA-DEMOS-ISSUE-088 -- Conflicting intermediate XML shortcuts create a non-round-trippable serializer registration
-
-- **Campaign status (2026-10-20): Resolved.** CNA `80b8e45b2` validates XML alias
-  collisions before mutation and separates shortcut/full-name lookup priority.
-  Genuine collision11/11 and priority12/12, original native16/16 and actual-TU
-  sanitizer5/5 pass. Complete regression and frozen-artifact audit pass; see
-  [checkpoint](repair-evidence/content/SECTIONS_CHECKPOINT.md). Demo `ce04195`
-  retains this assertion and changes the marker to the still-open ISSUE-089.
-
-- **Area/API:** `IntermediateSerializer::AddTypeSerializer`, `RegisterTypeSerializer`,
-  `FindTypeSerializer` and intermediate XML `Type` shortcut resolution.
-- **Reproduction:** register `DiceRollSerializer` for `CnaDemos.DiceRoll` with XML shortcut `dice`,
-  then register `CoinFlipSerializer` for the distinct `CnaDemos.CoinFlip` type with the same
-  shortcut. Serialize a CoinFlip root and immediately deserialize it as CoinFlip.
-- **Observed:** the second registration returns successfully and installs CoinFlip under its C++
-  type and full name, but the `dice` name remains mapped to DiceRoll. CoinFlip serialization emits
-  `<Asset Type="dice">3c</Asset>`; deserialization resolves that type as DiceRoll and refuses it as
-  unrelated to CoinFlip. Both renderer selections reproduce exactly one failed invariant among ten
-  controls; the nine other controls pass and child stderr is empty.
-- **Cause observed in source:** `RegisterTypeSerializer` checks only an existing target type. It
-  moves a new distinct-type serializer into registry ownership and installs its type/carrier before
-  using unchecked `std::map::emplace` calls for the full name and XML shortcut. A pre-existing name
-  silently keeps its old owner, leaving the returned serializer only partly registered.
-- **Expected:** a name collision must be rejected before registry mutation, or registration must
-  otherwise preserve a complete mapping whose own emitted XML resolves back to that serializer.
-  Re-registering the same target type may continue returning the first serializer, as the focused
-  control demonstrates.
-- **Scope/status:** open against clean isolated CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`. The issue is deterministic, build-time-only and
-  independent of graphics. Evidence: `/tmp/checkpoint-766-intermediate-registration-*`. No CNA
-  source was modified and no upstream message was sent.
-
-### CNA-DEMOS-ISSUE-087 -- Disposable XNB shared resources bypass the ReadAsset recorder
-
-- **Campaign status (2026-10-20): Resolved.** CNA `3d254dfa7`; demos `8b69456`.
-  Native36/sanitizers plus all affected native gates pass. Both renderer focus and
-  full719 comparisons preserve every predecessor outcome except087's improvement;
-  six exact visuals and final CTest684PASS/48 unchangedSKIP/three disabled pass,
-  with all319 artifact hashes unchanged. The independent C root-contract delta
-  remains explicitly unresolved, so this is not a globally green checkpoint.
-  See [complete evidence and scope](repair-evidence/content/DISPATCH_CHECKPOINT.md).
-  Historical candidate notes below are retained and superseded by this status.
-
-- **Repair committed (2026-10-20), FIXED_PENDING_REGRESSION:** CNA `3d254dfa7`
-  contains the shared-resource/typed/raw dispatch repair and36 native regressions.
-  All native gates below pass; complete external build is warning-free. Both
-  renderer focused suites give64PASS/nine unchangedFAIL each, including the
-  unchanged17/17 shared-resource assertions. The087 marker is removed only after
-  these passes; marker-build/focus and full719/CTest/visual regression are pending.
-  A separate additional demo-oracle defect was demonstrated: serialized index0
-  returns null rather than the offered fallback. Genuine53 verifies this; initial
-  demo5/13 failures remain, and the corrected demo preserves all13 controls,
-  including an explicit unchanged-offered-object check. No default-manager011 or
-  C API root-contract issue is claimed fixed. This issue is not yet Resolved.
-
-- **Native checkpoint10:32 UTC (not resolved):** all corrected whole-build,
-  module1965, pipeline552, consumer1412, runtime241 and XML gates complete with
-  exact expected outcomes and four artifact hashes unchanged. Actual-TU sanitizer
-  rerun36/36 against rebuilt libraries passes. External whole build is still
-  running; original nullable candidate failures remain retained below.
-
-- **Repair candidate (2026-10-20; not resolved):**28 native reference/value controls
-  change from10PASS/18FAIL to28PASS against the actual ContentReader implementation;
-  ASan/UBSan/leak-instrumented TU and tests also pass28/28. Exact audits retain all
-  old assertions. The candidate preserves disposable capability through erasure,
-  unifies typed/raw invocation, checks existing identity and uses target semantics
-  for explicit dispatch. Whole CNA compilation and external regression are pending.
-  Additional nullable boxing controls are prepared, not yet executed; default
-  manager ownership011 remains separate. See the linked permanent evidence below.
-- **Nullable follow-up:** expanded genuine value oracle34/34 retains all18 original
-  controls. Eight additional native cases exposed four null-existing failures in
-  the candidate, now corrected; all36 normal and actual-TU sanitizer cases pass.
-  The first incomplete whole build was interrupted and retained, not called a pass;
-  corrected whole build now passes with no new warnings. Full1965-case module gives
-  1961PASS/four unchangedSKIP; exact baseline comparison has no differences.
-  Wider native and external regression remain pending, so this is not yet Resolved.
-- **Additional boundary evidence (2026-10-20):** genuine dispatch now passes53/53,
-  preserving the original39 labels and adding14 null-existing/wrong-requested-type
-  checks. Native19 givesfivePASS/fourteenFAIL, preserving all17 previous outcomes.
-  The two new grouped cases expose null-existing recording and wrong-type payload
-  consumption/ownership ordering; no production repair or closure is claimed.
-  Exact audit `repair-content-dispatch-boundaries-audit.json` has no differences
-  in the original controls. Initial strict-build bracing error is retained.
-- **Campaign verification (2026-10-20; still open):** genuine reference dispatch
-  passes39/39 and value-type controls18/18. New native dispatch regressions give
-  fivePASS/twelveFAIL, including this shared-table omission and related raw,
-  existing-instance, explicit-reader and null dispatch contracts. These are
-  recorded subfindings, not additional historical IDs. No runtime repair yet;
-  [reference and native evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
-
-- **Area/API:** `ContentManager::ReadAsset`, `ContentReader::ReadSharedResources`,
-  `ContentReader::InnerReadObjectAny` and disposal recording for XNB object graphs.
-- **Reproduction:** make the existing shared graph's `Item` implement `IDisposable`, expose
-  protected `ReadAsset<std::shared_ptr<Party>>` through a derived manager and supply a recorder.
-  The authored graph contains one typed inline Item and two Items in the shared-resource table.
-- **Observed:** the recorder receives the typed inline Item exactly once but receives neither
-  shared-table Item. The complete graph still decodes correctly: both root aliases, the forward
-  edge, weak back edge and all deferred fixups pass. SOFTWARE and OPENGLES3/Xvfb each pass16/17
-  controls and fail only the exact three-resource recorder assertion.
-- **Cause observed in source:** typed `InnerReadObject<T>` calls `RecordDisposable(result)`, while
-  `ReadSharedResources` constructs every table value through `InnerReadObjectAny`. That type-erased
-  route deliberately omits `RecordDisposable`, so a disposable value cannot reach either the
-  supplied callback or the manager fallback. The reference ContentReader performs its runtime
-  IDisposable check even when the static read type is object.
-- **Expected:** the supplied ReadAsset callback receives every IDisposable owned by the asset,
-  including values materialized from the shared-resource table. Alias fixups must not record the
-  same shared object again; each of the two table objects should appear once alongside the inline
-  object.
-- **Scope/status:** open against clean isolated CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`. This is distinct from ISSUE-011: a nonempty caller
-  recorder is present and demonstrably receives the typed inline object. Explicit cleanup follows
-  the assertion. No graphics, screenshot or manual inspection is involved. Evidence:
-  `/tmp/checkpoint-759-shared-resources-*`. No CNA source was modified and no upstream message was
-  sent.
 
 ### CNA-DEMOS-ISSUE-086 -- Destroying a secondary EasyGL device blacks out the primary device
 
@@ -1844,49 +1590,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   only failed control remains this issue. Both renderer selections report20/21 and the expected
   SOFTWARE CTest passes. Evidence:`/tmp/checkpoint-758-read-asset-*`.
 
-### CNA-DEMOS-ISSUE-012 -- `ContentManager::Load<T>` does not reliably load through an `OpenStream` override
-
-- **Area:** content -- an ordinary derived `ContentManager::Load<T>` resolves `.xnb`, `.cnb` and
-  registered loose-file readers directly on the filesystem (`TryReadAssetBytes`). Only the protected
-  `ReadAsset<T>` goes through the virtual `OpenStream`, so an `OpenStream` override is ignored unless
-  the derived class can also opt into CNA's protected `RouteLoadsThroughOpenStreamEXT` extension.
-  `ResourceContentManager` now opts in, but the routed branch runs before
-  `BuiltinContent<T>::Register`; its first `Load<Curve>` in a clean process reaches the resource and
-  then rejects the XNB's unregistered built-in `CurveReader`.
-- **Demos:** `content.content_manager.open_stream_override` (knownIssue; expected failure): a
-  derived manager serving an XNB texture from memory; `ReadAsset` works, `Load` does not.
-  `content.content_manager.resource_content_manager` (knownIssue; isolated expected failure): a
-  `ResourceContentManager` over a resource family holding a Curve `.xnb`; in a clean process,
-  `Load<Curve>("Bounce")` reaches the resource but rejects its unregistered `CurveReader`. The demo
-  is process-isolated because an earlier content load otherwise registers the reader globally and
-  masks the defect.
-- **Reproduction:**
-  ```cpp
-  class PackContentManager : public ContentManager {
-      std::unique_ptr<System::IO::Stream> OpenStream(const std::string& name) override; // memory
-  };
-  pack.Load<Texture2D>("wheel");   // ContentLoadException: Failed to load image: pack/wheel
-                                   // (OpenStream is not called)
-  ```
-- **Expected (XNA 4.0):** `Load<T>` -> `ReadAsset<T>` -> `OpenStream`, so overriding `OpenStream`
-  is the documented way to load from pack files, archives, encrypted or network content, and
-  `ResourceContentManager.Load` reads embedded resources.
-- **Suggestion:** register `BuiltinContent<T>` before the routed `ReadAsset<T>` call. Also let an
-  ordinary derived manager's `Load<T>` fall back to (or prefer) its `OpenStream` override without
-  requiring knowledge of a CNA-only opt-in; the tier ladder could remain the base behavior.
-- **Environment:** CNA 0.1.0 at `a6e8104d28`, GCC 14.2, Linux.
-- **Status:** partially fixed by CNA `c1006b03e` for resource routing; cold built-in reader
-  registration and ordinary override routing remain open and are not reported upstream yet.
-- **Repair campaign (2026-10-20, still open):** genuine XNA cold resource oracle14/14 confirms
-  no `Game` is required. Current `ReadAsset` already calls `BuiltinContent<T>::Register`; the
-  historical suggestion above is stale. The actual cold defect is the registry's no-op without
-  a Game declaration. Ordinary generic, move-only SoundEffect and erased external-reference
-  loads also bypass the virtual seam. Repair CNA `d7ce398d8` passes20 native controls,
-  actual-TU sanitizers, canonical native subsystem gates and146 external focused cases.
-  Both012 witnesses pass on SOFTWARE/OPENGLES3; only their markers are removed after
-  proof, preserving every assertion and cold-process isolation. Full regression is pending.
-  See [stream routing evidence](repair-evidence/content/STREAM_ROUTING.md).
-
 ### CNA-DEMOS-ISSUE-013 -- The content manifest lists the content pipeline's bookkeeping files
 
 - **Area:** content -- `ContentManager::GetContentManifest()` (CNAEXT) reports
@@ -2202,60 +1905,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ---
 
-### CNA-DEMOS-ISSUE-030 -- `SimulatedPacketLoss` drops reliable packets for good
-
-- **Campaign status (2026-10-20): Resolved / ALREADY_FIXED before campaign.** CNA
-  `01534c2e7f33d67191efe26c4434c874a244bfa3` repaired sender-side simulation and
-  Reliable exemption before the campaign baseline. Genuine XNA4 simulator27/27
-  proves the current demo's receiver-side setup and minimum-latency expectation
-  incorrect. Demo `0b4d2ce` corrects those assumptions, preserves exact packet
-  counts and all six checks; one staged SOFTWARE and one OPENGLES3 execution
-  pass6/6 each, native deterministic and ENet integration11/11. See
-  [permanent evidence](repair-evidence/NETWORK_SIMULATOR.md). The earlier strict
-  GLES assertion-delta failure is retained. Rebuilt aggregate six checks pass on
-  both renderers; marker removed in `3d1f833`. Both complete719 sweeps and final
-  732-enabled CTest checkpoint pass, with319 hashes verified before/after. This
-  is local SystemLink validation, not an online-service or Xbox hardware claim.
-
-- **Area:** net -- `ENetBackend` applies `NetworkSession::SimulatedPacketLoss` where AppData is
-  handed to a local gamer, after ENet's reliable transport has delivered it
-  (`ShouldDropForSimulatedLoss`, whatever the packet's `SendDataOptions`). A packet sent with
-  `SendDataOptions::Reliable` (or `ReliableInOrder`) is then lost for good. In XNA, reliable delivery
-  is guaranteed whatever the connection does -- the simulation makes it late (resent), never lost --
-  which is what a game tests with the simulation.
-- **Demos:** `net.network_session.simulated_conditions` (expected failure).
-- **Reproduction:** two processes in a System Link session; the receiver sets
-  `SimulatedPacketLoss = 0.3`; the sender sends one `SendDataOptions::Reliable` packet per frame with a
-  sequence number.
-- **Observed:** about 70 % of the reliable sequence numbers arrive (68 % in one run), the same share
-  as for unreliable packets.
-- **Deterministic demo revision (2026-10-11):** separate 24-pair bursts now test baseline,
-  200 ms latency, and `SimulatedPacketLoss = 1`. After the final burst settles, the receiver
-  restores loss to zero and both peers pump for another second before disconnecting. SOFTWARE
-  and OPENGLES3 each received all 24 reliable packets in the first two phases and zero from the
-  outage, even after recovery. The source still drops AppData after transport acknowledgement,
-  with no reliable retry queued there. Exact authored counts include missing endpoints.
-  The earlier short-sample percentage gates for unreliable delivery were demo assumptions,
-  not CNA guarantees; their observed fluctuations are not a new CNA issue. This is CNA runtime
-  evidence plus source inspection, not a genuine-XNA runtime comparison.
-- **Expected:** every reliable packet arrives; only unreliable ones are lost.
-- **Environment:** CNA 0.1.0, Linux, System Link (ENet).
-- **Status:** open; not reported upstream yet.
-
-- **Demo watchdog correction (2026-10-12):** initial 466 SOFTWARE reached recovery but its
-  aggregate 20-second orchestration deadline expired before packet evaluation. The original raw
-  failure is archived and was not accepted as an ISSUE-030 reproduction. Unchanged isolated
-  runs and the per-phase-watchdog repair both retain all five original child checks: four pass,
-  and exactly the reliable-loss assertion fails on both renderers. The repair changes only
-  bounded coordination timing, including sign-in waits; packet counts, pacing, latency and
-  recovery assertions remain unchanged. This does not add a CNA issue or waive the earlier
-  interrupted evaluation. Full repaired466-timing validation passes all479enabled CTests
-  and both exact smoke comparisons. Controlled identical8-second phase delays also prove the
-  repaired37.41-second exchange retains all five host checks while the original sender times
-  out at22.88seconds. Complete466-transfer subsequently preserves the same network checks.
-
----
-
 ### CNA-DEMOS-ISSUE-031 -- glTF STEP and CUBICSPLINE animation samplers play as LINEAR
 
 - **Area:** content, glTF import -- `GltfImportCore`'s `ExtractClips` evaluates each channel
@@ -2564,56 +2213,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   files belong to this demo and are removed by scoped cleanup. No CNA edits or upstream report.
 
 
-### CNA-DEMOS-ISSUE-046 -- Intermediate XML cannot read its own aliased external TargetType
-
-- **Campaign status (2026-10-20): Resolved.** CNA `f421948fe` resolves
-  external target identities in the node's namespace scope and canonicalizes both
-  table entries and pending fixups, including generic targets without serializers.
-  Genuine XNA15/15, native focus58/58 and actual-TU/corpus ASan/UBSan/leak44/44 pass.
-  Full552 native and both719 external sweeps pass, as do732 enabled CTests and the
-  final319-artifact audit. Demo20/20 passes on each renderer; marker removed in
-  `3d1f833` with original assertions retained. Historical evidence below remains;
-  see [checkpoint](repair-evidence/content/SECTIONS_CHECKPOINT.md).
-
-- **Area:** IntermediateSerializer external-reference writing/reading and namespace resolution.
-- **Demo:** `content.custom.intermediate_external_references`; ten child checks, nine passing
-  and one native emitted-XML round-trip failure. No graphics or referenced-file loading is needed.
-- **Reproduction:** describe Scene and Profile in the same `CnaDemos.External` namespace. Scene
-  has an inline Profile preview and two ExternalReference<Profile> wrappers naming one file,
-  plus a second file and a null reference. Serialize with an absolute document relocation path,
-  then feed that exact XML to Deserialize<Scene> with the same path.
-- **Observed:** the writer emits `xmlns:External="CnaDemos.External"` and
-  `TargetType="External:Profile"`. Deserialize throws InvalidContentException containing
-  `Cannot find type "External:Profile".` The embedded preview loads via the same registered
-  Profile serializer. A separately identified control using `CnaDemos.External.Profile` for the
-  two TargetType attributes succeeds, including filename relocation and wrapper/null semantics.
-- **Expected:** the serializer can deserialize its own valid namespace-qualified external
-  references, resolving their target identities in the document's namespace context. This is a
-  CNA round-trip contract check, not a genuine-XNA runtime comparison.
-- **Cause:** IntermediateWriter::WriteExternalReferences calls SpellDeclaredTypeName, which
-  uses an existing namespace alias. IntermediateReader::ReadExternalReferences instead sends
-  the raw attribute to IsKnownTypeName and stores it unchanged; CanonicalTypeName does not
-  resolve document namespace aliases. ApplyFixups also compares the stored spelling directly
-  against the canonical target name. Both lookup and comparison need the resolved identity;
-  registering a hidden global alias in the demo would obscure the defect.
-- **Evidence/environment:** fresh Linux GCC 14.2 processes WITHOUT DISPLAY/WAYLAND_DISPLAY,
-  `/tmp/cna-437-xml-external-{SOFTWARE,OPENGLES3}.{json,log}`. Each initial unlabeled run
-  has exactly this failed check and nine passing checks. CNA observed at
-  e5014ffaaec2b7f2b018b4dad1f5e299899315f7 after external C API changes; the inspected
-  content-pipeline sources have no uncommitted edits. No atomic dependency snapshot is claimed.
-- **Handling:** preserve the original XML and failing assertion with ISSUE-046. Catch only the
-  diagnosed InvalidContentException so independent controls can run; other failures propagate.
-  Canonical-name control XML is explicitly separate and does not replace the original output.
-  Referenced filenames are recorded, not imported, compiled or published by this XML tool.
-  No CNA code was changed and no upstream report was sent.
-- **Final labeled evidence:** `/tmp/cna-437-xml-external-final-{SOFTWARE,OPENGLES3}.{json,log}`
-  retains the same one failure with ISSUE-046 and nine passes. Its WILL_FAIL CTest passes with
-  the other 20 focused tests. Full 437 at b697786 passed all 450 enabled CTests and both
-  renderer smoke runs. Exact original reviews add only this failed assertion (28/29 -> 29/30),
-  retaining all older states/check counts/failures. Archives: reports/checkpoint-437-*; original
-  streams and final binary hashes are preserved. The first pre-CTest staging-warning attempt
-  remains archived separately; it was not an XML demo failure.
-
 ### CNA-DEMOS-ISSUE-047 -- AddOutputFile refuses a generated file in the configured output directory
 
 - **Area:** XNA pipeline adapter `ContentProcessorContext::AddOutputFile`, forwarded by
@@ -2658,60 +2257,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   C API work ongoing; no atomic source snapshot claimed and no CNA source edited by this task.
   These are CPU pipeline runs under renderer selections, not GPU or genuine-XNA execution.
 - **Status:** open; not reported upstream.
-
-### CNA-DEMOS-ISSUE-048 -- Lenient builds report dropped parameters as effective
-
-- **Resolved (2026-10-20; FIXED_VALIDATED):** CNA `3a1437725`
-  returns actual effective parameters while separately preserving requested
-  manifest/cache identity. Native251/552 gates and broader1412/runtime241/XML
-  consumers preserve every prior result. Strict56 focused renderer executions
-  remove only this failed assertion; all36 child checks remain and ISSUE-047
-  remains visible. Both719 renderer sweeps, math95, six exact visuals and final
-  isolated732-enabled CTest pass their strict comparisons. All319 artifact hashes
-  agree before/after CTest,48 skips unchanged; see
-  [parameter evidence](repair-evidence/content/EFFECTIVE_PARAMETERS.md).
-
-- **Area:** native `ContentPipeline::Build`, `ContentBuildResult::parameters` and XNA processor
-  parameter adapters under `ContentStrictness::XnaCompatible`.
-- **Demo:** `content.custom.xna_pipeline_components`; existing ISSUE-047 remains the primary
-  knownIssue marker, with this second assertion explicitly labeled and documented.
-- **Public contract:** ContentPipeline.hpp documents the returned `parameters` as "Effective
-  processor parameters". After warning/default handling removes rejected entries before Process,
-  this result should describe what the processor actually received. The caller's original request
-  should remain intact; keeping that request is a separate passing check.
-- **Reproduction:** register the actual route importer, bounds processor and CNB writer. Request
-  `Padding = string("wide")` and `UnknownPadding = double(1.5)` in XnaCompatible mode, then call
-  `ContentPipeline::Build`. Compare the returned bytes to a default build, inspect both contextual
-  warnings and inspect `result.parameters.Values()`.
-- **Observed:** the build succeeds, warns once for each rejected parameter and emits bytes equal
-  to the default bounds. Nevertheless, both rejected entries remain in `result.parameters`.
-  The current focused demo has 34 passing checks and two failures (this discrepancy plus older
-  ISSUE-047) under both displayless SOFTWARE and OPENGLES3 selections. A valid Padding override survives
-  removal of the unknown parameter; a missing processor input still refuses the build.
-- **Cause verified in source:** RunImportAndProcess computes a local `effective` set and supplies
-  it to ContentProcessorContext, but Build later assigns `result.parameters = request.parameters`.
-  MakeContentBuildManifestEntry also copies result.parameters. That latter observation does not
-  establish a manifest/cache failure: requested configuration may need its own fingerprint identity.
-  The fix should distinguish requested versus effective metadata without silently changing cache
-  semantics, or explicitly correct the public contract if requested parameters are intended.
-- **Evidence:** `/tmp/cna-441-strictness-first-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}` retains
-  the initial unlabeled failure. Child stdout is authoritative (standalone JSON has zero checks);
-  stderr is empty and private directories were independently confirmed absent. Build log:
-  `/tmp/cna-441-contracts-build.log` (clean); metadata 441/0. Final labeled evidence is
-  `/tmp/cna-441-strictness-final-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}`: exactly the same two
-  failures, 17 passes, and both returned key names printed. All 13 original checks are retained.
-  Original focused streams and inspected source hashes are archived as
-  `reports/checkpoint-441-contracts-focused-*`. No incorrect compiled output, GPU behavior or genuine-XNA comparison is claimed.
-- **Environment:** Linux, GCC 14.2; observed CNA HEAD
-  `69acd67e51b6ec542d8ad429825da3e5bfce89db`. The inspected pipeline header/implementation and
-  XnaPipelineBridge.hpp had no uncommitted changes; other external C API work continues. This is
-  not an atomic source/dependency snapshot. No CNA source was changed or upstream message sent.
-- **Complete checkpoint:** 441-contracts at 2d28a13 passes all 454 enabled CTests and both full
-  smoke runs. Exact comparisons with ORIGINAL 441-config add only this assertion (31/32 -> 32/33),
-  retain every prior failure and match focused adapter checks. Normalized stderr is unchanged;
-  all 30 selected runtime hashes match. Archives: `reports/checkpoint-441-contracts-*`.
-- **Status:** Resolved by CNA `3a1437725`; historical metadata defect and evidence
-  retained. ISSUE-047 remains open and its marker is unchanged.
 
 ### CNA-DEMOS-ISSUE-050 -- Owner-only C game operations enter the foreign-thread queue
 
@@ -2927,6 +2472,475 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-111 -- Direct XNA XNB writer ignores its build environment platform and profile
+
+- **Campaign status (2026-10-20): Resolved.** CNA `6823af99a` honors explicit
+  platform/profile, preserves compression and default-overload behavior, and
+  versions the writer identity to invalidate incorrect cached output. Four native
+  regressions and exact external33/33 controls pass. Complete native, both719-demo
+  renderer sweeps,732 enabled CTests and319-artifact hash audits pass; see
+  [checkpoint](repair-evidence/content/SECTIONS_CHECKPOINT.md). Demo marker removed
+  in `ce04195`; original assertions and historical evidence below remain.
+
+- **Area/API:** `CNA::Content::Pipeline::RegisterXnaXnbOutput`, specifically the registered
+  canonical writer's environment-aware `ContentTypeWriter::Write` overload.
+- **Demo/reproduction:** `content.custom.xml_xnb_pipeline` creates a default XNB compiler, adds its
+  existing `VitalWriter`, and directly calls `RegisterXnaXnbOutput` with container options that
+  retain the default Windows/Reach target while requesting LZX compression. It resolves the
+  resulting `CnaDemos.XmlVital` writer and calls the environment overload with Windows Phone,
+  HiDef and a private output directory. The emitted XNB is loaded through `VitalReader` as a
+  positive control.
+- **Observed:** the XNB is valid, compressed and restores the exact value63, but its header reports
+  `Windows/Reach`; the demo prints that exact pair and retains one labeled failed assertion. Ten
+  serial SOFTWARE and ten serial OPENGLES3-labelled runs each pass26 controls and fail only this
+  assertion plus established ISSUE-090. Their normalized stdout SHA-256 is
+  `f043f692ac5ad687634516a2ecdbdb7ed2cf3d4fa142c8946f7cf5b0e6e8e695`; normalized stderr SHA-256
+  is `d4de1e8a60e84e94cd4430995e7b9d160df8c9e3010e6bd39aa0fdc4cec57dad`.
+- **Expected/contract:** the public `RegisterXnaXnbOutput` declaration says its registration
+  options configure the container while platform and profile come from the build environment at
+  write time. The environment overload should map `targetPlatform` and `targetProfile` into the
+  compiler request, while retaining registration-time compression, reader-name and limit options.
+- **Cause observed in source:** `XnaObjectXnbWriter::Write(..., environment)` forwards only
+  `environment.outputDirectory`. It chooses `CompileOptions::targetPlatform` from
+  `options_.platform` and `targetProfile` from `options_.graphicsProfile`. This also contradicts
+  the implementation comment that calls platform/profile build properties.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The same demo proves complete direct writer
+  registration, collision preservation, idempotence, stable identity/schema, compression and
+  runtime loading. Its end-to-end CLI path remains correct because the registry factory receives
+  command-line platform/profile in the registration options. No CNA source was modified, no
+  upstream message was sent and no genuine-XNA, GPU or visual behavior is claimed. Evidence:
+  `/tmp/checkpoint-994-authoritative-*`.
+- **Additional evidence:** Focused995 adds five passing `RegisterXnaXmlSourceContentPipeline`
+  controls around the same writer. The current demo passes31/33 controls, retaining only
+  ISSUE-090/111. Ten serial runs per renderer label share normalized stdout SHA-256
+  `2be8ac174e57aa7e88203f9a6fc49adcb3064b25343b3cffc24b3e8e71b944d7` and stderr SHA-256
+  `df194fd20910f4cf1206a8a06e8a4429fa6194cb7ada323069f3b791395e6d89`.
+
+### CNA-DEMOS-ISSUE-090 -- ContentTypeWriter Initialize deadlocks when retrieving a nested writer
+
+- **Campaign status (2026-10-20): Resolved.** CNA `7864dd5b1` invokes Initialize
+  outside the compiler lock, with duplicate/frozen validation before and after
+  callbacks. Genuine XNA8/8, bounded native9/9 and four native callback regressions
+  pass. Complete regression and frozen-artifact audit pass; see
+  [checkpoint](repair-evidence/content/SECTIONS_CHECKPOINT.md). Demo marker removed
+  in `ce04195`; the original deadlock reproduction and assertions remain.
+
+- **Area/API:** `ContentCompiler::AddTypeWriter`, `ContentTypeWriter::Initialize` and
+  `ContentCompiler::GetTypeWriter` in the build-time XNB compiler façade.
+- **Reproduction:** `content.custom.xml_xnb_pipeline` registers a focused writer whose
+  `Initialize(ContentCompiler&)` follows the documented contract by calling `GetTypeWriter` for
+  the built-in string writer it intends to cache. The attempt runs on a worker thread with a
+  one-second watchdog so the demo reports the failure instead of hanging its test process.
+- **Observed:** `AddTypeWriter` never returns and the watchdog records the one failed invariant.
+  The demo first completes thirty-one positive controls through the same public pipeline and focused
+  compiler probes: its main
+  writer is initialized, resolves a nested custom writer later from `Write`, receives Windows
+  Phone/HiDef target context, declines requested LZX compression, while a default writer accepts
+  requested LZX and produces a compressed payload that the runtime restores; it emits ordinary,
+  typed/raw, dynamically dispatched, shared-resource and external-reference values, loads them through game
+  readers, including ordinary/shared/external nulls, skips an unchanged source and rebuilds an
+  edited one; raw null, missing dynamic and foreign explicit writers are refused at their intended
+  boundaries; its compiler inventory/freeze and direct XNB-registration contracts also pass.
+  SOFTWARE and OPENGLES3 each pass31/33 controls; the second failure is independently labeled
+  ISSUE-111. Their outputs and intended diagnostics are identical after normalizing the private
+  temporary path.
+- **Cause observed in source:** `ContentCompiler::AddWriter` acquires its non-recursive `mutex_`
+  before invoking `facade->Initialize(*this)`. `GetTypeWriter` immediately tries to acquire the
+  same mutex, so the same thread waits on a lock it already owns. CNA's public documentation says
+  `Initialize` is called to retrieve and cache nested type writers, making this a direct contract
+  failure rather than unsupported re-entrancy invented by the demo.
+- **Expected:** a writer's `Initialize` callback can query already registered writers from the
+  supplied compiler and complete registration. Registration should preserve its duplicate/frozen
+  checks without holding a non-recursive lock across a callback documented to re-enter the
+  compiler.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The reproduction is deterministic,
+  build-time-only and independent of graphics. The demo manually removes its private files before
+  starting the deadlock probe and flushes its result before terminating the focused process, since
+  the blocked thread cannot be joined. Evidence: `/tmp/checkpoint-773-xnb-writer-*`. No CNA source
+  was modified and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-089 -- Intermediate serializers never receive their Initialize callback
+
+- **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `5d32ca58b`
+  gives registered serializers one persistent callback owner, published one-time
+  initialization, and separate nested/concurrent document state. Seven native
+  regressions and all affected559/1965/consumer/runtime/XML gates pass, with
+  actual-TU sanitizer coverage. Both focused renderer suites pass65/eight unchanged
+  failures; the standalone tool's current20 ordered controls all pass unchanged.
+  A helper's stale historical18 count was corrected by read-only comparison against
+  the preceding20-label logs; original failure retained. Marker089 removed after
+  these passes. Full719 sweeps preserve every unrelated predecessor result; final
+  CTest684PASS/48 unchangedSKIP/three disabled, all735 outcomes and319 artifact hashes
+  match. Six exact visuals and both95 math sets pass. The separate C API root-contract
+  delta remains explicitly unresolved; this is not a global green checkpoint. Explicit C++ unique_ptr
+  registration cannot reconstruct XNA's reflection-created instances after failure;
+  its no-copy/no-retry ownership boundary is documented, not claimed equivalent.
+  See [validated checkpoint](repair-evidence/content/INITIALIZATION_CHECKPOINT.md).
+
+- **Pre-repair verification (2026-10-20; then confirmed open):** genuine initialization21
+  and publication/cycle/failure15 pass. Strict native initialization21 gives4PASS/
+  17FAIL; two owner-isolation cases retain10 owner/init failures while their nested
+  and concurrent per-operation context controls pass. Additional fresh-process
+  cycle11 and failure6 probes giveonePASS/tenFAIL andonePASS/fiveFAIL respectively.
+  No runtime repair yet. See [permanent evidence](repair-evidence/content/README.md).
+
+- **Area/API:** `ContentTypeSerializer::Initialize`, `IntermediateSerializer`, custom serializer
+  registration and the namespace-scanning pass.
+- **Reproduction:** register the custom `TypedEnvelopeSerializer`. Its `Initialize` override records
+  the call and caches the described Attack serializer from the supplied IntermediateSerializer.
+  Serialize an envelope whose `ScanChildren` override reports that Attack as a dynamic child, then
+  deserialize the emitted document.
+- **Observed:** `ScanChildren`, Serialize and Deserialize all run, the scan reserves the
+  `CnaDemos` namespace, and the nested `<Encounter Type="CnaDemos:Attack">` round-trips exactly.
+  `Initialize` is never called, so the serializer must perform a fallback lookup during Serialize.
+  SOFTWARE and OPENGLES3/Xvfb each pass16 of18 child controls and fail this invariant plus the
+  independent established ISSUE-088 invariant; stdout is byte-identical and stderr is empty.
+- **Cause observed in source:** `ContentTypeSerializerBase::InvokeInitialize` exists and the public
+  `Initialize` documentation says it retrieves and caches nested serializers. A source-wide search
+  finds no production caller. `RegisterTypeSerializer` installs the object without initializing it,
+  and `SerializeObject`/`DeserializeObject` construct a pass but never invoke initialization.
+- **Expected:** each registered custom serializer must receive `Initialize` with the active
+  IntermediateSerializer before child scanning or serialization/deserialization, with lifecycle
+  semantics that permit its documented nested-serializer cache. The demo's scan fallback is only
+  diagnostic; it does not make the failed callback pass.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The issue is deterministic, build-time-only and
+  independent of graphics. Evidence: `/tmp/checkpoint-770-intermediate-scan-*`. No CNA source was
+  modified and no upstream message was sent. ISSUE-088 remains the demo's primary knownIssue
+  marker.
+
+### CNA-DEMOS-ISSUE-088 -- Conflicting intermediate XML shortcuts create a non-round-trippable serializer registration
+
+- **Campaign status (2026-10-20): Resolved.** CNA `80b8e45b2` validates XML alias
+  collisions before mutation and separates shortcut/full-name lookup priority.
+  Genuine collision11/11 and priority12/12, original native16/16 and actual-TU
+  sanitizer5/5 pass. Complete regression and frozen-artifact audit pass; see
+  [checkpoint](repair-evidence/content/SECTIONS_CHECKPOINT.md). Demo `ce04195`
+  retains this assertion and changes the marker to the still-open ISSUE-089.
+
+- **Area/API:** `IntermediateSerializer::AddTypeSerializer`, `RegisterTypeSerializer`,
+  `FindTypeSerializer` and intermediate XML `Type` shortcut resolution.
+- **Reproduction:** register `DiceRollSerializer` for `CnaDemos.DiceRoll` with XML shortcut `dice`,
+  then register `CoinFlipSerializer` for the distinct `CnaDemos.CoinFlip` type with the same
+  shortcut. Serialize a CoinFlip root and immediately deserialize it as CoinFlip.
+- **Observed:** the second registration returns successfully and installs CoinFlip under its C++
+  type and full name, but the `dice` name remains mapped to DiceRoll. CoinFlip serialization emits
+  `<Asset Type="dice">3c</Asset>`; deserialization resolves that type as DiceRoll and refuses it as
+  unrelated to CoinFlip. Both renderer selections reproduce exactly one failed invariant among ten
+  controls; the nine other controls pass and child stderr is empty.
+- **Cause observed in source:** `RegisterTypeSerializer` checks only an existing target type. It
+  moves a new distinct-type serializer into registry ownership and installs its type/carrier before
+  using unchecked `std::map::emplace` calls for the full name and XML shortcut. A pre-existing name
+  silently keeps its old owner, leaving the returned serializer only partly registered.
+- **Expected:** a name collision must be rejected before registry mutation, or registration must
+  otherwise preserve a complete mapping whose own emitted XML resolves back to that serializer.
+  Re-registering the same target type may continue returning the first serializer, as the focused
+  control demonstrates.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The issue is deterministic, build-time-only and
+  independent of graphics. Evidence: `/tmp/checkpoint-766-intermediate-registration-*`. No CNA
+  source was modified and no upstream message was sent.
+
+### CNA-DEMOS-ISSUE-087 -- Disposable XNB shared resources bypass the ReadAsset recorder
+
+- **Campaign status (2026-10-20): Resolved.** CNA `3d254dfa7`; demos `8b69456`.
+  Native36/sanitizers plus all affected native gates pass. Both renderer focus and
+  full719 comparisons preserve every predecessor outcome except087's improvement;
+  six exact visuals and final CTest684PASS/48 unchangedSKIP/three disabled pass,
+  with all319 artifact hashes unchanged. The independent C root-contract delta
+  remains explicitly unresolved, so this is not a globally green checkpoint.
+  See [complete evidence and scope](repair-evidence/content/DISPATCH_CHECKPOINT.md).
+  Historical candidate notes below are retained and superseded by this status.
+
+- **Repair committed (2026-10-20), FIXED_PENDING_REGRESSION:** CNA `3d254dfa7`
+  contains the shared-resource/typed/raw dispatch repair and36 native regressions.
+  All native gates below pass; complete external build is warning-free. Both
+  renderer focused suites give64PASS/nine unchangedFAIL each, including the
+  unchanged17/17 shared-resource assertions. The087 marker is removed only after
+  these passes; marker-build/focus and full719/CTest/visual regression are pending.
+  A separate additional demo-oracle defect was demonstrated: serialized index0
+  returns null rather than the offered fallback. Genuine53 verifies this; initial
+  demo5/13 failures remain, and the corrected demo preserves all13 controls,
+  including an explicit unchanged-offered-object check. No default-manager011 or
+  C API root-contract issue is claimed fixed. This issue is not yet Resolved.
+
+- **Native checkpoint10:32 UTC (not resolved):** all corrected whole-build,
+  module1965, pipeline552, consumer1412, runtime241 and XML gates complete with
+  exact expected outcomes and four artifact hashes unchanged. Actual-TU sanitizer
+  rerun36/36 against rebuilt libraries passes. External whole build is still
+  running; original nullable candidate failures remain retained below.
+
+- **Repair candidate (2026-10-20; not resolved):**28 native reference/value controls
+  change from10PASS/18FAIL to28PASS against the actual ContentReader implementation;
+  ASan/UBSan/leak-instrumented TU and tests also pass28/28. Exact audits retain all
+  old assertions. The candidate preserves disposable capability through erasure,
+  unifies typed/raw invocation, checks existing identity and uses target semantics
+  for explicit dispatch. Whole CNA compilation and external regression are pending.
+  Additional nullable boxing controls are prepared, not yet executed; default
+  manager ownership011 remains separate. See the linked permanent evidence below.
+- **Nullable follow-up:** expanded genuine value oracle34/34 retains all18 original
+  controls. Eight additional native cases exposed four null-existing failures in
+  the candidate, now corrected; all36 normal and actual-TU sanitizer cases pass.
+  The first incomplete whole build was interrupted and retained, not called a pass;
+  corrected whole build now passes with no new warnings. Full1965-case module gives
+  1961PASS/four unchangedSKIP; exact baseline comparison has no differences.
+  Wider native and external regression remain pending, so this is not yet Resolved.
+- **Additional boundary evidence (2026-10-20):** genuine dispatch now passes53/53,
+  preserving the original39 labels and adding14 null-existing/wrong-requested-type
+  checks. Native19 givesfivePASS/fourteenFAIL, preserving all17 previous outcomes.
+  The two new grouped cases expose null-existing recording and wrong-type payload
+  consumption/ownership ordering; no production repair or closure is claimed.
+  Exact audit `repair-content-dispatch-boundaries-audit.json` has no differences
+  in the original controls. Initial strict-build bracing error is retained.
+- **Campaign verification (2026-10-20; still open):** genuine reference dispatch
+  passes39/39 and value-type controls18/18. New native dispatch regressions give
+  fivePASS/twelveFAIL, including this shared-table omission and related raw,
+  existing-instance, explicit-reader and null dispatch contracts. These are
+  recorded subfindings, not additional historical IDs. No runtime repair yet;
+  [reference and native evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
+
+- **Area/API:** `ContentManager::ReadAsset`, `ContentReader::ReadSharedResources`,
+  `ContentReader::InnerReadObjectAny` and disposal recording for XNB object graphs.
+- **Reproduction:** make the existing shared graph's `Item` implement `IDisposable`, expose
+  protected `ReadAsset<std::shared_ptr<Party>>` through a derived manager and supply a recorder.
+  The authored graph contains one typed inline Item and two Items in the shared-resource table.
+- **Observed:** the recorder receives the typed inline Item exactly once but receives neither
+  shared-table Item. The complete graph still decodes correctly: both root aliases, the forward
+  edge, weak back edge and all deferred fixups pass. SOFTWARE and OPENGLES3/Xvfb each pass16/17
+  controls and fail only the exact three-resource recorder assertion.
+- **Cause observed in source:** typed `InnerReadObject<T>` calls `RecordDisposable(result)`, while
+  `ReadSharedResources` constructs every table value through `InnerReadObjectAny`. That type-erased
+  route deliberately omits `RecordDisposable`, so a disposable value cannot reach either the
+  supplied callback or the manager fallback. The reference ContentReader performs its runtime
+  IDisposable check even when the static read type is object.
+- **Expected:** the supplied ReadAsset callback receives every IDisposable owned by the asset,
+  including values materialized from the shared-resource table. Alias fixups must not record the
+  same shared object again; each of the two table objects should appear once alongside the inline
+  object.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. This is distinct from ISSUE-011: a nonempty caller
+  recorder is present and demonstrably receives the typed inline object. Explicit cleanup follows
+  the assertion. No graphics, screenshot or manual inspection is involved. Evidence:
+  `/tmp/checkpoint-759-shared-resources-*`. No CNA source was modified and no upstream message was
+  sent.
+
+### CNA-DEMOS-ISSUE-012 -- `ContentManager::Load<T>` does not reliably load through an `OpenStream` override
+
+- **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `d7ce398d8`, demo markers
+  `dc9bfac`. Ordinary, SoundEffect and erased-reference loads honor OpenStream;
+  standalone resource loading installs the required reader family without Game.
+  Genuine cold14/14, twenty native regressions, actual-five-TU sanitizers and all
+  affected native gates pass. Initial/marker focus67PASS/six unchangedFAIL per
+  renderer; both full719 sweeps improve only the two012 cases from the preceding
+  checkpoint. All732 enabled CTests are accepted (684PASS/48 unchangedSKIP),
+  all735 outcomes/319 artifact hashes match, and six visual references are exact.
+  The unrelated C API RootDirectory conflict remains explicit; this is not a
+  globally green checkpoint. Every assertion and cold-process isolation remains.
+  See [validated checkpoint](repair-evidence/content/STREAM_ROUTING_CHECKPOINT.md).
+  Historical evidence and pre-closure progress follow.
+
+- **Area:** content -- an ordinary derived `ContentManager::Load<T>` resolves `.xnb`, `.cnb` and
+  registered loose-file readers directly on the filesystem (`TryReadAssetBytes`). Only the protected
+  `ReadAsset<T>` goes through the virtual `OpenStream`, so an `OpenStream` override is ignored unless
+  the derived class can also opt into CNA's protected `RouteLoadsThroughOpenStreamEXT` extension.
+  `ResourceContentManager` now opts in, but the routed branch runs before
+  `BuiltinContent<T>::Register`; its first `Load<Curve>` in a clean process reaches the resource and
+  then rejects the XNB's unregistered built-in `CurveReader`.
+- **Demos:** `content.content_manager.open_stream_override` (knownIssue; expected failure): a
+  derived manager serving an XNB texture from memory; `ReadAsset` works, `Load` does not.
+  `content.content_manager.resource_content_manager` (knownIssue; isolated expected failure): a
+  `ResourceContentManager` over a resource family holding a Curve `.xnb`; in a clean process,
+  `Load<Curve>("Bounce")` reaches the resource but rejects its unregistered `CurveReader`. The demo
+  is process-isolated because an earlier content load otherwise registers the reader globally and
+  masks the defect.
+- **Reproduction:**
+  ```cpp
+  class PackContentManager : public ContentManager {
+      std::unique_ptr<System::IO::Stream> OpenStream(const std::string& name) override; // memory
+  };
+  pack.Load<Texture2D>("wheel");   // ContentLoadException: Failed to load image: pack/wheel
+                                   // (OpenStream is not called)
+  ```
+- **Expected (XNA 4.0):** `Load<T>` -> `ReadAsset<T>` -> `OpenStream`, so overriding `OpenStream`
+  is the documented way to load from pack files, archives, encrypted or network content, and
+  `ResourceContentManager.Load` reads embedded resources.
+- **Suggestion:** register `BuiltinContent<T>` before the routed `ReadAsset<T>` call. Also let an
+  ordinary derived manager's `Load<T>` fall back to (or prefer) its `OpenStream` override without
+  requiring knowledge of a CNA-only opt-in; the tier ladder could remain the base behavior.
+- **Environment:** CNA 0.1.0 at `a6e8104d28`, GCC 14.2, Linux.
+- **Status:** partially fixed by CNA `c1006b03e` for resource routing; cold built-in reader
+  registration and ordinary override routing remain open and are not reported upstream yet.
+- **Repair campaign before final regression (2026-10-20):** genuine XNA cold resource oracle14/14 confirms
+  no `Game` is required. Current `ReadAsset` already calls `BuiltinContent<T>::Register`; the
+  historical suggestion above is stale. The actual cold defect is the registry's no-op without
+  a Game declaration. Ordinary generic, move-only SoundEffect and erased external-reference
+  loads also bypass the virtual seam. Repair CNA `d7ce398d8` passes20 native controls,
+  actual-TU sanitizers, canonical native subsystem gates and146 external focused cases.
+  Both012 witnesses pass on SOFTWARE/OPENGLES3; only their markers are removed after
+  proof, preserving every assertion and cold-process isolation. Full regression was still pending at that stage.
+  See [stream routing evidence](repair-evidence/content/STREAM_ROUTING.md).
+
+### CNA-DEMOS-ISSUE-030 -- `SimulatedPacketLoss` drops reliable packets for good
+
+- **Campaign status (2026-10-20): Resolved / ALREADY_FIXED before campaign.** CNA
+  `01534c2e7f33d67191efe26c4434c874a244bfa3` repaired sender-side simulation and
+  Reliable exemption before the campaign baseline. Genuine XNA4 simulator27/27
+  proves the current demo's receiver-side setup and minimum-latency expectation
+  incorrect. Demo `0b4d2ce` corrects those assumptions, preserves exact packet
+  counts and all six checks; one staged SOFTWARE and one OPENGLES3 execution
+  pass6/6 each, native deterministic and ENet integration11/11. See
+  [permanent evidence](repair-evidence/NETWORK_SIMULATOR.md). The earlier strict
+  GLES assertion-delta failure is retained. Rebuilt aggregate six checks pass on
+  both renderers; marker removed in `3d1f833`. Both complete719 sweeps and final
+  732-enabled CTest checkpoint pass, with319 hashes verified before/after. This
+  is local SystemLink validation, not an online-service or Xbox hardware claim.
+
+- **Area:** net -- `ENetBackend` applies `NetworkSession::SimulatedPacketLoss` where AppData is
+  handed to a local gamer, after ENet's reliable transport has delivered it
+  (`ShouldDropForSimulatedLoss`, whatever the packet's `SendDataOptions`). A packet sent with
+  `SendDataOptions::Reliable` (or `ReliableInOrder`) is then lost for good. In XNA, reliable delivery
+  is guaranteed whatever the connection does -- the simulation makes it late (resent), never lost --
+  which is what a game tests with the simulation.
+- **Demos:** `net.network_session.simulated_conditions` (expected failure).
+- **Reproduction:** two processes in a System Link session; the receiver sets
+  `SimulatedPacketLoss = 0.3`; the sender sends one `SendDataOptions::Reliable` packet per frame with a
+  sequence number.
+- **Observed:** about 70 % of the reliable sequence numbers arrive (68 % in one run), the same share
+  as for unreliable packets.
+- **Deterministic demo revision (2026-10-11):** separate 24-pair bursts now test baseline,
+  200 ms latency, and `SimulatedPacketLoss = 1`. After the final burst settles, the receiver
+  restores loss to zero and both peers pump for another second before disconnecting. SOFTWARE
+  and OPENGLES3 each received all 24 reliable packets in the first two phases and zero from the
+  outage, even after recovery. The source still drops AppData after transport acknowledgement,
+  with no reliable retry queued there. Exact authored counts include missing endpoints.
+  The earlier short-sample percentage gates for unreliable delivery were demo assumptions,
+  not CNA guarantees; their observed fluctuations are not a new CNA issue. This is CNA runtime
+  evidence plus source inspection, not a genuine-XNA runtime comparison.
+- **Expected:** every reliable packet arrives; only unreliable ones are lost.
+- **Environment:** CNA 0.1.0, Linux, System Link (ENet).
+- **Status:** open; not reported upstream yet.
+
+- **Demo watchdog correction (2026-10-12):** initial 466 SOFTWARE reached recovery but its
+  aggregate 20-second orchestration deadline expired before packet evaluation. The original raw
+  failure is archived and was not accepted as an ISSUE-030 reproduction. Unchanged isolated
+  runs and the per-phase-watchdog repair both retain all five original child checks: four pass,
+  and exactly the reliable-loss assertion fails on both renderers. The repair changes only
+  bounded coordination timing, including sign-in waits; packet counts, pacing, latency and
+  recovery assertions remain unchanged. This does not add a CNA issue or waive the earlier
+  interrupted evaluation. Full repaired466-timing validation passes all479enabled CTests
+  and both exact smoke comparisons. Controlled identical8-second phase delays also prove the
+  repaired37.41-second exchange retains all five host checks while the original sender times
+  out at22.88seconds. Complete466-transfer subsequently preserves the same network checks.
+
+---
+
+### CNA-DEMOS-ISSUE-046 -- Intermediate XML cannot read its own aliased external TargetType
+
+- **Campaign status (2026-10-20): Resolved.** CNA `f421948fe` resolves
+  external target identities in the node's namespace scope and canonicalizes both
+  table entries and pending fixups, including generic targets without serializers.
+  Genuine XNA15/15, native focus58/58 and actual-TU/corpus ASan/UBSan/leak44/44 pass.
+  Full552 native and both719 external sweeps pass, as do732 enabled CTests and the
+  final319-artifact audit. Demo20/20 passes on each renderer; marker removed in
+  `3d1f833` with original assertions retained. Historical evidence below remains;
+  see [checkpoint](repair-evidence/content/SECTIONS_CHECKPOINT.md).
+
+- **Area:** IntermediateSerializer external-reference writing/reading and namespace resolution.
+- **Demo:** `content.custom.intermediate_external_references`; ten child checks, nine passing
+  and one native emitted-XML round-trip failure. No graphics or referenced-file loading is needed.
+- **Reproduction:** describe Scene and Profile in the same `CnaDemos.External` namespace. Scene
+  has an inline Profile preview and two ExternalReference<Profile> wrappers naming one file,
+  plus a second file and a null reference. Serialize with an absolute document relocation path,
+  then feed that exact XML to Deserialize<Scene> with the same path.
+- **Observed:** the writer emits `xmlns:External="CnaDemos.External"` and
+  `TargetType="External:Profile"`. Deserialize throws InvalidContentException containing
+  `Cannot find type "External:Profile".` The embedded preview loads via the same registered
+  Profile serializer. A separately identified control using `CnaDemos.External.Profile` for the
+  two TargetType attributes succeeds, including filename relocation and wrapper/null semantics.
+- **Expected:** the serializer can deserialize its own valid namespace-qualified external
+  references, resolving their target identities in the document's namespace context. This is a
+  CNA round-trip contract check, not a genuine-XNA runtime comparison.
+- **Cause:** IntermediateWriter::WriteExternalReferences calls SpellDeclaredTypeName, which
+  uses an existing namespace alias. IntermediateReader::ReadExternalReferences instead sends
+  the raw attribute to IsKnownTypeName and stores it unchanged; CanonicalTypeName does not
+  resolve document namespace aliases. ApplyFixups also compares the stored spelling directly
+  against the canonical target name. Both lookup and comparison need the resolved identity;
+  registering a hidden global alias in the demo would obscure the defect.
+- **Evidence/environment:** fresh Linux GCC 14.2 processes WITHOUT DISPLAY/WAYLAND_DISPLAY,
+  `/tmp/cna-437-xml-external-{SOFTWARE,OPENGLES3}.{json,log}`. Each initial unlabeled run
+  has exactly this failed check and nine passing checks. CNA observed at
+  e5014ffaaec2b7f2b018b4dad1f5e299899315f7 after external C API changes; the inspected
+  content-pipeline sources have no uncommitted edits. No atomic dependency snapshot is claimed.
+- **Handling:** preserve the original XML and failing assertion with ISSUE-046. Catch only the
+  diagnosed InvalidContentException so independent controls can run; other failures propagate.
+  Canonical-name control XML is explicitly separate and does not replace the original output.
+  Referenced filenames are recorded, not imported, compiled or published by this XML tool.
+  No CNA code was changed and no upstream report was sent.
+- **Final labeled evidence:** `/tmp/cna-437-xml-external-final-{SOFTWARE,OPENGLES3}.{json,log}`
+  retains the same one failure with ISSUE-046 and nine passes. Its WILL_FAIL CTest passes with
+  the other 20 focused tests. Full 437 at b697786 passed all 450 enabled CTests and both
+  renderer smoke runs. Exact original reviews add only this failed assertion (28/29 -> 29/30),
+  retaining all older states/check counts/failures. Archives: reports/checkpoint-437-*; original
+  streams and final binary hashes are preserved. The first pre-CTest staging-warning attempt
+  remains archived separately; it was not an XML demo failure.
+
+### CNA-DEMOS-ISSUE-048 -- Lenient builds report dropped parameters as effective
+
+- **Resolved (2026-10-20; FIXED_VALIDATED):** CNA `3a1437725`
+  returns actual effective parameters while separately preserving requested
+  manifest/cache identity. Native251/552 gates and broader1412/runtime241/XML
+  consumers preserve every prior result. Strict56 focused renderer executions
+  remove only this failed assertion; all36 child checks remain and ISSUE-047
+  remains visible. Both719 renderer sweeps, math95, six exact visuals and final
+  isolated732-enabled CTest pass their strict comparisons. All319 artifact hashes
+  agree before/after CTest,48 skips unchanged; see
+  [parameter evidence](repair-evidence/content/EFFECTIVE_PARAMETERS.md).
+
+- **Area:** native `ContentPipeline::Build`, `ContentBuildResult::parameters` and XNA processor
+  parameter adapters under `ContentStrictness::XnaCompatible`.
+- **Demo:** `content.custom.xna_pipeline_components`; existing ISSUE-047 remains the primary
+  knownIssue marker, with this second assertion explicitly labeled and documented.
+- **Public contract:** ContentPipeline.hpp documents the returned `parameters` as "Effective
+  processor parameters". After warning/default handling removes rejected entries before Process,
+  this result should describe what the processor actually received. The caller's original request
+  should remain intact; keeping that request is a separate passing check.
+- **Reproduction:** register the actual route importer, bounds processor and CNB writer. Request
+  `Padding = string("wide")` and `UnknownPadding = double(1.5)` in XnaCompatible mode, then call
+  `ContentPipeline::Build`. Compare the returned bytes to a default build, inspect both contextual
+  warnings and inspect `result.parameters.Values()`.
+- **Observed:** the build succeeds, warns once for each rejected parameter and emits bytes equal
+  to the default bounds. Nevertheless, both rejected entries remain in `result.parameters`.
+  The current focused demo has 34 passing checks and two failures (this discrepancy plus older
+  ISSUE-047) under both displayless SOFTWARE and OPENGLES3 selections. A valid Padding override survives
+  removal of the unknown parameter; a missing processor input still refuses the build.
+- **Cause verified in source:** RunImportAndProcess computes a local `effective` set and supplies
+  it to ContentProcessorContext, but Build later assigns `result.parameters = request.parameters`.
+  MakeContentBuildManifestEntry also copies result.parameters. That latter observation does not
+  establish a manifest/cache failure: requested configuration may need its own fingerprint identity.
+  The fix should distinguish requested versus effective metadata without silently changing cache
+  semantics, or explicitly correct the public contract if requested parameters are intended.
+- **Evidence:** `/tmp/cna-441-strictness-first-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}` retains
+  the initial unlabeled failure. Child stdout is authoritative (standalone JSON has zero checks);
+  stderr is empty and private directories were independently confirmed absent. Build log:
+  `/tmp/cna-441-contracts-build.log` (clean); metadata 441/0. Final labeled evidence is
+  `/tmp/cna-441-strictness-final-{SOFTWARE,OPENGLES3}.{json,log,stderr.log}`: exactly the same two
+  failures, 17 passes, and both returned key names printed. All 13 original checks are retained.
+  Original focused streams and inspected source hashes are archived as
+  `reports/checkpoint-441-contracts-focused-*`. No incorrect compiled output, GPU behavior or genuine-XNA comparison is claimed.
+- **Environment:** Linux, GCC 14.2; observed CNA HEAD
+  `69acd67e51b6ec542d8ad429825da3e5bfce89db`. The inspected pipeline header/implementation and
+  XnaPipelineBridge.hpp had no uncommitted changes; other external C API work continues. This is
+  not an atomic source/dependency snapshot. No CNA source was changed or upstream message sent.
+- **Complete checkpoint:** 441-contracts at 2d28a13 passes all 454 enabled CTests and both full
+  smoke runs. Exact comparisons with ORIGINAL 441-config add only this assertion (31/32 -> 32/33),
+  retain every prior failure and match focused adapter checks. Normalized stderr is unchanged;
+  all 30 selected runtime hashes match. Archives: `reports/checkpoint-441-contracts-*`.
+- **Status:** Resolved by CNA `3a1437725`; historical metadata defect and evidence
+  retained. ISSUE-047 remains open and its marker is unchanged.
+
 
 ### CNA-DEMOS-ISSUE-149 -- intermediate null reads report broader exceptions than XNA
 

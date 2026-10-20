@@ -12,10 +12,24 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
-Current repair phase F (2026-10-20): all155 historical IDs retained,76 final/79
+Current repair phase F (2026-10-20): all155 historical IDs retained,77 final/78
 pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
+
+13:03 UTC: ISSUE-012 closed after full regression; runtime CNA d7ce398d8,
+marker demos dc9bfac. See STREAM_ROUTING_CHECKPOINT.md. Both719 sweeps retain
+only the original C-root contract residual; final CTest684PASS/48sameSKIP/three
+disabled and319 hashes exact. Global acceptance remains false, last accepted048.
+All155 issue bodies retained; nine already-resolved records moved under Resolved,
+body hashes unchanged (section audit errors[]). Counts44 fixed/23 documentation/
+eight already fixed/one demo expectation/one duplicate. No push or merge.
+Four boundary candidates105/106/108/110 now pass all native gates: module1990,
+pipeline562, consumers1412, runtime241, both XML sets and six link checks; exact
+prior skips and hashes unchanged. No active jobs. Next: coherent CNA commits,
+verify/release012 external freeze, correct three historical diagnostic assertions,
+build external boundary batch, initial146 focus before removing any markers.
+Uncommitted boundary sources/tests remain separate from012 closure documentation.
 
 12:51 UTC: boundary module1990 passes1986/four unchangedSKIP; six link checks pass,
 all hashes exact. Only pipeline30922 and external012 finalCTest78862 RUNNING(1 each).

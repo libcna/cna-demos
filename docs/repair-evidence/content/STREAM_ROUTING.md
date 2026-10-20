@@ -1,5 +1,9 @@
 # ISSUE-012 stream routing investigation
 
+Final status: resolved in CNA d7ce398d8 after complete native/external validation.
+See `STREAM_ROUTING_CHECKPOINT.md` for final results and the separate retained
+C-root contract conflict. Progress entries below preserve historical evidence.
+
 2026-10-20. Issue remains open; CNA repair committed `d7ce398d8`, full validation pending.
 Pre-repair native binary revision: CNA `5d32ca58b` (status HEAD `56dca0b43`).
 Permanent fixtures: `ContentStreamRoutingTests.cpp`, `ResourceContentColdOracle.cs`;

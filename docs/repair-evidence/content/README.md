@@ -2,10 +2,11 @@
 
 Current2026-10-20 status:089 is locally closed; see `INITIALIZATION_CHECKPOINT.md`
 for complete evidence and the retained unrelated C-root contract residual.012 is
-still pending full external regression; `STREAM_ROUTING.md` records its candidate.
+also locally closed; `STREAM_ROUTING_CHECKPOINT.md` records its full validation.
 `PUBLIC_BOUNDARY_TRIAGE.md` and six standalone C++ probes preserve before evidence
 for013/014/105/106/108/110. `BOUNDARY_REPAIRS.md` records uncommitted105/106/108/110
-candidates, focused normal/sanitizer passes and pending canonical regression;
+candidates, focused normal/sanitizer passes; canonical regression now also passes,
+with module1990/pipeline562 and unchanged consumer/runtime/XML/link outcomes;
 013/014 have no runtime repair yet. Older progress entries below are historical.
 
 ## ISSUE-012: stream routing baseline (2026-10-20)
