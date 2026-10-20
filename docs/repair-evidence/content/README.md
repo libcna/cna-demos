@@ -220,6 +220,17 @@ Reflection supplies only the unavailable build-host entry, not replacement behav
 
 ## ISSUE-088/089: intermediate registration and initialization references
 
+2026-10-20 native089 baseline: permanent `IntermediateInitializationProbe.cpp`
+strict C++23/Wall/Wextra/Werror build is warning-free;21 controls givefourPASS/
+seventeenFAIL, exactly audited in `repair-intermediate-initialization-native-before-*`.
+Both XML round trips and byte-identical repeated output pass, but initialization,
+callback owner identity and retained owner/nested-cache controls fail. No089 runtime
+patch is applied. Unlike the genuine process-wide owner, CNA currently constructs
+a stack-local IntermediateSerializer for each operation and keeps serializers in a
+process-wide registry. Initializing those serializers with that stack object would
+introduce dangling retained context, not fix the contract. Per-operation namespace
+aliases and relocation paths must also remain isolated when repairing owner lifetime.
+
 `IntermediateCollisionOracle.cs` passes11/11 on genuine XNA4. The real private
 registration entry rejects a distinct target with the same XML shortcut using
 exact InvalidOperationException. Its diagnostic identifies XmlTypeName and the
