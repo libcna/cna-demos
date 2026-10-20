@@ -17,6 +17,25 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+13:32 UTC: C adapter fix committed CNAc57ecab8c; native strict C smoke normal/
+sanitizer and unchanged external demo25/25 exact labels both pass. Root canonical
+build12705 COMPLETE0,1141 steps/45 prior warnings/zero new/three source hashes exact.
+21730 module1993 (three new focusPASS),85718 pipeline562,58114 consumers RUNNING
+(one worker each). Four native artifacts frozen. Manifest demo adds four assertions
+13->17 without removing any; still uncommitted pending external proof. Prepared
+content-roots external gates include C compatibility, retain all original residuals.
+Next native/link gates, combined external build/focus including C API and cold-root
+witness, then full regression. No closure credit yet;77 FINAL/78 PENDING unchanged.
+
+13:25 UTC: boundary full92630 FAILED with a new C API regression: the documented
+None-codec size-ignore contract, protected by unchanged cnb_foundations/CnbSmoke.
+SW719624/44/48/3; no GLES/finalCTest run. All evidence retained; do not close110.
+CNB_C_API_COMPATIBILITY.md records the cause and C-only adapter candidate preserving
+that ABI without weakening C++ limits. Normal strict native C smoke passes; sanitizer
+70975 RUNNING(1), root native build12705 RUNNING(2). External319 artifacts unchanged.
+No C demo assertion changed. Four C-only candidate files join three root files;
+native CNA excludes C API, so its active source freeze remains intact. Counts77/78.
+
 13:16 UTC: boundary demo regressions/markers committed34e530e after both146
 focus gates68PASS/five unchangedFAIL each renderer. Builds243+11 steps warning-free.
 Final92630 RUNNING(1) over319 frozen external artifacts; math/exact visuals pass,

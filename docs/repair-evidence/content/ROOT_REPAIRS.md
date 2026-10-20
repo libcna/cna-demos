@@ -54,3 +54,17 @@ pipeline562 unchanged, consumers1412/runtime241/XML/link exact. No overlapping
 SystemLink suites. No013/014 demo change, marker removal, commit or closure yet.
 The old private strict-stream flag comment is corrected while its header is touched;
 that comment-only clarification does not change the already validated012 behavior.
+
+Canonical build now completes1141 printed steps with45 exactly matched historical
+warnings and zero new diagnostics. Three source hashes match; four native artifacts
+are frozen. Module1993/pipeline562/consumers gates run independently; the three new
+focused regressions already pass. The preceding boundary external sweep failed on
+the documented C ABI None exception (see `CNB_C_API_COMPATIBILITY.md`), not on these
+root candidates, which were not in its binaries. Adapter fix is CNAc57ecab8c.
+
+The manifest demo adds four controls to its original thirteen: cached snapshot after
+staging files, exact bookkeeping exclusion, reserved subtree exclusion, and exact
+retention of legitimate hidden/prefix assets. No original control or tolerance is
+changed. External content-roots validation will include the four preceding boundary
+repairs and C adapter; only105 status should improve from the completed012 checkpoint,
+with manifest checks13->17. The original C API RootDirectory residual stays explicit.
