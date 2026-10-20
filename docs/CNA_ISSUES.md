@@ -917,6 +917,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-089 -- Intermediate serializers never receive their Initialize callback
 
+- **Current verification (2026-10-20; confirmed open):** genuine initialization21
+  and publication/cycle/failure15 pass. Strict native initialization21 gives4PASS/
+  17FAIL; two owner-isolation cases retain10 owner/init failures while their nested
+  and concurrent per-operation context controls pass. Additional fresh-process
+  cycle11 and failure6 probes giveonePASS/tenFAIL andonePASS/fiveFAIL respectively.
+  No runtime repair yet. See [permanent evidence](repair-evidence/content/README.md).
+
 - **Area/API:** `ContentTypeSerializer::Initialize`, `IntermediateSerializer`, custom serializer
   registration and the namespace-scanning pass.
 - **Reproduction:** register the custom `TypedEnvelopeSerializer`. Its `Initialize` override records
@@ -975,6 +982,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   source was modified and no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-087 -- Disposable XNB shared resources bypass the ReadAsset recorder
+
+- **Native checkpoint10:32 UTC (not resolved):** all corrected whole-build,
+  module1965, pipeline552, consumer1412, runtime241 and XML gates complete with
+  exact expected outcomes and four artifact hashes unchanged. Actual-TU sanitizer
+  rerun36/36 against rebuilt libraries passes. External whole build is still
+  running; original nullable candidate failures remain retained below.
 
 - **Repair candidate (2026-10-20; not resolved):**28 native reference/value controls
   change from10PASS/18FAIL to28PASS against the actual ContentReader implementation;

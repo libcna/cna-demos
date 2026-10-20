@@ -1,5 +1,24 @@
 # Content repair evidence
 
+## ISSUE-089: initialization cycle and failure baseline (2026-10-20)
+
+`IntermediateInitializationEdgesProbe.cpp` adds native counterparts of the already
+measured genuine15 publication/cycle/failure controls. Two fresh processes avoid
+cross-contamination from a deliberately throwing initializer. Strict C++23 build
+with Wall/Wextra/Werror is warning-free. Cycles give11 controls:onePASS/tenFAIL;
+failure gives6:onePASS/fiveFAIL. The passing controls show that unused payload
+writers are not invoked. Missing eager initialization, published self/mutual lookup,
+retained owner/cache and original exception propagation are explicit failures.
+Reports `repair-intermediate-initialization-edges-native-before-*`; exact audit
+errors[], actual probe exits1. No089 runtime patch or successful fix is claimed.
+
+These17 native controls deliberately do not pretend explicit CNAEXT unique_ptr
+registration can reconstruct fresh instances after failure: unlike XNA discovery,
+it retains no constructor factory. Genuine fresh-owner/fresh-instance recovery is
+still recorded by `IntermediateInitializationEdgesOracle.cs`, not discarded.
+Any implementation must explicitly resolve/document that registration boundary;
+retrying the same failed instance would not reproduce the measured XNA behavior.
+
 ## Completed checkpoint (2026-10-20)
 
 146/147/149 are FIXED_VALIDATED; see [the full checkpoint](CHECKPOINT.md).

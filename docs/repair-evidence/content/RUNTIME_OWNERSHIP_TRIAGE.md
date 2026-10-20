@@ -2,6 +2,14 @@
 
 ## Latest dispatch candidate (2026-10-20,09:32 UTC)
 
+Native gates complete10:32 UTC:552 pipeline=551PASS/one unchangedSDK-fixtureSKIP,
+932.000s. Exact previous043 case/status audit errors[], four post-gate artifact
+hashes match. Combined with the module1965, consumers1412, runtime241 and both XML
+fixture modes below, no native regression remains. The actual-TU sanitizer36 was
+also rerun against these rebuilt libraries:36PASS9ms, no ASan/UBSan/leak diagnostics
+and four hashes unchanged (`repair-content-dispatch-current-linked-sanitizer*`).
+External whole build remains running; no087 closure or marker removal yet.
+
 Canonical checkpoint10:15 UTC: corrected whole CNA build succeeds; all51 warnings
 match the preceding51 diagnostics/multiplicities. Nine source hashes match and four
 native artifacts are frozen. Canonical focus36/36PASS3ms; full module1965 gives
