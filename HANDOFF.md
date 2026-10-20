@@ -24,7 +24,7 @@ GLES656/53/7/3. Six pixel-exact visuals and both95 math sets pass. Final isolate
 CTest has735 inventory/732 enabled,684PASS/48 unchangedSKIP/three disabled; all319
 artifact hashes match. See `docs/repair-evidence/content/EFFECTIVE_PARAMETERS.md`.
 
-New committed repairs are still pending complete external regression:
+New committed repairs are still pending an accepted complete regression checkpoint:
 039/045 CNA583af2a5e,043 CNA252e9bca1,103 CNA68a3c7b1f. Native043 completes1929
 content cases,552 pipeline,1412 consumers/runtime241/XML and actual-TU sanitizer11,
 with exact prior outcomes and four matching hashes. C103 native/evidence probes
@@ -39,16 +39,30 @@ been weakened; the owner contract question is pending. Do not call this a green
 checkpoint or silently classify the C expectation as wrong. Both failed sweeps
 and final319 hashes are retained; their external freeze has been released.
 
-NEXT: full external rebuild54284 and marker rebuild14100 pass warning-free;
-initial and marker-updated146 exact focus each give63PASS/ten unchangedFAIL per
-renderer. All counts/unrelated failures remain exact.319 external artifacts are
-FROZEN for full job8777 (math, metadata/tools, visuals, both719 sweeps). The C root
-contract regression remains a reported failure, not an allowed delta. Continue the
-independent087 ownership/dispatch batch: genuine53/53 reference controls plus18/18
-value controls; native19 givesfivePASS/fourteenFAIL with all17 prior outcomes
-unchanged. No087 production change yet. See CNA's live handoff for exact commands,
-active jobs and freezes; limit campaign compiler/test workers to THREE, private
-GPU only. Sharp99c2f79c/EasyGLf4d6afa/MetaGLdd3b300 are unchanged and clean.
+The043 full external run now completes:63 intended status improvements against
+campaign start, but the same C root assertion delta remains on both renderers.
+Both95 math, metadata/tools and six exact visuals pass. Final serial CTest has
+684PASS/48 unchangedSKIP/three disabled936.58s, all735 outcomes and319 hashes match.
+Its external freeze was released only afterward;048 remains the accepted checkpoint.
+
+NEXT (10:23 UTC):087 candidate is uncommitted in CNA. Genuine reference53 and
+value/nullable34 pass; all36 focused native cases pass normally and with actual-TU
+ASan/UBSan/leak instrumentation, including against the rebuilt libraries. Corrected
+whole CNA build succeeds with the same51 warnings. Native1965 gives1961PASS/four
+unchangedSKIP; consumers1412/runtime241/default and original XML retain every prior
+outcome. Four native artifacts are FROZEN;552 pipeline31779 is running and complete
+external build48985 is running. Do not rebuild native or edit compiled source.
+Then run the prepared146 focused comparisons. The existing_objects demo contains
+a proven extra oracle error: index0 returns null, not the supplied fallback. Retain
+its first failed focused result before correcting that expectation from genuine53,
+preserving all13 controls and checking the supplied fallback stays unchanged.
+Do not remove087 marker before its own actual17-check demo passes both renderers.
+
+Independent089 has permanent21-control before evidence (fourPASS/seventeenFAIL)
+and two owner-isolation cases (ten owner/initialization assertion failures; nested/
+concurrent context controls pass). No089 implementation yet. See CNA's live handoff
+for exact commands, jobs and freezes; limit campaign compiler/test workers to THREE,
+private GPU only. Sharp99c2f79c/EasyGLf4d6afa/MetaGLdd3b300 freshly verified clean.
 FileShare152/vendor148 owner questions remain pending. Nothing pushed or merged.
 The paragraphs below are historical and superseded by this section.
 
