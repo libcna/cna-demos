@@ -57,6 +57,19 @@ The prepared native driver explicitly passes shared ccache/base and one-worker
 CMake/CTest environment to test children. All errors remain in audit JSON; console
 output is bounded to counts/first ten errors/full audit path. Syntax passes;
 this is not a native test pass and does not change any expected outcomes.
+Start/end cgroup memory counters are now included per native stage; a newly
+OOM-killed child refuses the gate. Guard/snapshot-only check passed, no CNA workload.
+
+The completed external checkpoint remains valid:8261 exited0, all18 stages,
+CTest684PASS/48unchangedSKIP/three disabled, both719-demo renderer sweeps,
+95 math demos per renderer, six exact visuals and146 focused checks. Its independent
+audit has no errors and verifies319 artifacts/three sources. Only61683 is the
+current heavy campaign job; use the current checkpoint above for next actions.
+
+### Historical recovery notes (not current launch instructions)
+
+The following notes preserve earlier observations. References to86497/8261 still
+running and to a usernet driver expecting old hashes are superseded above.
 
 External8261 COMPLETE0 after resume:all18 stages,CTest684PASS/48sameSKIP/three
 disabled964.43s;735 exact outcomes against XML,319 artifacts/three sources exact.

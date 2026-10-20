@@ -261,3 +261,10 @@ The checked driver `build-probe/repair-native-warning-provenance.mjs` can audit
 the completed log under a fresh report prefix; it does not compile or change flags.
 Call-site age alone does not prove every declaration/compiler option was identical;
 the report explicitly records that limitation. This remains an interim snapshot.
+
+The prepared final-native driver now records cgroup memory.current/peak/events
+at start and after each stage, and rejects a new oom_kill/oom_group_kill event even
+if a child exit status otherwise appeared successful. Its guard/snapshot prefix
+was evaluated alone in cna-repair-memory-audit-check.scope:6GiB maximum,zero swap,
+15,441,920-byte initial peak and all event counters zero. No CNA suite/compiler
+was launched by that check; the whole driver passes Node syntax checking.
