@@ -131,3 +131,12 @@ libraries of the existing `cna_custom_content_compiler_example` target. Use the
 shared ccache, one compiler worker and a bounded memory scope; do not overlap the
 ongoing canonical build. Retain the original failing host run before production
 repairs. These new fixture files are currently uncommitted preparation.
+
+Prepared driver: `build-probe/repair-content-generated-output-host-before.mjs`
+(syntax checked, NOT RUN). It requires a successful canonical cache-policy build
+audit before compiling, reuses the actual custom-compiler target configuration,
+uses streaming SHA-256 checks, and verifies unchanged canonical binaries/sources.
+Its baseline expects four original root-authorization failures and the one invalid
+input control passing; unexpected diagnostics, failures or leaked fixture
+directories make the driver fail. That expectation does not suppress the Python
+tests' failing exit status or establish a baseline until execution.

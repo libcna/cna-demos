@@ -36,6 +36,16 @@ generated_output_cli_tests.py (five cases; Python AST syntax passes).
 Both are uncommitted. They exercise the real compiler host, not a fake publisher;
 see GENERATED_OUTPUT_TRIAGE.md for exact intended coverage and compile target.
 Do not start their build during61683 or claim a new baseline before executing it.
+Prepared driver build-probe/repair-content-generated-output-host-before.mjs passes
+Node syntax check only; it guards the completed cache-build audit and retains the
+expected four host failures/one control pass without suppressing test exit1.
+61683 currently has16 compiler warnings in vendored Draco's PLY lambda captures
+(C++20 implicit-this deprecation), not model encoder diagnostics. Retain them in
+the final build audit; do not claim this broader rebuild is warning-free.
+Both prepared drivers now fail closed unless their actual cgroup has memory.max
+no greater than6GiB and swap.max0. Guard-only checks PASS2 bounded/2 unbounded
+refusals; no compiler/CNA suite started. Launch final native gate through its own
+systemd scope with those limits, then private display/usernet broadcast setup.
 
 External8261 COMPLETE0 after resume:all18 stages,CTest684PASS/48sameSKIP/three
 disabled964.43s;735 exact outcomes against XML,319 artifacts/three sources exact.

@@ -213,3 +213,19 @@ same verified limits in scope`cna-repair-model-cache-policy`. These limits apply
 to the launched workload, not to the Codex application itself. The final usernet
 driver now refuses a missing private broadcast route as well as wrong credentials.
 Await the build audit before starting the final full gate.
+
+The prepared final-native and generated-output-host drivers now also inspect
+their own cgroup-v2 `memory.max`/`memory.swap.max` before launching any workload.
+They refuse an absent/unbounded limit, a limit above6GiB, or nonzero swap.
+Their actual guard prefixes were evaluated separately: both accept the private
+`cna-repair-memory-guard-check.scope` with memory.max6442450944/swap.max0;
+both refuse the ordinary unbounded scope with the intended diagnostic. These
+four guard checks launch neither a compiler nor CNA tests. Both complete driver
+files pass Node syntax checking. Their future audit records include the actual
+cgroup and limits, rather than assuming the launch command enforced them.
+
+The ongoing cache-policy build has emitted16 warnings from vendored Draco PLY
+reader/writer headers (`-Wdeprecated`, implicit `this` capture under C++20).
+No vendor source was edited. Keep these diagnostics in the complete build report;
+the earlier warning-free incremental model build did not recompile this vendor
+code and must not be confused with this broader configuration-triggered rebuild.
