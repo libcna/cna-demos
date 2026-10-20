@@ -45,6 +45,30 @@ direct None branch. This is a runtime validation defect, not an XNA-specific API
 
 Reports: `repair-content-chunk-limits-before-{build.log,audit.json}` and `.log`.
 
+## ISSUE-014: cold content-root ordering
+
+`ColdContentRootProbe.cpp` reproduces this independently in a fresh Linux process:
+12 controls,9PASS/threeFAIL, no Game. It stages different manifest-only assets under
+the executable directory and an unrelated private working directory without first
+calling CNA's platform/title APIs. The first relative-root scan uses the working
+directory; querying TitleLocation and explicitly refreshing switches the same
+manager to the executable directory. Authored RootDirectory, snapshot caching,
+stable later refresh and an explicit absolute-root control remain correct.
+
+The fixture's Linux `/proc/self/exe` lookup only stages data without warming CNA.
+Uniquely owned directories are removed after restoring the working directory; no
+user content is touched. Strict warning-free build and exact audit pass against
+the frozen boundary-candidate native artifacts (title/root code unchanged), with
+all four hashes identical before/after. Reports `repair-content-cold-root-before-*`.
+No Windows/macOS/Android or genuine-XNA execution is claimed by this probe.
+
+Current TitleRootedDirectory consults the platform base only when HasCurrentPlatform
+is already true, whereas TitleLocation explicitly obtains the lazy platform's
+filesystem. The recorded public title/content-root contract requires a stable title
+root. Repair at the lower content/platform layer, not through a new dependency on
+the upper runtime TitleLocation class; preserve explicit roots/overrides and the
+separate Android packaged namespace. No014 production patch during the freeze.
+
 ## ISSUE-106: pre-built compiler diagnostics
 
 `CompilerOptionDiagnosticProbe.cpp`:21 controls,16PASS/fiveFAIL against frozen

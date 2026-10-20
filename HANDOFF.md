@@ -17,6 +17,13 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+12:51 UTC: boundary module1990 passes1986/four unchangedSKIP; six link checks pass,
+all hashes exact. Only pipeline30922 and external012 finalCTest78862 RUNNING(1 each).
+Both012719 sweeps match expected improvement-only deltas; C-root residual stays
+explicit.014 fresh Linux probe confirms9PASS/threeFAIL of12, no root code change;
+permanent evidence added. No canonical source/metadata edits or rebuilds; freezes
+remain. Boundary focus helper prepared for exact37/32/23 control preservation.
+
 12:45 UTC: canonical boundary CNA build83644 COMPLETE0,84steps/zero warnings/nine
 source hashes exact. Four new native artifacts frozen.62368 module1990 and30922
 pipeline562 RUNNING(1 each); all focused actual-TU normal/sanitized candidates pass,
