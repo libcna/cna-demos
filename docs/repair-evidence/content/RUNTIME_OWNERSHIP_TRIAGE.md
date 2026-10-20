@@ -1,5 +1,32 @@
 # Next content-runtime batch: source audit, not repair closure
 
+## Ownership lifecycle baseline (2026-10-20,14:08 UTC)
+
+Genuine `ContentOwnershipOracle.cs` now passes108/108: the original91 checks remain
+unchanged, with17 additive disposal-lifecycle controls. Explicit Dispose propagates
+a second object's failure after disposing the first, skips the third, and still
+permanently disposes the manager in finally. Subsequent Dispose does not retry;
+Load, ReadAsset and Unload throw exact ObjectDisposedException without reopening.
+Protected Dispose(false) drops records without calling their Dispose, and also
+permanently refuses subsequent reads/unload. Strict C#4/x86/Werror build/run both0.
+Reports `repair-content-ownership-lifecycle-reference-*`; this is real XNA, no GPU
+or hardware/service claim. Native counterpart10 gives2PASS/eightFAIL in3ms, preserving
+all prior seven outcomes and adding precisely three failed cases. Strict C++23/
+Wall/Wextra/Werror build passes; four frozen native hashes remain unchanged.
+Reports `repair-content-ownership-lifecycle-before-*`. No production change yet.
+
+Ownership repair constraints confirmed from current public contracts/tests:
+`Texture2DTest.ACopySurvivesDisposingTheOriginalAndDoubleDisposeIsANoOp` explicitly
+protects CNA's independent value wrappers, unlike managed XNA references. C API
+CONTENT.md separately guarantees issued texture handles survive manager unload/
+destruction. Do not globally make every texture copy dispose every other copy.
+Content-managed ownership needs a scoped solution and the C extension needs its
+independent-handle semantics preserved. The C effect adapter currently returns
+the cached shared_ptr directly; inspect that path before adding default recording
+for XNB effect results. Shared_ptr-only default tracking cannot close011's original
+by-value texture reproduction. ISSUE-010's disposed Load exception is independently
+reproduced; its storage findings remain separate and must not disappear.
+
 ## Latest dispatch candidate (2026-10-20,09:32 UTC)
 
 Repair committed as CNA `3d254dfa7`: all native gates below and corrected external

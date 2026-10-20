@@ -74,6 +74,7 @@ sealed class OwnershipManager : ContentManager
     {
         return ReadAsset<OwnershipRoot>("asset", recorder);
     }
+    public void ReleaseUnmanagedOnly() { base.Dispose(false); }
 }
 static class ContentOwnershipOracle
 {
@@ -254,6 +255,47 @@ static class ContentOwnershipOracle
                         Throws<ContentLoadException>(() => manager.Raw(null), "reader I/O exception wrapped mode " + mode);
                     Check(manager.LastStream.Closed, "reader refusal closes stream mode " + mode);
                 }
+            }
+            Reset();
+            using (var manager = new OwnershipManager(bytes))
+            {
+                manager.Dispose();
+                Throws<ObjectDisposedException>(() => manager.Load<OwnershipRoot>("asset"), "disposed named Load refused");
+                Throws<ObjectDisposedException>(() => manager.Raw(null), "disposed ReadAsset refused");
+                Throws<ObjectDisposedException>(manager.Unload, "disposed empty manager Unload refused");
+                manager.Dispose();
+                Check(manager.Opens == 0, "disposed operations do not open a stream");
+            }
+            Reset();
+            using (var manager = new OwnershipManager(bytes))
+            {
+                var root = manager.Load<OwnershipRoot>("asset");
+                root.First.ThrowOnDispose = true;
+                Throws<InvalidOperationException>(manager.Dispose, "Dispose propagates second-object failure");
+                Check(root.Inline.Disposals == 1 && root.First.Disposals == 1 && root.Second.Disposals == 0,
+                      "failed Dispose preserves order and stops at failing object");
+                manager.Dispose();
+                Check(root.Inline.Disposals == 1 && root.First.Disposals == 1 && root.Second.Disposals == 0,
+                      "second Dispose does not retry abandoned records");
+                Throws<ObjectDisposedException>(manager.Unload, "failed Dispose still marks manager disposed for Unload");
+                Throws<ObjectDisposedException>(() => manager.Load<OwnershipRoot>("asset"), "failed Dispose still marks manager disposed for Load");
+                Throws<ObjectDisposedException>(() => manager.Raw(null), "failed Dispose still marks manager disposed for ReadAsset");
+                Check(manager.Opens == 1, "failed Dispose subsequent operations do not reopen");
+            }
+            Reset();
+            using (var manager = new OwnershipManager(bytes))
+            {
+                var root = manager.Load<OwnershipRoot>("asset");
+                manager.ReleaseUnmanagedOnly();
+                Check(root.Inline.Disposals == 0 && root.First.Disposals == 0 && root.Second.Disposals == 0,
+                      "Dispose false does not call managed disposables");
+                manager.Dispose();
+                Check(root.Inline.Disposals == 0 && root.First.Disposals == 0 && root.Second.Disposals == 0,
+                      "Dispose false abandons records for later Dispose true");
+                Throws<ObjectDisposedException>(manager.Unload, "Dispose false marks manager disposed for Unload");
+                Throws<ObjectDisposedException>(() => manager.Load<OwnershipRoot>("asset"), "Dispose false marks manager disposed for Load");
+                Throws<ObjectDisposedException>(() => manager.Raw(null), "Dispose false marks manager disposed for ReadAsset");
+                Check(manager.Opens == 1, "Dispose false subsequent operations do not reopen");
             }
             Console.WriteLine("checks=" + checks + " failed=" + failures);
             return failures == 0 ? 0 : 1;

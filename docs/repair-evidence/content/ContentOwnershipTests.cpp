@@ -5,6 +5,7 @@
 #include "Microsoft/Xna/Framework/Content/ContentManager.hpp"
 #include "System/IO/BinaryWriter.hpp"
 #include "System/InvalidOperationException.hpp"
+#include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework::Content;
 
@@ -56,6 +57,7 @@ namespace
     {
     public:
         using ContentManager::ReadAsset;
+        using ContentManager::Dispose;
         explicit OwnershipProbeManager(std::vector<uint8_t> bytes) : bytes_(std::move(bytes))
         {
             // Isolate ISSUE-011 from the separately tracked OpenStream routing ISSUE-012.
@@ -220,5 +222,48 @@ TEST_F(ContentOwnershipCompatibilityTest, ThrowingCallerRecorderDoesNotTransferO
     ASSERT_EQ(OwnedItemReader::created.size(), 1U);
     manager.Unload();
     EXPECT_EQ(OwnedItemReader::created.front()->disposals, 0);
+}
+
+TEST_F(ContentOwnershipCompatibilityTest, DisposedManagerRefusesLoadReadAndUnloadBeforeOpening)
+{
+    OwnershipProbeManager manager(Xnb());
+    manager.Dispose();
+    EXPECT_THROW((void)manager.Load<OwnedRoot>("asset"), System::ObjectDisposedException);
+    EXPECT_THROW((void)manager.Load<OwnedRoot>(""), System::ObjectDisposedException);
+    EXPECT_THROW((void)manager.ReadAsset<OwnedRoot>("asset", {}), System::ObjectDisposedException);
+    EXPECT_THROW(manager.Unload(), System::ObjectDisposedException);
+    EXPECT_NO_THROW(manager.Dispose());
+    EXPECT_EQ(manager.opens, 0);
+}
+
+TEST_F(ContentOwnershipCompatibilityTest, FailedDisposeStopsThenPermanentlyDisposesManager)
+{
+    OwnershipProbeManager manager(Xnb());
+    const auto root = manager.Load<OwnedRoot>("asset");
+    root.items[1]->throwOnDispose = true;
+    EXPECT_THROW(manager.Dispose(), System::InvalidOperationException);
+    EXPECT_EQ(root.items[0]->disposals, 1);
+    EXPECT_EQ(root.items[1]->disposals, 1);
+    EXPECT_EQ(root.items[2]->disposals, 0);
+    EXPECT_NO_THROW(manager.Dispose());
+    EXPECT_EQ(root.items[1]->disposals, 1);
+    EXPECT_THROW(manager.Unload(), System::ObjectDisposedException);
+    EXPECT_THROW((void)manager.Load<OwnedRoot>("asset"), System::ObjectDisposedException);
+    EXPECT_THROW((void)manager.ReadAsset<OwnedRoot>("asset", {}), System::ObjectDisposedException);
+    EXPECT_EQ(manager.opens, 1);
+}
+
+TEST_F(ContentOwnershipCompatibilityTest, NonManagedDisposeDropsRecordsWithoutCallingObjects)
+{
+    OwnershipProbeManager manager(Xnb());
+    const auto root = manager.Load<OwnedRoot>("asset");
+    manager.Dispose(false);
+    CheckDisposed(root, 0);
+    EXPECT_NO_THROW(manager.Dispose());
+    CheckDisposed(root, 0);
+    EXPECT_THROW(manager.Unload(), System::ObjectDisposedException);
+    EXPECT_THROW((void)manager.Load<OwnedRoot>("asset"), System::ObjectDisposedException);
+    EXPECT_THROW((void)manager.ReadAsset<OwnedRoot>("asset", {}), System::ObjectDisposedException);
+    EXPECT_EQ(manager.opens, 1);
 }
 }

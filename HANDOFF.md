@@ -17,7 +17,13 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
-14:03 UTC: corrected146 focus passes exactly (68PASS/five unchangedFAIL each),319
+14:08 UTC: ownership genuine reference expands91->108 exact passes; native10=
+twoPASS/eightFAIL (three additive cases, prior seven outcomes unchanged), strict
+build/four native hashes exact. No production fix or closure; all reports retained.
+Full combined24685 still RUNNING(1), SOFTWARE graphics underway, no other jobs.
+Guarded six-ID closure helper prepared but not run; counts77/78 unchanged.
+
+14:01 UTC: corrected146 focus passes exactly (68PASS/five unchangedFAIL each),319
 post-focus hashes match. Manifest regression committed1f8ae67. Full combined24685
 RUNNING(1),both95 math/six zero-pixel visuals pass; both719/CTest pending. No other
 jobs or compiled source changes. Ownership011 review must preserve documented
