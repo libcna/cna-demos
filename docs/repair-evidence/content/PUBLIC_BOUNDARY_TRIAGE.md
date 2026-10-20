@@ -45,6 +45,23 @@ direct None branch. This is a runtime validation defect, not an XNA-specific API
 
 Reports: `repair-content-chunk-limits-before-{build.log,audit.json}` and `.log`.
 
+## ISSUE-106: pre-built compiler diagnostics
+
+`CompilerOptionDiagnosticProbe.cpp`:21 controls,16PASS/fiveFAIL against frozen
+canonical012 (compiler implementation unchanged). All seven registry-affecting
+options refuse the pre-built overload with status2, refer to the factory overload,
+leave the registry mutable and create no output directory. Only the two FX options
+are named by the diagnostic; XMA executable/launcher/argument, font directory and
+build configuration are missing. No external compiler, encoder or font service runs.
+Strict warning-free build, exact audit and four native pre/post hashes pass.
+Reports `repair-content-compiler-options-before-{build.log,audit.json}` and `.log`.
+
+The runtime compares all seven fields against defaults but uses the old FX-only
+message; public equality/overload comments are correspondingly stale. Preserve
+early refusal and the factory guidance, update the diagnostic and documentation,
+and retain the demo's service-not-entered controls when replacing its historical
+observation. This is not an unsupported external-service blocker.
+
 ## ISSUE-105: named-only routing
 
 Current089 focused `content.sound_effect.pipeline_components` retains precisely

@@ -17,6 +17,24 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+12:45 UTC: canonical boundary CNA build83644 COMPLETE0,84steps/zero warnings/nine
+source hashes exact. Four new native artifacts frozen.62368 module1990 and30922
+pipeline562 RUNNING(1 each); all focused actual-TU normal/sanitized candidates pass,
+including10621+three. External01278862 RUNNING(1):SW719624/44/48/three manual, only
+retained C-root residual; GLES underway. THREE workers, no source/test edits or
+external rebuild. Next free slot six native link checks; consumers wait external
+SystemLink/CTest completion. Boundary runtime uncommitted, no marker/assertion edits.
+
+12:41 UTC:012 markers committed dc9bfac after both146 focused passes. Full78862
+RUNNING(1) on319 FROZEN external artifacts; both95 math/six exact visuals PASS,
+SOFTWARE sweep underway. No external rebuild or overlapping SystemLink suites.
+Four next CNA boundary repairs uncommitted:105/106/108/110. Actual-TU normal and
+sanitized proof:11011+15 PASS,10525+23 PASS,10812+8 PASS.105 first native fixture
+stronger-Werror setup failures retained; canonical-policy fixture passes without
+suppression.10624736/49964 RUNNING(1 each). Native012 binary hashes stay fixed.
+See BOUNDARY_REPAIRS.md and CNA live handoff for exact next native build/gates.
+No boundary-batch demo assertions/markers changed;76 final/79 pending remains.
+
 12:31 UTC:012 runtime committed CNA d7ce398d8, all native gates/initial146 focus
 pass. Whole external build warning-free (two rescheduled segments fully reconciled),
 67PASS/six unchangedFAIL per renderer. Only two proven012 markers removed; all
