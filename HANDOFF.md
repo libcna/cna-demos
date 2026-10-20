@@ -17,6 +17,14 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+14:19 UTC: both719 full sweeps exact locally (SOFTWARE625/43/48/3,GLES664/45/7/3),
+only original C-root residual.24685 serial CTest underway,319 frozen artifacts match.
+Separate build residual001 committed CNA b35fbc933:actual16 scenarios across four
+CMake versions/native build/new registered CTest/repeated cache pass; older shared
+mode is explicitly refused, static mode retained. All four native and319 external
+runtime artifacts byte-identical. External reconfiguration waits until full gates
+finish. No001 or six-content-ID closure yet,77/78 unchanged; see build evidence.
+
 14:08 UTC: ownership genuine reference expands91->108 exact passes; native10=
 twoPASS/eightFAIL (three additive cases, prior seven outcomes unchanged), strict
 build/four native hashes exact. No production fix or closure; all reports retained.
