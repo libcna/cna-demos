@@ -2,6 +2,13 @@
 
 ## Latest dispatch candidate (2026-10-20,09:32 UTC)
 
+Canonical checkpoint10:15 UTC: corrected whole CNA build succeeds; all51 warnings
+match the preceding51 diagnostics/multiplicities. Nine source hashes match and four
+native artifacts are frozen. Canonical focus36/36PASS3ms; full module1965 gives
+1961PASS/four unchangedSKIP, exact previous1929 outcomes plus36 and the one measured
+value-oracle rename, differences[]. Pipeline552 and broader consumer/runtime/XML
+gates continue. Full external rebuild is still in progress; no087 closure yet.
+
 Nullable follow-up09:50 UTC: genuine value oracle is now34/34PASS, all original18
 labels retained plus16 nullable controls. An empty Nullable existing argument boxes
 to null and must be read as new; a nonempty value still fails identity after reading.

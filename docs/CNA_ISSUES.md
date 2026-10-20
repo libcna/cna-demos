@@ -988,7 +988,9 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   controls. Eight additional native cases exposed four null-existing failures in
   the candidate, now corrected; all36 normal and actual-TU sanitizer cases pass.
   The first incomplete whole build was interrupted and retained, not called a pass;
-  a fresh corrected build/full1965-case module gate remains pending.
+  corrected whole build now passes with no new warnings. Full1965-case module gives
+  1961PASS/four unchangedSKIP; exact baseline comparison has no differences.
+  Wider native and external regression remain pending, so this is not yet Resolved.
 - **Additional boundary evidence (2026-10-20):** genuine dispatch now passes53/53,
   preserving the original39 labels and adding14 null-existing/wrong-requested-type
   checks. Native19 givesfivePASS/fourteenFAIL, preserving all17 previous outcomes.
