@@ -1726,8 +1726,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   legitimate output-root manifest record. Genuine XNA4 IL now confirms that extra
   output paths retain subdirectories through registration and cleanup; CNA's
   unconditional basename mapping must not lose that identity when root authorization
-  is repaired. Six real-host regression scenarios are prepared but NOT compiled/run.
-  No runtime repair or genuine-XNA execution pass is claimed. See
+  is repaired. Six real-host regression scenarios now compile strictly without
+  warnings and run: five original root-authorization failures/one invalid-input
+  control pass; normal test exit1 retained. Post-registration assertions are not
+  reached. Corrected baseline audit passes with unchanged canonical hashes; initial
+  auditor mistake about the deliberately retained empty shared staging root is
+  documented, not a test or runtime change. No repair or genuine-XNA execution pass is claimed. See
   [current triage and reference evidence](repair-evidence/content/GENERATED_OUTPUT_TRIAGE.md).
 
 - **Area:** XNA pipeline adapter `ContentProcessorContext::AddOutputFile`, forwarded by

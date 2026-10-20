@@ -1,5 +1,47 @@
 # ISSUE-047: separate generated-output root baseline
 
+## Current measured host baseline
+
+The real compiler fixture is now compiled and run against the canonical binaries
+of the validated CNA `68e0acb67` repair checkpoint. Six Python scenarios yield
+**five FAIL/one PASS**. Each of the five valid generated-output scenarios fails
+at the original outside-source-root authorization guard; the invalid-input
+control passes. Nested-output ownership, publication, incremental repair and
+cleanup assertions after that guard remain **not reached**, not validated.
+No ISSUE-047 production fix or closure is claimed.
+
+`GeneratedOutputCompiler.cpp` registers actual importer/processor/writer objects
+with the real compiler host. The strict C++23/Wall/Wextra/Werror build is clean.
+`generated_output_cli_tests.py` retains its normal failing exit1; the baseline
+auditor accepts only the exact five failure names, five original diagnostics,
+one passing control and unchanged canonical artifact/source hashes. No assertion,
+timeout, expected value or production code changed between baseline attempts.
+
+Initial job51013 correctly retained the five failures but its auditor incorrectly
+required the private TMPDIR parent to be completely empty. CNA deliberately
+retains `cna_content_staging_v1`; the destructor removes each reservation, not
+the shared root. Inspection found only that owned non-symlink directory, empty.
+The corrected auditor removes only this exact owned empty directory with rmdir;
+any reservation, symlink or other leftover still fails. Initial audit/logs remain.
+The initial empty directories were subsequently removed with nonrecursive rmdir.
+
+Corrected job92605 exits0: strict build0, Python1, exact5FAIL/1PASS, no audit
+errors, four canonical binaries/three ISSUE-109 sources unchanged, private parent
+cleaned. It used the existing build-probe, shared ccache/base, one compiler and
+MemoryHigh4GiB/Max6GiB/Swap0; no build occurred in the temporary fixture tree.
+Reports: `repair-content-generated-output-host-before-corrected-*`, including
+the complete audit; initial reports retain the `...-host-before-*` prefix.
+Fixture SHA-256: `586983c9e7cce8ff834ba77222fe6334a13aa64ac0e69c679a7c4af629e59d1f`;
+Python SHA-256: `d9c8d09c8f33bcbff7908a0141aab5fb93cf8269321b4202e005b7f020fa234a`.
+
+Next implement output-root provenance and path preservation through canonical
+registration, XNA bridge and manifest/fingerprint flow, retaining all input-root
+capability and authored-file guards. Re-run these same six host cases and the
+11-case context/manifest suite; they must become passes before closure.
+The older preparation/running-state descriptions below are historical evidence.
+
+## Historical context baseline
+
 Current CNA `69afba262` still reproduces the finding. The isolated native
 `ContentGeneratedOutputTests.cpp` runs the actual XNA bridge and canonical
 processor context against the frozen libraries used by the ongoing ISSUE-109

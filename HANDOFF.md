@@ -34,10 +34,12 @@ control, original Python exit1 retained. Canonical binaries/109 sources unchange
 Initial51013 audit failure preserved: the host intentionally retains its empty
 shared staging root. Auditor now removes only that owned empty non-symlink root,
 still refusing any leftover reservation/content; no test/assertion change.
-Both private temporary parents cleaned. No job remains live. Next commit the
-two validated047 fixtures and evidence, then implement root provenance/path
-preservation per GENERATED_OUTPUT_TRIAGE.md. No047 production change yet.
-Counts91FINAL/64PENDING;109 closure metadata is being finalized. No push or merge.
+Both private temporary parents cleaned. No job remains live. The validated047
+fixtures and evidence accompany this checkpoint. Next implement root provenance/
+path preservation per GENERATED_OUTPUT_TRIAGE.md, then make the same six host
+and11 context/manifest cases pass. No047 production change yet.
+Counts91FINAL/64PENDING;109 closure metadata committed in CNA33dad9dc9 and demos90b9ba3.
+The post-closure catalog CTests also pass3/3. No push or merge.
 
 ### Earlier checkpoint (superseded for live jobs and next actions)
 
