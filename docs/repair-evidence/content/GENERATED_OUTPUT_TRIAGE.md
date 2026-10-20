@@ -1,9 +1,131 @@
-# ISSUE-047: separate generated-output root baseline
+# ISSUE-047: generated-output repair and retained evidence
 
-## Current measured host baseline
+## Final repair and validation (2026-10-21)
 
-The real compiler fixture is now compiled and run against the canonical binaries
-of the validated CNA `68e0acb67` repair checkpoint. Six Python scenarios yield
+ISSUE-047 is **RESOLVED / FIXED_VALIDATED**. CNA source commit
+`a56383319578256459c95ff990fd6b7826fa2226` records generated-output provenance and
+nested paths. Its parents `23a34f986219d8ad61c24f31ce902b0ceeacf5cb` and
+`32cb1a4ed31b7c0c5a1b58c4341faf0df481e37c` repair old-cache output reporting and
+Windows atomic self-copy, respectively. Six added native regressions protect
+these repairs; the original11 context/manifest and six real-host tests are unchanged
+and pass, including publication, no-op, tamper/deletion repair and ownership-safe clean.
+
+Full native10804:10703PASS/101unchangedSKIP; independent XML preserves every10798
+predecessor outcome plus six passes. External63473 completes all18 stages:
+SOFTWARE628PASS/40knownFAIL/48SKIP/3manual, OPENGLES3667PASS/42knownFAIL/7SKIP/3manual.
+Only047 improves against109; unrelated statuses/checks/failed assertions and all36
+standalone internal labels are unchanged. Both original-baseline comparisons find
+71 expected improvements, zero unexpected differences. Math95 per renderer,six
+pixel-exact references and CTest684PASS/48sameSKIP/three disabled (763.03s) pass.
+Independent closure59379 verifies341 current files, including319 external artifacts,
+and all evidence comparisons; errors empty. Final external scope peak1,132,859,392
+bytes,zero high/max/OOM events. No unresolved full-regression gate remains for047.
+
+Actual-helper ASan/UBSan/leak fixture5/5 and identical Linux/MinGW32-Wine copy
+fixtures5/5 pass. This is not native Windows/MSVC, genuine-XNA execution or
+instrumentation of every CNA dependency. Static XNA evidence is identified below.
+No broad all-platform/all-renderer claim is made. The knownIssue047 marker and
+previously resolved048 restriction are removed without changing the standalone
+runtime assertions. The manifest demo explicitly adopts10/generatedOutput:false,
+retains version8 rejection and adds9, preserving all14 checks. No failing gate
+below is deleted, retried away or reclassified as success.
+
+Reports live under `build/linux-full/reports/repair-generated-output-*`, especially
+`-closure-audit.json`, `-native-full-audit.json`, `-final-gates-summary.json`,
+`-ctest-final-audit.json` and both `-full-*-local-audit.json` comparisons.
+
+## Retained candidate-validation chronology
+
+The candidate/running statements below describe the progression to the completed
+checkpoint above, not current jobs or remaining validation requirements.
+
+The uncommitted candidate has focused and full native validation, with external
+CTest validation still running: registration
+accepts canonical configured-output files without input dependencies; the XNA
+bridge preserves output-relative paths; manifest version10 persists a generated
+provenance bit and fingerprints it separately from input bytes. Initial build20174
+failed after102/687 tasks: canonical cache recovery succeeded, but BuildContent
+reparsed the saved incompatible previous manifest and failed output reporting.
+That log/audit is retained; no manual cache deletion bypasses this defect.
+BuildContent now still requires a valid current manifest, while warning and using
+empty previous state for an incompatible/corrupt old cache. A fifth new native
+regression covers old/corrupt/future manifests, rebuilt-output reporting, no deletion
+authority from invalid state and a subsequent no-op. Recovery52660 completed0,
+with only two prior warnings. Focus56969 passed all11 context and six host cases
+unchanged. Native115 gave113PASS/one unchangedSKIP/oneFAIL: the round-trip test
+still explicitly expected version9. All new native cases passed. That version
+assertion now pins10, also checks generatedOutput:false, and the old-version
+rejection test adds9. No assertion is removed or relaxed.
+
+The actual atomic-copy helper was independently probed with identical C++ source
+on Linux and MinGW32/Wine: before, Linux5PASS but Wine2PASS/3FAIL (same-file,
+lexical-alias and empty self-copy all Access denied). Its source reader remained
+open when destination replacement ran. The local fix closes/checks that reader
+before publication, preserving read-error refusal and atomic replacement. After,
+both platforms5/5 PASS, strict warning-free builds, no temporary leaks, identical
+probe hash. Native Windows/MSVC are not claimed. Reports are
+repair-atomic-deployment-copy-{before,after}-audit.json; source is
+AtomicDeploymentCopy.cpp. A sixth native regression protects the helper path.
+
+Final candidate build76628 completed0:20 tasks,zero diagnostics. Focus13383 then
+completed0:131 native cases give130PASS/one unchangedSKIP, including all six new
+regressions; every previous selected native outcome is unchanged. The unchanged
+11 context/manifest and six real compiler-host cases all pass. Strict fixture
+builds are warning-free; frozen source/artifact hashes match. Peak1,212,870,656
+bytes,zero high/max/OOM events; private temporary parents cleaned. Reports:
+`repair-generated-output-native-final-build-audit.json` and
+`repair-generated-output-final-focused-audit.json`.
+
+External incremental build94535 completed0:347 tasks,609,391ms,one expected
+incompatible-cache recovery warning,no errors,all frozen hashes exact. Peak
+4,299,345,920 bytes,high2539,max/oom/oom_kill0. Initial demo focus76950 stopped
+after16 SOFTWARE cases:15PASS/oneFAIL, the manifest demo's explicit version9
+expectation. Original audit/logs retained. The deliberate format10 change now
+has an explicit10/generatedOutput:false assertion in that demo, retaining old
+version8 refusal and adding9; all14 checks and unrelated assertions remain.
+No behavior assertion is relaxed. Follow-up build/focus use format-v10 prefixes.
+Sanitizer57508 COMPLETE0: identical atomic-copy probe5/5 PASS under
+ASan/UBSan/leak detection; actual helper instrumented,strict build clean,
+source hashes exact,fixture tree cleaned,peak272,592,896 bytes,zero OOM.
+Format-v10 build94348 COMPLETE0:11,205ms,zero diagnostics/errors,frozen hashes
+exact. Format-v10 focus85104 COMPLETE0:146 cases,70PASS/three unchanged knownFAIL
+per renderer; only047 improves. Manifest demo retains14 checks. Independent
+comparison confirms all36 standalone internal labels unchanged on both renderers.
+Peak2,929,029,120 bytes,zero high/max/OOM. The047 marker and stale048 restriction
+are now removed locally,without changing standalone runtime code. Metadata build
+6798 COMPLETE0:8,742ms,zero diagnostics/errors. Metadata focus96907 COMPLETE0:
+146 cases,36 internal labels preserved per renderer,hashes exact;peak
+4,295,487,488 bytes,high1450,max/oom/oom_kill0. Native56713 COMPLETE0:
+10804=10703PASS/101sameSKIP,1,281,742ms; independent XML preserves every prior
+outcome plus six new passes,source/artifact hashes exact. Private display/network,
+owner UID/all capabilities zero verified. Peak2,546,384,896 bytes,zero high/max/OOM.
+Current63473 runs full external alone in <=6GiB/private-Xwayland scope. Fourteen
+stages pass,including both math95,six exact visuals and both full719 sweeps:
+SOFTWARE628PASS/40knownFAIL/48SKIP/3manual; OPENGLES3667PASS/42knownFAIL/7SKIP/3manual.
+Only047 improves against109. All unrelated statuses/check counts/failed assertions
+and all36 internal standalone check labels are preserved. Original-baseline audits
+each report71 expected improvements and zero unexpected differences. CTest runs;
+the completed-stage memory peak is1,121,337,344 bytes,zero high/max/OOM events.
+All319 artifacts and candidate sources remain frozen. Full external and final
+closure audit still required; no issue closure or commit.
+The historical before-repair failures below remain preserved, not reclassified.
+Validation drivers: repair-generated-output-demo-focused.mjs
+compares all146 content runs against109 and permits only047's improvement;
+repair-generated-output-native-full.mjs preserves all10798 predecessor native
+outcomes plus six new passes and requires owner UID/zero capabilities/private
+broadcast networking; repair-generated-output-full-gates.mjs performs math,
+six visual references, both719 sweeps and735 registered CTests with source/artifact
+freezes. repair-atomic-deployment-copy-sanitizer.mjs instruments the actual helper
+and unchanged five-case fixture with ASan/UBSan/leak detection.
+Initial demo focus failed as recorded; sanitizer57508 and format-v10 focus85104
+passed,as did final metadata focus96907 and full native56713. External full63473
+is running. Never overlap its heavy workload. The additional closure audit
+driver is syntax-checked only and must run after the complete external checkpoint.
+
+## Retained host baseline (before this candidate)
+
+The real compiler fixture was compiled and run against the canonical binaries
+of the validated CNA `68e0acb67` repair checkpoint. Six Python scenarios yielded
 **five FAIL/one PASS**. Each of the five valid generated-output scenarios fails
 at the original outside-source-root authorization guard; the invalid-input
 control passes. Nested-output ownership, publication, incremental repair and

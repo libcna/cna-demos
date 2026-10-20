@@ -82,7 +82,7 @@ namespace
 
     void BuildManifest(CnaDemos::DemoContext& ctx)
     {
-        ctx.Check(Pipeline::ContentBuildManifestVersion == 9u &&
+        ctx.Check(Pipeline::ContentBuildManifestVersion == 10u &&
                       std::string(Pipeline::ContentBuildManifestFileName) ==
                           ".cna-content-manifest.json" &&
                       Pipeline::ContentSha256({'a', 'b', 'c'}) ==
@@ -255,6 +255,8 @@ namespace
         const auto parsed = Pipeline::ContentBuildManifest::Parse(serialized);
         ctx.Check(!serialized.empty() && serialized.back() == '\n' &&
                       serialized.find("CNA.ContentPipeline.Manifest") != std::string::npos &&
+                      serialized.find("\"version\":10") != std::string::npos &&
+                      serialized.find("\"generatedOutput\":false") != std::string::npos &&
                       serialized.find(canonical.generic_string()) == std::string::npos &&
                       parsed.Entries() == manifest.Entries() && parsed.Serialize() == serialized,
                   "serialization is deterministic, round-trips every stable field and never leaks the physical build root");
@@ -283,16 +285,21 @@ namespace
                       RefusesSet(std::move(uppercaseDigest), "lowercase SHA-256"),
                   "Set refuses escaping sources, missing ownership, undeclared schemas, unhashed deployment inputs and invalid digests");
 
-        std::string oldVersion = serialized;
         const std::string currentVersion = "\"version\":" +
             std::to_string(Pipeline::ContentBuildManifestVersion);
-        oldVersion.replace(oldVersion.find(currentVersion), currentVersion.size(),
-                           "\"version\":8");
         const bool malformed = Refuses(
             [] { (void)Pipeline::ContentBuildManifest::Parse("{"); }, {});
-        const bool incompatible = Refuses(
-            [&] { (void)Pipeline::ContentBuildManifest::Parse(oldVersion); },
-            "version is not supported");
+        bool incompatible = true;
+        for (const unsigned version : {8u, 9u})
+        {
+            std::string oldVersion = serialized;
+            oldVersion.replace(oldVersion.find(currentVersion), currentVersion.size(),
+                               "\"version\":" + std::to_string(version));
+            const bool refused = Refuses(
+                [&] { (void)Pipeline::ContentBuildManifest::Parse(oldVersion); },
+                "version is not supported");
+            incompatible = refused && incompatible;
+        }
         ctx.Check(malformed && incompatible,
                   "Parse refuses malformed or incompatible persisted cache state so a host can rebuild it");
 

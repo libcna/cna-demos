@@ -1,7 +1,7 @@
 # HANDOFF
 
 **Read this first in every new session.** It is the single place that says what state the
-project is in and what to do next. Update it after every batch. Last updated: 2026-10-20.
+project is in and what to do next. Update it after every batch. Last updated: 2026-10-21.
 
 ## 1. Purpose (one paragraph)
 
@@ -12,10 +12,38 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
-Current repair phase F (2026-10-20): all155 historical IDs retained,91 final/64
+Current repair phase F (2026-10-21): all155 historical IDs retained,92 final/63
 pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
+
+ISSUE-047 is now RESOLVED/FIXED_VALIDATED by CNA source revision
+a56383319578256459c95ff990fd6b7826fa2226, with parent repairs23a34f986 and32cb1a4ed.
+Native10804=10703PASS/101unchangedSKIP; six new native regressions, unchanged11
+context and six real-host cases pass. External63473 COMPLETE0,18 stages:
+SOFTWARE628PASS/40knownFAIL/48SKIP/3manual; OPENGLES3667PASS/42knownFAIL/7SKIP/3manual.
+Only047 improves against109; all36 internal standalone labels preserved. Both95
+math sweeps,six pixel-exact references,CTest684PASS/48unchangedSKIP/three previously
+disabled tests763.03s pass. Closure59379 independently verifies341 current files,
+including319 external artifacts; errors[]. Actual atomic-copy helper ASan/UBSan/
+leak5/5 and Linux/MinGW32-Wine5/5 pass, not native Windows/MSVC coverage.
+Peak external scope1,132,859,392 bytes,zero high/max/OOM; no heavy job remains live.
+The047 marker is removed only after validation; all assertions/history retained.
+Manifest demo pins10/generatedOutput:false and refuses8/9, retaining14 checks.
+Post-closure catalog CTests pass3/3 (10.56s). All155 unique permanent IDs remain;
+the full historical047 body and the other154 matrix records are unchanged.
+No new push or merge. CNA and demos closure commits remain logically separate.
+
+Next: refresh ISSUE-057 concurrent/sequential staging reproductions, then prove
+cross-process/thread lifecycle synchronization while preserving all safety and
+malformed-state controls. Its read-only design note is committed separately from
+047 (design note commitcd07666); no staging implementation or test-oracle change yet. ISSUE-131 is reserved
+to the owner. The campaign is not complete:63 IDs still need final dispositions.
+
+### Retained pre-closure validation chronology
+
+Earlier candidate/running statements below are historical, superseded by the
+completed047 checkpoint above; do not restart completed jobs.
 
 Latest: ISSUE-109 RESOLVED by CNA68e0acb67732efdb8a0b737ab6f43181444dee65.
 Native5396 COMPLETE0:10798=10697PASS/101unchangedSKIP, focused54/54. Independent
@@ -34,10 +62,72 @@ control, original Python exit1 retained. Canonical binaries/109 sources unchange
 Initial51013 audit failure preserved: the host intentionally retains its empty
 shared staging root. Auditor now removes only that owned empty non-symlink root,
 still refusing any leftover reservation/content; no test/assertion change.
-Both private temporary parents cleaned. No job remains live. The validated047
-fixtures and evidence accompany this checkpoint. Next implement root provenance/
-path preservation per GENERATED_OUTPUT_TRIAGE.md, then make the same six host
-and11 context/manifest cases pass. No047 production change yet.
+Both private temporary parents cleaned. Validated047 fixtures committed in3b18b54;
+the corresponding CNA checkpoint is91490f2f1. A new uncommitted047 candidate now
+adds output-root authorization, nested-path preservation and manifest-v10 generated
+provenance, plus four native regressions in two test files and public documentation.
+It still requires full regression. Initial build20174 COMPLETE1: BuildContent tried to parse
+the saved old manifest after the canonical compiler had safely rebuilt it.
+No cache deletion; failure retained. Local BuildContent fix now warns/ignores
+unreadable previous state while still refusing an invalid current manifest.
+A fifth native regression covers old/corrupt/future cache versions and output
+ownership. Recovery52660 COMPLETE0, two prior warnings. Focus56969 COMPLETE1:
+native113PASS/one unchangedSKIP/oneFAIL, solely a literal version9 expectation.
+That oracle now explicitly pins10 and generatedOutput:false, and rejects version9.
+All five new native cases pass; unchanged11 context and six real-host cases PASS,
+strict builds clean and hashes exact. Original failure is retained.
+Actual atomic-copy probe23944: Linux5PASS, MinGW32/Wine2PASS/3self-copyFAIL due to
+the open reader preventing replacement. Local helper closes/checks the reader
+before publication; identical probe56854 now5/5 on both, zero leaks/OOM. Not native
+Windows/MSVC coverage. Sixth native regression added. AtomicDeploymentCopy.cpp is
+an untracked validated fixture. Build76628 COMPLETE0:20 tasks,zero diagnostics.
+Final focused13383 COMPLETE0:130 nativePASS/one unchangedSKIP, all six new cases
+PASS; unchanged context11/11 and real compiler-host6/6 PASS, strict builds clean,
+frozen hashes exact. Peak1,212,870,656 bytes,zero OOM/high/max events.
+External build94535 COMPLETE0:347 tasks,609,391ms,one expected incompatible-cache
+recovery warning,no errors; one worker/shared cache. Peak4,299,345,920 bytes,
+high2539,max/oom/oom_kill0. Frozen sources/native artifacts/fixtures exact.
+Initial focus76950 COMPLETE1 after16 SOFTWARE cases: manifest demo still pins9
+instead of the intentional10. Original failure retained; local demo now pins10,
+asserts generatedOutput:false, keeps rejection8 and adds9; all14 checks retained.
+The047 marker was still present at that failed focus. Sanitizer57508 COMPLETE0: actual helper5/5 PASS with
+ASan/UBSan/leak detection,strict build clean,peak272,592,896 bytes,zero OOM.
+Format-v10 build94348 COMPLETE0:11,205ms,zero diagnostics/errors,frozen hashes
+exact. Format-v10 focus85104 COMPLETE0:146 cases,70PASS/three same knownFAIL per
+renderer,only047 improves; all36 internal standalone labels unchanged,manifest
+demo14 checks retained,peak2,929,029,120 bytes,zero OOM. Removed047 marker/stale048
+restriction locally; standalone runtime source unchanged. Metadata build6798
+COMPLETE0:8,742ms,zero diagnostics/errors. Final metadata focus96907 COMPLETE0:
+146 cases,all36 internal labels preserved per renderer; hashes exact;peak
+4,295,487,488 bytes,high1450,max/oom/oom_kill0. Native56713 COMPLETE0:
+10804=10703PASS/101sameSKIP,1,281,742ms,independent XML comparison exact with six
+new passes; hashes exact. Private display/UID/capability/network checks pass.
+Peak2,546,384,896 bytes,zero high/max/OOM. Current63473 runs full external alone,
+private Xwayland,<=6GiB. First fourteen stages pass including both math95,six
+exact visuals and both719 sweeps: SOFTWARE628PASS/40knownFAIL/48SKIP/3manual,
+OPENGLES3667PASS/42knownFAIL/7SKIP/3manual. Only047 improves against109; both
+original-baseline audits find71 improvements and no unexpected differences.
+CTest is running (420/735 started); resume verified the existing live job without
+launching a duplicate. Scope peak1,121,337,344 bytes,zero high/max/OOM events;
+host Codex~302MiB RSS,22GiB available. Poll63473 and inspect final-gates-summary
+and comparisons/CTest audits. All candidate sources/319 artifacts remain frozen.
+Prepared repair-generated-output-closure-audit.mjs is syntax-checked,NOT RUN;
+run after63473. Then coherent CNA source/test commits,047 permanent closure and
+separate demos evidence/metadata commit; not before full evidence passes. Additional uncommitted
+CONTENT_STAGING_TRIAGE.md is057 read-only OS synchronization design review only;
+no staging implementation/test change. Keep that note separate from047 commits.
+Full native/external regression still required; no047 closure. Marker removal
+is an uncommitted candidate validated by the completed format-v10 focus.
+Expected full native10804=10703PASS/101unchangedSKIP. No other campaign heavy job.
+Latest host check: resumed Codex~295MiB RSS,22GiB available. No process stopped;
+scope limits protect workloads, not the Codex application itself.
+Continuation drivers: build-probe/repair-generated-output-demo-focused.mjs
+(initial/metadata stages), repair-atomic-deployment-copy-sanitizer.mjs,
+repair-generated-output-native-full.mjs and repair-generated-output-full-gates.mjs.
+Do not run any heavy stage concurrently with63473. Exact sequential continuation
+and native private-network requirements are in CNA's current handoff. Only the
+documented format-version expectations and047/048 metadata changed in demos;
+no behavior assertion was weakened, and no new source commit or push occurred.
 Counts91FINAL/64PENDING;109 closure metadata committed in CNA33dad9dc9 and demos90b9ba3.
 The post-closure catalog CTests also pass3/3. No push or merge.
 

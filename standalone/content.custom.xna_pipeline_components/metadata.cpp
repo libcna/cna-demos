@@ -88,6 +88,5 @@ CNA_DEMOS_STANDALONE({
     .tags = {"content", "custom", "pipeline", "parameters", "dependencies", "scanner", "cnaext"},
     .assets = {"custom/patrol.route", "custom/patrol.scale"},
     .restrictions = "Build-time tool in a separate process; requires CNA::ContentPipelineBuild. "
-                    "ISSUE-048: returned effective parameters retain dropped entries. Compiled CNB bytes are inspected in memory. Temporary source/output files are removed; explicit builds do not establish incremental caching.",
-    .knownIssue = "CNA-DEMOS-ISSUE-047",
+                    "Compiled CNB bytes are inspected in memory. Temporary source/output files are removed; explicit builds do not establish incremental caching.",
 })
