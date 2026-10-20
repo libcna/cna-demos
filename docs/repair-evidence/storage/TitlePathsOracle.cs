@@ -54,6 +54,8 @@ static class TitlePathsOracle
             string astralLong = new System.Text.StringBuilder().Insert(0, astral, 32760).ToString();
             Reject<ArgumentException>(astralLong);
             Reject<InvalidOperationException>(astralLong.Substring(2));
+            Reject<InvalidOperationException>(name + "/seed.bin\0suffix");
+            Reject<InvalidOperationException>(name + "/missing.bin\0suffix");
             Console.WriteLine("checks=" + checks + " failed=" + failed);
             return failed == 0 ? 0 : 1;
         }

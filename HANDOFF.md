@@ -23,11 +23,15 @@ disabled,911.46s; six pixel-exact visuals, three binary hashes reverified.
 See docs/repair-evidence/lifecycle/CHECKPOINT.md. External freeze RELEASED.
 
 NEXT: storage056/151 native repairs are committed (Sharp1c0fc9b5/CNA5865ae938),
-external closure pending. Sharp145 prerequisites551ced42 and82b57541 pass the full
-18142-test gate. Title145 native production/C adapter/tests are uncommitted;
-focused16/16 and actual-TU ASan/UBSan/leak6/6 pass, broader runtime240total237PASS/
-three unchanged skips. Its genuine probe28/28 and actual-assembly IL evidence are
-in docs/repair-evidence/storage/. C ABI pre-fix probe13checks/five failures retained.
+external closure pending. Title145 committedcbb77e3c8 includes lower-layer prerequisites
+through Sharp58c6cba1 (full18144/18144, zero failures/skips, warning-free build).
+Native focused17/17 and actual TitleContainer/FileStream-TU ASan/UBSan/leak13/13 pass;
+consumers1408PASS/four same skips, runtime241total238PASS/three same skips.
+Genuine title30/30; actual C ABI RuntimeGameSmoke/StorageSmoke/title13/13 now pass,
+with the original five C title failures retained as pre-fix evidence. Complete
+external build63979 running before focused two-renderer tests and marker removal.
+No external storage closure yet. Next content146 genuine14/14 and native1PASS/two
+pre-fix FAIL establish null-value/empty-key contracts; production unchanged.
 Follow CNA's CNA_DEMOS_REPAIR_HANDOFF.md for exact native job/commit/build state;
 never count these pending external repairs as resolved yet. FileShare152 platform
 policy question remains pending. No push or merge. The paragraphs below are history.

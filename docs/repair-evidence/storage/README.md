@@ -1,8 +1,61 @@
-# Prepared storage/runtime evidence (056, 151, 152; not repaired)
+# Storage/runtime repair evidence (056, 145, 151, 152)
 
-No CNA storage or Sharp Runtime production change is included here. The current
-dependency is Sharp Runtime `f2aecfef`. These probes prepare the next coherent
-storage batch while the preceding geometry checkpoint remains frozen.
+## Current checkpoint (2026-10-20)
+
+056/145/151 are FIXED_PENDING_REGRESSION, not yet closed. CNA repairs5865ae938
+(disposed storage) and cbb77e3c8 (title paths/C adapter), Sharp repairs1c0fc9b5
+(EOF),551ced42 (directories),82b57541 (relative URI),3304ecd6 (invalid paths),
+58c6cba1 (native path-status errors) are committed. All historical sections below
+describe the measured pre-repair state unless explicitly labeled otherwise.
+
+Sharp's final warning-free full build and full component gate pass18,144/18,144
+across41 executables, zero failures/skips. Native title/storage focus17/17 passes;
+exact native consumers1408PASS/four unchanged skips and runtime241total238PASS/
+three unchanged skips pass. Actual TitleContainer.cpp plus FileStream.cpp and13
+regression tests pass ASan/UBSan/leak checks. Android branch syntax-only compilation
+passes; this is not an NDK cross-build or Android runtime claim. Reports:
+`repair-title-status-native-*`, `repair-title-nul-final-sanitizer*`,
+`repair-title-android-branch-syntax.log`.
+
+Actual rebuilt external C API passes strict C17/Wall/Wextra/Wpedantic/Werror
+RuntimeGameSmoke, StorageSmoke and the independent TitleCValidationProbe13/13
+(previous8PASS/five FAIL). The independent probe checks argument categories, buffer
+preservation, directory errors and cleanup; the existing runtime smoke retains its
+missing-path and successful-byte controls. ldd binds
+the actual external C ABI DSO; both libraries' hashes match before/after execution.
+Reports `repair-storage-c-after-*`, `repair-storage-c-libraries*.log` and manifest.
+The full external demo build is still running. Focused SOFTWARE/OPENGLES3, marker
+updates and full renderer/visual/CTest regression remain required before closure.
+FileShare152 remains open; the platform-policy question has no answer yet.
+
+### Invalid paths and error preservation
+
+TitlePathsOracle now passes30/30 genuine checks, adding embedded NUL with existing
+and missing prefixes. FileStream formerly opened the prefix of a NUL-containing
+name and could truncate the wrong file. FilePathValidationOracle verifies exact
+exceptions, argument precedence and unchanged seed bytes. Its explicit Framework4
+mode and default .NET8.0.31 mode each pass72/72. They deliberately differ for long
+Append/ReadWrite input: Framework4 normalizes the path before its append-access
+guard; modern .NET rejects the arguments first. The initial71/72 Framework4 result
+and diagnostic rerun remain retained, not overwritten or claimed as universal parity.
+Sharp keeps the modern .NET argument order; XNA TitleContainer uses Open/Read.
+Reports `repair-file-path-{validation,length,length-detail,versioned}-xna*`,
+`repair-file-path-net8*` and `repair-title-nul-xna*`.
+
+Sharp rejects empty input before mode/access checks, and embedded NUL after those
+checks but before filesystem effects. Native missing errors remain missing errors;
+filename-too-long, denied and other status failures retain their correct exception
+categories instead of becoming FileNotFoundException. New regressions fail before
+each repair. CNA opens through that corrected FileStream without masking errors in
+an existence check; Android only falls back for genuine missing-file categories.
+The old Framework4 URI length boundary stays in CNA's XNA layer, not modern Sharp.
+
+Retained intermediate failures include the native length regression (16/17), its
+broader runtime gate (237PASS/three skips/one FAIL of241), and an expanded sanitizer
+link failure missing File helpers. The latter is not a sanitizer runtime failure;
+the corrected build links the actual Sharp archives and all13 tests pass. No test
+assertion or tolerance was weakened. The following sections retain the original
+investigation chronologically.
 
 ## EOF is a state-transition defect, not only a getter result (056)
 
