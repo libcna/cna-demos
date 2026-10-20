@@ -167,3 +167,12 @@ They are prepared, not yet compiled or executed. No test result is claimed.
 The target-lookup tests deliberately preserve CNA's documented fresh unique_ptr
 contract rather than importing XNA's process-global reader ownership model.
 Dispatch uses matching factory/target names to isolate043 from its own failures.
+
+`ContentOwnershipTests.cpp` adds seven further prepared, uncompiled native cases
+from the measured ownership contract: default Unload/Dispose, cache identity,
+caller ownership/order, per-materialization duplicate recording, partial-read
+retention, failed-Unload cleanup and a throwing recorder. The test manager uses
+the existing OpenStream opt-in solely to isolate011 from012; it is not a proposed
+production workaround. These shared_ptr cases cannot close the separate value-
+handle Texture2D ownership requirement. All32 prepared cases can be compiled in
+one bounded probe once a worker and stable native dependency closure are available.

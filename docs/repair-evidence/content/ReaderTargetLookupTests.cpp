@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MS-PL
 // ISSUE-043 before/after regressions, staged outside the preceding frozen build.
 #include <gtest/gtest.h>
+#include <type_traits>
 #include "Microsoft/Xna/Framework/Content/ContentTypeReaderManager.hpp"
 #include "System/InvalidOperationException.hpp"
 
@@ -13,7 +14,8 @@ namespace
     template<class T> class LookupReader final : public ContentTypeReader<T>
     {
     public:
-        LookupReader() : ContentTypeReader<T>("CNA.Repair.Target") { }
+        LookupReader() : ContentTypeReader<T>(std::is_same_v<T, LookupValue>
+            ? "CNA.Repair.Target" : "CNA.Repair.OtherTarget") { }
     protected:
         T Read(ContentReader&, std::optional<T> existing) override
         { return existing.value_or(T{}); }
