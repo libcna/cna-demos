@@ -34,8 +34,10 @@ int main(int argc, char** argv)
         return cna_demo_finish(&demo);
 
     if (!cna_demo_check(&demo, cna_game_launch_parameters_parse_ext(game, arguments, 6) == CNA_RESULT_SUCCESS &&
-                        cna_game_launch_parameters_get_count(game, &count) == CNA_RESULT_SUCCESS && count == 3,
-                        "parse replaces the map, ignores bare and equals-only flags and merges duplicate names")) goto cleanup;
+                        cna_game_launch_parameters_get_count(game, &count) == CNA_RESULT_SUCCESS && count == 5 &&
+                        cna_game_launch_parameters_get_value_size(game, (CNA_StringView){"windowed", 8}, &needed) == CNA_RESULT_SUCCESS && needed == 0 &&
+                        cna_game_launch_parameters_get_value_size(game, (CNA_StringView){"equals=ignored", 14}, &needed) == CNA_RESULT_SUCCESS && needed == 0,
+                        "parse replaces the map, retains bare and equals-containing names with empty values and merges duplicates")) goto cleanup;
     memset(profile_argument, '#', sizeof(profile_argument)); /* Input bytes need not outlive parsing. */
     memset(buffer, '#', sizeof(buffer));
     cna_demo_check(&demo, cna_game_launch_parameters_copy_value(game, mode, buffer, sizeof(buffer), &copied) == CNA_RESULT_SUCCESS &&
@@ -55,9 +57,9 @@ int main(int argc, char** argv)
                    copied == 5 && memcmp(buffer + 1, expected, 5) == 0 && buffer[0] == '#' && buffer[6] == '#',
                    "exact-capacity copying preserves guards and the owned UTF-8 bytes after caller storage changes");
 
-    const char* const names[] = {"Zeta", "mode", "profile"};
+    const char* const names[] = {"Zeta", "equals=ignored", "mode", "profile", "windowed"};
     int ordered = 1;
-    for (uint64_t index = 0; index < 3; ++index) {
+    for (uint64_t index = 0; index < 5; ++index) {
         memset(buffer, '#', sizeof(buffer));
         if (cna_game_launch_parameters_get_key_size(game, index, &needed) != CNA_RESULT_SUCCESS ||
             needed != strlen(names[index]) || needed >= sizeof(buffer) ||
@@ -70,18 +72,18 @@ int main(int argc, char** argv)
         printf("Parameter %llu: %s\n", (unsigned long long)index, buffer);
     }
     cna_demo_check(&demo, ordered, "count/copy enumeration puts uppercase Zeta before lowercase names with no implicit terminators");
-    cna_demo_check(&demo, cna_game_launch_parameters_get_key_size(game, 3, &needed) == CNA_RESULT_INVALID_ARGUMENT &&
+    cna_demo_check(&demo, cna_game_launch_parameters_get_key_size(game, 5, &needed) == CNA_RESULT_INVALID_ARGUMENT &&
                    cna_game_launch_parameters_get_value_size(game, (CNA_StringView){"missing", 7}, &needed) == CNA_RESULT_INVALID_ARGUMENT,
                    "an absent key and an index at count are refused");
     memset(buffer, '#', sizeof(buffer));
-    cna_demo_check(&demo, cna_game_launch_parameters_add(game, mode, (CNA_StringView){"replacement", 11}) == CNA_RESULT_SUCCESS &&
+    cna_demo_check(&demo, cna_game_launch_parameters_add(game, mode, (CNA_StringView){"replacement", 11}) == CNA_RESULT_INVALID_ARGUMENT &&
                    cna_game_launch_parameters_copy_value(game, mode, buffer, sizeof(buffer), &copied) == CNA_RESULT_SUCCESS &&
                    copied == 5 && memcmp(buffer, "first", 5) == 0 &&
-                   cna_game_launch_parameters_get_count(game, &count) == CNA_RESULT_SUCCESS && count == 3,
-                   "the documented C Add contract keeps an existing value while returning success");
+                   cna_game_launch_parameters_get_count(game, &count) == CNA_RESULT_SUCCESS && count == 5,
+                   "duplicate Add reports ArgumentException through INVALID_ARGUMENT and preserves the existing map");
     memset(buffer, '#', sizeof(buffer));
     cna_demo_check(&demo, cna_game_launch_parameters_add(game, (CNA_StringView){"Alpha", 5}, (CNA_StringView){"new", 3}) == CNA_RESULT_SUCCESS &&
-                   cna_game_launch_parameters_get_count(game, &count) == CNA_RESULT_SUCCESS && count == 4 &&
+                   cna_game_launch_parameters_get_count(game, &count) == CNA_RESULT_SUCCESS && count == 6 &&
                    cna_game_launch_parameters_copy_key(game, 0, buffer, sizeof(buffer), &copied) == CNA_RESULT_SUCCESS &&
                    copied == 5 && memcmp(buffer, "Alpha", 5) == 0,
                    "adding a new key changes the count and a fresh sorted enumeration");
@@ -94,7 +96,7 @@ int main(int argc, char** argv)
     cna_demo_check(&demo, cna_game_launch_parameters_parse_ext(game, malformed, 2) == CNA_RESULT_ENCODING,
                    "a malformed UTF-8 argument refuses replacement parsing");
     memset(buffer, '#', sizeof(buffer));
-    cna_demo_check(&demo, cna_game_launch_parameters_get_count(game, &count) == CNA_RESULT_SUCCESS && count == 4 &&
+    cna_demo_check(&demo, cna_game_launch_parameters_get_count(game, &count) == CNA_RESULT_SUCCESS && count == 6 &&
                    cna_game_launch_parameters_copy_value(game, mode, buffer, sizeof(buffer), &copied) == CNA_RESULT_SUCCESS &&
                    copied == 5 && memcmp(buffer, "first", 5) == 0,
                    "failed parsing preserves the previous count and value despite an earlier valid replacement argument");

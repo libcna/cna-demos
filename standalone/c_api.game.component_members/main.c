@@ -209,10 +209,10 @@ int main(int argc, char** argv)
     cna_demo_check(
         &demo,
         cna_game_component_dispose(plain) == CNA_RESULT_SUCCESS &&
-            cna_game_component_dispose(plain) == CNA_RESULT_SUCCESS && plain_behavior.disposed == 1 &&
-            events.disposed == 1 && cna_game_component_dispose(drawable) == CNA_RESULT_SUCCESS &&
+            cna_game_component_dispose(plain) == CNA_RESULT_SUCCESS && plain_behavior.disposed == 2 &&
+            events.disposed == 2 && cna_game_component_dispose(drawable) == CNA_RESULT_SUCCESS &&
             draw_behavior.unloaded == 1 && draw_behavior.disposed == 1,
-        "disposal is idempotent, raises one event and unloads drawable content once");
+        "each explicit disposal repeats its callback/event and a drawable disposal invokes its unload hook");
 
 cleanup:
     for (i = 0; i < 5; ++i) {

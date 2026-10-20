@@ -86,6 +86,4 @@ CNA_DEMOS_GAME(GameComponentDemo, {
              "IGameComponent::Initialize", "IUpdateable::Update", "Game::Components", "GameComponentCollection::Add"},
     .tags = {"component", "architecture"},
     .frames = 10,
-    .restrictions = "CNA-DEMOS-ISSUE-141 records repeated Dispose suppressing XNA's repeated Disposed event.",
-    .knownIssue = "CNA-DEMOS-ISSUE-141",
 })

@@ -1,5 +1,8 @@
 # Lifecycle audit and native witnesses (141–144; external validation pending)
 
+The opening audit below records the historical pre-fix state. Subsequent sections
+record the committed repairs and validation; full external regression is pending.
+
 Production audit while the geometry checkpoint is frozen. No lifecycle runtime
 code or demo assertions have been changed. The fresh `ComponentContractsOracle.cs` now
 passes29/29 genuine checks (`repair-lifecycle-contracts-xna{,-build}.log`): hook
@@ -204,3 +207,32 @@ component-members demo's second explicit disposal must repeat its callback/event
 the C launch demo must retain bare/equals names and reject duplicate Add. Preserve
 all assertion calls, UTF-8, buffer-guard and atomicity controls. These corrections
 are not permission to change unrelated expected failures or the frozen Color binary.
+
+## Actual C ABI validation after the Color checkpoint
+
+The Color checkpoint closed in demo8d7404b/CNAca2a94bdb. The subsequent lifecycle
+external build links actual libcna at step13 and libcna_c_api at step34 before
+compiling the dependent demo translation units. Those completed libraries were
+SHA256-frozen independently while the remaining demo sources continued compiling.
+Strict C17/Wall/Wextra/Wpedantic/Werror RuntimeComponentsSmoke, RuntimeGameSmoke
+and ComponentCDisposalProbe all pass against the actual rebuilt C ABI; ldd confirms
+the library path. The independent disposal probe now passes11/11 (previously four
+failures), including self-removal, repeated callback/event and cleanup controls.
+Both library hashes are unchanged afterward. Reports `repair-lifecycle-c-*`.
+This does not yet claim the whole demo executable build or renderer regression.
+
+The three adjacent demo oracles are now corrected with source assertion-call counts
+unchanged4/20/15. The C launch check additionally verifies both retained empty values;
+all UTF-8 and guard/atomicity controls remain. Four primary141–144 knownIssue markers
+are still present until focused execution passes.
+
+## Focused external execution and marker update
+
+The complete external build finishes warning-free. All20 focused scenarios on
+each SOFTWARE/OPENGLES3 label match their contracts:18PASS and the same two
+unrelated050/051 failures. All four primary repaired demos pass their unchanged
+5/8/11/8 assertions; the three adjacent genuine-backed oracles also pass, with
+their original4/20/15 assertion calls retained. No unrelated expected failure moves.
+Reports `repair-lifecycle-focused-*`. Only after this run are the four141–144
+knownIssue/restriction markers removed. The marker rebuild and frozen full
+regression must still finish before those issue rows are closed.

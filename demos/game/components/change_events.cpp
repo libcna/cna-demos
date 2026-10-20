@@ -295,6 +295,4 @@ CNA_DEMOS_GAME(ChangeEventsDemo, {
              "IDrawable::VisibleChanged", "IDrawable::DrawOrder", "IDrawable::DrawOrderChanged"},
     .tags = {"component", "event", "pause"},
     .frames = 3,
-    .restrictions = "CNA-DEMOS-ISSUE-142 records public events firing before and independently of their XNA hooks.",
-    .knownIssue = "CNA-DEMOS-ISSUE-142",
 })

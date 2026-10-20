@@ -88,7 +88,8 @@ namespace
             // in C++; call that public IDisposable entry point through the base reference.
             static_cast<GameComponent&>(*top_).Dispose();
             static_cast<GameComponent&>(*top_).Dispose();
-            Context().Check(top_->unloads == 1, "disposing a drawable component unloads its content exactly once");
+            // Genuine XNA invokes the managed hook on each explicit Dispose, including repeats.
+            Context().Check(top_->unloads == 2, "each explicit drawable disposal invokes its unload hook");
         }
 
     private:

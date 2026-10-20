@@ -76,6 +76,4 @@ CNA_DEMOS_CONSOLE(LaunchParametersParse, {
     .apis = {"LaunchParameters::LaunchParameters", "LaunchParameters::ContainsKey", "LaunchParameters::Add",
              "Game::LaunchParameters"},
     .tags = {"command-line", "arguments", "dictionary", "validation"},
-    .restrictions = "CNA-DEMOS-ISSUE-144 records dropped empty-value arguments and silent duplicate Add.",
-    .knownIssue = "CNA-DEMOS-ISSUE-144",
 })

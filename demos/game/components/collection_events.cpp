@@ -241,6 +241,4 @@ CNA_DEMOS_GAME(CollectionEventsDemo, {
              "GameComponentCollectionEventArgs::GameComponent", "IGameComponent"},
     .tags = {"component", "collection", "event", "ownership", "validation"},
     .frames = 3,
-    .restrictions = "CNA-DEMOS-ISSUE-143 records Insert validation precedence and null removal during Clear.",
-    .knownIssue = "CNA-DEMOS-ISSUE-143",
 })
