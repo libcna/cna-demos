@@ -238,3 +238,11 @@ is warning-free. Complete manager/writer/song focus passes33/33 in146ms, includi
 (204 refused/196 written). Corrected1918 gate is running under prefix
 `repair-content-runtime-corrected`; its four artifacts are frozen separately.
 No whole-module pass or039/045 closure is claimed until it finishes.
+
+Corrected module71175 now completes0 in188.735s:1914PASS/four unchangedSKIP of1918,
+all1905 original outcomes (including the explicitly mapped Song test) and13 later
+additions match, `differences: []`. All four hashes match afterward. The isolated
+writer fixture correction is committed as CNA1ec77a734; runtime039/045 and its
+regressions are CNA583af2a5e. Full native pipeline552 job66736 and external build6996
+are running. Both issues remain FIXED_PENDING_REGRESSION, not closed. No new native
+rebuild during the remaining pipeline/consumer/hash gates.

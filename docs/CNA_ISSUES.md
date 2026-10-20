@@ -2295,6 +2295,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-039 -- ContentManager permits changing the root with loaded assets
 
+- **Campaign repair (2026-10-20; full regression pending):** CNA `583af2a5e`
+  guards both setters before mutation. Genuine91 checks, actual-TU sanitizer23,
+  focused33 and full native content1918 (1914PASS/four unchanged skips) validate
+  this batch. Broader pipeline and external renderer regression are running;
+  [evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
+
 - **Campaign update (2026-10-20; not resolved):** genuine XNA89/89 confirms both
   same-root and different-root assignment are refused with cached assets, while
   failed Load and uncached ReadAsset permit assignment. Native baseline gives
@@ -2381,6 +2387,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   A library fix should preserve the distinction between target identity and reader factory name.
 
 ### CNA-DEMOS-ISSUE-045 -- Truncated XNB leaks EndOfStreamException through ContentManager::Load
+
+- **Campaign repair (2026-10-20; full regression pending):** CNA `583af2a5e`
+  shares typed/erased header bounds validation and wraps content-boundary I/O only.
+  The confirmed compressed-header heap overread is fixed; actual-TU sanitizer23,
+  genuine91, focused33 and full native content1918 pass their exact gates. Direct
+  parser/Song-reader contracts remain intact. Broader pipeline and external
+  checkpoint are still required; [evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
 
 - **Campaign update (2026-10-20; not resolved):** expanded genuine XNA89/89 and
   native four-case baseline confirm header/body IOException wrapping without
