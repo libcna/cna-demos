@@ -2,7 +2,7 @@
 
 ## Current checkpoint (2026-10-20)
 
-056/145/151 are FIXED_PENDING_REGRESSION, not yet closed. CNA repairs5865ae938
+056/145/151 are FIXED_VALIDATED; see [CHECKPOINT.md](CHECKPOINT.md). CNA repairs5865ae938
 (disposed storage) and cbb77e3c8 (title paths/C adapter), Sharp repairs1c0fc9b5
 (EOF),551ced42 (directories),82b57541 (relative URI),3304ecd6 (invalid paths),
 58c6cba1 (native path-status errors) are committed. All historical sections below
@@ -30,8 +30,8 @@ the actual C save child's38 checks remain unchanged. Both DSOs still match the C
 validation manifest. Only then removed056/145/151 markers; marker rebuild passed.
 Both full renderer sweeps now have exact55 improvements/differences[] versus the
 campaign baseline; all six visuals are pixel-exact. Final isolated serial CTest
-is running against frozen binaries. See [CHECKPOINT.md](CHECKPOINT.md); closure
-still requires its completion and the post-run hash audit.
+accepts all732 enabled tests with zero unexpected failures,48same skips/three
+disabled,921.47s. All three frozen hashes pass before/after; external freeze released.
 FileShare152 remains open; the platform-policy question has no answer yet.
 
 ### Invalid paths and error preservation

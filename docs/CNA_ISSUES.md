@@ -50,30 +50,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   source was modified and no fresh XNA execution or upstream message is claimed. Evidence:
   `/tmp/checkpoint-1109-storage-public-headers/*`.
 
-### CNA-DEMOS-ISSUE-151 -- disposed StorageContainer remains fully usable
-
-- **Area/API:** every `StorageContainer` property and file/directory operation other than
-  `IsDisposed`, in `modules/storage/src/StorageContainer.cpp`.
-- **Demo/reproduction:** run `storage.storage_container.lifetime`. It first proves the complete
-  synchronous BeginOpenContainer result, canonical type name, owner/display properties, one-shot
-  Disposing event and idempotent Dispose. It then invokes both guarded properties, all directory
-  operations/list overloads, all file operations/list overloads and all three OpenFile overloads
-  against valid fixtures after disposal.
-- **Observed:** zero of15 calls throws `System::ObjectDisposedException`; every operation proceeds,
-  including mutations. Seven grouped lifecycle assertions fail after seven positive controls.
-  Five repeated runs on each renderer label are byte-identical at stdout SHA-256
-  `57248a0cb473179ce23eb8fece9fe9fefd792fa9bb7a3d9bbe1a9dc04a577f9f` with empty stderr.
-- **Expected/reference:** genuine XNA's `DisplayName`/`StorageDevice` getters and shared
-  `ValidateArguments`/listing paths call `VerifyNotDisposed`, which throws ObjectDisposedException;
-  only `IsDisposed` remains readable. The checked-in decompilation provides the exact reference.
-- **Cause:** CNA's Dispose only sets `isDisposed_` and raises the event. No property or operation
-  checks the flag before using the retained owner/path state.
-- **Suggested repair/status:** add one shared disposed guard and call it from both properties and
-  every path/list entry point before other validation or filesystem effects. Open against pinned
-  CNA `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA source was modified and no fresh XNA
-  execution or upstream message is claimed. Evidence:
-  `/tmp/checkpoint-1109-storage-public-headers/*`.
-
 ### CNA-DEMOS-ISSUE-150 -- documented `CNA::Runtime` facade has no linkable implementation
 
 - **Area/API:** public `CNA/Misc.hpp`: `RuntimeOptions` and `Runtime::Initialize`, `Shutdown`,
@@ -216,31 +192,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Focused evidence is under
   `/tmp/checkpoint-1085-opaque-data/*`. The XML oracle is CNA's checked-in genuine-XNA corpus;
   no fresh XNA execution, CNA source modification or upstream message is claimed.
-
-### CNA-DEMOS-ISSUE-145 -- TitleContainer accepts rooted names and reports non-XNA path exceptions
-
-- **Area/API:** `Microsoft::Xna::Framework::TitleContainer::OpenStream`.
-- **Demo/reproduction:** run `game.title_container.open_stream`. Alongside successful
-  title-relative, backslash, dot-segment and changed-working-directory reads, pass the absolute
-  path of the same deployed PNG, a missing relative name and an empty name.
-- **Observed:** CNA accepts the absolute path and opens the file. A missing relative file throws
-  `std::runtime_error`; an empty name reaches the title directory and ultimately throws
-  `System::IO::FileNotFoundException`. These are three expected failures in the focused demo.
-- **Expected/reference:** genuine Windows XNA 4.0 rejects an absolute name with
-  `System.ArgumentException`, a missing relative name with `System.IO.FileNotFoundException`, and
-  an empty name with `System.ArgumentNullException`. The same probe confirms that ordinary,
-  backslash and dot-segment names resolve beside the executable even after the working directory
-  changes; a parent segment is also legal.
-- **Cause/suggested repair:** `TitleContainer::OpenStream` explicitly treats rooted paths as files
-  to open directly and throws a generic runtime error when its preflight existence check fails.
-  Validate empty and rooted names before resolution, using the XNA exception mappings, and let the
-  existing `FileStream` path supply the specific missing-file exception.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Genuine XNA ran from the installed Windows
-  assemblies under Wine with stdout SHA-256
-  `7a7c6be52d3dab90c85dd30a44b881870276d4af86d8f96345280fcf326c5e64` and empty stderr. Focused CNA
-  evidence is under `/tmp/checkpoint-1078-root-values/*`. No CNA source was modified and no
-  upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-131 -- BoundingFrustum ray intersection omits outside entry and boundary start
 
@@ -1516,42 +1467,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   full validation after recording the defect, and retain this issue even if scheduling permits a
   clean retry. The eleven OcclusionQuery controls already pass on both renderers independently.
   No sibling source was changed, unknown staging directory deleted or upstream message sent.
-
-### CNA-DEMOS-ISSUE-056 -- File stream position becomes -1 after a short EOF read
-
-- **Area:** sharp-runtime `System::IO::FileStream::Read/getPositionProperty`, exposed through
-  CNA StorageContainer file streams and `cna_storage_stream_get_position`.
-- **Reproduction:** the extension of `c_api.storage.save_game` is independently
-  compiled as `/tmp/cna-storage-eof-probe` using existing C target inputs. It seeks to byte16
-  of the original24-byte save and requests12bytes into physically allocated guarded storage.
-  A second read at EOF and a position query follow. A separate `/tmp/cna-canonical-eof-probe`
-  uses direct FileStream with a unique4-byte temporary file, requesting6bytes, then querying
-  position after both short and empty reads. Sources/builders/runners are archived below.
-- **Observed:** C returns SUCCESS with position-1 instead of24. Exactly one of31child checks
-  fails; all23original controls plus seven additions pass, including exact tail bytes, untouched
-  guards, empty EOF output, rewind/full reread, parent release guards and stale-handle output.
-  Both requested renderer environments agree. The direct FileStream probe reads4bytes and
-  reports-1after both reads instead of4, while every data/guard/rewind/reread control passes.
-  Both programs return1 specifically for the defect; stderr is empty. No Game/rendering claim.
-- **Expected:** an open file stream remains positioned at the actual end after a short/empty
-  EOF read; its position getter must not publish an internal std::fstream failure sentinel as
-  a successful byte offset. The C adapter should retain the same canonical stream semantics.
-- **Investigation:** FileStream::Read uses fstream.read/gcount and leaves EOF/fail state set;
-  getPositionProperty directly calls tellg. CNA's generated C getter forwards that value with
-  SUCCESS. Direct reproduction isolates the underlying stream path from the C adapter and
-  rules out the demo's source/output buffers. Seek from Begin clears native state and restores
-  successful reading; that positive control does not weaken the failing position assertion.
-- **Environment/evidence:** Linux x86_64/GCC14.2, existing linux-full runtime artifacts from
-  complete466-transfer (CNA59598bfac), observed clean sharp-runtime c20373bae. Later source
-  review observes CNA714f9f76a; no atomic input/source snapshot is claimed. All35selected
-  shipped binaries remain unchanged through probe builds/runs. Immutable stdout/stderr/JSON,
-  direct/C sources, helper scripts, source hashes and exact23+8child review are in
-  `build/linux-full/reports/checkpoint-466-transfer-eof-*`. No sibling source changes or
-  upstream messages. The catalog extension now retains the failing assertion with knownIssue metadata; its native
-  build, both focused selections and relevant CTest WILL_FAIL contract pass as documented
-  in checkpoint-467-focused-* (30positive child checks and only the confirmed position failure). The later read-only extension preserves this failure and adds seven positive controls
-  (37passes/one failure,38total) on both requested selections, in checkpoint-467-scene-focused-*.
-  Reproduce via `cna-demos c_api.storage.save_game --automated --renderer SOFTWARE` after building.
 
 ### CNA-DEMOS-ISSUE-001 -- `libcna.so` fails to link with CMake 3.28 (duplicate symbols)
 
@@ -2854,6 +2769,127 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-151 -- disposed StorageContainer remains fully usable
+
+- **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
+  CNA `5865ae938`; demo markers `de6bcde`. Genuine contracts, native tests,
+  actual production-TU sanitizers and rebuilt external C ABI pass. Both complete
+  renderer sweeps have exactly55 cumulative improvements versus campaign HEAD
+  (57 versus Complete1128), with no other status/check/failed-assertion deltas.
+  All732 enabled CTests accepted, zero unexpected failures,48same skips/three
+  disabled,921.47s; all six visual references pixel-exact. Three frozen hashes
+  verified before/after. Original behavior assertions remain. See
+  [complete storage evidence and platform limitations](repair-evidence/storage/CHECKPOINT.md).
+  Historical evidence follows; FileShare152 remains open.
+
+- **Area/API:** every `StorageContainer` property and file/directory operation other than
+  `IsDisposed`, in `modules/storage/src/StorageContainer.cpp`.
+- **Demo/reproduction:** run `storage.storage_container.lifetime`. It first proves the complete
+  synchronous BeginOpenContainer result, canonical type name, owner/display properties, one-shot
+  Disposing event and idempotent Dispose. It then invokes both guarded properties, all directory
+  operations/list overloads, all file operations/list overloads and all three OpenFile overloads
+  against valid fixtures after disposal.
+- **Observed:** zero of15 calls throws `System::ObjectDisposedException`; every operation proceeds,
+  including mutations. Seven grouped lifecycle assertions fail after seven positive controls.
+  Five repeated runs on each renderer label are byte-identical at stdout SHA-256
+  `57248a0cb473179ce23eb8fece9fe9fefd792fa9bb7a3d9bbe1a9dc04a577f9f` with empty stderr.
+- **Expected/reference:** genuine XNA's `DisplayName`/`StorageDevice` getters and shared
+  `ValidateArguments`/listing paths call `VerifyNotDisposed`, which throws ObjectDisposedException;
+  only `IsDisposed` remains readable. The checked-in decompilation provides the exact reference.
+- **Cause:** CNA's Dispose only sets `isDisposed_` and raises the event. No property or operation
+  checks the flag before using the retained owner/path state.
+- **Suggested repair/status:** add one shared disposed guard and call it from both properties and
+  every path/list entry point before other validation or filesystem effects. Open against pinned
+  CNA `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA source was modified and no fresh XNA
+  execution or upstream message is claimed. Evidence:
+  `/tmp/checkpoint-1109-storage-public-headers/*`.
+
+
+### CNA-DEMOS-ISSUE-145 -- TitleContainer accepts rooted names and reports non-XNA path exceptions
+
+- **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
+  CNA `cbb77e3c8`; demo markers `de6bcde`. Genuine contracts, native tests,
+  actual production-TU sanitizers and rebuilt external C ABI pass. Both complete
+  renderer sweeps have exactly55 cumulative improvements versus campaign HEAD
+  (57 versus Complete1128), with no other status/check/failed-assertion deltas.
+  All732 enabled CTests accepted, zero unexpected failures,48same skips/three
+  disabled,921.47s; all six visual references pixel-exact. Three frozen hashes
+  verified before/after. Original behavior assertions remain. See
+  [complete storage evidence and platform limitations](repair-evidence/storage/CHECKPOINT.md).
+  Historical evidence follows; FileShare152 remains open.
+
+- **Area/API:** `Microsoft::Xna::Framework::TitleContainer::OpenStream`.
+- **Demo/reproduction:** run `game.title_container.open_stream`. Alongside successful
+  title-relative, backslash, dot-segment and changed-working-directory reads, pass the absolute
+  path of the same deployed PNG, a missing relative name and an empty name.
+- **Observed:** CNA accepts the absolute path and opens the file. A missing relative file throws
+  `std::runtime_error`; an empty name reaches the title directory and ultimately throws
+  `System::IO::FileNotFoundException`. These are three expected failures in the focused demo.
+- **Expected/reference:** genuine Windows XNA 4.0 rejects an absolute name with
+  `System.ArgumentException`, a missing relative name with `System.IO.FileNotFoundException`, and
+  an empty name with `System.ArgumentNullException`. The same probe confirms that ordinary,
+  backslash and dot-segment names resolve beside the executable even after the working directory
+  changes; a parent segment is also legal.
+- **Cause/suggested repair:** `TitleContainer::OpenStream` explicitly treats rooted paths as files
+  to open directly and throws a generic runtime error when its preflight existence check fails.
+  Validate empty and rooted names before resolution, using the XNA exception mappings, and let the
+  existing `FileStream` path supply the specific missing-file exception.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux. Genuine XNA ran from the installed Windows
+  assemblies under Wine with stdout SHA-256
+  `7a7c6be52d3dab90c85dd30a44b881870276d4af86d8f96345280fcf326c5e64` and empty stderr. Focused CNA
+  evidence is under `/tmp/checkpoint-1078-root-values/*`. No CNA source was modified and no
+  upstream message was sent.
+
+
+### CNA-DEMOS-ISSUE-056 -- File stream position becomes -1 after a short EOF read
+
+- **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
+  Sharp Runtime `1c0fc9b5`; demo markers `de6bcde`. Genuine contracts, native tests,
+  actual production-TU sanitizers and rebuilt external C ABI pass. Both complete
+  renderer sweeps have exactly55 cumulative improvements versus campaign HEAD
+  (57 versus Complete1128), with no other status/check/failed-assertion deltas.
+  All732 enabled CTests accepted, zero unexpected failures,48same skips/three
+  disabled,921.47s; all six visual references pixel-exact. Three frozen hashes
+  verified before/after. Original behavior assertions remain. See
+  [complete storage evidence and platform limitations](repair-evidence/storage/CHECKPOINT.md).
+  Historical evidence follows; FileShare152 remains open.
+
+- **Area:** sharp-runtime `System::IO::FileStream::Read/getPositionProperty`, exposed through
+  CNA StorageContainer file streams and `cna_storage_stream_get_position`.
+- **Reproduction:** the extension of `c_api.storage.save_game` is independently
+  compiled as `/tmp/cna-storage-eof-probe` using existing C target inputs. It seeks to byte16
+  of the original24-byte save and requests12bytes into physically allocated guarded storage.
+  A second read at EOF and a position query follow. A separate `/tmp/cna-canonical-eof-probe`
+  uses direct FileStream with a unique4-byte temporary file, requesting6bytes, then querying
+  position after both short and empty reads. Sources/builders/runners are archived below.
+- **Observed:** C returns SUCCESS with position-1 instead of24. Exactly one of31child checks
+  fails; all23original controls plus seven additions pass, including exact tail bytes, untouched
+  guards, empty EOF output, rewind/full reread, parent release guards and stale-handle output.
+  Both requested renderer environments agree. The direct FileStream probe reads4bytes and
+  reports-1after both reads instead of4, while every data/guard/rewind/reread control passes.
+  Both programs return1 specifically for the defect; stderr is empty. No Game/rendering claim.
+- **Expected:** an open file stream remains positioned at the actual end after a short/empty
+  EOF read; its position getter must not publish an internal std::fstream failure sentinel as
+  a successful byte offset. The C adapter should retain the same canonical stream semantics.
+- **Investigation:** FileStream::Read uses fstream.read/gcount and leaves EOF/fail state set;
+  getPositionProperty directly calls tellg. CNA's generated C getter forwards that value with
+  SUCCESS. Direct reproduction isolates the underlying stream path from the C adapter and
+  rules out the demo's source/output buffers. Seek from Begin clears native state and restores
+  successful reading; that positive control does not weaken the failing position assertion.
+- **Environment/evidence:** Linux x86_64/GCC14.2, existing linux-full runtime artifacts from
+  complete466-transfer (CNA59598bfac), observed clean sharp-runtime c20373bae. Later source
+  review observes CNA714f9f76a; no atomic input/source snapshot is claimed. All35selected
+  shipped binaries remain unchanged through probe builds/runs. Immutable stdout/stderr/JSON,
+  direct/C sources, helper scripts, source hashes and exact23+8child review are in
+  `build/linux-full/reports/checkpoint-466-transfer-eof-*`. No sibling source changes or
+  upstream messages. The catalog extension now retains the failing assertion with knownIssue metadata; its native
+  build, both focused selections and relevant CTest WILL_FAIL contract pass as documented
+  in checkpoint-467-focused-* (30positive child checks and only the confirmed position failure). The later read-only extension preserves this failure and adds seven positive controls
+  (37passes/one failure,38total) on both requested selections, in checkpoint-467-scene-focused-*.
+  Reproduce via `cna-demos c_api.storage.save_game --automated --renderer SOFTWARE` after building.
+
 
 ### CNA-DEMOS-ISSUE-144 -- LaunchParameters drops empty values and silently ignores duplicate Add
 

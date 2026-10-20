@@ -1,7 +1,9 @@
 # Storage checkpoint — 2026-10-20
 
-Status: final CTest/hash audit pending. Issues 056, 145 and 151 are not yet closed.
-All 155 historical IDs remain: 62 final, 93 pending.
+Status: FIXED_VALIDATED. Issues 056, 145 and 151 are closed.
+All 155 historical IDs remain: 65 final, 90 pending (33 runtime findings, one
+verified duplicate, 23 documentation corrections, seven pre-campaign fixes and
+one demonstrated demo-expectation defect).
 
 ## Revisions and scope
 
@@ -55,10 +57,12 @@ tool suites (7 + 4 + 5) pass. All six visual references are pixel-exact, maximum
 channel difference zero; the GLES texture capture was also visually inspected.
 No other renderer/platform validation is claimed for this batch.
 
-After both smoke sweeps finished, full serial CTest started on an isolated private
-GPU display, with no overlapping campaign SystemLink suite. All three frozen
-hashes passed immediately before CTest. Final CTest result and post-run hash audit
-must be appended before closure or releasing the external build freeze.
+After both smoke sweeps finished, full serial CTest ran on an isolated private
+GPU display, with no overlapping campaign SystemLink suite. All 732 enabled tests
+are accepted, zero unexpected failures, the same 48 skips and three disabled tests,
+921.47 seconds. All three frozen hashes passed both before and after CTest. The
+three repaired registered tests no longer have WILL_FAIL; assertions are retained.
+The storage external freeze is now released for the next content repair batch.
 
 Reports: `build/linux-full/reports/repair-storage-*`, including the frozen SHA256
 manifest, strict comparisons, visual captures and full CTest log. Historical
