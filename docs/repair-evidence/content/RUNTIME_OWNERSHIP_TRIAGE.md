@@ -90,3 +90,36 @@ assertion is removed or relaxed. The corrected compilation passes Werror; the
 original compile failure remains in `repair-content-root-native-before-build.log`.
 Actual baseline results: `repair-content-root-werror-native-before.log`.
 No039 production repair or post-fix pass is claimed yet.
+
+## ISSUE-045 boundary and bounds baseline; candidate039/045 repair
+
+Expanded genuine oracle passes89/89 (strict C#4/x86): all header lengths0..9
+through Load and ReadAsset, stream closure, root mutation after failed loads, and
+reader IOException versus InvalidOperationException are verified. The original
+35-check run remains archived; the new report is `repair-content-envelope-xna.log`.
+Four native envelope cases fail as expected in10ms against frozen048 dependencies:
+short typed/raw/untyped headers leak EndOfStreamException, and the body boundary
+also leaks IOException. User InvalidOperationException is already preserved.
+
+An additional actual-TU ASan baseline confirms a **four-byte heap-buffer-overread**
+in ContentManagerUntyped.cpp:154 when an external XNB declares a ten-byte LZX
+container. The typed path checks the compressed14-byte prefix; the erased path
+does not and constructs a four-byte MemoryStream at the end of the input vector.
+The retained report `repair-content-envelope-sanitizer-before.log` identifies the
+read immediately after the ten-byte allocation. This is a related045 parser-boundary
+subfinding, not a fabricated runtime pass or a new historical issue ID.
+
+The uncommitted candidate moves existing header/range checks into one private
+ContentManager::ReadXnbHeader shared by both paths, adds IOException wrapping at
+the manager header and typed/erased ContentReader asset boundaries, and preserves
+the low-level ParseXnbHeader EndOfStream contract and non-I/O user exceptions.
+Both RootDirectory setters reject a nonempty cache before assigning, matching XNA
+rather than FNA's unrestricted property. The required divergence log is updated.
+
+Actual ContentManager.cpp plus ContentManagerUntyped.cpp and the whole manager
+fixture pass ASan/UBSan/leak **23/23 in29ms**, exit0, after the candidate. Eight new
+native cases cover039/045; unchanged positive controls also pass. Report:
+`repair-content-envelope-sanitizer-after.log`. The candidate has NOT yet entered
+the canonical native build or external demos: both048 checkpoint binary sets
+remain frozen. Neither039 nor045 is closed; complete native/external regression
+is still required. Other ownership findings011/012/043/087 remain open.

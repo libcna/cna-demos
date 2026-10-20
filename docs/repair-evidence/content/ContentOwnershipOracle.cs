@@ -26,8 +26,11 @@ public sealed class OwnershipItemReader : ContentTypeReader<OwnershipItem>
 {
     public static bool ReuseOne;
     public static OwnershipItem Reused;
+    public static int FailureMode;
     protected override OwnershipItem Read(ContentReader input, OwnershipItem existing)
     {
+        if (FailureMode == 1) throw new IOException("reader IO sentinel");
+        if (FailureMode == 2) throw new InvalidOperationException("reader user sentinel");
         string label = input.ReadString();
         if (ReuseOne) return Reused ?? (Reused = new OwnershipItem(label));
         return new OwnershipItem(label);
@@ -111,6 +114,7 @@ static class ContentOwnershipOracle
         OwnershipItem.Created.Clear();
         OwnershipItemReader.ReuseOne = false;
         OwnershipItemReader.Reused = null;
+        OwnershipItemReader.FailureMode = 0;
     }
     static void Graph(OwnershipRoot root, string label)
     {
@@ -220,6 +224,35 @@ static class ContentOwnershipOracle
                 manager.Dispose();
                 Throws<ObjectDisposedException>(() => manager.Load<OwnershipRoot>(""), "disposed Load precedes empty-name check");
                 Throws<ObjectDisposedException>(manager.Unload, "Unload after Dispose refused");
+            }
+            for (int length = 0; length < 10; ++length)
+            {
+                byte[] shortHeader = new byte[length];
+                Array.Copy(bytes, shortHeader, length);
+                using (var manager = new OwnershipManager(shortHeader))
+                {
+                    Throws<ContentLoadException>(() => manager.Load<OwnershipRoot>("short"),
+                                                 "Load wraps header length " + length);
+                    Check(manager.LastStream.Closed, "Load closes header length " + length);
+                    Throws<ContentLoadException>(() => manager.Raw(null),
+                                                 "ReadAsset wraps header length " + length);
+                    Check(manager.LastStream.Closed, "ReadAsset closes header length " + length);
+                    manager.RootDirectory = "after-refusal";
+                    Check(manager.RootDirectory == "after-refusal", "failed Load leaves root mutable " + length);
+                }
+            }
+            for (int mode = 1; mode <= 2; ++mode)
+            {
+                Reset();
+                OwnershipItemReader.FailureMode = mode;
+                using (var manager = new OwnershipManager(bytes))
+                {
+                    if (mode == 1)
+                        Throws<ContentLoadException>(() => manager.Raw(null), "reader IOException wrapped");
+                    else
+                        Throws<InvalidOperationException>(() => manager.Raw(null), "reader user exception preserved");
+                    Check(manager.LastStream.Closed, "reader refusal closes stream mode " + mode);
+                }
             }
             Console.WriteLine("checks=" + checks + " failed=" + failures);
             return failures == 0 ? 0 : 1;

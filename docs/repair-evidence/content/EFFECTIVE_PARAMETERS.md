@@ -56,3 +56,18 @@ to pass: the four new effective-parameter tests and the earlier digest regressio
 The original `repair-baseline-native-LastTest.log` is empty and is not used as
 evidence. No external rebuild or issue closure is claimed yet. Reports:
 `repair-effective-parameters-pipeline-core{.log,.xml,-audit.json}`.
+
+The full native XNA pipeline gate now completes551PASS/one unchanged XACT SKIP
+of552 in1008.149s, with every previous outcome unchanged and `differences: []`.
+All four native hashes match afterward. Broader consumers/runtime/XML and their
+final hash audit are running; the native binary remains frozen meanwhile.
+
+External rebuild5276 completes346 steps without warnings. All56 focused executions
+pass the strict comparison:25PASS/three remaining FAIL per renderer. Exactly the048
+failed assertion disappears; all36 child checks remain in xna_pipeline_components,
+which still fails only047. No marker is removed or assertion changed. All319
+external artifacts are frozen in `repair-effective-parameters-binaries.sha256`.
+Both95 math sweeps retain exact48 earlier improvements, metadata/tools and all six
+pixel-exact references pass. Full719 renderer sweeps are running; final CTest and
+hash audit remain pending. Reference to later039/045 source work must not be read
+as inclusion in this frozen048 checkpoint.
