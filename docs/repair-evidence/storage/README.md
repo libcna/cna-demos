@@ -32,7 +32,10 @@ Both full renderer sweeps now have exact55 improvements/differences[] versus the
 campaign baseline; all six visuals are pixel-exact. Final isolated serial CTest
 accepts all732 enabled tests with zero unexpected failures,48same skips/three
 disabled,921.47s. All three frozen hashes pass before/after; external freeze released.
-FileShare152 remains open; the platform-policy question has no answer yet.
+FileShare152 remains open. The owner has since selected native .NET behavior on
+each platform, with the Windows/Unix difference explicitly documented. The
+original exclusive FileShare.None demo must pass on both. This resolves the
+policy question, not the implementation or its validation.
 
 ### Invalid paths and error preservation
 
@@ -359,6 +362,11 @@ exception controls +3 new lifecycle regressions,10ms). Reports
 
 ## Measured FileShare platform split; no expectation relaxation
 
+Owner decision received 2026-10-20: implement native .NET behavior per platform,
+not mandatory Windows sharing on Unix. Preserve the exact measured matrices as
+separate platform oracles. No platform is declared runtime-validated by source
+inspection or cross-compilation alone.
+
 The identical `FileSharePlatformOracle.cs` direct144-pair matrix now runs in both
 reference environments. Framework4.0.30319.1/Win32NT opens25 and refuses119,
 zero Windows-contract mismatches. .NET8.0.31/Unix opens81 and refuses63:56 cases
@@ -366,8 +374,8 @@ differ from Windows, while every exclusive/None conflict is still refused. The
 Unix measurement deliberately exits1 for those mismatches; it is not relabeled
 as Windows parity. This agrees with the inspected modern Unix implementation's
 coarse advisory exclusive/shared locking. Original XNA expectations and all demo
-assertions remain unchanged. The production sharing implementation is not chosen
-or applied by this measurement; it must distinguish actual platform semantics
+assertions remain unchanged. No production sharing implementation was
+applied by this measurement; it must distinguish actual platform semantics
 from the existing defect that ignores sharing altogether.
 
 Reports: demos `repair-file-share-platform-xna*`; Sharp Runtime
