@@ -2,6 +2,20 @@
 
 ## Latest dispatch candidate (2026-10-20,09:32 UTC)
 
+Nullable follow-up09:50 UTC: genuine value oracle is now34/34PASS, all original18
+labels retained plus16 nullable controls. An empty Nullable existing argument boxes
+to null and must be read as new; a nonempty value still fails identity after reading.
+Eight native counterparts exposed four failures in the first candidate,32PASS/4FAIL
+of36 (`repair-content-dispatch-nullable-before-split-policy-*`). The28 earlier
+cases all remained passes. The incomplete whole build was intentionally interrupted
+after491/1203 steps; its log remains, and no complete native pass was claimed.
+Normalizing the empty optional payload before invocation now gives36/36PASS both
+normally and with actual-TU ASan/UBSan/leak checks, exact audit errors[]. Reports
+`repair-content-nullable-xna-*` and `repair-content-dispatch-nullable-fixed*`.
+All three new native regression sources are installed; the revised complete
+module inventory is1965 (previous1929 plus36, with the documented old-value-test
+rename). A fresh whole build is underway under native-corrected-build; no closure.
+
 Permanent `ContentValueDispatchTests.cpp` adds nine native counterparts of the
 genuine18 value controls. Before:fivePASS/fourFAIL; combined with the previous19
 reference controls,28=tenPASS/eighteenFAIL, every prior outcome unchanged.

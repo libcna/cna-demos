@@ -976,6 +976,19 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-087 -- Disposable XNB shared resources bypass the ReadAsset recorder
 
+- **Repair candidate (2026-10-20; not resolved):**28 native reference/value controls
+  change from10PASS/18FAIL to28PASS against the actual ContentReader implementation;
+  ASan/UBSan/leak-instrumented TU and tests also pass28/28. Exact audits retain all
+  old assertions. The candidate preserves disposable capability through erasure,
+  unifies typed/raw invocation, checks existing identity and uses target semantics
+  for explicit dispatch. Whole CNA compilation and external regression are pending.
+  Additional nullable boxing controls are prepared, not yet executed; default
+  manager ownership011 remains separate. See the linked permanent evidence below.
+- **Nullable follow-up:** expanded genuine value oracle34/34 retains all18 original
+  controls. Eight additional native cases exposed four null-existing failures in
+  the candidate, now corrected; all36 normal and actual-TU sanitizer cases pass.
+  The first incomplete whole build was interrupted and retained, not called a pass;
+  a fresh corrected build/full1965-case module gate remains pending.
 - **Additional boundary evidence (2026-10-20):** genuine dispatch now passes53/53,
   preserving the original39 labels and adding14 null-existing/wrong-requested-type
   checks. Native19 givesfivePASS/fourteenFAIL, preserving all17 previous outcomes.
