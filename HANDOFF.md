@@ -39,8 +39,9 @@ Do not start their build during61683 or claim a new baseline before executing it
 Prepared driver build-probe/repair-content-generated-output-host-before.mjs passes
 Node syntax check only; it guards the completed cache-build audit and retains the
 expected four host failures/one control pass without suppressing test exit1.
-61683 currently has16 compiler warnings in vendored Draco's PLY lambda captures
-(C++20 implicit-this deprecation), not model encoder diagnostics. Retain them in
+61683 currently has18 compiler warnings:16 in vendored Draco's PLY lambda captures
+and two old nodiscard calls in XnaMaterialContentTests.cpp (unchanged against
+688f3f23e), not model encoder diagnostics. Retain them in
 the final build audit; do not claim this broader rebuild is warning-free.
 Both prepared drivers now fail closed unless their actual cgroup has memory.max
 no greater than6GiB and swap.max0. Guard-only checks PASS2 bounded/2 unbounded

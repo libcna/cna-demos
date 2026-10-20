@@ -212,12 +212,18 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Campaign verification (2026-10-20; still open):** seven added native boundary
   cases fail against the current stable encoder while all28 original codec cases
   pass. The localized candidate gives35/35 normally and with actual-TU
-  ASan/UBSan/leak checks. Native/external builds are warning-free; both73 content
+  ASan/UBSan/leak checks. Initial incremental native/external builds are warning-free; both73 content
   focus runs retain69PASS/four knownFAIL, and the model demo passes29/29 with the
   same five invalid inputs now requiring exact encoder ContentLoadException.
   Every other control remains. The obsolete restriction was removed only after
-  those canonical passes. Full native/external gates are running; no closure or
-  committed runtime repair is claimed yet. See
+  those canonical passes. The complete external gate now matches its predecessor,
+  including both719 sweeps, six exact visual references and CTest684PASS/48sameSKIP/
+  three disabled. Failed native gates are retained: the latest isolated run had
+  unsuitable root credentials and no broadcast route. All26 affected permission/
+  discovery/two-process controls pass on unchanged binaries with corrected isolation.
+  A one-worker cache-policy rebuild is running under a6GiB memory limit; its broader
+  compilation has18 retained vendor/test warnings. The complete native
+  gate must still pass before closure. No committed runtime repair is claimed yet. See
   [current validation](repair-evidence/content/MODEL_ENCODER_VALIDATION.md).
 
 - **Area/API:** `CNA::Content::Cnb::EncodeModelToCnb` and `DecodeModelFromCnb`, schema 1.

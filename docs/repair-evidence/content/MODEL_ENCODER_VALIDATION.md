@@ -229,3 +229,16 @@ reader/writer headers (`-Wdeprecated`, implicit `this` capture under C++20).
 No vendor source was edited. Keep these diagnostics in the complete build report;
 the earlier warning-free incremental model build did not recompile this vendor
 code and must not be confused with this broader configuration-triggered rebuild.
+
+The live scope sample at2026-10-20T18:48:02.981Z records memory.peak4297031680,
+memory.high4294967296, memory.max6442450944 and swap.max0. Its memory.events has
+high307, max0, oom0, oom_kill0 and oom_group_kill0: the soft threshold was exercised
+without reaching the hard maximum or killing a process. This is an interim sample,
+not a claim about the eventual whole build. Retained data:
+`repair-model-encoder-native-cache-memory-samples.jsonl`.
+
+Later compilation of `XnaMaterialContentTests.cpp` adds two `-Wunused-result`
+warnings at418/420 for ignored `nodiscard` getters, bringing the running total
+to18. `git diff 688f3f23e -- <that test file>` is empty and both lines blame to
+d2336a91cd, establishing that these are unchanged pre-campaign test statements.
+They are retained, not suppressed or conflated with the16 Draco diagnostics.
