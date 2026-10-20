@@ -198,6 +198,21 @@ static class ContentOwnershipOracle
                 manager.RootDirectory = "cleared";
                 Check(manager.RootDirectory == "cleared", "failed Unload also clears loaded cache");
             }
+            Reset();
+            using (var manager = new OwnershipManager(bytes))
+            {
+                IDisposable captured = null;
+                Throws<InvalidOperationException>(() => manager.Raw(value => {
+                    captured = value;
+                    throw new InvalidOperationException("caller recorder refusal");
+                }), "caller recorder exception is not wrapped as an I/O failure");
+                Check(captured != null && OwnershipItem.Created.Count == 1, "refused callback receives inline object");
+                Check(manager.LastStream.Closed, "callback refusal closes stream");
+                manager.Unload();
+                Check(OwnershipItem.Created.Count == 1 && OwnershipItem.Created[0].Disposals == 0,
+                      "callback refusal does not transfer lifetime back to the manager");
+                if (captured != null) captured.Dispose();
+            }
             using (var manager = new OwnershipManager(new byte[] { 88, 78, 66 }))
             {
                 Throws<ContentLoadException>(() => manager.Load<OwnershipRoot>("short"), "truncated XNB header wrapped");
