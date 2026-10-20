@@ -1,5 +1,39 @@
 # Content repair evidence
 
+## Current validation checkpoint (2026-10-20; not final closure)
+
+CNA repairs146/149 are committed as7c4431fdf and9dd0826bf; Sharp147 isaf1b0bea
+(current Sharp99c2f79c). Full native content504:503PASS/one unchanged XACT fixture
+SKIP,999.450s; exact identity/status comparison against the pre-fix run shows only
+the six new expected failures becoming PASS. Broader consumers1408PASS/four same
+SKIP of1412, runtime238PASS/three same SKIP of241. XML consumers initially4PASS/two
+missing-fixture SKIP; using the existing original ShipGame fixture alias gives6/6.
+The initial skip log is retained. Native hashes verified before the next batch.
+
+Actual OpaqueDataDictionary.cpp, IntermediateReader.cpp and IntermediateSerializer.cpp
+instrumented with ASan/UBSan/leak detection:9/9 selected native regression cases
+PASS. This is not a claim of whole-library instrumentation. Initial shell-quoting
+and incomplete static-library-closure harness failures remain in the reports;
+the corrected build uses CnaTests' exact static content-pipeline closure.
+
+External strict28-demo focus on each renderer:56 expected results,23PASS/five
+unchanged FAIL per renderer. Exact parent statuses/counts AND child assertion counts/
+failure multisets are checked. Only146/147 become PASS; exactly two149 assertions
+stop failing while all four148 failures remain. Demo markers71e6992 changed only
+after this validation. Both external builds are warning-free; native initial build
+retains two pre-existing material-test nodiscard warnings, final small rebuild is
+warning-free. Reports `repair-content-*` preserve the failures and successful runs.
+
+Full SOFTWARE719:614PASS/54FAIL/48SKIP/three manual, strict57 improvements versus
+campaign HEAD (59 versus Complete1128), differences[]. Metadata/tools and all six
+zero-pixel-difference visuals pass; the GLES font image was also inspected. Full
+OPENGLES3 likewise passes strict57 improvements/differences[]:653PASS/56FAIL/seven
+SKIP/three manual. Final isolated serial CTest is running.319 frozen executable/
+DSO/tool hashes are in `repair-content-binaries.sha256`; external binaries must not
+be rebuilt until the final audit.146/147/149 are not yet closed.
+
+The sections below retain the chronological reproduction and intermediate results.
+
 ## ISSUE-146: exact null-value and empty-key contracts
 
 `OpaqueDictionaryOracle.cs` passes14/14 against genuine XNA4's content-pipeline
@@ -167,11 +201,43 @@ file has been modified, and unrelated campaign work continues.
 
 ## ISSUE-090: initialization callback deadlock
 
+The narrow two-phase AddWriter repair now builds warning-free;10/10 native focus
+passes, including four new bounded callback regressions. The original standalone
+probe now passes9/9 against the actual native library closure. It verifies the
+callback returns, nested/cache identities remain stable, initialization runs once,
+and pre-existing duplicate/frozen checks occur before the callback. Full508 native
+content regression is running; no external090 pass or issue closure is claimed.
+
 `CompilerInitializationOracle.cs` passes8/8 on genuine XNA4. The real internal
 compiler constructor discovers attributed writers; its build-host lookup creates
 the initialization context. Inside Initialize, the PUBLIC GetTypeWriter(string)
 completes, preserves cached writer identity and runs once per compiler-owned writer.
 Reflection supplies only the unavailable build-host entry, not replacement behavior.
+
+## ISSUE-088/089: intermediate registration and initialization references
+
+`IntermediateCollisionOracle.cs` passes11/11 on genuine XNA4. The real private
+registration entry rejects a distinct target with the same XML shortcut using
+exact InvalidOperationException. Its diagnostic identifies XmlTypeName and the
+colliding shortcut. The original writer/mapping/output remains unchanged; the
+rejected target can subsequently register with a distinct shortcut, and both
+public Serialize/Deserialize round trips preserve exact content. Reflection only
+supplies XNA's registration host entry. Reports `repair-intermediate-collision-asserted-xna*`;
+the initial diagnostic showing reflective fallback after rejection is retained.
+
+`IntermediateInitializationOracle.cs` passes21/21 on genuine XNA4. One custom
+serializer instance receives Initialize exactly once across two writes and two
+reads. Nested string lookup succeeds inside Initialize, before any ScanChildren,
+Serialize or Deserialize. All callbacks see the same long-lived owner; its custom
+and nested serializer caches remain usable after all four operations. Reports
+`repair-intermediate-initialization-asserted-xna*`; the shape and initial diagnostic
+probes remain. This disproves a per-operation new-instance assumption: a fix must
+not initialize a shared serializer with a temporary context it could retain.
+
+Current external strict content focus still reproduces both088/089 assertions
+(20 child controls, two failures) on both renderers. Source confirms unchecked
+name-map insertion after ownership/type mutation and no production InvokeInitialize
+caller. No088/089 production repair has been applied yet.
 
 Initial setup attempts are retained: manual AddTypeWriter duplicated a writer that
 the genuine constructor had already discovered; public GetTypeWriter outside an
