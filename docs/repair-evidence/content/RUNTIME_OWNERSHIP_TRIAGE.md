@@ -157,3 +157,13 @@ existing-instance, raw, null and identity rules must be handled together at the
 reader invocation boundary. FNA's raw path bypasses recording, unlike this measured
 XNA contract. These are reference measurements, not a claim that CNA already passes;
 no011/087 implementation or closure is included in the039/045 build underway.
+
+Two native regression sources are staged here, outside the canonical source glob
+while039/045 builds: `ContentDispatchTests.cpp` (17 cases matching the39-check
+dispatch oracle plus shared-resource and caller-exception controls) and
+`ReaderTargetLookupTests.cpp` (eight cases for distinct target/factory identities,
+fresh instances, lazy construction and registry withdrawal/replacement callbacks).
+They are prepared, not yet compiled or executed. No test result is claimed.
+The target-lookup tests deliberately preserve CNA's documented fresh unique_ptr
+contract rather than importing XNA's process-global reader ownership model.
+Dispatch uses matching factory/target names to isolate043 from its own failures.
