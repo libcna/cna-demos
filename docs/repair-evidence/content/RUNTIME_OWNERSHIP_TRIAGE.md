@@ -123,3 +123,20 @@ native cases cover039/045; unchanged positive controls also pass. Report:
 the canonical native build or external demos: both048 checkpoint binary sets
 remain frozen. Neither039 nor045 is closed; complete native/external regression
 is still required. Other ownership findings011/012/043/087 remain open.
+
+Pre-build regression review identified an older SoundEffect asset test expecting
+raw EndOfStreamException at ReadAsset. Its exact expected type is corrected to the
+genuine-backed ContentLoadException; the truncated100MiB declaration and allocation
+guard are unchanged. The whole-container and SoundEffect property fuzz tests no
+longer accept leaked EOF from asset loading, making those gates stricter. Low-level
+header/decompressor tests retain their own contracts. After the048 native consumer
+and hash audit passed, canonical runtime build20911 started (1194 steps,parallel2).
+No compiled source is to be edited during that build.
+
+Additional011 source constraint: GraphicsResource's existing optional shared
+identity is used by reference-valued state properties, but ordinary texture copies
+deliberately remain independent wrappers. Its disposal broadcast currently marks
+aliases disposed without invoking each texture wrapper's native-resource release.
+Simply sharing that identity would therefore be insufficient to prove immediate
+resource release at ContentManager::Unload. Preserve ordinary copy semantics and
+validate both invalidation and actual ownership release; no graphics edits yet.

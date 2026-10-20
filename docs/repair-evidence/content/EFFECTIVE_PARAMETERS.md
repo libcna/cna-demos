@@ -71,3 +71,10 @@ Both95 math sweeps retain exact48 earlier improvements, metadata/tools and all s
 pixel-exact references pass. Full719 renderer sweeps are running; final CTest and
 hash audit remain pending. Reference to later039/045 source work must not be read
 as inclusion in this frozen048 checkpoint.
+
+Broader native checkpoint54092 now completes0:1412 consumers give1408PASS/four
+unchanged SKIP203.003s, runtime241 gives238PASS/three unchanged SKIP11.121s, default
+XML gives fourPASS/two same fixture SKIP. Original XML fixtures pass6/6 in14ms.
+Exact comparisons have no differences and all four final hashes match. Only then
+is the native freeze released for candidate039/045. External048 artifacts remain
+frozen while full renderer95510 and subsequent final CTest/audit are pending.
