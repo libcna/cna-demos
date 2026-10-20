@@ -132,3 +132,93 @@ production callers found; no content-wide rewrite is justified.
 Reports: `repair-title-paths-xna{,-build}.log`,
 `repair-title-paths-native-before{,-build}.log`. Both new fixture roots were removed;
 no runtime source or demo assertion is changed by these probes.
+
+## Native151 regression coverage prepared before its repair
+
+`StorageContainerLifetimeTests.cpp` adds three native tests: live identity and
+one-shot disposal controls, all15 post-disposal public doors with filesystem
+invariants, and disposed-before-invalid-argument precedence. The standalone
+strict C++23/Wall/Wextra/Wpedantic/Werror build passes; unchanged storage production
+gives1PASS/two expectedFAIL (5ms; `repair-storage-lifetime-native-before*`).
+Fixtures use unique container names through real public acquisition and remove
+only their own named files/directories. These tests have not yet been rebuilt
+into CnaTests; no runtime151 repair or external checkpoint includes them yet.
+
+## Unchanged Sharp Runtime baseline preparation
+
+Reused the existing Debug `build/`, capped at two jobs. Its incremental baseline
+build completes without warnings/errors (11 reported link steps). The initial
+full component gate reaches XML Serialization with zero failures but five skips:
+its default old XNA sample-root location is absent. The original sample files do
+exist under `/rv/tmp/samples`, so the supported `XNA_SAMPLES_ROOT` is now directed
+to a private two-symlink layout in Sharp Runtime `build-probe/cna-repair-xna-samples`.
+No sample or test is modified, no skip is permitted, and the first failing gate
+log is retained as `build-probe/cna-repair-storage-baseline-components-missing-fixtures.log`.
+The unchanged full gate now passes **18,137/18,137 across41 executables, zero
+failures and zero skips**, using those fixtures and the original Yacht SOAP server
+on a private loopback port. The fixture process stopped and its temporary executable/
+config were removed by the existing helper. Current Sharp revision remains
+`f2aecfefeac171b331787e5cdc4849507363ef0e`, clean; no production edit or new build tree.
+Reports: Sharp `build/gs-007b-components-live.log` and
+`build-probe/cna-repair-storage-baseline-components-corrected-driver.log`.
+
+Only after that complete unchanged baseline, three native `FileStreamEofTests.cpp`
+regressions were added in Sharp Runtime. All three fail against unchanged production:
+short/repeated EOF preserves position and guards, relative seek uses the real end,
+and both Write/WriteByte after EOF persist bytes. The incremental IO-only build is
+warning-free. Reports: Sharp `build-probe/cna-repair-eof-before{,-build}.log`.
+No EOF fix has been applied yet; these are intentionally failing pre-repair tests.
+
+`FileStreamLayoutProbe.cpp` records the pre-repair Linux x86_64 layout: FileStream
+size576/alignment8, Stream size8/alignment8, FileStream neither copyable nor movable.
+No layout change is authorized by this measurement alone: any eventual native-handle
+implementation must also preserve ownership traits, add before/after pins, document
+full-consumer rebuilding and pass the dependency's full gate.
+
+The Win64 MinGW cross-build also succeeds without warnings. Its compiler class
+layout records FileStream size536/alignment8 and Stream size8/alignment8
+(`repair-file-stream-layout-win64-static*`). The attempted executable run was
+rejected with Bad EXE format by the existing32-bit XNA Wine prefix; that failure
+is retained in `repair-file-stream-layout-win64.log`. This is compile/layout
+evidence only, not Win64 runtime coverage; no additional Wine prefix was created.
+
+## Isolated candidates while lifecycle binaries rebuild
+
+Production sources remain unchanged during the lifecycle external build. A copied
+FileStream.cpp candidate clears only benign EOF/fail state after returning the
+actual short-read count, preserving badbit and non-EOF failures. It passes3/3 new
+tests and all723 current IO tests (720 baseline +3), zero skips/failures,2.233s.
+Strict candidate build passes. The first harness linked only CNA's exported subset
+and lacked File::ReadAllText/WriteAllText; the next tried a nonexistent Sharp compile
+database. Both failures are retained. The corrected harness uses current exported
+header paths and the actual Sharp IO target's complete static dependency/object list.
+Reports `repair-eof-candidate-*`. This is candidate evidence, not a production fix
+or an18,140-test post-fix full dependency gate.
+
+A copied StorageContainer.cpp candidate uses one shared internal disposed guard
+before property/path/list validation or filesystem effects. It leaves IsDisposed,
+GetTypeName and repeated Dispose available. All three new native tests pass(3ms),
+without changing public layout/API or bypassing actual container acquisition.
+The same candidate also passes all17 native storage tests (14 existing containment/
+exception controls +3 new lifecycle regressions,10ms). Reports
+`repair-storage-lifetime-candidate*`; no151 closure is claimed.
+
+## Measured FileShare platform split; no expectation relaxation
+
+The identical `FileSharePlatformOracle.cs` direct144-pair matrix now runs in both
+reference environments. Framework4.0.30319.1/Win32NT opens25 and refuses119,
+zero Windows-contract mismatches. .NET8.0.31/Unix opens81 and refuses63:56 cases
+differ from Windows, while every exclusive/None conflict is still refused. The
+Unix measurement deliberately exits1 for those mismatches; it is not relabeled
+as Windows parity. This agrees with the inspected modern Unix implementation's
+coarse advisory exclusive/shared locking. Original XNA expectations and all demo
+assertions remain unchanged. The production sharing implementation is not chosen
+or applied by this measurement; it must distinguish actual platform semantics
+from the existing defect that ignores sharing altogether.
+
+Reports: demos `repair-file-share-platform-xna*`; Sharp Runtime
+`build-probe/cna-repair-file-share-net8-corrected*`. Installed .NET8 SDK references
+were used offline, one build job. The initial standalone project's late intermediate-
+path property emitted MSB3539; the corrected early SDK-import configuration builds
+with warnings treated as errors,zero warnings/errors. Original warning/run logs
+remain retained. Both platforms' exact new fixture files were removed.
