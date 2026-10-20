@@ -65,6 +65,38 @@ namespace
         ctx.CheckNear(mods.Load<Curve>("brightness").Evaluate(0.0f), 0.75, 1e-6,
                       "refreshing the manifest does not unload already cached assets");
         ctx.Print("Manifest snapshots: empty -> add file -> refresh -> one entry -> remove -> refresh -> empty");
+
+        // ISSUE-013: exact pipeline bookkeeping is not a runtime asset. Keep ordinary hidden
+        // files and prefix lookalikes visible; filtering every dot-file would hide user content.
+        for (const char* name : {".cna-content.lock", ".cna-content-manifest.json",
+                                "nested/.cna-content.lock", "nested/.cna-content-manifest.json",
+                                ".cna-contentproj/cna-buildcontent.json",
+                                "nested/.cna-contentproj/cache.bin", ".private.cnj", "user.lock",
+                                ".cna-content.lock.png", ".cna-content-manifest.json.cnj",
+                                ".cna-contentproj-extra/visible.png"})
+        {
+            const auto target = path / name;
+            std::filesystem::create_directories(target.parent_path());
+            std::ofstream staged;
+            staged.exceptions(std::ios::failbit | std::ios::badbit);
+            staged.open(target, std::ios::binary);
+            staged << "manifest-only fixture";
+        }
+        ctx.Check(mods.GetContentManifest().empty(),
+                  "new bookkeeping and real files do not implicitly refresh the snapshot");
+        mods.RefreshContentManifest();
+        std::set<std::string> names;
+        for (const auto& entry : mods.GetContentManifest()) names.insert(entry.relativePath);
+        ctx.Check(!names.contains(".cna-content") && !names.contains(".cna-content-manifest") &&
+                      !names.contains("nested/.cna-content") && !names.contains("nested/.cna-content-manifest"),
+                  "pipeline locks and build manifests are excluded at every depth (ISSUE-013)");
+        ctx.Check(!names.contains(".cna-contentproj/cna-buildcontent") &&
+                      !names.contains("nested/.cna-contentproj/cache"),
+                  "only the reserved project-intermediate subtrees are excluded (ISSUE-013)");
+        const std::set<std::string> expectedNames{ ".private", "user", ".cna-content.lock",
+            ".cna-content-manifest.json", ".cna-contentproj-extra/visible" };
+        ctx.Check(names == expectedNames,
+                  "the exact manifest retains legitimate hidden assets and all prefix lookalikes");
     }
 
     class ManifestDemo final : public CnaDemos::DemoGame
@@ -82,7 +114,7 @@ namespace
 
             // One entry per asset name, with every form found for it: an .xnb, a .cnj, or native
             // files (.cnb, .png, .wav, ...). Useful for tools, mod loaders and content checks.
-            // The content pipeline's own bookkeeping files are listed too (CNA-DEMOS-ISSUE-013).
+            // Exact pipeline bookkeeping names are excluded (CNA-DEMOS-ISSUE-013 regression above).
             std::vector<ContentManifestEntry> entries = getContentProperty().GetContentManifest();
             std::sort(entries.begin(), entries.end(), [](const ContentManifestEntry& a, const ContentManifestEntry& b) {
                 return a.relativePath < b.relativePath;
