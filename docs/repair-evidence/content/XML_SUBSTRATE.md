@@ -78,8 +78,10 @@ audits: 627 PASS / 41 unchanged FAIL / 48 SKIP / three manual, exactly the two
 expected XML/C-root improvements since ISSUE-016. Reports include
 `repair-xml-substrate-native-gates.json` and `full-SOFTWARE-{comparison,local-audit}.json`.
 
-OPENGLES3/CTest regression remains running with frozen external artifacts.
-Historical ISSUE-148 remains open until those finish. The pending
-full audit permits only the XML/C-root FAIL-to-PASS transitions versus the last
-checkpoint and requires all other statuses, checks and failing assertions to
-remain exact. No downstream full-suite pass is inferred from focused results.
+OPENGLES3 and final CTest now also pass their exact audits: OPENGLES3
+666PASS/43 existingFAIL/7SKIP/three manual; CTest684PASS/48 unchangedSKIP/three
+disabled in887.44s,319 pre/post artifact hashes verified. Only the expected
+XML/C-root transitions differ from the previous checkpoint. ISSUE-148 is now
+resolved with full evidence in `XML_CONTENT_FINAL_CHECKPOINT.md`; all original
+historical text remains. These completed gates do not cover the subsequent
+uncommitted ISSUE-109 encoder candidate.

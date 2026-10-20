@@ -12,10 +12,28 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
-Current repair phase F (2026-10-20): all155 historical IDs retained,85 final/70
+Current repair phase F (2026-10-20): all155 historical IDs retained,90 final/65
 pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
+
+XML/content final74592 COMPLETE0:CTest684PASS/48 sameSKIP/three disabled887.44s,
+319 hashes exact. Both719/math95/six zero-pixel visuals/native10791/Sharp18158
+gates pass their complete comparisons.039/043/045/103/148 now FIXED_VALIDATED;
+150 unrelated historical bodies unchanged,allfive original bodies preserved.
+See XML_CONTENT_FINAL_CHECKPOINT.md. This releases the previous external freeze.
+New109 native build88321 COMPLETE0,542 printed steps,zero warnings/source delta.
+Canonical codec35/35 passes; full10798 gate95074 RUNNING on four frozen native
+binaries and two source files. No109 external rebuild/demo correction yet.
+Do not rebuild or edit those native files during95074. Two109 code/test files
+remain uncommitted; this closure checkpoint does not validate them. No new push.
+
+Next coherent content repair109 now has a localized uncommitted encoder candidate.
+Before35 codec cases=28oldPASS/sevennewFAIL; after35/35 normal and actual-TU
+ASan/UBSan/leak, strict builds warning-free, exact old-outcome/source-hash audit.
+Canonical native build88321 runs two workers; previous XML external74592 finalCTest
+continues one worker with319 frozen artifacts. Do not rebuild external outputs.
+No109 demo edit/marker change/closure yet; see MODEL_ENCODER_VALIDATION.md.
 
 Both719 sweeps now complete with exact original/local comparisons:SOFTWARE
 627/41/48/3,OPENGLES3 666/43/7/3. Native final10791/corpus9 complete. External74592

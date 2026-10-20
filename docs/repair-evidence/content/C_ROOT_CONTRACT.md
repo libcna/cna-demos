@@ -1,5 +1,11 @@
 # ISSUE-039/103: owner-approved C RootDirectory contract correction
 
+Final validation is complete: both719 sweeps, native10791 and final CTest
+684PASS/48 unchangedSKIP/three disabled pass their exact audits. The original
+C-root discrepancy is gone, with all resource-lifetime controls preserved.
+039/103 and the related pending043/045/148 now close under
+`XML_CONTENT_FINAL_CHECKPOINT.md`. The evidence below retains the earlier stages.
+
 ## Decision and scope
 
 On 2026-10-20 the owner explicitly selected XNA/C++ compatibility for the C API:
@@ -45,7 +51,7 @@ and restores the file before checking success: this proves refusal did not
 silently evict the cache. Manifest-root transitions explicitly unload first;
 the original independently owned texture is read after each added unload.
 
-## Focused evidence (full checkpoint still pending)
+## Focused evidence (before the final checkpoint)
 
 - Original strict-C `ContentSmoke`: exit 2 on SOFTWARE and OPENGLES3, reaching the
   manifest-root transition after all earlier content routes. Original logs retained.

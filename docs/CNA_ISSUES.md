@@ -84,43 +84,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `/tmp/checkpoint-1104-runtime-public-headers/*`. Open; no CNA source was modified.
 
 
-### CNA-DEMOS-ISSUE-148 -- intermediate XML substrate disagrees on envelope node forms
-
-- **Repair-campaign verification (2026-10-20; still open):** fresh genuine XNA confirms
-  the processing-instruction acceptance, both self-closing-section rejections and
-  in-memory BOM rejection. Expanded paired empty sections remain accepted. See the
-  direct `IntermediateEnvelopeOracle.cs` and its16-check combined148/149 evidence.
-  A further13-case `IntermediateSectionsOracle.cs` confirms paired/self-closing
-  combinations and exact exception/node categories. The owned-CNA section fix
-  has13/13 actual-TU sanitizer passes (before:sixPASS/sevenFAIL), but full native
-  and demo regression is pending. Processing-instruction and string-BOM defects
-  remain open; the historical description below is retained.
-
-- **Area/API:** `IntermediateSerializer::Deserialize<T>` and its `System::Xml::XmlReader`
-  substrate while reading the XNA intermediate document envelope.
-- **Demo/reproduction:** run `content.custom.intermediate_serializer`. Its envelope controls place
-  `<?pi x?>` between Asset members, append self-closing empty Resources or ExternalReferences, and
-  pass an in-memory UTF-8 BOM immediately before the XML declaration.
-- **Observed:** CNA rejects the processing instruction before `IntermediateReader` can skip it,
-  reporting tinyxml2's `XML_ERROR_PARSING_DECLARATION`. It accepts both self-closing empty root
-  sections and the in-memory BOM. These are four expected failures; twenty-five controls covering
-  serializer attributes, ordinary metadata tolerance, required envelope structure and rejection
-  paths still pass.
-- **Expected/reference:** the checked-in genuine-XNA corpus accepts the processing instruction and
-  rejects `<Resources />`, `<ExternalReferences />` and the BOM-prefixed in-memory string. CNA's
-  `docs/xna-intermediate-xml-format.md` records the same XNA behavior and separately lists all four
-  CNA substrate differences.
-- **Cause/suggested repair:** CNA's corpus test explicitly exempts the processing-instruction case
-  as a tinyxml2 substrate limit and deliberately allows the other three rejected-XNA inputs.
-  Preserve the reader's comment/PI skipping and DTD prohibition, but adapt or pre-validate the XML
-  substrate so these four public `Deserialize` results match XNA.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` with the current sharp-runtime dependency on Linux.
-  Focused evidence is under `/tmp/checkpoint-1093-intermediate-envelope-syntax/*`. No CNA or
-  sharp-runtime source was modified, and no fresh XNA execution or upstream message is claimed.
-
-
-
 ### CNA-DEMOS-ISSUE-131 -- BoundingFrustum ray intersection omits outside entry and boundary start
 
 - **Area/API:** `Microsoft::Xna::Framework::Ray::Intersects(BoundingFrustum)` and the delegated
@@ -310,58 +273,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `42afcf412220b921f89ce61ce56f7bce194542bd66f94d1c71911f62e48d8c91`.
   No CNA source was modified, no workaround was added, and no upstream message or visual-quality
   claim was made.
-
-### CNA-DEMOS-ISSUE-103 -- C content loaders discard canonical `ContentLoadException` identity
-
-- **Repair-campaign status (2026-10-20): FIXED_PENDING_REGRESSION.** CNA68a3c7b1f
-  passes all44 checks on both renderers, with exactly eight canonical-type
-  improvements and unchanged assertion labels. Four existing C API smoke tests
-  pass both renderers; successful model/effect loading passes OPENGLES3. Full
-  regression/original demo verification still awaits the separate039 C root
-  contract decision; the marker remains. An independent public-C
-  reproduction avoids the live-root contract conflict exposed by039. A four-byte
-  invalid XNB reaches all eight loaders: Texture2D, TextureCube, SoundEffect,
-  Effect, Model, ObjectDictionary, SpriteFont and ForeignObject. Both SOFTWARE and
-  OPENGLES3 give36 passing controls/eight failed canonical-type checks of44.
-  IO result/category/message, null outputs and empty argument parameter remain
-  correct. The CNA-native C17/Werror regression reproduces the same failure.
-  See [permanent probe](repair-evidence/content/ContentExceptionIdentityProbe.c)
-  and [current evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
-  The historical reproduction below is retained.
-- **Area/API:** the C exception-detail contract in `CNA/C/core.h` and the typed
-  `cna_content_manager_load_*` routes, observed through
-  `cna_content_manager_load_texture2d`.
-- **Demo/reproduction:** `c_api.content.content_manager` changes its live manager root from
-  `assets` to `assets/textures`, unloads the cached `textures/checker` value, then requests that
-  logical name again. The native `ContentManager::Load<Texture2D>` path cannot open the resulting
-  location and throws its ordinary `Microsoft::Xna::Framework::Content::ContentLoadException`.
-  Query `cna_error_get_last_info`, `cna_error_get_last_exception_type_size_ext` and the matching
-  copy route immediately after the failed load.
-- **Observed:** the route correctly returns `CNA_RESULT_IO`; the thread diagnostic keeps result IO,
-  category IO and its nonempty message, but reports zero exception-type bytes. Both SOFTWARE and
-  OPENGLES3/Xvfb print `missing load exception type: <none>` and fail only the exact canonical-type
-  check among54 controls.
-- **Expected/contract:** `core.h` says the exception-type query names the canonical exception behind
-  the most recent failure so a managed binding can rethrow it, and explicitly uses
-  `Microsoft.Xna.Framework.Content.ContentLoadException` as an example. This failure came from that
-  native exception rather than a C-layer argument or handle check, so the type must survive as that
-  exact name. It carries no argument parameter.
-- **Cause observed in source:** `ContentManagerLoadTexture2d` catches `ContentLoadException` inside
-  the route body and calls `IoError(exception.what())`. The outer `CallWithExceptionBarrier` sees a
-  returned result rather than the exception, so `NoteTranslatedException` never records its dynamic
-  type. The same catch-and-`IoError` pattern appears in the sound-effect, cube, font, Effect and
-  Model content loaders; only Texture2D is claimed by runtime evidence here.
-- **Suggested repair:** preserve the caught canonical exception metadata when translating the
-  intended IO result, or let the common exception barrier perform that translation. Keep the
-  existing result/category/message and all output-handle clearing contracts.
-- **Evidence/status:** open against clean isolated CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`. Ten SOFTWARE and ten OPENGLES3/Xvfb runs reproduce
-  exactly one failure and53 passes with byte-identical stdout SHA-256
-  `960cf6f99b002990d67441e387e954a8eeb6a79249356308e9183aabc1edb348` and empty stderr. The exact
-  known-issue CTest passes ten repetitions. Contract/source excerpts are
-  `/tmp/checkpoint-925-content-exception-source.txt`, SHA-256
-  `97cff773d99c041cb9fc457399f1451b781b61358ebf43beb7346013da26ca94`. No CNA source was modified
-  and no upstream message or manual visual-quality claim was made.
 
 ### CNA-DEMOS-ISSUE-102 -- Oversized shadow cascade count overruns fixed draw-parameter arrays
 
@@ -1838,174 +1749,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   catalog and metadata validation pass. No audible validation is claimed.
 - **Status:** runtime-confirmed missing disposal guards; not reported upstream.
 
-### CNA-DEMOS-ISSUE-039 -- ContentManager permits changing the root with loaded assets
-
-- **Focused renderer validation (2026-10-20; final regression pending):** the
-  original five checks pass on SOFTWARE and OPENGLES3 against CNA583af2a5e.
-  The marker is removed only after both passes; strict146 content comparison
-  preserves every other count/failure. Full renderer sweeps/CTest remain required.
-
-- **Campaign repair (2026-10-20; full regression pending):** CNA `583af2a5e`
-  guards both setters before mutation. Genuine91 checks, actual-TU sanitizer23,
-  focused33 and full native content1918 (1914PASS/four unchanged skips) validate
-  this batch. Broader pipeline and external renderer regression are running;
-  [evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
-
-- **Campaign update (2026-10-20; not resolved):** genuine XNA89/89 confirms both
-  same-root and different-root assignment are refused with cached assets, while
-  failed Load and uncached ReadAsset permit assignment. Native baseline gives
-  twoPASS/oneFAIL; the local setter repair passes actual-TU ASan/UBSan/leak23/23
-  with the related XNB boundary cases. Canonical build and external regression
-  remain pending. See [runtime evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
-
-- **Area:** both ContentManager::setRootDirectoryProperty overloads in
-  `modules/content/src/Xna/ContentManager.cpp`.
-- **Demo:** `content.content_manager.cache_and_unload` (marked `knownIssue`).
-- **Reproduction:** create a manager rooted at assets, Load<Texture2D>("textures/checker"),
-  then attempt to set RootDirectory to assets/xnb without first calling Unload.
-- **Observed:** the setter accepts the new path. Both overloads directly assign rootDirectory_
-  and never check the loaded-asset cache. The old cached asset and the new root can consequently
-  describe different content trees under one manager.
-- **Expected:** InvalidOperationException and an unchanged root while the manager has loaded
-  assets. The local genuine-XNA 4.0 ContentManager decompilation checks loadedAssets.Count > 0
-  before assigning the root. This is reference-source evidence; genuine XNA was not executed.
-- **Independent behavior:** after Unload, switching to assets/textures and loading checker
-  works, creating one new texture. Original first-load/cache/reload checks continue to pass;
-  the extended demo has 5 checks with exactly the root-mutation guard failing.
-- **Environment/evidence:** CNA `2b15506a48e1a6202c985823131daf5856826f71`, Linux GCC 14.2,
-  SOFTWARE and OPENGLES3/private Xvfb. Reports: `/tmp/cna-content-root-{SOFTWARE,OPENGLES3}.json`;
-  both execute 5 checks with exactly one failure, and both screenshots were inspected. Build,
-  metadata (407/0), targeted CTest and catalog validation pass. The same setter implementation
-  exists at the CI pin (source checked only).
-- **Status:** runtime-confirmed XNA compatibility gap, not a demo workaround; no CNA source
-  changed and no upstream report sent.
-
-### CNA-DEMOS-ISSUE-043 -- GetTypeReader confuses the target type name with the reader factory key
-
-- **Focused renderer validation (2026-10-20; full regression pending):** original
-  13 checks pass on SOFTWARE and OPENGLES3 against CNA252e9bca1. Only its two
-  lookup failures disappear; all146 focused comparisons preserve prior counts
-  and unrelated failures. Marker removed only afterward; warning-free incremental
-  rebuild and repeated146 comparisons pass. Full regression is running; not closed.
-- **Campaign repair CNA252e9bca1 (2026-10-20; FIXED_PENDING_REGRESSION):** actual registry-TU11/11
-  and ASan/UBSan/leak11/11 pass. Canonical content1929 gives1925PASS/four unchanged
-  skips; full pipeline552 gives551PASS/one unchanged skip. Exact previous outcomes
-  and all four native artifact hashes match. Broader consumers1412/runtime241,
-  default XML and original XML6 all retain their prior outcomes. Native validation
-  is complete; full external regression remains pending.
-- **Campaign verification (2026-10-20; still open):** eight new native registry
-  regressions give onePASS/sevenFAIL. Distinct reader/target identities reproduce
-  the defect; coverage also preserves lazy construction, withdrawal/replacement
-  callbacks and CNA's documented fresh-reader ownership. No runtime repair yet;
-  [lookup evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
-
-- **Area:** ContentTypeReaderManager::GetTypeReader/CreateReaderForTargetTypeEXT and the
-  constructor association in ContentTypeReader<T>.
-- **Demo:** `content.xnb.existing_objects` (two explicit known-failing lookup checks; the other
-  eleven checks exercise independent existing-object/raw-payload behavior).
-- **Reproduction:** register a capture-free WeaponReader factory under
-  `CnaDemos.LoadoutWeaponReader`, as named by the XNB reader table. Its base constructor correctly
-  declares target `CnaDemos.LoadoutWeapon`. After the entire two-entry table has been constructed,
-  the root reader's Initialize calls GetTypeReader(System::Type::From<WeaponPtr>()).
-- **Observed:** GetTypeReader returns null although the weapon reader has already been constructed.
-  Explicit CreateReader("CnaDemos.LoadoutWeaponReader") returns the correct reader, whose public
-  target name remains `CnaDemos.LoadoutWeapon`. Indexed ReadObject, explicit-reader ReadRawObject,
-  existing slot identity/runtime state, null fallback and type-erased tags all work.
-- **Expected:** type lookup resolves the reader for that target type without requiring a data
-  type's canonical name to equal its reader class/factory name. Those names are also distinct
-  throughout CNA's built-in readers (for example System.String versus its StringReader).
-- **Cause:** ContentTypeReader<T>'s constructor associates C++ type T with the target name.
-  CreateReaderForTargetTypeEXT retrieves that string and passes it directly to CreateReader,
-  which indexes factories by reader name. No target-to-reader-name mapping bridges them.
-  ContentRuntimeContractTests uses the same string for target and factory key, so its passing
-  lookup test does not cover this distinction. The demo now directly executes implicit
-  ReadRawObject<T>(existing); it throws before consuming any payload bytes. The explicit-reader
-  fallback is guarded by unchanged stream position and the unresolved lookup; partial decode
-  failures are rethrown, not hidden.
-- **Evidence/environment:** Linux GCC 14.2, both renderer selections WITHOUT DISPLAY or
-  WAYLAND_DISPLAY: `/tmp/cna-430-existing-{SOFTWARE,OPENGLES3}.{json,log}` (12 checks, exactly
-  one failure before adding the issue label). CNA HEAD 2fda5389d2990b40146d06de0ae0531d05055f24
-  with an external C API refactor in progress; the inspected C++ content reader implementation
-  is unchanged. No graphics/GPU or genuine-XNA runtime comparison is claimed.
-- **Final labeled reproduction:** `/tmp/cna-430-existing-final-{SOFTWARE,OPENGLES3}.{json,log}`
-  retains the same single failed check with the issue identifier. Its WILL_FAIL CTest passes;
-  full 430 at b113bdc completed with 443 enabled CTests and both complete smoke runs. The only
-  added failed assertion versus 428 is this one (25/26 -> 26/27); all older states/check counts
-  remain unchanged. Original logs and exact review/hashes: `reports/checkpoint-430-*`.
-  Both new external-reference renders pass independently; no failure was hidden by the marker.
-- **Extended reproduction (433 batch):** `/tmp/cna-433-existing_objects-{SOFTWARE,OPENGLES3}.{json,log}`
-  records 13 checks, exactly two failures, in fresh processes with DISPLAY/WAYLAND_DISPLAY unset.
-  The original GetTypeReader assertion is retained verbatim; the new implicit raw-read assertion
-  shares ISSUE-043. All eleven other checks still pass. CNA HEAD at build start was 4d774868e9
-  with further external C API work; the content lookup source still has the same defect.
-  Full 433 at a01ab68 passed all 446 enabled CTests and both complete smoke runs; ORIGINAL
-  comparisons to 432 require review exactly for this additional assertion and 12 -> 13 checks.
-  Raw totals 26/27 -> 27/28, no older failures removed. Exact evidence reviews/hashes are in
-  `reports/checkpoint-433-{SOFTWARE,OPENGLES3}-review.json`.
-- **Handling:** retain both failing lookup assertions. A clearly labeled public named-factory
-  fallback lets the remaining schema example run; it does not change the target name or add
-  a hidden alias registration. No global registry clearing, CNA source edits or upstream report.
-  A library fix should preserve the distinction between target identity and reader factory name.
-
-### CNA-DEMOS-ISSUE-045 -- Truncated XNB leaks EndOfStreamException through ContentManager::Load
-
-- **Focused renderer validation (2026-10-20; final regression pending):** the
-  original14 checks pass on SOFTWARE and OPENGLES3 against CNA583af2a5e.
-  The marker is removed after both passes; the separate ReadAsset demo's exact
-  exception catch is corrected from genuine XNA evidence without weakening any
-  ownership check. Strict146 content comparison passes; full checkpoint pending.
-
-- **Campaign repair (2026-10-20; full regression pending):** CNA `583af2a5e`
-  shares typed/erased header bounds validation and wraps content-boundary I/O only.
-  The confirmed compressed-header heap overread is fixed; actual-TU sanitizer23,
-  genuine91, focused33 and full native content1918 pass their exact gates. Direct
-  parser/Song-reader contracts remain intact. Broader pipeline and external
-  checkpoint are still required; [evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
-
-- **Campaign update (2026-10-20; not resolved):** expanded genuine XNA89/89 and
-  native four-case baseline confirm header/body IOException wrapping without
-  changing user-reader exception types. Investigation also found an erased-load
-  **heap-buffer-overread**: a ten-byte LZX external XNB is read four bytes beyond
-  its allocation because the typed path's compressed-prefix guard is missing.
-  Actual-TU ASan confirms the original defect. A local shared header guard plus
-  exception-boundary repair passes ASan/UBSan/leak23/23 across the whole manager
-  fixture, but canonical build/external regression remain pending. Historical
-  evidence below is retained; see [runtime evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
-
-- **Area:** ContentManager::Load<T>/LoadXnbAsset and the low-level XNB header parser.
-- **Demo:** `content.content_manager.asset_precedence`, 14 console checks: thirteen pass and
-  one preserves the public exception-type failure. The format-priority behavior itself passes.
-- **Reproduction:** a private content directory contains valid same-name CNB, CNJ and native
-  rules files. Write a three-byte `rules.xnb` containing `XNB`, then call Load<Rules>("rules")
-  on a fresh manager. The valid compiled XNB control first loads the authored value 400.
-- **Observed:** Load throws System::IO::EndOfStreamException. Catching only the publicly
-  documented ContentLoadException would not recover. No lower-tier loader runs; repairing the
-  XNB permits the same manager to load it successfully without Unload. A three-byte CNB is
-  correctly refused as ContentLoadException, and its repair/retry also works.
-- **Expected:** failure to load an invalid XNB reaches the caller through ContentLoadException,
-  consistent with Load<T>'s public @throws contract and its wrapping of ordinary loose-reader
-  exceptions. This is a CNA contract comparison, not a genuine-XNA runtime observation.
-- **Cause:** Load dispatches directly to LoadXnbAsset, which calls ParseXnbHeader without a
-  wrapping boundary. The internal parser intentionally documents EndOfStreamException for a
-  truncated header and reads the fourth platform byte after the three magic bytes. That
-  low-level behavior escapes through the public content-loading boundary unchanged.
-- **Evidence/environment:** `/tmp/cna-434-asset_precedence-{SOFTWARE,OPENGLES3}.{json,log}`,
-  fresh Linux GCC 14.2 processes WITHOUT DISPLAY/WAYLAND_DISPLAY, exactly one failure in each
-  initial unlabeled 14-check run. CNA observed clean HEAD 9e340c876f6426218e2f82651fcb0b086de25e15
-  after build start; external C API refactors are unrelated to the inspected unchanged XNB path.
-- **Final labeled reproduction:** `/tmp/cna-434-asset-final-{SOFTWARE,OPENGLES3}.{json,log}`
-  keeps all 14 checks and the same one failure with ISSUE-045. Both temporary directories were
-  verified removed after exit. Its WILL_FAIL CTest passes along with the other 20 targeted tests.
-  Full 434 at 652398e passed all 447 enabled CTests and both complete smoke runs. ORIGINAL
-  comparisons to 433 require review only for this new failure and the two passing demo extensions;
-  all older failed assertions are retained (27/28 -> 28/29). Original evidence and exact reviews:
-  `reports/checkpoint-434-{SOFTWARE,OPENGLES3}*`.
-- **Handling:** retain the failing expectation with its issue identifier. The negative probe
-  explicitly catches EndOfStreamException solely so independent priority/cache/repair checks
-  continue; it does not relabel the exception or fall back to a lower-priority asset. Temporary
-  files belong to this demo and are removed by scoped cleanup. No CNA edits or upstream report.
-
-
 ### CNA-DEMOS-ISSUE-047 -- AddOutputFile refuses a generated file in the configured output directory
 
 - **Area:** XNA pipeline adapter `ContentProcessorContext::AddOutputFile`, forwarded by
@@ -2265,6 +2008,309 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-039 -- ContentManager permits changing the root with loaded assets
+
+- **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `583af2a5e`.
+  Both native root setters refuse assignment while assets remain loaded. Owner-approved C contract/docs correction CNA124281bff and demosdab9d4f preserves54 original controls under two explicit mappings plus13 additions; canonical C67/C++5 pass both renderers.
+  Final XML/content checkpoint: native10690PASS/101 unchangedSKIP; SOFTWARE719
+  627PASS/41 unchangedFAIL/48SKIP/three manual; OPENGLES3 666/43/7/3. Both95 math
+  and six zero-pixel visual references pass; CTest684PASS/48 unchangedSKIP/three
+  disabled,319 frozen hashes verified. Original-baseline/local comparisons have
+  no unexplained delta or C-root residual. Linux runtime coverage only.
+  Historical evidence follows; see [final checkpoint](repair-evidence/content/XML_CONTENT_FINAL_CHECKPOINT.md).
+
+- **Focused renderer validation (2026-10-20; final regression pending):** the
+  original five checks pass on SOFTWARE and OPENGLES3 against CNA583af2a5e.
+  The marker is removed only after both passes; strict146 content comparison
+  preserves every other count/failure. Full renderer sweeps/CTest remain required.
+
+- **Campaign repair (2026-10-20; full regression pending):** CNA `583af2a5e`
+  guards both setters before mutation. Genuine91 checks, actual-TU sanitizer23,
+  focused33 and full native content1918 (1914PASS/four unchanged skips) validate
+  this batch. Broader pipeline and external renderer regression are running;
+  [evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
+
+- **Campaign update (2026-10-20; not resolved):** genuine XNA89/89 confirms both
+  same-root and different-root assignment are refused with cached assets, while
+  failed Load and uncached ReadAsset permit assignment. Native baseline gives
+  twoPASS/oneFAIL; the local setter repair passes actual-TU ASan/UBSan/leak23/23
+  with the related XNB boundary cases. Canonical build and external regression
+  remain pending. See [runtime evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
+
+- **Area:** both ContentManager::setRootDirectoryProperty overloads in
+  `modules/content/src/Xna/ContentManager.cpp`.
+- **Demo:** `content.content_manager.cache_and_unload` (marked `knownIssue`).
+- **Reproduction:** create a manager rooted at assets, Load<Texture2D>("textures/checker"),
+  then attempt to set RootDirectory to assets/xnb without first calling Unload.
+- **Observed:** the setter accepts the new path. Both overloads directly assign rootDirectory_
+  and never check the loaded-asset cache. The old cached asset and the new root can consequently
+  describe different content trees under one manager.
+- **Expected:** InvalidOperationException and an unchanged root while the manager has loaded
+  assets. The local genuine-XNA 4.0 ContentManager decompilation checks loadedAssets.Count > 0
+  before assigning the root. This is reference-source evidence; genuine XNA was not executed.
+- **Independent behavior:** after Unload, switching to assets/textures and loading checker
+  works, creating one new texture. Original first-load/cache/reload checks continue to pass;
+  the extended demo has 5 checks with exactly the root-mutation guard failing.
+- **Environment/evidence:** CNA `2b15506a48e1a6202c985823131daf5856826f71`, Linux GCC 14.2,
+  SOFTWARE and OPENGLES3/private Xvfb. Reports: `/tmp/cna-content-root-{SOFTWARE,OPENGLES3}.json`;
+  both execute 5 checks with exactly one failure, and both screenshots were inspected. Build,
+  metadata (407/0), targeted CTest and catalog validation pass. The same setter implementation
+  exists at the CI pin (source checked only).
+- **Status:** runtime-confirmed XNA compatibility gap, not a demo workaround; no CNA source
+  changed and no upstream report sent.
+
+### CNA-DEMOS-ISSUE-043 -- GetTypeReader confuses the target type name with the reader factory key
+
+- **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `252e9bca1`.
+  Registration associates distinct target and reader identities while preserving documented fresh unique_ptr ownership. Genuine5/native11/actual-TU sanitizer11 and complete native/external gates pass; the separate existing-value oracle correction remains documented under087.
+  Final XML/content checkpoint: native10690PASS/101 unchangedSKIP; SOFTWARE719
+  627PASS/41 unchangedFAIL/48SKIP/three manual; OPENGLES3 666/43/7/3. Both95 math
+  and six zero-pixel visual references pass; CTest684PASS/48 unchangedSKIP/three
+  disabled,319 frozen hashes verified. Original-baseline/local comparisons have
+  no unexplained delta or C-root residual. Linux runtime coverage only.
+  Historical evidence follows; see [final checkpoint](repair-evidence/content/XML_CONTENT_FINAL_CHECKPOINT.md).
+
+- **Focused renderer validation (2026-10-20; full regression pending):** original
+  13 checks pass on SOFTWARE and OPENGLES3 against CNA252e9bca1. Only its two
+  lookup failures disappear; all146 focused comparisons preserve prior counts
+  and unrelated failures. Marker removed only afterward; warning-free incremental
+  rebuild and repeated146 comparisons pass. Full regression is running; not closed.
+- **Campaign repair CNA252e9bca1 (2026-10-20; FIXED_PENDING_REGRESSION):** actual registry-TU11/11
+  and ASan/UBSan/leak11/11 pass. Canonical content1929 gives1925PASS/four unchanged
+  skips; full pipeline552 gives551PASS/one unchanged skip. Exact previous outcomes
+  and all four native artifact hashes match. Broader consumers1412/runtime241,
+  default XML and original XML6 all retain their prior outcomes. Native validation
+  is complete; full external regression remains pending.
+- **Campaign verification (2026-10-20; still open):** eight new native registry
+  regressions give onePASS/sevenFAIL. Distinct reader/target identities reproduce
+  the defect; coverage also preserves lazy construction, withdrawal/replacement
+  callbacks and CNA's documented fresh-reader ownership. No runtime repair yet;
+  [lookup evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
+
+- **Area:** ContentTypeReaderManager::GetTypeReader/CreateReaderForTargetTypeEXT and the
+  constructor association in ContentTypeReader<T>.
+- **Demo:** `content.xnb.existing_objects` (two explicit known-failing lookup checks; the other
+  eleven checks exercise independent existing-object/raw-payload behavior).
+- **Reproduction:** register a capture-free WeaponReader factory under
+  `CnaDemos.LoadoutWeaponReader`, as named by the XNB reader table. Its base constructor correctly
+  declares target `CnaDemos.LoadoutWeapon`. After the entire two-entry table has been constructed,
+  the root reader's Initialize calls GetTypeReader(System::Type::From<WeaponPtr>()).
+- **Observed:** GetTypeReader returns null although the weapon reader has already been constructed.
+  Explicit CreateReader("CnaDemos.LoadoutWeaponReader") returns the correct reader, whose public
+  target name remains `CnaDemos.LoadoutWeapon`. Indexed ReadObject, explicit-reader ReadRawObject,
+  existing slot identity/runtime state, null fallback and type-erased tags all work.
+- **Expected:** type lookup resolves the reader for that target type without requiring a data
+  type's canonical name to equal its reader class/factory name. Those names are also distinct
+  throughout CNA's built-in readers (for example System.String versus its StringReader).
+- **Cause:** ContentTypeReader<T>'s constructor associates C++ type T with the target name.
+  CreateReaderForTargetTypeEXT retrieves that string and passes it directly to CreateReader,
+  which indexes factories by reader name. No target-to-reader-name mapping bridges them.
+  ContentRuntimeContractTests uses the same string for target and factory key, so its passing
+  lookup test does not cover this distinction. The demo now directly executes implicit
+  ReadRawObject<T>(existing); it throws before consuming any payload bytes. The explicit-reader
+  fallback is guarded by unchanged stream position and the unresolved lookup; partial decode
+  failures are rethrown, not hidden.
+- **Evidence/environment:** Linux GCC 14.2, both renderer selections WITHOUT DISPLAY or
+  WAYLAND_DISPLAY: `/tmp/cna-430-existing-{SOFTWARE,OPENGLES3}.{json,log}` (12 checks, exactly
+  one failure before adding the issue label). CNA HEAD 2fda5389d2990b40146d06de0ae0531d05055f24
+  with an external C API refactor in progress; the inspected C++ content reader implementation
+  is unchanged. No graphics/GPU or genuine-XNA runtime comparison is claimed.
+- **Final labeled reproduction:** `/tmp/cna-430-existing-final-{SOFTWARE,OPENGLES3}.{json,log}`
+  retains the same single failed check with the issue identifier. Its WILL_FAIL CTest passes;
+  full 430 at b113bdc completed with 443 enabled CTests and both complete smoke runs. The only
+  added failed assertion versus 428 is this one (25/26 -> 26/27); all older states/check counts
+  remain unchanged. Original logs and exact review/hashes: `reports/checkpoint-430-*`.
+  Both new external-reference renders pass independently; no failure was hidden by the marker.
+- **Extended reproduction (433 batch):** `/tmp/cna-433-existing_objects-{SOFTWARE,OPENGLES3}.{json,log}`
+  records 13 checks, exactly two failures, in fresh processes with DISPLAY/WAYLAND_DISPLAY unset.
+  The original GetTypeReader assertion is retained verbatim; the new implicit raw-read assertion
+  shares ISSUE-043. All eleven other checks still pass. CNA HEAD at build start was 4d774868e9
+  with further external C API work; the content lookup source still has the same defect.
+  Full 433 at a01ab68 passed all 446 enabled CTests and both complete smoke runs; ORIGINAL
+  comparisons to 432 require review exactly for this additional assertion and 12 -> 13 checks.
+  Raw totals 26/27 -> 27/28, no older failures removed. Exact evidence reviews/hashes are in
+  `reports/checkpoint-433-{SOFTWARE,OPENGLES3}-review.json`.
+- **Handling:** retain both failing lookup assertions. A clearly labeled public named-factory
+  fallback lets the remaining schema example run; it does not change the target name or add
+  a hidden alias registration. No global registry clearing, CNA source edits or upstream report.
+  A library fix should preserve the distinction between target identity and reader factory name.
+
+### CNA-DEMOS-ISSUE-045 -- Truncated XNB leaks EndOfStreamException through ContentManager::Load
+
+- **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `583af2a5e`.
+  Typed and erased XNB paths wrap header/body I/O failures without changing caller exceptions. Shared prefix validation also removes the demonstrated four-byte LZX heap overread. Genuine91, native33 and actual-TU ASan/UBSan/leak23 pass.
+  Final XML/content checkpoint: native10690PASS/101 unchangedSKIP; SOFTWARE719
+  627PASS/41 unchangedFAIL/48SKIP/three manual; OPENGLES3 666/43/7/3. Both95 math
+  and six zero-pixel visual references pass; CTest684PASS/48 unchangedSKIP/three
+  disabled,319 frozen hashes verified. Original-baseline/local comparisons have
+  no unexplained delta or C-root residual. Linux runtime coverage only.
+  Historical evidence follows; see [final checkpoint](repair-evidence/content/XML_CONTENT_FINAL_CHECKPOINT.md).
+
+- **Focused renderer validation (2026-10-20; final regression pending):** the
+  original14 checks pass on SOFTWARE and OPENGLES3 against CNA583af2a5e.
+  The marker is removed after both passes; the separate ReadAsset demo's exact
+  exception catch is corrected from genuine XNA evidence without weakening any
+  ownership check. Strict146 content comparison passes; full checkpoint pending.
+
+- **Campaign repair (2026-10-20; full regression pending):** CNA `583af2a5e`
+  shares typed/erased header bounds validation and wraps content-boundary I/O only.
+  The confirmed compressed-header heap overread is fixed; actual-TU sanitizer23,
+  genuine91, focused33 and full native content1918 pass their exact gates. Direct
+  parser/Song-reader contracts remain intact. Broader pipeline and external
+  checkpoint are still required; [evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
+
+- **Campaign update (2026-10-20; not resolved):** expanded genuine XNA89/89 and
+  native four-case baseline confirm header/body IOException wrapping without
+  changing user-reader exception types. Investigation also found an erased-load
+  **heap-buffer-overread**: a ten-byte LZX external XNB is read four bytes beyond
+  its allocation because the typed path's compressed-prefix guard is missing.
+  Actual-TU ASan confirms the original defect. A local shared header guard plus
+  exception-boundary repair passes ASan/UBSan/leak23/23 across the whole manager
+  fixture, but canonical build/external regression remain pending. Historical
+  evidence below is retained; see [runtime evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
+
+- **Area:** ContentManager::Load<T>/LoadXnbAsset and the low-level XNB header parser.
+- **Demo:** `content.content_manager.asset_precedence`, 14 console checks: thirteen pass and
+  one preserves the public exception-type failure. The format-priority behavior itself passes.
+- **Reproduction:** a private content directory contains valid same-name CNB, CNJ and native
+  rules files. Write a three-byte `rules.xnb` containing `XNB`, then call Load<Rules>("rules")
+  on a fresh manager. The valid compiled XNB control first loads the authored value 400.
+- **Observed:** Load throws System::IO::EndOfStreamException. Catching only the publicly
+  documented ContentLoadException would not recover. No lower-tier loader runs; repairing the
+  XNB permits the same manager to load it successfully without Unload. A three-byte CNB is
+  correctly refused as ContentLoadException, and its repair/retry also works.
+- **Expected:** failure to load an invalid XNB reaches the caller through ContentLoadException,
+  consistent with Load<T>'s public @throws contract and its wrapping of ordinary loose-reader
+  exceptions. This is a CNA contract comparison, not a genuine-XNA runtime observation.
+- **Cause:** Load dispatches directly to LoadXnbAsset, which calls ParseXnbHeader without a
+  wrapping boundary. The internal parser intentionally documents EndOfStreamException for a
+  truncated header and reads the fourth platform byte after the three magic bytes. That
+  low-level behavior escapes through the public content-loading boundary unchanged.
+- **Evidence/environment:** `/tmp/cna-434-asset_precedence-{SOFTWARE,OPENGLES3}.{json,log}`,
+  fresh Linux GCC 14.2 processes WITHOUT DISPLAY/WAYLAND_DISPLAY, exactly one failure in each
+  initial unlabeled 14-check run. CNA observed clean HEAD 9e340c876f6426218e2f82651fcb0b086de25e15
+  after build start; external C API refactors are unrelated to the inspected unchanged XNB path.
+- **Final labeled reproduction:** `/tmp/cna-434-asset-final-{SOFTWARE,OPENGLES3}.{json,log}`
+  keeps all 14 checks and the same one failure with ISSUE-045. Both temporary directories were
+  verified removed after exit. Its WILL_FAIL CTest passes along with the other 20 targeted tests.
+  Full 434 at 652398e passed all 447 enabled CTests and both complete smoke runs. ORIGINAL
+  comparisons to 433 require review only for this new failure and the two passing demo extensions;
+  all older failed assertions are retained (27/28 -> 28/29). Original evidence and exact reviews:
+  `reports/checkpoint-434-{SOFTWARE,OPENGLES3}*`.
+- **Handling:** retain the failing expectation with its issue identifier. The negative probe
+  explicitly catches EndOfStreamException solely so independent priority/cache/repair checks
+  continue; it does not relabel the exception or fall back to a lower-priority asset. Temporary
+  files belong to this demo and are removed by scoped cleanup. No CNA edits or upstream report.
+
+
+### CNA-DEMOS-ISSUE-103 -- C content loaders discard canonical `ContentLoadException` identity
+
+- **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `68a3c7b1f`.
+  C content loaders preserve canonical exceptions through the common barrier. All44 typed-error controls pass both renderers; the rebuilt original C demo67 passes with resource-lifetime controls intact. Owner-approved root-contract correction CNA124281bff/demosdab9d4f and marker aab4bf3 are retained.
+  Final XML/content checkpoint: native10690PASS/101 unchangedSKIP; SOFTWARE719
+  627PASS/41 unchangedFAIL/48SKIP/three manual; OPENGLES3 666/43/7/3. Both95 math
+  and six zero-pixel visual references pass; CTest684PASS/48 unchangedSKIP/three
+  disabled,319 frozen hashes verified. Original-baseline/local comparisons have
+  no unexplained delta or C-root residual. Linux runtime coverage only.
+  Historical evidence follows; see [final checkpoint](repair-evidence/content/XML_CONTENT_FINAL_CHECKPOINT.md).
+
+- **Repair-campaign status (2026-10-20): FIXED_PENDING_REGRESSION.** CNA68a3c7b1f
+  passes all44 checks on both renderers, with exactly eight canonical-type
+  improvements and unchanged assertion labels. Four existing C API smoke tests
+  pass both renderers; successful model/effect loading passes OPENGLES3. Full
+  regression/original demo verification still awaits the separate039 C root
+  contract decision; the marker remains. An independent public-C
+  reproduction avoids the live-root contract conflict exposed by039. A four-byte
+  invalid XNB reaches all eight loaders: Texture2D, TextureCube, SoundEffect,
+  Effect, Model, ObjectDictionary, SpriteFont and ForeignObject. Both SOFTWARE and
+  OPENGLES3 give36 passing controls/eight failed canonical-type checks of44.
+  IO result/category/message, null outputs and empty argument parameter remain
+  correct. The CNA-native C17/Werror regression reproduces the same failure.
+  See [permanent probe](repair-evidence/content/ContentExceptionIdentityProbe.c)
+  and [current evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
+  The historical reproduction below is retained.
+- **Area/API:** the C exception-detail contract in `CNA/C/core.h` and the typed
+  `cna_content_manager_load_*` routes, observed through
+  `cna_content_manager_load_texture2d`.
+- **Demo/reproduction:** `c_api.content.content_manager` changes its live manager root from
+  `assets` to `assets/textures`, unloads the cached `textures/checker` value, then requests that
+  logical name again. The native `ContentManager::Load<Texture2D>` path cannot open the resulting
+  location and throws its ordinary `Microsoft::Xna::Framework::Content::ContentLoadException`.
+  Query `cna_error_get_last_info`, `cna_error_get_last_exception_type_size_ext` and the matching
+  copy route immediately after the failed load.
+- **Observed:** the route correctly returns `CNA_RESULT_IO`; the thread diagnostic keeps result IO,
+  category IO and its nonempty message, but reports zero exception-type bytes. Both SOFTWARE and
+  OPENGLES3/Xvfb print `missing load exception type: <none>` and fail only the exact canonical-type
+  check among54 controls.
+- **Expected/contract:** `core.h` says the exception-type query names the canonical exception behind
+  the most recent failure so a managed binding can rethrow it, and explicitly uses
+  `Microsoft.Xna.Framework.Content.ContentLoadException` as an example. This failure came from that
+  native exception rather than a C-layer argument or handle check, so the type must survive as that
+  exact name. It carries no argument parameter.
+- **Cause observed in source:** `ContentManagerLoadTexture2d` catches `ContentLoadException` inside
+  the route body and calls `IoError(exception.what())`. The outer `CallWithExceptionBarrier` sees a
+  returned result rather than the exception, so `NoteTranslatedException` never records its dynamic
+  type. The same catch-and-`IoError` pattern appears in the sound-effect, cube, font, Effect and
+  Model content loaders; only Texture2D is claimed by runtime evidence here.
+- **Suggested repair:** preserve the caught canonical exception metadata when translating the
+  intended IO result, or let the common exception barrier perform that translation. Keep the
+  existing result/category/message and all output-handle clearing contracts.
+- **Evidence/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. Ten SOFTWARE and ten OPENGLES3/Xvfb runs reproduce
+  exactly one failure and53 passes with byte-identical stdout SHA-256
+  `960cf6f99b002990d67441e387e954a8eeb6a79249356308e9183aabc1edb348` and empty stderr. The exact
+  known-issue CTest passes ten repetitions. Contract/source excerpts are
+  `/tmp/checkpoint-925-content-exception-source.txt`, SHA-256
+  `97cff773d99c041cb9fc457399f1451b781b61358ebf43beb7346013da26ca94`. No CNA source was modified
+  and no upstream message or manual visual-quality claim was made.
+
+### CNA-DEMOS-ISSUE-148 -- intermediate XML substrate disagrees on envelope node forms
+
+- **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `e0318ab52`.
+  CNA section/fixup repairs e0318ab52/de1b6e259 plus Sharp Runtime16993ac6/97713eb2 correct self-closing sections, processing instructions and character-input BOM handling. CNA dbfe6b4c1 removes the two corpus exemptions without changing goldens. Sharp18158/41 and actual-TU parser4/reader5 sanitizer controls pass; XML demo36 passes both renderers.
+  Final XML/content checkpoint: native10690PASS/101 unchangedSKIP; SOFTWARE719
+  627PASS/41 unchangedFAIL/48SKIP/three manual; OPENGLES3 666/43/7/3. Both95 math
+  and six zero-pixel visual references pass; CTest684PASS/48 unchangedSKIP/three
+  disabled,319 frozen hashes verified. Original-baseline/local comparisons have
+  no unexplained delta or C-root residual. Linux runtime coverage only.
+  Historical evidence follows; see [final checkpoint](repair-evidence/content/XML_CONTENT_FINAL_CHECKPOINT.md).
+
+- **Repair-campaign verification (2026-10-20; still open):** fresh genuine XNA confirms
+  the processing-instruction acceptance, both self-closing-section rejections and
+  in-memory BOM rejection. Expanded paired empty sections remain accepted. See the
+  direct `IntermediateEnvelopeOracle.cs` and its16-check combined148/149 evidence.
+  A further13-case `IntermediateSectionsOracle.cs` confirms paired/self-closing
+  combinations and exact exception/node categories. The owned-CNA section fix
+  has13/13 actual-TU sanitizer passes (before:sixPASS/sevenFAIL), but full native
+  and demo regression is pending. Processing-instruction and string-BOM defects
+  remain open; the historical description below is retained.
+
+- **Area/API:** `IntermediateSerializer::Deserialize<T>` and its `System::Xml::XmlReader`
+  substrate while reading the XNA intermediate document envelope.
+- **Demo/reproduction:** run `content.custom.intermediate_serializer`. Its envelope controls place
+  `<?pi x?>` between Asset members, append self-closing empty Resources or ExternalReferences, and
+  pass an in-memory UTF-8 BOM immediately before the XML declaration.
+- **Observed:** CNA rejects the processing instruction before `IntermediateReader` can skip it,
+  reporting tinyxml2's `XML_ERROR_PARSING_DECLARATION`. It accepts both self-closing empty root
+  sections and the in-memory BOM. These are four expected failures; twenty-five controls covering
+  serializer attributes, ordinary metadata tolerance, required envelope structure and rejection
+  paths still pass.
+- **Expected/reference:** the checked-in genuine-XNA corpus accepts the processing instruction and
+  rejects `<Resources />`, `<ExternalReferences />` and the BOM-prefixed in-memory string. CNA's
+  `docs/xna-intermediate-xml-format.md` records the same XNA behavior and separately lists all four
+  CNA substrate differences.
+- **Cause/suggested repair:** CNA's corpus test explicitly exempts the processing-instruction case
+  as a tinyxml2 substrate limit and deliberately allows the other three rejected-XNA inputs.
+  Preserve the reader's comment/PI skipping and DTD prohibition, but adapt or pre-validate the XML
+  substrate so these four public `Deserialize` results match XNA.
+- **Evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` with the current sharp-runtime dependency on Linux.
+  Focused evidence is under `/tmp/checkpoint-1093-intermediate-envelope-syntax/*`. No CNA or
+  sharp-runtime source was modified, and no fresh XNA execution or upstream message is claimed.
+
+
+
 
 ### CNA-DEMOS-ISSUE-016 -- Linking `CNA_GamerServices` after another library duplicates CNA in the executable
 
