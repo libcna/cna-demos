@@ -377,3 +377,40 @@ must follow release of the088/090/111 binary freezes. The processing-instruction
 vendor-policy question remains unanswered; string-BOM handling must also preserve
 the measured deferred Read exception timing. Neither parser issue is repaired or
 hidden, and the demo148 knownIssue remains unchanged.
+
+The subsequent **whole-corpus sanitizer gate failed**, retained as
+`repair-intermediate-sections-sanitizer-corpus.log`:21PASS/one FAIL of22, with two
+missing-reference messages displaced by the end-document diagnostic. LeakSanitizer
+also reports792 bytes in11 allocations, all the corpus's deliberately cyclic Node
+fixtures. The13-case focused pass above is not a whole-corpus pass or sufficient
+validation of the initial section repair.
+
+Expanded genuine `IntermediateSectionsOracle.cs` now passes18/18. Shared fixups
+run after consuming their section end and before reading externals; external fixups
+run before the final envelope check. A malformed section end still wins over a
+missing-reference error. The initial contrary expectation for that last ordering
+is retained17/18, then corrected from measured XNA behavior. CNA's private fixup
+method is split by section; tests preserve exact missing-reference diagnostics.
+Test-owned strong Node cycles now have RAII teardown **after** serialization and
+all graph assertions, including exception/ASSERT exits. No graph behavior assertion
+or golden XML is removed. The corrected actual-TU/corpus sanitizer run is pending.
+
+The new native fixture classes initially omitted Object::GetTypeName overrides,
+making them abstract. Those setup failures are retained; corrected frozen-library
+baseline18 tests gives sevenPASS/elevenFAIL in2ms. Reports
+`repair-intermediate-section-order-{verified-xna,corrected-native-before}*`.
+
+## ISSUE-046: namespace-aware external target identity
+
+`IntermediateExternalAliasOracle.cs` passes12/12 against genuine XNA. Root and
+entry-local aliases, local namespace shadowing, aliases inside generic arguments,
+assembly qualification and types without serializers are verified. A target with
+no public constructor remains a valid external identity; it is never instantiated.
+Surrounding TargetType whitespace is refused, not trimmed. The initial contrary
+whitespace expectation is preserved11/12; the corrected expected contract follows
+the observed genuine exception, not current CNA behavior.
+
+Matching corrected native baseline gives fourPASS/eightFAIL in2ms, with controls
+ensuring no target serializer or global XML alias is introduced. The initial native
+abstract-fixture setup failures are retained separately. No046 runtime change yet.
+Reports `repair-intermediate-external-alias-{verified-xna,corrected-native-before}*`.

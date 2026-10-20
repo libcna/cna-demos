@@ -4,10 +4,39 @@ using System.IO;
 using System.Xml;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Intermediate;
+using Microsoft.Xna.Framework.Content;
+
+public class SectionNode { public int Value; }
+public class SectionRoot
+{
+    [ContentSerializer(SharedResource = true)] public SectionNode Shared;
+    public ExternalReference<SectionNode> External;
+}
 
 static class IntermediateSectionsOracle
 {
     static int checks, failed;
+    static void ObserveFixups(string name, string shared, string sections, string expectedMessage)
+    {
+        ++checks;
+        string xml = "<XnaContent><Asset Type=\"SectionRoot\">" + shared +
+            "<External><Reference>#e</Reference></External></Asset>" + sections + "</XnaContent>";
+        try
+        {
+            using (var reader = XmlReader.Create(new StringReader(xml)))
+                IntermediateSerializer.Deserialize<SectionRoot>(reader, null);
+            ++failed;
+            Console.WriteLine(name + " UNEXPECTED ACCEPT");
+        }
+        catch (Exception error)
+        {
+            Console.WriteLine(name + " REJECT " + error.GetType().FullName + " " + error.Message);
+            bool diagnosticMatches = expectedMessage.StartsWith("There was an error", StringComparison.Ordinal)
+                ? error.Message.StartsWith(expectedMessage, StringComparison.Ordinal)
+                : error.Message == expectedMessage;
+            if (error.GetType() != typeof(InvalidContentException) || !diagnosticMatches) ++failed;
+        }
+    }
     static void Observe(string name, string sections, string rejectedNode)
     {
         ++checks;
@@ -47,6 +76,14 @@ static class IntermediateSectionsOracle
         Observe("resources-selfclosing-with-comment", "<Resources /><!--tail-->", "None");
         Observe("externals-selfclosing-with-comment", "<ExternalReferences /><!--tail-->", "None");
         Observe("reverse-paired-order", "<ExternalReferences></ExternalReferences><Resources></Resources>", "Element");
+        ObserveFixups("shared-before-missing-external-section", "<Shared>#s</Shared>", "<Resources />", "Missing shared resource \"#s\".");
+        ObserveFixups("shared-before-invalid-external-type", "<Shared>#s</Shared>",
+            "<Resources></Resources><ExternalReferences><ExternalReference ID=\"#e\" TargetType=\"No.Such.Type\">C:\\a.bin</ExternalReference></ExternalReferences>",
+            "Missing shared resource \"#s\".");
+        ObserveFixups("section-end-before-shared-fixup", "<Shared>#s</Shared>", "<Resources /><Unexpected />",
+            "There was an error while deserializing intermediate XML. 'Element' is an invalid XmlNodeType.");
+        ObserveFixups("external-before-end-document", "<Shared Null=\"true\" />", "<ExternalReferences />", "Missing external reference \"#e\".");
+        ObserveFixups("external-before-trailing-element", "<Shared Null=\"true\" />", "<ExternalReferences></ExternalReferences><Unexpected />", "Missing external reference \"#e\".");
         Console.WriteLine("checks=" + checks + " failed=" + failed);
         return failed == 0 ? 0 : 1;
     }
