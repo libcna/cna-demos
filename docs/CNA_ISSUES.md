@@ -1067,6 +1067,14 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-057 -- Content staging scavenger warns during normal concurrent lifecycle
 
+- **Campaign verification (2026-10-20), CONFIRMED_OPEN:** current CNA dbfe6b4c1
+  reproduces3,241 missing-owner warnings in one fixed1,000-owner concurrent run;
+  all owners succeed, no removal occurs and the private parent ends empty. The
+  paired1,000-owner sequential control has zero diagnostics/errors. No production
+  change or warning suppression. Strict Clang builds pass; the initial extra-strict
+  GCC optional-handle warning is retained separately. See
+  [current baseline](repair-evidence/content/CONTENT_STAGING_TRIAGE.md).
+
 - **Area:** CNA content tools, `tools/common/CnaContentStaging.hpp`, consumed by `cna-content`
   and the content-project build. Build-time diagnostic race; no runtime demo knownIssue marker.
 - **Original observation:** full470-query, demo source `a699a2d`, completed all seven scheduled

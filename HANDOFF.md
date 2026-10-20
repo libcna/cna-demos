@@ -17,6 +17,21 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+Both719 sweeps now complete with exact original/local comparisons:SOFTWARE
+627/41/48/3,OPENGLES3 666/43/7/3. Native final10791/corpus9 complete. External74592
+is running serial finalCTest;319 artifacts remain frozen. Native corpus/docs
+committed CNA dbfe6b4c1; no issue closure until remaining gate/audits finish.
+057 newly reconfirmed by fixed1,000 concurrent owners (3,241 missing-owner
+warnings,zero owner errors/removals) against a clean1,000-owner sequential control.
+Permanent probes/CONTENT_STAGING_TRIAGE.md preserve both results and initial GCC
+strict-build failure; Clang strict builds pass. No057 production change.
+
+Native37179 COMPLETE0:10791 cases=10690PASS/101 sameSKIP,1647.295s, exact baseline
+and three frozen hashes pass. Strict corpus9/9 passes without PI/BOM exemptions.
+External74592 continues on319 frozen artifacts:SOFTWARE719 exact627/41/48/3,
+OPENGLES3/CTest pending. Include older pending043/045 in the eventual C-root
+closure audit as well as039/103/148; counts remain85/70 until complete proof.
+
 Next ownership batch gained four native value-wrapper controls:
 ContentTextureOwnershipTests.cpp gives onePASS/threeFAIL on private OPENGLES3;
 all15 failures are missing manager-triggered disposal/resource release. Pixel,
