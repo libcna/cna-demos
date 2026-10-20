@@ -2,6 +2,25 @@
 
 ## Latest dispatch candidate (2026-10-20,09:32 UTC)
 
+Repair committed as CNA `3d254dfa7`: all native gates below and corrected external
+focus pass. External whole build48985 exits0,1043 printed steps, zero warnings.
+The first log audit incorrectly assumed its terminal step gap must equal the prior
+build's gap. Exact accounting proves three printed prelude steps (glob, CMake
+regeneration, glob), then1040 contiguous build steps; prior972 had one prelude plus
+971. The failed audit remains; corrected `*-build-accounting-audit.json` passes for
+both native and external builds. No compiler diagnostic was waived.
+
+Original146 external focus90968 exits1:087 shared_resources improves to17/17 on
+both renderers, but existing_objects stops after5/13 because its old zero-index
+fallback expectation is false under genuine XNA. This precise failure remains in
+`repair-content-dispatch-focused-initial-*`; it is the only delta. Corrected demo
+retains13 controls and checks a null result AND an untouched offered fallback.
+Nine-step warning-free rebuild76338 plus oracle focus72580 complete0:each renderer
+64PASS/nine unchangedFAIL, exact146 comparison errors[]. All other identities,
+runtime fields, tags, invocation counts and stream alignment remain asserted.
+087 marker was removed only after these passes; marker rebuild55301 completes0,
+nine steps, warning-free. Marker focus is underway; full regression/closure pending.
+
 Native gates complete10:32 UTC:552 pipeline=551PASS/one unchangedSDK-fixtureSKIP,
 932.000s. Exact previous043 case/status audit errors[], four post-gate artifact
 hashes match. Combined with the module1965, consumers1412, runtime241 and both XML

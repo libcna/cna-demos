@@ -45,22 +45,28 @@ Both95 math, metadata/tools and six exact visuals pass. Final serial CTest has
 684PASS/48 unchangedSKIP/three disabled936.58s, all735 outcomes and319 hashes match.
 Its external freeze was released only afterward;048 remains the accepted checkpoint.
 
-NEXT (10:23 UTC):087 candidate is uncommitted in CNA. Genuine reference53 and
-value/nullable34 pass; all36 focused native cases pass normally and with actual-TU
-ASan/UBSan/leak instrumentation, including against the rebuilt libraries. Corrected
-whole CNA build succeeds with the same51 warnings. Native1965 gives1961PASS/four
-unchangedSKIP; consumers1412/runtime241/default and original XML retain every prior
-outcome. Four native artifacts are FROZEN;552 pipeline31779 is running and complete
-external build48985 is running. Do not rebuild native or edit compiled source.
-Then run the prepared146 focused comparisons. The existing_objects demo contains
-a proven extra oracle error: index0 returns null, not the supplied fallback. Retain
-its first failed focused result before correcting that expectation from genuine53,
-preserving all13 controls and checking the supplied fallback stays unchanged.
-Do not remove087 marker before its own actual17-check demo passes both renderers.
+NEXT (10:46 UTC):087 repair committed CNA3d254dfa7, FIXED_PENDING_REGRESSION.
+Genuine reference53 and value/nullable34 pass; all36 native regressions pass normally
+and with actual-TU ASan/UBSan/leak, also against rebuilt libraries. Whole CNA build
+passes with the same51 warnings; native1965/552 pipeline/1412 consumers/runtime241/
+default and original XML all preserve exact outcomes and four hashes. External
+1043-step build passes warning-free. Its first log audit had an incorrect fixed-gap
+assumption; retained failure and corrected exact prelude/body accounting are recorded.
+Original146 focus retains the demonstrated existing_objects zero-index oracle error:
+5/13 controls, only delta. Corrected demo expects null AND an unchanged offered
+fallback; all13 original behavior controls remain. Oracle146 focus passes exactly
+64PASS/nine unchangedFAIL per renderer, shared_resources17/17 unchanged passes.
+087 marker removed only afterward. Marker rebuild55301 passes warning-free;
+marker focus15417 is running. Then freeze319 artifacts and run prepared
+repair-content-dispatch-final-gates.mjs: math95/both719/six visuals, separate strict
+original-baseline AND predecessor audits, final serial CTest735/732 and hashes.
+Do not rebuild external during those gates. No087 closure before full validation.
 
 Independent089 has permanent21-control before evidence (fourPASS/seventeenFAIL)
 and two owner-isolation cases (ten owner/initialization assertion failures; nested/
-concurrent context controls pass). No089 implementation yet. See CNA's live handoff
+concurrent context controls pass), plus native cycle11 (onePASS/tenFAIL) and failure6
+(onePASS/fiveFAIL). Genuine21/15 retained, including fresh-owner recovery that cannot
+be faked by retrying an explicitly registered unique_ptr instance. No089 implementation yet. See CNA's live handoff
 for exact commands, jobs and freezes; limit campaign compiler/test workers to THREE,
 private GPU only. Sharp99c2f79c/EasyGLf4d6afa/MetaGLdd3b300 freshly verified clean.
 FileShare152/vendor148 owner questions remain pending. Nothing pushed or merged.

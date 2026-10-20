@@ -486,6 +486,11 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `content.xnb.existing_objects`: indexed/raw reads into existing slots, retained runtime state,
   null fallback, two-pass initialization and safely unboxed tags (11 passing checks plus the
   GetTypeReader and implicit ReadRawObject target/factory-name failures, ISSUE-043).
+  Campaign correction2026-10-20: the historical null-fallback expectation above is
+  disproved by genuine XNA. The demo now expects null and separately verifies the
+  offered object remains unchanged; all13 controls are retained. Lookup043 had
+  already passed before this distinct correction. Rebuilt focus passes13/13 on
+  both renderers against CNA `3d254dfa7`; complete regression remains pending.
 - ✅ `content.xnb.external_references`: sibling loose image/compiled label, null and unsafe/missing
   paths, typed/erased owner caches and actual shared-image rendering (11 checks per renderer).
 - ✅ Existing intermediate XML tools now cover a two-resource cycle, explicit shared_ptr unlinking

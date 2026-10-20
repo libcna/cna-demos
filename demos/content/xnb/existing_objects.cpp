@@ -24,9 +24,9 @@ namespace
     using WeaponPtr = std::shared_ptr<Weapon>;
     struct Loadout
     {
-        WeaponPtr primary, secondary, fallback;
+        WeaponPtr primary, secondary, fallback, offeredFallback;
         std::any tag, absentTag;
-        bool primaryRetained = false, secondaryRetained = false, fallbackRetained = false;
+        bool primaryRetained = false, secondaryRetained = false;
         int endMarker = 0;
     };
     struct Observation
@@ -98,13 +98,13 @@ namespace
                 observed.rawLookupError = error.what();
                 loadout.secondary = input.ReadRawObject<WeaponPtr>(*weaponReader_, secondary);
             }
-            loadout.fallback = input.ReadObject<WeaponPtr>(fallback); // authored zero: retain this default
+            loadout.offeredFallback = fallback;
+            loadout.fallback = input.ReadObject<WeaponPtr>(fallback); // authored zero: null, not the offered default
             loadout.tag = input.ReadObject(); // std::any preserves the actual produced type
             loadout.absentTag = input.ReadObject(); // authored zero: empty std::any
             loadout.endMarker = input.ReadInt32();
             loadout.primaryRetained = loadout.primary == primary;
             loadout.secondaryRetained = loadout.secondary == secondary;
-            loadout.fallbackRetained = loadout.fallback == fallback;
             return loadout;
         }
     private:
@@ -128,15 +128,18 @@ namespace
         if (!observed.automaticRawSucceeded) ctx.Print("Automatic raw lookup failed before consuming payload: {}", observed.rawLookupError);
         ctx.Check(observed.readerContract && observed.constructed == (observed.automaticRawSucceeded ? 4 : 3),
                   "the dependent reader retains the correct target type and advertises existing-object support");
-        if (!ctx.Check(loadout.primary && loadout.secondary && loadout.fallback, "all three loadout slots remain populated")) return;
+        if (!ctx.Check(loadout.primary && loadout.secondary, "both serialized weapon payloads populate their slots")) return;
         ctx.Check(loadout.primaryRetained && loadout.primary->name == "Sword" && loadout.primary->ammunition == 12,
                   "indexed ReadObject fills the existing primary object without replacing its identity");
         ctx.Check(loadout.secondaryRetained && loadout.secondary->name == "Bow" && loadout.secondary->ammunition == 6,
                   "ReadRawObject fills the existing secondary directly without consuming a reader index");
         ctx.Check(loadout.primary->runtimeSlot == "primary" && loadout.secondary->runtimeSlot == "secondary",
                   "fields outside the content schema keep their caller-owned runtime state");
-        ctx.Check(loadout.fallbackRetained && loadout.fallback->name == "Default" && loadout.fallback->ammunition == 1 &&
-                  loadout.fallback->runtimeSlot == "fallback", "a zero object reference preserves the supplied fallback instance");
+        // Genuine XNA returns null for index zero even with an existing instance; it does not
+        // invoke the reader or mutate that offered object (ContentDispatchOracle.cs).
+        ctx.Check(!loadout.fallback && loadout.offeredFallback && loadout.offeredFallback->name == "Default" &&
+                  loadout.offeredFallback->ammunition == 1 && loadout.offeredFallback->runtimeSlot == "fallback",
+                  "a zero object reference returns null and leaves the supplied fallback unchanged");
         const auto* tagged = std::any_cast<WeaponPtr>(&loadout.tag); // safe type probe, no unchecked cast
         ctx.Check(tagged && *tagged && *tagged != loadout.primary && (*tagged)->name == "Sword" &&
                   (*tagged)->ammunition == 12 && (*tagged)->runtimeSlot.empty(),
@@ -146,7 +149,7 @@ namespace
         ctx.Check(observed.existingReads == 2 && observed.freshReads == 1,
                   "only populated payloads invoke the weapon reader, with the correct existing-instance optional");
         ctx.Check(loadout.endMarker == 0x12345678, "mixed indexed and raw payloads leave the stream aligned at the trailer");
-        ctx.Print("{}: {} rounds; {}: {} rounds; default retained; independent typed tag",
+        ctx.Print("{}: {} rounds; {}: {} rounds; null reference, supplied fallback unchanged; independent typed tag",
                   loadout.primary->name, loadout.primary->ammunition, loadout.secondary->name, loadout.secondary->ammunition);
     }
 }

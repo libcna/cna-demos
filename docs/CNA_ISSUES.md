@@ -983,6 +983,18 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-087 -- Disposable XNB shared resources bypass the ReadAsset recorder
 
+- **Repair committed (2026-10-20), FIXED_PENDING_REGRESSION:** CNA `3d254dfa7`
+  contains the shared-resource/typed/raw dispatch repair and36 native regressions.
+  All native gates below pass; complete external build is warning-free. Both
+  renderer focused suites give64PASS/nine unchangedFAIL each, including the
+  unchanged17/17 shared-resource assertions. The087 marker is removed only after
+  these passes; marker-build/focus and full719/CTest/visual regression are pending.
+  A separate additional demo-oracle defect was demonstrated: serialized index0
+  returns null rather than the offered fallback. Genuine53 verifies this; initial
+  demo5/13 failures remain, and the corrected demo preserves all13 controls,
+  including an explicit unchanged-offered-object check. No default-manager011 or
+  C API root-contract issue is claimed fixed. This issue is not yet Resolved.
+
 - **Native checkpoint10:32 UTC (not resolved):** all corrected whole-build,
   module1965, pipeline552, consumer1412, runtime241 and XML gates complete with
   exact expected outcomes and four artifact hashes unchanged. Actual-TU sanitizer

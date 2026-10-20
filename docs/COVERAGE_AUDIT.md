@@ -1432,6 +1432,20 @@ scalar/math helpers, while object graphs and container orchestration remain sepa
 | Declared built-in readers, withdrawal across loads and a later Game | reader_versions now retains all17custom-policy checks and adds six built-in lifetime controls (23passing checks in both requested renderer environments, empty stderr). A real signed Int32 XNB first loads under a Game declaration; withdrawing its factory removes direct construction while preserving the cached value. An uncached manager and the original manager after Unload both refuse the asset without silently reinstalling its reader. A subsequent Game permits a fresh load BEFORE a registry query could materialize declarations. Console ownProcess keeps this built-in mutation out of the parent/browser registry; no Internal helpers, blanket clearing or replacement of an unknown caller factory is used. The new deterministic90byte fixture is staged identically and all three old fixtures remain byte-identical. The two Games never Run: no rendering/visual or hardware credit. Constructor declarations, query materialization and ordinary custom-key withdrawal remain distinct behaviors; this example does not establish concurrent registry changes or unloadable reader code. |
 | InitializeTypeReaders/ReadAsset, constructor limits | Public integration surfaces for the container loader/custom readers. Independent low-level container orchestration is intentionally deferred; ordinary demos should let ContentManager own parsing. Focused931-932 cover the application-facing exact-byte and size guards through real custom readers; arbitrary limit injection and whole-container fuzzing remain CNA test-suite work. |
 
+Repair-campaign correction (2026-10-20) to the historical XNB rows above:
+`existing_objects` originally expected serialized index0 to return its offered
+fallback. Genuine `ContentDispatchOracle.cs`53/53 proves the result is null even
+with an existing instance. The repaired runtime made that old demo stop after5/13
+controls on both renderers; both initial failure logs remain. The corrected demo
+still has13 controls and explicitly checks null plus the unchanged offered object,
+while preserving identity, runtime fields, reader counts, tags and stream alignment.
+This is an evidence-backed demo expectation correction, not a CNA regression waiver.
+ISSUE-043 lookup had already passed13/13 before the distinct null-dispatch repair.
+Corrected oracle rebuild passes warning-free; both renderers pass13/13, with the
+entire146-case focus exactly64PASS/nine unchangedFAIL per renderer. CNA repair is
+`3d254dfa7`; full regression is pending. The historical table is retained as
+Complete1128 evidence. Reports `repair-content-dispatch-focused-{initial,oracle}-*`.
+
 ### Intermediate XML serialization (member and behavior decisions)
 
 The first tool deliberately demonstrates one small authored encounter, not the whole serializer.

@@ -219,5 +219,4 @@ CNA_DEMOS_CONSOLE(SharedResources, {
              "ContentTypeReader::Read", "ContentTypeReaderManager::AddTypeCreator", "ContentManager::Load", "ContentManager::ReadAsset"},
     .tags = {"content", "xnb", "reader", "shared-resources", "ownership"},
     .assets = {"graphs/shared_party.xnb", "graphs/bad_shared_index.xnb", "graphs/bad_shared_type.xnb"},
-    .knownIssue = "CNA-DEMOS-ISSUE-087",
 })
