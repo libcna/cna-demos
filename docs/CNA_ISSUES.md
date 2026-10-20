@@ -2281,6 +2281,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-039 -- ContentManager permits changing the root with loaded assets
 
+- **Campaign update (2026-10-20; not resolved):** genuine XNA89/89 confirms both
+  same-root and different-root assignment are refused with cached assets, while
+  failed Load and uncached ReadAsset permit assignment. Native baseline gives
+  twoPASS/oneFAIL; the local setter repair passes actual-TU ASan/UBSan/leak23/23
+  with the related XNB boundary cases. Canonical build and external regression
+  remain pending. See [runtime evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
+
 - **Area:** both ContentManager::setRootDirectoryProperty overloads in
   `modules/content/src/Xna/ContentManager.cpp`.
 - **Demo:** `content.content_manager.cache_and_unload` (marked `knownIssue`).
@@ -2354,6 +2361,16 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   A library fix should preserve the distinction between target identity and reader factory name.
 
 ### CNA-DEMOS-ISSUE-045 -- Truncated XNB leaks EndOfStreamException through ContentManager::Load
+
+- **Campaign update (2026-10-20; not resolved):** expanded genuine XNA89/89 and
+  native four-case baseline confirm header/body IOException wrapping without
+  changing user-reader exception types. Investigation also found an erased-load
+  **heap-buffer-overread**: a ten-byte LZX external XNB is read four bytes beyond
+  its allocation because the typed path's compressed-prefix guard is missing.
+  Actual-TU ASan confirms the original defect. A local shared header guard plus
+  exception-boundary repair passes ASan/UBSan/leak23/23 across the whole manager
+  fixture, but canonical build/external regression remain pending. Historical
+  evidence below is retained; see [runtime evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
 
 - **Area:** ContentManager::Load<T>/LoadXnbAsset and the low-level XNB header parser.
 - **Demo:** `content.content_manager.asset_precedence`, 14 console checks: thirteen pass and
@@ -2485,6 +2502,14 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Status:** open; not reported upstream.
 
 ### CNA-DEMOS-ISSUE-048 -- Lenient builds report dropped parameters as effective
+
+- **Campaign update (2026-10-20; full regression pending):** CNA `3a1437725`
+  returns actual effective parameters while separately preserving requested
+  manifest/cache identity. Native251/552 gates and broader1412/runtime241/XML
+  consumers preserve every prior result. Strict56 focused renderer executions
+  remove only this failed assertion; all36 child checks remain and ISSUE-047
+  remains visible. Complete renderer sweeps/final CTest are still pending; see
+  [parameter evidence](repair-evidence/content/EFFECTIVE_PARAMETERS.md).
 
 - **Area:** native `ContentPipeline::Build`, `ContentBuildResult::parameters` and XNA processor
   parameter adapters under `ContentStrictness::XnaCompatible`.
