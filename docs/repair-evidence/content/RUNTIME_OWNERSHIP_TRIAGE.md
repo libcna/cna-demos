@@ -1,6 +1,6 @@
 # Next content-runtime batch: source audit, not repair closure
 
-## Latest dispatch candidate (2026-10-20,09:34 UTC)
+## Latest dispatch candidate (2026-10-20,09:32 UTC)
 
 Permanent `ContentValueDispatchTests.cpp` adds nine native counterparts of the
 genuine18 value controls. Before:fivePASS/fourFAIL; combined with the previous19
@@ -25,7 +25,10 @@ pre-existing unused renderer parameters stopped it. That log remains. The helper
 now uses the actual production compile_commands flags for that TU and retains
 Wall/Wextra/Werror for both new test TUs; this successful build emits no warnings.
 No canonical build/full regression or087 closure is claimed yet. Sanitizers are
-running separately; manager fallback011 and by-value resource ownership remain
+now also pass28/28 (actual ContentReader TU plus new tests, ASan/UBSan/leak checks,
+prefix `repair-content-dispatch-complete-sanitizer-split-policy`, errors[]);
+this is not a claim that all linked libraries were sanitized.
+Manager fallback011 and by-value resource ownership remain
 independently unresolved. Existing by-value reference wrappers retain their
 C++ value-carrier semantics, not a fabricated managed ReferenceEquals identity.
 
