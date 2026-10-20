@@ -1,5 +1,27 @@
 # Next content-runtime batch: source audit, not repair closure
 
+## Refreshed ownership baseline after ISSUE-057 (2026-10-21)
+
+On CNA `31a580d2eb51794824499638609e113a95670901` (staging source repair
+`83e611fe1e1196e63ccc708d2aada80e8addf512`) and demos
+`af858e41d4c8756096fc00874913802714413c0f`, driver42827 completes its baseline
+audit successfully. Both original permanent test sources and the genuine XNA
+oracle remain byte-identical to demos005899e9. Strict C++23/Wall/Wextra/Werror
+compilation against current canonical native libraries passes in5384ms with no
+diagnostics; actual native run exits1 in242ms, preserved as the reproduced failure.
+All14 cases give3PASS/11FAIL, with all50 failure messages exactly matching the
+retained ten-manager/four-texture XML baselines. No new failure, disappearing
+assertion, altered source or reinterpretation of the result is accepted.
+
+The driver also verifies the current native/source freeze before and after,
+including the affected ownership headers/implementations, and uses one compiler
+worker/shared ccache. Scope peak503,635,968 bytes,zero high/max/OOM. Private
+OPENGLES3 is used for the texture cases; this is not an all-renderer or native
+Windows ownership pass. Reports: `build/linux-full/reports/repair-content-ownership-after057-before-*`.
+No ISSUE-011 production repair or closure yet. Continue with correct registration,
+value-wrapper ownership, nested/non-XNB acquisition and independent C-resource
+lifetimes below; a shared-pointer-only fallback is not sufficient to close011.
+
 ## Ownership integration audit (2026-10-21; no production edits)
 
 Read-only audit against CNA `fd97482067a289669699a90df60402a437a45e5f`, while

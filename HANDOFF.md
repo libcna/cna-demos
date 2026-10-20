@@ -12,6 +12,18 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+Active011 baseline after057: CNA31a580d2eb51794824499638609e113a95670901 /
+demosaf858e41d4c8756096fc00874913802714413c0f. Driver42827 COMPLETE0: strict
+current-library build5384ms/zero diagnostics; native14=3PASS/11FAIL,normal exit1
+retained,all50 failure messages exactly match original XML baselines. Both test
+sources and genuine oracle match005899e9; current native/affected-source hashes
+unchanged. Peak503,635,968 bytes,zero high/max/OOM. No live heavy job or011
+production edit. Reports repair-content-ownership-after057-before-*.
+Next: correct manager-owned disposal across reference/value/nested/non-XNB routes,
+preserving explicit-recorder and independent C-handle lifetimes. Read
+RUNTIME_OWNERSHIP_TRIAGE.md and CNA's current handoff before choosing the ownership
+implementation.93FINAL/62PENDING unchanged;057 below remains fully validated.
+
 Current repair phase F, latest completed checkpoint ISSUE-057 (2026-10-21).
 CNA source83e611fe1e1196e63ccc708d2aada80e8addf512; demos parentf1140ccdeee7da3f2a503c53ce6f303d796cf01b,
 with057 fixtures/permanent closure committed separately here. Inventory155:

@@ -1171,6 +1171,14 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-011 -- `ContentManager::Unload` does not dispose loaded assets
 
+- **Refreshed baseline after057 (2026-10-21; still open):** CNA31a580d2e/demosaf858e4
+  reproduce all14 original ownership cases as3PASS/11FAIL, including the exact50
+  earlier failed assertions. Both permanent test sources and the genuine oracle
+  are unchanged from005899e9; strict current-library build passes with no diagnostics,
+  native exit1 is preserved, all frozen hashes match. Scope peak503,635,968 bytes,
+  zero OOM; no ownership production patch or weakened assertion. See
+  [current ownership evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
+
 - **Campaign oracle correction (2026-10-20; still open):** the short-input branch
   of `read_asset_ownership` now catches exact ContentLoadException at ReadAsset,
   as measured in genuine XNA91 and repaired by045. The reader-name, stream lifetime,
