@@ -17,6 +17,15 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+109 current jobs:95074 native full10798 (canonical35 alreadyPASS),8261 external
+post-metadata146 then both719/math95/six visuals/CTest. Initial146 exact69PASS/
+four knownFAIL per renderer; model29/29 with all inputs/controls retained under
+one stronger exact-exception oracle. Native542/external229/metadata builds clean.
+Only verified109 restriction sentence removed; issue remains open. Freeze native
+four artifacts/two sources and external319/three sources for these gates.
+Runtime/test and demo/evidence edits remain uncommitted; previous five-ID closure
+is CNAfe59ea861/demosd566696 (90FINAL/65PENDING), not proof of109.
+
 XML/content final74592 COMPLETE0:CTest684PASS/48 sameSKIP/three disabled887.44s,
 319 hashes exact. Both719/math95/six zero-pixel visuals/native10791/Sharp18158
 gates pass their complete comparisons.039/043/045/103/148 now FIXED_VALIDATED;

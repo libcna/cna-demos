@@ -22,6 +22,7 @@
 #include "CNA/Content/Cnb/CnbTextureCodec.hpp"
 #include "CNA/Content/Cnb/CnbWriter.hpp"
 #include "CNA/Content/Pipeline/ModelContentPipeline.hpp"
+#include "Microsoft/Xna/Framework/Content/ContentLoadException.hpp"
 #include "Microsoft/Xna/Framework/TitleLocation.hpp"
 
 namespace Cnb = CNA::Content::Cnb;
@@ -713,46 +714,42 @@ namespace
                       }),
                   "the decoder refuses wrong identity/version and missing or duplicate mandatory tables");
 
-        const auto encoderEmitsDecoderRefused = [&](const auto& corrupt)
+        const auto encoderRefusesInvalid = [&](const auto& corrupt)
         {
             Cnb::CnbModelData candidate = complete;
             corrupt(candidate);
             try
             {
-                const auto bytes = Cnb::EncodeModelToCnb(candidate, "Models/invalid");
-                return Refuses([&]
-                {
-                    (void)Cnb::DecodeModelFromCnb(
-                        Cnb::CnbDocument::Parse(bytes, "encoder-produced invalid Model CNB"));
-                });
-            }
-            catch (const std::exception&)
-            {
+                (void)Cnb::EncodeModelToCnb(candidate, "Models/invalid");
                 return false;
+            }
+            catch (const Microsoft::Xna::Framework::Content::ContentLoadException&)
+            {
+                return true;
             }
         };
         ctx.Check(
-            encoderEmitsDecoderRefused([](Cnb::CnbModelData& value)
+            encoderRefusesInvalid([](Cnb::CnbModelData& value)
             {
                 value.bones[0].parent = -2;
             }) &&
-            encoderEmitsDecoderRefused([](Cnb::CnbModelData& value)
+            encoderRefusesInvalid([](Cnb::CnbModelData& value)
             {
                 value.meshes[0].parentBone = -2;
             }) &&
-            encoderEmitsDecoderRefused([](Cnb::CnbModelData& value)
+            encoderRefusesInvalid([](Cnb::CnbModelData& value)
             {
                 value.parts[0].indexBytes[0] = 3u;
             }) &&
-            encoderEmitsDecoderRefused([](Cnb::CnbModelData& value)
+            encoderRefusesInvalid([](Cnb::CnbModelData& value)
             {
                 value.parts[0].material.alphaMode = 3u;
             }) &&
-            encoderEmitsDecoderRefused([](Cnb::CnbModelData& value)
+            encoderRefusesInvalid([](Cnb::CnbModelData& value)
             {
                 value.parts[0].material.textureCoordinateSets[0] = 2u;
             }),
-            "the encoder currently emits five Model values its decoder refuses (CNA-DEMOS-ISSUE-109)");
+            "the encoder refuses all five invalid Model values before producing a container");
 
         const std::filesystem::path cnjRoot = std::filesystem::temp_directory_path() /
             ("cna-demos-model-front-end-" +
@@ -876,5 +873,5 @@ CNA_DEMOS_CONSOLE(ModelPipelineContract, {
              "CNA::Content::Cnb::DecodeTexture2DFromCnb"},
     .tags = {"content", "pipeline", "model", "gltf", "generated", "texture", "cnaext"},
     .assets = {"models/loose_textured_crate.gltf", "models/loose_slide_rig.gltf"},
-    .restrictions = "CNA-DEMOS-ISSUE-109: EncodeModelToCnb can emit some invalid parent, index and material values that DecodeModelFromCnb refuses. Headless CPU conversion and exact canonical/container checks. Representative relationship and schema refusals are covered; arbitrary malformed-container fuzzing remains CNA test-suite work. Existing graphics.model demos own GPU upload, rendering, animation and visual evidence; no screenshot or genuine-XNA execution is claimed.",
+    .restrictions = "Headless CPU conversion and exact canonical/container checks. Representative relationship and schema refusals are covered; arbitrary malformed-container fuzzing remains CNA test-suite work. Existing graphics.model demos own GPU upload, rendering, animation and visual evidence; no screenshot or genuine-XNA execution is claimed.",
 })

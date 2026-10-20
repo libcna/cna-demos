@@ -209,6 +209,17 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-109 -- Model encoder emits values its paired decoder refuses
 
+- **Campaign verification (2026-10-20; still open):** seven added native boundary
+  cases fail against the current stable encoder while all28 original codec cases
+  pass. The localized candidate gives35/35 normally and with actual-TU
+  ASan/UBSan/leak checks. Native/external builds are warning-free; both73 content
+  focus runs retain69PASS/four knownFAIL, and the model demo passes29/29 with the
+  same five invalid inputs now requiring exact encoder ContentLoadException.
+  Every other control remains. The obsolete restriction was removed only after
+  those canonical passes. Full native/external gates are running; no closure or
+  committed runtime repair is claimed yet. See
+  [current validation](repair-evidence/content/MODEL_ENCODER_VALIDATION.md).
+
 - **Area/API:** `CNA::Content::Cnb::EncodeModelToCnb` and `DecodeModelFromCnb`, schema 1.
 - **Demo/reproduction:** run `content.model.pipeline_contract`. The demo first round-trips a
   complete valid `CnbModelData`, then makes five independent copies and changes exactly one public
