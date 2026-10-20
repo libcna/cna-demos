@@ -339,25 +339,23 @@ int main()
         check(embeddedBomRejected,
               "an in-memory UTF-8 BOM before the XML declaration is refused (CNA-DEMOS-ISSUE-148)");
 
-        bool nullRootReadRejected = false;
-        bool nullRootReadUsesXnaException = false;
+        // ISSUE-149: the historical XNA oracle wrapped Deserialize AND Serialize in
+        // one catch. Fresh IntermediateEnvelopeOracle proves only the latter rejects null.
+        bool nullRootReadCompleted = false;
+        bool nullRootReadReturnedNull = false;
         try
         {
-            (void)DeserializeEncounter("<XnaContent><Asset Null=\"true\" /></XnaContent>");
+            const auto nullRoot = DeserializeEncounter("<XnaContent><Asset Null=\"true\" /></XnaContent>");
+            nullRootReadCompleted = true;
+            nullRootReadReturnedNull = nullRoot == nullptr;
         }
-        catch (const System::ArgumentNullException& error)
+        catch (const std::exception& error)
         {
-            nullRootReadRejected = nullRootReadUsesXnaException = true;
-            std::cout << "Null root read refusal: " << error.what() << '\n';
+            std::cout << "Unexpected null root read refusal: " << error.what() << '\n';
         }
-        catch (const InvalidContentException& error)
-        {
-            nullRootReadRejected = true;
-            std::cout << "Null root read refusal: " << error.what() << '\n';
-        }
-        check(nullRootReadRejected, "a null Asset root is refused");
-        check(nullRootReadUsesXnaException,
-              "a null Asset root reports XNA's ArgumentNullException (CNA-DEMOS-ISSUE-149)");
+        check(nullRootReadCompleted, "reading a null Asset root completes without an exception");
+        check(nullRootReadReturnedNull,
+              "a null Asset root returns XNA's null reference (CNA-DEMOS-ISSUE-149)");
 
         bool nullRootWriteUsesXnaException = false;
         try

@@ -122,3 +122,20 @@ Full native content baseline:504 tests/117 suites in1306.990s,497PASS/one existi
 XACT fixture SKIP/exactly six new expected failures (four146, two149). No other
 failure. Reports `repair-content-native-before*`. Only after this run completed
 were dictionary/null runtime repairs applied; full post-fix validation is pending.
+
+Post-fix native focus now passes19/19 (735ms): dictionary tests, entire intermediate
+corpus and hardening. The first18/19 result exposed a diagnostic-format distinction:
+existing Sharp Serialize(null) uses modern .NET's `(Parameter 'value')`, while the
+Framework4 corpus uses a separate `Parameter name: value` line. Both exact forms
+are now pinned alongside exception type, parameter and timing; no runtime or golden
+message was rewritten. The original failed log remains. Native full504 regression
+and actual-production-TU sanitizers are running. The demo's two null-root read
+assertions now require successful completion and a null result, preserving count
+and independent write rejection; external rebuilding waits for storage CTest.
+
+Sharp repair af1b0bea is committed; full dependency gate passes18146/18146 across
+41 executables, zero failures/skips. Watcher TEST-only synchronization is separate
+e0601cd2; the two stress-only rename findings above remain unresolved. An invocation
+missing supported XNA_SAMPLES_ROOT produced five fixture skips; it is retained as
+*-components-missing-fixtures.log, and the complete final gate uses the original
+linked sample fixtures and isolated original Yacht service.
