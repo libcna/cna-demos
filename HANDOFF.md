@@ -12,10 +12,19 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
-Current repair phase F (2026-10-20): all155 historical IDs retained,77 final/78
+Current repair phase F (2026-10-20): all155 historical IDs retained,83 final/72
 pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
+
+14:28 UTC: six IDs013/014/105/106/108/110 close on complete combined proof; all155
+historical bodies preserved.24685 final exit1 solely original C-root residual;
+CTest684PASS/48 sameSKIP/three disabled599.13s,319 hashes exact. See checkpoint
+ROOTS_BOUNDARIES_CHECKPOINT.md.001 external configuration gate remains pending.
+016 actual separate relink (only first file-first workaround removed) reproduces
+6461 strong duplicates/1725 Graphics and shutdown SIGABRT; tiny generic fixture
+did not reproduce and is retained as incomplete minimization. No016 repair yet.
+Next commit closure, external001 rebuild, continue shared/static topology repair.
 
 14:19 UTC: both719 full sweeps exact locally (SOFTWARE625/43/48/3,GLES664/45/7/3),
 only original C-root residual.24685 serial CTest underway,319 frozen artifacts match.

@@ -244,29 +244,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   and `7a2cfc151a43ead9fc54e24ff18133dfc76d095a00e38836da0c2fa6b2220464`.
   No CNA source was modified and no upstream message was sent.
 
-### CNA-DEMOS-ISSUE-110 -- Direct uncompressed-chunk helper bypasses its size contract
-
-- **Area/API:** `CNA::Content::Cnb::DecompressCnbChunk` with
-  `CnbCompression::None`.
-- **Demo/reproduction:** run `content.custom.cnb_read_limits`. The passing diagnostic supplies
-  4096 stored bytes, declares 4097 uncompressed bytes, sets the maximum uncompressed size to one
-  byte, and calls the public helper directly.
-- **Observed:** the helper returns a 4096-byte copy successfully. Its `None` branch returns before
-  comparing the declared size with the stored size or checking the configured ceiling.
-- **Expected/contract:** the public header says the input must expand to exactly
-  `uncompressedSize`, that this attacker-controlled value is checked against
-  `maxUncompressedSize` before allocation, and that either violation throws
-  `ContentLoadException`. Those requirements should apply to the no-compression path too.
-- **Scope/status:** `CnbDocument` first enforces equal stored/logical sizes and all configured
-  limits while validating its table of contents, and it does not call the helper for uncompressed
-  chunks. Ordinary container parsing therefore remains bounded. A direct caller can nevertheless
-  get a second copy larger than its stated ceiling, contrary to the public helper contract. The
-  exact header/implementation excerpt is
-  `/tmp/checkpoint-979-cnb-infrastructure/decompress-contract-and-source.txt`, SHA-256
-  `994a2ae3717617eb1f5b8c101fada0e70f70dad5e06d734028a44951b5f74615`. Open against clean
-  isolated CNA `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA source was modified and no upstream
-  message was sent. The issue is a passing diagnostic rather than a runtime `knownIssue` marker.
-
 ### CNA-DEMOS-ISSUE-109 -- Model encoder emits values its paired decoder refuses
 
 - **Area/API:** `CNA::Content::Cnb::EncodeModelToCnb` and `DecodeModelFromCnb`, schema 1.
@@ -297,88 +274,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   is recorded as a passing diagnostic control rather than an expected demo failure. Open against
   clean isolated CNA `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA source was modified,
   no upstream message was sent, and no malformed file from outside the public encoder is needed.
-
-### CNA-DEMOS-ISSUE-108 -- Character-region expansion silently ignores an inverted range
-
-- **Area/API:** `CNA::Content::Pipeline::ExpandCharacterRegions`, declared in
-  `SpriteFontContentPipeline.hpp`.
-- **Demo/reproduction:** run `content.sprite_font.pipeline_contract`. The standalone build-time
-  demo parses a valid `.spritefont`, then copies the public `FontDescription` value and replaces
-  its regions with the directly constructible `FontCharacterRegion{u'Z', u'A'}`, clears the
-  unrelated fallback character, and calls `ExpandCharacterRegions`.
-- **Observed:** expansion returns an empty vector. Its unsigned loop starts at `Z`, tests it
-  against the smaller `A`, and performs no iteration. The XML parser rejects the same ordering,
-  but the public expansion function accepts a `FontDescription` assembled by any caller.
-- **Expected/contract:** the public declaration explicitly documents a `std::runtime_error` for
-  an inverted region. The function should validate every public input region before expanding it,
-  independent of whether that value originated in the built-in XML parser.
-- **Scope/status:** the passing demo labels and asserts the exact current behavior so the rest of
-  the 44-declaration source-pipeline audit remains executable; its metadata names this issue rather
-  than hiding the discrepancy. Malformed XML and a character set above the 8192-glyph limit are
-  separately refused as documented. Open against clean isolated CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA source was modified, no upstream message was
-  sent, and no genuine-XNA behavior is claimed for direct construction of CNA's extension type.
-
-### CNA-DEMOS-ISSUE-106 -- Pre-built content compiler reports every service option as an FX option
-
-- **Area/API:** `CNA::Content::Pipeline::ContentCompilerOptions` and the pre-built-registry
-  `RunContentCompiler` overload.
-- **Demo/reproduction:** run `content.custom.incremental_compiler`. It first supplies a configured
-  registry with `--fx-compiler`, then repeats the same build with only
-  `--xma-encoder unused-encoder`. Both calls are captured before source discovery and enter no
-  importer, processor or writer.
-- **Observed:** both correctly return command-line status 2 and direct the caller to the
-  `ContentPipelineRegistryFactory` overload. The XMA-only call nevertheless says only that
-  `--fx-compiler and --fx-compiler-launcher` select a build-time service and never names XMA.
-  Source review shows the same hard-coded diagnostic is also used when `fontDirectories` or
-  `buildConfiguration` make the options non-default.
-- **Expected:** the refusal should name the supplied option, or generically name every
-  registry-affecting service/configuration option. A caller selecting an XMA encoder, font search
-  directory or build configuration should not be told that they selected an FX compiler.
-- **Cause observed in source:** the overload compares `ContentCompilerOptions` with its defaults.
-  Its equality operator intentionally includes effect and XMA executable/launcher settings, XMA
-  arguments, font directories and build configuration while excluding coordinator-owned XNB
-  container settings. The failure text was written only for the original two FX fields and was
-  not broadened with the public options structure.
-- **Scope/status:** the refusal itself is correct and prevents silent option loss; this is a
-  user-facing diagnostic/documentation defect, so the demo records it in a passing observation
-  rather than becoming an expected-failure demo. Open against clean isolated CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`. Relevant public contract and implementation are in
-  `/tmp/checkpoint-960-compiler-options-source.txt`, SHA-256
-  `cc2385482db71984b5d78ef6171bb06381a59ce6b7537eab442364e30d258c15`; direct stderr is retained
-  in `/tmp/checkpoint-960-compiler-options.err`. No CNA source was modified and no upstream
-  message was sent.
-
-### CNA-DEMOS-ISSUE-105 -- A sole named-only importer becomes the convention route
-
-- **Area/API:** `CNA::Content::Pipeline::ContentImporter::SelectedByNameOnly` and
-  `ContentPipelineRegistry::ResolveImporter`.
-- **Demo/reproduction:** run `content.sound_effect.pipeline_components`. Register the built-in
-  SoundEffect pipeline with a compressed decoder, then resolve an `.mp3` without an explicit
-  importer name. `CompressedSoundImporter` is the only component declaring that extension and its
-  public `SelectedByNameOnly()` result is true. The demo separately proves that the same component
-  resolves and builds successfully when explicitly named.
-- **Observed:** default resolution returns `CNA.CompressedSoundImporter` instead of reporting that
-  no ordinary importer is available. Fourteen other controls pass, including the descriptor
-  contract, the complete real-WAV route, deterministic CNB output, contextual parameter failure,
-  explicit compressed callback success, and missing/unsuccessful decoder failures. The final
-  named-only exclusion control fails under the renderer-independent pipeline code.
-- **Expected/contract:** the base-class documentation says a named-only importer is left out of
-  default resolution, still runs when a build names it, and never becomes the answer to which
-  importer reads an extension on its own. `CompressedSoundImporter` documents the same rule so a
-  convention build of compressed audio remains on its ordinary song route.
-- **Cause observed in source:** `ResolveImporter` filters `SelectedByNameOnly()` candidates only
-  when more than one importer declares the extension. With exactly one candidate it forwards an
-  empty explicit name to the generic route resolver, which selects that sole candidate without
-  consulting `SelectedByNameOnly()`. The equivalent processor resolver has the same conditional
-  shape and should be audited with the repair.
-- **Suggested repair:** always form the eligible default candidate set by excluding named-only
-  components, then require exactly one eligible candidate. Preserve explicit-name resolution.
-- **Evidence/status:** open against clean isolated CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`. Contract and implementation excerpts are
-  `/tmp/checkpoint-951-named-only-importer-source.txt`, SHA-256
-  `eac283ca9615ae578d490836551e7bb8a768c0679bed6de952db2863339bc38d`. No CNA source was
-  modified, no upstream message was sent, and the demo names this issue as an expected failure.
 
 ### CNA-DEMOS-ISSUE-104 -- STUB does not provide the promised WarnAndStub Texture3D null object
 
@@ -1590,41 +1485,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   only failed control remains this issue. Both renderer selections report20/21 and the expected
   SOFTWARE CTest passes. Evidence:`/tmp/checkpoint-758-read-asset-*`.
 
-### CNA-DEMOS-ISSUE-013 -- The content manifest lists the content pipeline's bookkeeping files
-
-- **Area:** content -- `ContentManager::GetContentManifest()` (CNAEXT) reports
-  `.cna-content` (`.lock`) and `.cna-content-manifest` (`.json`), the files `cna-content` writes
-  into every output directory, as if they were assets.
-- **Demo:** `content.content_manager.manifest` prints them (and says so in a comment).
-- **Expected:** only loadable assets; tools that walk the manifest (mod loaders, content checks)
-  otherwise have to know and filter CNA's internal file names.
-- **Environment:** CNA 0.1.0, Linux.
-- **Status:** open (low impact); not reported upstream yet.
-
-### CNA-DEMOS-ISSUE-014 -- Before the platform exists, the content root is the working directory
-
-- **Area:** content -- `ContentManager::TitleRootedDirectory()` resolves a relative
-  `RootDirectory` against the title path, else against the current platform's base path -- but
-  only if a platform already exists (`HasCurrentPlatform()`); otherwise against the working
-  directory. Nothing creates the platform until some call needs it (the first `Load` does, as a
-  side effect).
-- **Found by:** `content.content_manager.manifest`, first written as a console demo, which passed
-  when started from `bin/` and failed under CTest (another working directory). It is now a Game
-  demo, the context where a platform always exists.
-- **Reproduction (console program started from another directory):**
-  ```cpp
-  ContentManager content(nullptr, "assets");
-  content.GetContentManifest().size();      // 0 -- scanned <cwd>/assets
-  (void)content.Load<Curve>("curves/bounce"); // works; creates the platform
-  content.RefreshContentManifest();
-  content.GetContentManifest().size();      // 21 -- now <executable dir>/assets
-  ```
-- **Expected:** the same root for every call, independent of call order -- XNA resolves content
-  under `TitleContainer`/`TitleLocation.Path` (CNA's own comment says so) regardless of what ran
-  before. Tools and tests that use a `ContentManager` without a `Game` are affected.
-- **Environment:** CNA 0.1.0, GCC 14.2, Linux.
-- **Status:** open (low impact); not reported upstream yet.
-
 ### CNA-DEMOS-ISSUE-015 -- `Song::FromUri` resolves a relative path against the working directory
 
 - **Area:** media -- `Song::FromUri` (`Song.cpp`) uses a scheme-less path as it is, so a relative
@@ -2481,6 +2341,201 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-013 -- The content manifest lists the content pipeline's bookkeeping files
+
+- **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `bbe2bda7b`; demo regression `1f8ae67`.
+  Manifest scans exclude exact pipeline bookkeeping at every depth while preserving legitimate hidden files, prefix lookalikes and snapshot semantics.
+  16 public/eight native manifest checks pass normally and with focused ASan/UBSan/leak detection.
+  Native gates,146 content/354 C API focused cases, both719 renderer sweeps, six exact
+  visuals and732 enabled CTests satisfy their exact local comparisons. Original C API
+  RootDirectory conflict remains explicit: this is not a globally green checkpoint.
+  Linux SDL/SOFTWARE/OPENGLES3 runtime coverage only; other platforms are not claimed.
+  Historical evidence follows. See [validated checkpoint](repair-evidence/content/ROOTS_BOUNDARIES_CHECKPOINT.md).
+
+- **Area:** content -- `ContentManager::GetContentManifest()` (CNAEXT) reports
+  `.cna-content` (`.lock`) and `.cna-content-manifest` (`.json`), the files `cna-content` writes
+  into every output directory, as if they were assets.
+- **Demo:** `content.content_manager.manifest` prints them (and says so in a comment).
+- **Expected:** only loadable assets; tools that walk the manifest (mod loaders, content checks)
+  otherwise have to know and filter CNA's internal file names.
+- **Environment:** CNA 0.1.0, Linux.
+- **Status:** open (low impact); not reported upstream yet.
+
+### CNA-DEMOS-ISSUE-014 -- Before the platform exists, the content root is the working directory
+
+- **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `bbe2bda7b`; demo regression `1f8ae67`.
+  Cold relative-root resolution initializes the platform filesystem lazily and no longer depends on prior title lookup; absolute-root and explicit-title controls remain intact.
+  12 public/one fresh-process native cold-root checks pass normally and with focused ASan/UBSan/leak detection.
+  Native gates,146 content/354 C API focused cases, both719 renderer sweeps, six exact
+  visuals and732 enabled CTests satisfy their exact local comparisons. Original C API
+  RootDirectory conflict remains explicit: this is not a globally green checkpoint.
+  Linux SDL/SOFTWARE/OPENGLES3 runtime coverage only; other platforms are not claimed.
+  Historical evidence follows. See [validated checkpoint](repair-evidence/content/ROOTS_BOUNDARIES_CHECKPOINT.md).
+
+- **Area:** content -- `ContentManager::TitleRootedDirectory()` resolves a relative
+  `RootDirectory` against the title path, else against the current platform's base path -- but
+  only if a platform already exists (`HasCurrentPlatform()`); otherwise against the working
+  directory. Nothing creates the platform until some call needs it (the first `Load` does, as a
+  side effect).
+- **Found by:** `content.content_manager.manifest`, first written as a console demo, which passed
+  when started from `bin/` and failed under CTest (another working directory). It is now a Game
+  demo, the context where a platform always exists.
+- **Reproduction (console program started from another directory):**
+  ```cpp
+  ContentManager content(nullptr, "assets");
+  content.GetContentManifest().size();      // 0 -- scanned <cwd>/assets
+  (void)content.Load<Curve>("curves/bounce"); // works; creates the platform
+  content.RefreshContentManifest();
+  content.GetContentManifest().size();      // 21 -- now <executable dir>/assets
+  ```
+- **Expected:** the same root for every call, independent of call order -- XNA resolves content
+  under `TitleContainer`/`TitleLocation.Path` (CNA's own comment says so) regardless of what ran
+  before. Tools and tests that use a `ContentManager` without a `Game` are affected.
+- **Environment:** CNA 0.1.0, GCC 14.2, Linux.
+- **Status:** open (low impact); not reported upstream yet.
+
+### CNA-DEMOS-ISSUE-105 -- A sole named-only importer becomes the convention route
+
+- **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `1721b4182`; demo regression `34e530e`.
+  Default routes exclude named-only importer/processor candidates before selection; explicit names, writers and discovery retain their contracts.
+  25 public/23 native routing checks pass normally and with focused ASan/UBSan/leak detection.
+  Native gates,146 content/354 C API focused cases, both719 renderer sweeps, six exact
+  visuals and732 enabled CTests satisfy their exact local comparisons. Original C API
+  RootDirectory conflict remains explicit: this is not a globally green checkpoint.
+  Linux SDL/SOFTWARE/OPENGLES3 runtime coverage only; other platforms are not claimed.
+  Historical evidence follows. See [validated checkpoint](repair-evidence/content/ROOTS_BOUNDARIES_CHECKPOINT.md).
+
+- **Area/API:** `CNA::Content::Pipeline::ContentImporter::SelectedByNameOnly` and
+  `ContentPipelineRegistry::ResolveImporter`.
+- **Demo/reproduction:** run `content.sound_effect.pipeline_components`. Register the built-in
+  SoundEffect pipeline with a compressed decoder, then resolve an `.mp3` without an explicit
+  importer name. `CompressedSoundImporter` is the only component declaring that extension and its
+  public `SelectedByNameOnly()` result is true. The demo separately proves that the same component
+  resolves and builds successfully when explicitly named.
+- **Observed:** default resolution returns `CNA.CompressedSoundImporter` instead of reporting that
+  no ordinary importer is available. Fourteen other controls pass, including the descriptor
+  contract, the complete real-WAV route, deterministic CNB output, contextual parameter failure,
+  explicit compressed callback success, and missing/unsuccessful decoder failures. The final
+  named-only exclusion control fails under the renderer-independent pipeline code.
+- **Expected/contract:** the base-class documentation says a named-only importer is left out of
+  default resolution, still runs when a build names it, and never becomes the answer to which
+  importer reads an extension on its own. `CompressedSoundImporter` documents the same rule so a
+  convention build of compressed audio remains on its ordinary song route.
+- **Cause observed in source:** `ResolveImporter` filters `SelectedByNameOnly()` candidates only
+  when more than one importer declares the extension. With exactly one candidate it forwards an
+  empty explicit name to the generic route resolver, which selects that sole candidate without
+  consulting `SelectedByNameOnly()`. The equivalent processor resolver has the same conditional
+  shape and should be audited with the repair.
+- **Suggested repair:** always form the eligible default candidate set by excluding named-only
+  components, then require exactly one eligible candidate. Preserve explicit-name resolution.
+- **Evidence/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. Contract and implementation excerpts are
+  `/tmp/checkpoint-951-named-only-importer-source.txt`, SHA-256
+  `eac283ca9615ae578d490836551e7bb8a768c0679bed6de952db2863339bc38d`. No CNA source was
+  modified, no upstream message was sent, and the demo names this issue as an expected failure.
+
+### CNA-DEMOS-ISSUE-106 -- Pre-built content compiler reports every service option as an FX option
+
+- **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `2ce326907`; demo regression `34e530e`.
+  Pre-built compiler diagnostics and public comments name every registry-affecting option, without changing refusal status or timing.
+  21 public/three native option checks pass normally and with focused ASan/UBSan/leak detection.
+  Native gates,146 content/354 C API focused cases, both719 renderer sweeps, six exact
+  visuals and732 enabled CTests satisfy their exact local comparisons. Original C API
+  RootDirectory conflict remains explicit: this is not a globally green checkpoint.
+  Linux SDL/SOFTWARE/OPENGLES3 runtime coverage only; other platforms are not claimed.
+  Historical evidence follows. See [validated checkpoint](repair-evidence/content/ROOTS_BOUNDARIES_CHECKPOINT.md).
+
+- **Area/API:** `CNA::Content::Pipeline::ContentCompilerOptions` and the pre-built-registry
+  `RunContentCompiler` overload.
+- **Demo/reproduction:** run `content.custom.incremental_compiler`. It first supplies a configured
+  registry with `--fx-compiler`, then repeats the same build with only
+  `--xma-encoder unused-encoder`. Both calls are captured before source discovery and enter no
+  importer, processor or writer.
+- **Observed:** both correctly return command-line status 2 and direct the caller to the
+  `ContentPipelineRegistryFactory` overload. The XMA-only call nevertheless says only that
+  `--fx-compiler and --fx-compiler-launcher` select a build-time service and never names XMA.
+  Source review shows the same hard-coded diagnostic is also used when `fontDirectories` or
+  `buildConfiguration` make the options non-default.
+- **Expected:** the refusal should name the supplied option, or generically name every
+  registry-affecting service/configuration option. A caller selecting an XMA encoder, font search
+  directory or build configuration should not be told that they selected an FX compiler.
+- **Cause observed in source:** the overload compares `ContentCompilerOptions` with its defaults.
+  Its equality operator intentionally includes effect and XMA executable/launcher settings, XMA
+  arguments, font directories and build configuration while excluding coordinator-owned XNB
+  container settings. The failure text was written only for the original two FX fields and was
+  not broadened with the public options structure.
+- **Scope/status:** the refusal itself is correct and prevents silent option loss; this is a
+  user-facing diagnostic/documentation defect, so the demo records it in a passing observation
+  rather than becoming an expected-failure demo. Open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. Relevant public contract and implementation are in
+  `/tmp/checkpoint-960-compiler-options-source.txt`, SHA-256
+  `cc2385482db71984b5d78ef6171bb06381a59ce6b7537eab442364e30d258c15`; direct stderr is retained
+  in `/tmp/checkpoint-960-compiler-options.err`. No CNA source was modified and no upstream
+  message was sent.
+
+### CNA-DEMOS-ISSUE-108 -- Character-region expansion silently ignores an inverted range
+
+- **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `0d63ac853`; demo regression `34e530e`.
+  Direct character expansion refuses inverted ranges with documented runtime_error and preserves fallback, ordering and glyph ceilings.
+  12 public/eight native font checks pass normally and with focused ASan/UBSan/leak detection.
+  Native gates,146 content/354 C API focused cases, both719 renderer sweeps, six exact
+  visuals and732 enabled CTests satisfy their exact local comparisons. Original C API
+  RootDirectory conflict remains explicit: this is not a globally green checkpoint.
+  Linux SDL/SOFTWARE/OPENGLES3 runtime coverage only; other platforms are not claimed.
+  Historical evidence follows. See [validated checkpoint](repair-evidence/content/ROOTS_BOUNDARIES_CHECKPOINT.md).
+
+- **Area/API:** `CNA::Content::Pipeline::ExpandCharacterRegions`, declared in
+  `SpriteFontContentPipeline.hpp`.
+- **Demo/reproduction:** run `content.sprite_font.pipeline_contract`. The standalone build-time
+  demo parses a valid `.spritefont`, then copies the public `FontDescription` value and replaces
+  its regions with the directly constructible `FontCharacterRegion{u'Z', u'A'}`, clears the
+  unrelated fallback character, and calls `ExpandCharacterRegions`.
+- **Observed:** expansion returns an empty vector. Its unsigned loop starts at `Z`, tests it
+  against the smaller `A`, and performs no iteration. The XML parser rejects the same ordering,
+  but the public expansion function accepts a `FontDescription` assembled by any caller.
+- **Expected/contract:** the public declaration explicitly documents a `std::runtime_error` for
+  an inverted region. The function should validate every public input region before expanding it,
+  independent of whether that value originated in the built-in XML parser.
+- **Scope/status:** the passing demo labels and asserts the exact current behavior so the rest of
+  the 44-declaration source-pipeline audit remains executable; its metadata names this issue rather
+  than hiding the discrepancy. Malformed XML and a character set above the 8192-glyph limit are
+  separately refused as documented. Open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA source was modified, no upstream message was
+  sent, and no genuine-XNA behavior is claimed for direct construction of CNA's extension type.
+
+### CNA-DEMOS-ISSUE-110 -- Direct uncompressed-chunk helper bypasses its size contract
+
+- **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `2386155f2`; demo regression `34e530e`.
+  The C++ stored codec enforces exact declaration size and allocation ceilings. Adapter c57ecab8c preserves the deliberately different documented C ABI, including all25 original C demo controls.
+  11 public/15 native chunk, plus strict native C and original C demo checks pass normally and with focused ASan/UBSan/leak detection.
+  Native gates,146 content/354 C API focused cases, both719 renderer sweeps, six exact
+  visuals and732 enabled CTests satisfy their exact local comparisons. Original C API
+  RootDirectory conflict remains explicit: this is not a globally green checkpoint.
+  Linux SDL/SOFTWARE/OPENGLES3 runtime coverage only; other platforms are not claimed.
+  Historical evidence follows. See [validated checkpoint](repair-evidence/content/ROOTS_BOUNDARIES_CHECKPOINT.md).
+
+- **Area/API:** `CNA::Content::Cnb::DecompressCnbChunk` with
+  `CnbCompression::None`.
+- **Demo/reproduction:** run `content.custom.cnb_read_limits`. The passing diagnostic supplies
+  4096 stored bytes, declares 4097 uncompressed bytes, sets the maximum uncompressed size to one
+  byte, and calls the public helper directly.
+- **Observed:** the helper returns a 4096-byte copy successfully. Its `None` branch returns before
+  comparing the declared size with the stored size or checking the configured ceiling.
+- **Expected/contract:** the public header says the input must expand to exactly
+  `uncompressedSize`, that this attacker-controlled value is checked against
+  `maxUncompressedSize` before allocation, and that either violation throws
+  `ContentLoadException`. Those requirements should apply to the no-compression path too.
+- **Scope/status:** `CnbDocument` first enforces equal stored/logical sizes and all configured
+  limits while validating its table of contents, and it does not call the helper for uncompressed
+  chunks. Ordinary container parsing therefore remains bounded. A direct caller can nevertheless
+  get a second copy larger than its stated ceiling, contrary to the public helper contract. The
+  exact header/implementation excerpt is
+  `/tmp/checkpoint-979-cnb-infrastructure/decompress-contract-and-source.txt`, SHA-256
+  `994a2ae3717617eb1f5b8c101fada0e70f70dad5e06d734028a44951b5f74615`. Open against clean
+  isolated CNA `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA source was modified and no upstream
+  message was sent. The issue is a passing diagnostic rather than a runtime `knownIssue` marker.
+
 
 ### CNA-DEMOS-ISSUE-111 -- Direct XNA XNB writer ignores its build environment platform and profile
 
