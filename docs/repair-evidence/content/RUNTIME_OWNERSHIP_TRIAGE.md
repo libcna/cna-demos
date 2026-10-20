@@ -64,5 +64,12 @@ ownership back to the manager; truncated header/body failures instead become
 ContentLoadException. Source paths are under
 `../xna4-decomp/reference/xna4/decompiled/windows/Microsoft.Xna.Framework/`.
 
+The local FNA checkout at1358793096d556388be798d24dc3728b2abb10ff differs in
+these exact places: its RecordDisposable suppresses duplicate identities,
+RootDirectory is an unrestricted auto-property, and Unload lacks XNA's finally
+cleanup. CNA's owner policy says measured XNA wins. A future implementation must
+record these specific departures from FNA in the required CNA divergence log;
+do not substitute FNA's convenient deduplication for the measured35-check result.
+
 Next: add corresponding native before/after tests. Keep011,012,039,
 043,045 and087 open until their own repairs and full relevant gates finish.
