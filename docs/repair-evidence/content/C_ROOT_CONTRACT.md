@@ -64,3 +64,16 @@ No issue is closed or known-issue marker removed at this focused checkpoint.
 The canonical external rebuild and full regression must follow the completion
 of the frozen ISSUE-016 sweep. That sweep still records the previous C contract
 residual; it is not retroactively relabeled green.
+
+## Canonical follow-up
+
+After ISSUE-016 completed, the full external rebuild and marker rebuild passed.
+The actual registered C demo now passes67/67 on SOFTWARE and OPENGLES3, before
+and after removal of marker103 in `aab4bf3`. Every label exactly matches the
+already audited 67-check candidate. The C++ cache/root scenario retains5/5.
+Contract/source correction commits are CNA `124281bff` and demos `dab9d4f`.
+Reports: `repair-xml-substrate-focused{,-markers}-audit.json`.
+
+The full XML/C-root combined checkpoint is running. It requires the old C-root
+residual to disappear, not become an allowed difference. Historical039/103 remain
+open until this combined regression completes.
