@@ -12,10 +12,114 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+Current repair phase F, latest completed checkpoint ISSUE-057 (2026-10-21).
+CNA source83e611fe1e1196e63ccc708d2aada80e8addf512; demos parentf1140ccdeee7da3f2a503c53ce6f303d796cf01b,
+with057 fixtures/permanent closure committed separately here. Inventory155:
+93FINAL/62PENDING. ISSUE-057 is RESOLVED/FIXED_VALIDATED; all historical IDs and
+descriptions remain. No runtime knownIssue marker existed for057 or was removed.
+
+Native10807=10706PASS/101sameSKIP; all old outcomes plus three new PASS preserved.
+Canonical/external builds zero diagnostics,context11/host6/native focus133PASS/one
+sameSKIP/external focus146 exact. External29991 COMPLETE0,18 stages: both719
+renderer sweeps unchanged from047 (SW628/40/48/3,GLES667/42/7/3),both95 math,
+six pixel-exact visuals,CTest684PASS/48sameSKIP/three disabled,714.32s,319 hashes
+exact. Peak359,165,952 bytes,zero high/max/OOM. Actual-header ASan/UBSan/leak
+concurrent1000-owner probe and new sequential1000 exact cleanups pass; both
+original historical probe sources remain unchanged. Linux15/Wine14 available
+process controls and seven unprivileged permission controls pass. Wine native
+symlink creation unavailable,not passed;no native Windows/macOS/network-FS claim.
+Closure15171 COMPLETE0:352 unique current files,10807 native XML outcomes,
+all comparisons and six exact visuals verified;errors[]. No live heavy job.
+Post-closure catalog/validation CTests pass3/3 in7.30s. All155 unique IDs and
+the complete historical057 body are retained; other154 matrix/issue records unchanged.
+
+Next: record this demos closure revision in CNA's handoff/status commit, then run
+build-probe/repair-content-ownership-after057-before.mjs serially on the bounded
+private native runner. Preserve14 original ownership regressions (expected
+3PASS/11FAIL) and exact failure messages. Continue the correct manager/C-handle/
+nested-resource ownership repair from RUNTIME_OWNERSHIP_TRIAGE.md.131 is reserved
+to the owner;152 remains actionable. No push/merge;full goal remains active.
+
+### Retained pre-closure chronology (superseded)
+
+The running/candidate statements below are historical; the checkpoint above and
+CNA's current handoff are authoritative. Do not restart completed gates.
+
 Current repair phase F (2026-10-21): all155 historical IDs retained,92 final/63
 pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
+
+Active057 candidate (uncommitted,not closed): a persistent empty parent coordination
+file protects only staging lifecycle transitions with an OS lock. Existing scavenger
+body/safety diagnostics unchanged; three native regression cases and new independent
+process/permission fixtures added. Native process v2 passes15 controls; MinGW32/Wine
+passes14 available controls, explicitly lacking native symlink creation (Function
+not implemented), not a native Windows pass. Canonical build12564 COMPLETE0 with
+zero diagnostics; focus53714 COMPLETE0:133PASS/one sameSKIP, context11/11,real host6/6.
+Auxiliary54210 COMPLETE0: original unchanged1000-owner probe under ASan/UBSan/leak
+now has zero diagnostics; seven unprivileged permission controls pass. Private
+parents retain exactly the documented empty coordination file until their harness
+has verified all child processes exited, then remove only that owned exact file.
+No arbitrary-leftover or warning suppression. All original probes remain unchanged.
+
+Full native60712 COMPLETE0:10807=10706PASS/101sameSKIP,1,224,981ms;
+all10804 prior results unchanged+three PASS,independent XML/frozen hashes match.
+Peak1,117,966,336 bytes,zero high/max/OOM. External build17134 COMPLETE0:
+10,073ms,zero diagnostics/errors,one worker,peak1,605,029,888 bytes,zero high/max/OOM.
+Focus12011 COMPLETE0:146 content scenarios (73 each),zero result/check/knownIssue/
+failed-assertion differences versus047,all36 standalone labels retained;
+peak208,023,552 bytes. RUNNING29991:full external18-stage regression,private
+display,6GiB scope,alone. Poll29991; sources/artifacts including public pipeline
+docs remain frozen. It compares against047, expecting zero
+status/knownIssue/check/failed-assertion changes. Adapted external drivers pin the
+current hashes/cleanup; do not blindly rerun047's historical drivers. Reports repair-staging-lifecycle-*;
+exact commands and next task are in CNA's active057 checkpoint. Current committed
+heads CNAfd9748206/demosf1140cc; candidate/helper/tests/fixtures are uncommitted.
+Demos6d4659d independently commits only the read-only ISSUE-011 integration audit
+in docs/repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md. No011 runtime change
+or closure;057 was prepared on16931a6 and all frozen runtime hashes remain unchanged.
+Demosf1140cc adds the verified direct-font-atlas and borrowed-model GPU paths plus
+existing real-pixel C lifetime coverage to that same read-only011 audit. Neither
+documentation commit changes production code or the057 validation snapshot.
+No issue closure/source commit/push. Totals92FINAL/63PENDING.
+Live29991 partial checkpoint: SOFTWARE719 complete628PASS/40knownFAIL/48SKIP/
+three manual in651,572ms,exact047 and original-baseline comparisons accepted.
+All36 standalone labels retained. Both95 math sweeps and six pixel-exact visuals
+pass. OPENGLES3 full719 also accepted667PASS/42knownFAIL/7SKIP/three manual in
+284,357ms,exact047/original-baseline comparison errors[].319 artifact hashes
+match after full sweeps and before CTest.29991 now runs final serial CTest;
+18-stage summary/independent closure remain pending. All155 permanent IDs retained;
+read-only matrix comparison confirms only057 differs,other154 unchanged.
+Before closure, run newly prepared build-probe/repair-staging-sequential.mjs after
+29991 is terminal/accepted. New permanent ContentStagingSequentialLifecycleProbe.cpp
+preserves the old1000-owner active/recent/closed-scan controls and demands exactly
+the documented safe coordination file after every lifecycle. Historical sequential
+fixture remains unchanged, not claimed passing the new housekeeping contract.
+The new control will run actual-header ASan/UBSan/leak under bounded unprivileged
+serial execution; closure auditor now requires its successful audit and hashes.
+Both drivers syntax-check; this additional control has NOT yet been built or run.
+External drivers: build-probe/repair-staging-external-build.mjs (complete17134)
+then repair-staging-demo-focused.mjs (complete12011), each requiring the prior
+accepted gate. Full continuation driver repair-staging-full-gates.mjs is live29991;
+repair-staging-closure-audit.mjs is prepared and syntax-checked, NOT RUN.
+The full gate requires all prior accepted gates; closure independently verifies
+the unchanged scanner, original reproduction, new process/permission controls,
+all native outcomes, external regressions and current artifact/source hashes.
+Native/full, external/build and focused-demo audits are accepted. Do not rerun those completed
+gates from the historical live-job descriptions retained below.
+Read-only host measurement: Codex PID3439242 RSS320856KiB,22GiB available;
+test scope current477769728/peak1117966336 bytes,MemoryHigh4GiB,MemoryMax6GiB,
+MemorySwapMax0. These workload limits do not limit Codex itself. No process stopped.
+
+Next011 baseline driver is prepared/syntax-checked, NOT RUN:
+build-probe/repair-content-ownership-after057-before.mjs. It requires accepted057
+closure and recorded repair SHA, preserves the original fixtures from005899e9,
+relinks against current canonical libraries, and compares all14 cases plus exact
+XML failures to the retained3PASS/11FAIL baseline. Run only after29991/closure and
+057 commits/status are complete, serially on the bounded private native runner.
+
+### Last complete checkpoint: ISSUE-047
 
 ISSUE-047 is now RESOLVED/FIXED_VALIDATED by CNA source revision
 a56383319578256459c95ff990fd6b7826fa2226, with parent repairs23a34f986 and32cb1a4ed.

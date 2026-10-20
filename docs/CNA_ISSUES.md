@@ -946,110 +946,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   demos remain valid because they pass caller-owned Songs/collections. Revisit a safe regression
   demo after CNA repairs the lifetime order.
 
-### CNA-DEMOS-ISSUE-057 -- Content staging scavenger warns during normal concurrent lifecycle
-
-- **Refreshed baseline (2026-10-21), CONFIRMED_OPEN:** CNA `ee92c1eaa`
-  still reproduces the defect after047 closure: unchanged probes give1000 concurrent
-  owners/5640 scans,3093 missing-owner warnings plus64 unreadable,22 incomplete and39
-  invalid-directory diagnostics,zero owner errors/removals and an empty final parent.
-  The1000-owner sequential control has zero errors/diagnostics. Strict builds pass;
-  original failing concurrent exit1 retained, no production/test-oracle changes.
-  The bounded scope peaks at141,725,696 bytes with zero OOM. See the baseline below.
-
-- **Campaign verification (2026-10-20), CONFIRMED_OPEN:** current CNA dbfe6b4c1
-  reproduces3,241 missing-owner warnings in one fixed1,000-owner concurrent run;
-  all owners succeed, no removal occurs and the private parent ends empty. The
-  paired1,000-owner sequential control has zero diagnostics/errors. No production
-  change or warning suppression. Strict Clang builds pass; the initial extra-strict
-  GCC optional-handle warning is retained separately. See
-  [current baseline](repair-evidence/content/CONTENT_STAGING_TRIAGE.md).
-
-- **Area:** CNA content tools, `tools/common/CnaContentStaging.hpp`, consumed by `cna-content`
-  and the content-project build. Build-time diagnostic race; no runtime demo knownIssue marker.
-- **Original observation:** full470-query, demo source `a699a2d`, completed all seven scheduled
-  build operations, then `tools/validate.sh` stopped at its unchanged warning gate before
-  metadata validation, CTest or smoke. Content-project output included
-  `error: warning: content staging scavenger: cna_content_stage_v1_306788_18dd6c565a238173_0:
-  owner metadata is absent or is not a regular file`. Both wrapper exits were1.
-  The actual candidate under `/tmp/cna_content_staging_v1` was absent when later inspected.
-- **Independent reproduction:** compile `/tmp/cna-staging-concurrency-probe.cpp` with GCC14.2,
-  C++23, `-O2 -pthread -I../cna/tools/common`. It directly uses the unchanged CNA tool header.
-  One thread creates/destroys1,000 `ContentBuildStagingDirectory` objects in an initially empty
-  private parent; another repeatedly calls `ScavengeContentStagingDirectories` there. No malformed
-  staging fixture is fabricated and the production staging root is never scanned by the probe.
-  Run it only with a fresh private parent; the archived Python driver creates one per trial.
-- **Observed:** all three bounded trials reproduce the exact missing-owner-metadata diagnostic,
-  respectively3,175/3,079/3,089 times. Each completes1,000 owners with zero owner errors, zero
-  reported removals and an empty private parent afterwards. Other observed race diagnostics
-  concern vanished directory validation and incomplete/unreadable metadata. Each probe exits1
-  deliberately for the reproduced condition, with empty stderr. A sequential control creates
-  another1,000 owners and scans while each complete owner is alive and after destruction:
-  zero scan errors, zero diagnostics, final parent empty, exit0.
-- **Expected:** overlapping normal CNA staging lifecycles should not produce malformed-owner
-  warnings merely because another builder is publishing or removing its private staging state.
-  Conservative cleanup must remain safe; suspicious unrelated directories should still be
-  preserved and reported as appropriate. A warning-free successful consumer build should not
-  depend on the scheduling of independent content-tool invocations.
-- **Mechanism and limits:** enumeration, directory validation, metadata stat/size/read and lease
-  handling are separate filesystem operations. Creation exposes the candidate before its lease
-  and atomic metadata publication; destruction removes the metadata/directory. The scanner reads
-  metadata before checking age or claiming the lease. The isolated probe establishes diagnostics
-  during legitimate concurrent lifecycle operations. The original build's precise interleaving,
-  including creation versus teardown, was not observed. No asset corruption or unsafe removal
-  is claimed. The older checkpoint437 refusal involved the related vanished-directory message;
-  its original logs remain separate and are not retroactively a reproduction of this exact run.
-- **Evidence/environment:** Linux x86_64, GCC14.2, CNA tools observed at clean
-  `eff31310179168fb4f47258e6226a5234c2140d0`; relevant header snapshots and hashes are archived.
-  Original build/refusal/exits and post-refusal selected artifacts:
-  `build/linux-full/reports/checkpoint-470-query-initial-staging-refusal-*`.
-  Probe sources, executables, original streams, compiler logs, private-root identities and review:
-  `build/linux-full/reports/checkpoint-470-query-staging-probe-*`.
-  All35selected shipped binaries and four existing assets remained unchanged through the probes.
-  This is a source/selected-artifact observation, not an atomic full dependency snapshot.
-- **Recurrence on471-punctual:** initial focused build22225, demo HEADc173c11 plus the new
-  uncommitted punctual receiver, compiles/links33scheduled operations but exits1 at the
-  unchanged diagnostic gate (CMake exit0, gate1). The content-project step reports the same
-  missing-owner condition for `cna_content_stage_v1_477930_18dd5445705a3d88_0`. No new demo
-  metadata/native/CTest/smoke run follows that refusal. Both relevant tool headers are byte-
-  identical to the original independent probe; CNA remains cleaneff3131017 and all3909watched
-  build inputs stay unchanged. The exact candidate and its owner file are absent at later
-  inspection; creation versus teardown is still unobserved. Original build, source/input
-  observations, headers and post-build artifact hashes are preserved separately under
-  `build/linux-full/reports/checkpoint-471-punctual-initial-staging-refusal-*`. No directory
-  is removed, warning suppressed or CNA source changed. The fresh watched consistency retry
-  completes7scheduled operations with CMake0/gate0 and all3909inputs unchanged. Focused
-  SW/GL and27targeted CTests then pass (GL8pixels, exactSWskip, actual image inspected).
-  This permits native validation but does not resolve the staging race.
-- **Recurrence on Focused873:** the first SOFTWARE and OPENGLES3-labelled
-  `content.custom.multi_artifact_publication` runs were launched simultaneously while adding a
-  separate-process output-lease control. Both programs passed20/20, but the SOFTWARE stderr gained
-  the exact `owner metadata is absent or is not a regular file` warning for another live
-  `cna_content_stage_v1_*` directory. Immediate serial reruns passed20/20 with matching normalized
-  streams and only the eight deliberately exercised compiler diagnostics. This is a real compiler
-  workflow recurrence at CNA `d23e139de9e5c15511b6be745de290896a69ee37`, rather than the earlier
-  direct header probe; no artifact loss was observed. Evidence:
-  `/tmp/checkpoint-873-independent-process-lease-{software,opengles3}{,-serial}.*`.
-- **Recurrence on Focused878:** the first full `-j3` build succeeds, but the content-project step
-  reports `not a validated current-user staging directory` for a `cna_content_stage_v1_*`
-  candidate. This is another conservative validation outcome from the same enumeration/lifecycle
-  window; the candidate is absent after the build and no asset loss is observed. An immediate
-  unchanged `-j3` retry is warning-free. The retry log is
-  `/tmp/checkpoint-878-build-retry.log`; the initial diagnostic was observed in the interactive
-  build output and was not redirected to a file.
-- **Recurrence on Focused993:** the first `-j3` build compiles and links the bridge-context
-  extension, but the content-project step reports `owner metadata is absent or is not a regular
-  file` for `cna_content_stage_v1_23_18dc22105b79a260_0`. The candidate is absent on later
-  inspection, no artifact loss is observed, and an immediate unchanged `-j3` retry is warning-free.
-  The diagnostic was observed in the interactive build output and was not redirected to a file.
-- **Recurrence on Focused994:** one of twenty deliberately parallel renderer-labelled direct runs
-  completed with its expected26/28 result but added the same missing-owner warning for
-  `cna_content_stage_v1_16_18dc3fc3c769aa47_0`. All twenty subsequent serial repetitions produced
-  one identical normalized stderr hash without the warning. No artifact loss was observed.
-- **Handling:** keep the warning gate and original failure visible, retry the unchanged documented
-  full validation after recording the defect, and retain this issue even if scheduling permits a
-  clean retry. The eleven OcclusionQuery controls already pass on both renderers independently.
-  No sibling source was changed, unknown staging directory deleted or upstream message sent.
-
 ### CNA-DEMOS-ISSUE-003 -- `SpriteBatch` does not leave its texture in `GraphicsDevice::Textures[0]`
 
 - **Area:** graphics -- `Microsoft::Xna::Framework::Graphics::SpriteBatch`
@@ -1942,6 +1838,143 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-057 -- Content staging scavenger warns during normal concurrent lifecycle
+
+- **Resolved (2026-10-21), FIXED_VALIDATED:** CNA
+  `83e611fe1e1196e63ccc708d2aada80e8addf512` coordinates staging initialization,
+  scavenging and teardown with a persistent parent OS lock, without serializing
+  content builds or changing the scanner's safety/diagnostic body. Three native
+  regressions pass; full native10807=10706PASS/101unchangedSKIP. The unchanged
+  original1000-owner concurrent probe has zero diagnostics under ASan/UBSan/leak;
+  the new sequential counterpart preserves all active/closed checks and verifies
+  exact safe-marker-only cleanup1000 times. Both original historical probes remain
+  unchanged. Linux15 and MinGW32/Wine14 available process controls plus seven
+  unprivileged permission controls pass. Native Wine symlink creation is explicitly
+  unavailable; native Windows/MSVC/macOS/network-filesystem coverage is not claimed.
+  Both719 renderer sweeps retain every047 result, check count and failed assertion;
+  math95 each, six pixel-exact visuals and CTest684PASS/48sameSKIP/three disabled
+  pass. Independent closure verifies352 unique files and all evidence, errors[].
+  No runtime knownIssue marker existed or was removed. See
+  [repair and retained evidence](repair-evidence/content/CONTENT_STAGING_TRIAGE.md).
+
+- **Historical finding and campaign baseline (preserved):**
+
+- **Candidate validation (2026-10-21; still open):** uncommitted parent-lifecycle
+  coordination preserves the original scavenger body and diagnostics. Native process
+  tests15/15 and MinGW32/Wine14 available controls pass; native Wine symlink creation
+  is explicitly unavailable, not a Windows pass. Native focus133PASS/one sameSKIP,
+  unchanged context11/11 and real host6/6 pass. The original1000-owner probe under
+  actual-header ASan/UBSan/leak now has zero diagnostics; seven unprivileged permission
+  controls pass. The exact persistent empty coordination file is documented and
+  checked, not an ignored leftover. Full native60712 passes10706 cases with101
+  unchanged skips; all predecessor outcomes and frozen hashes match. External
+  build17134 passes with zero diagnostics; external full regression remains
+  pending, with no closure or source commit. See
+  [candidate and retained evidence](repair-evidence/content/CONTENT_STAGING_TRIAGE.md).
+
+- **Refreshed baseline (2026-10-21), CONFIRMED_OPEN:** CNA `ee92c1eaa`
+  still reproduces the defect after047 closure: unchanged probes give1000 concurrent
+  owners/5640 scans,3093 missing-owner warnings plus64 unreadable,22 incomplete and39
+  invalid-directory diagnostics,zero owner errors/removals and an empty final parent.
+  The1000-owner sequential control has zero errors/diagnostics. Strict builds pass;
+  original failing concurrent exit1 retained, no production/test-oracle changes.
+  The bounded scope peaks at141,725,696 bytes with zero OOM. See the baseline below.
+
+- **Campaign verification (2026-10-20), CONFIRMED_OPEN:** current CNA dbfe6b4c1
+  reproduces3,241 missing-owner warnings in one fixed1,000-owner concurrent run;
+  all owners succeed, no removal occurs and the private parent ends empty. The
+  paired1,000-owner sequential control has zero diagnostics/errors. No production
+  change or warning suppression. Strict Clang builds pass; the initial extra-strict
+  GCC optional-handle warning is retained separately. See
+  [current baseline](repair-evidence/content/CONTENT_STAGING_TRIAGE.md).
+
+- **Area:** CNA content tools, `tools/common/CnaContentStaging.hpp`, consumed by `cna-content`
+  and the content-project build. Build-time diagnostic race; no runtime demo knownIssue marker.
+- **Original observation:** full470-query, demo source `a699a2d`, completed all seven scheduled
+  build operations, then `tools/validate.sh` stopped at its unchanged warning gate before
+  metadata validation, CTest or smoke. Content-project output included
+  `error: warning: content staging scavenger: cna_content_stage_v1_306788_18dd6c565a238173_0:
+  owner metadata is absent or is not a regular file`. Both wrapper exits were1.
+  The actual candidate under `/tmp/cna_content_staging_v1` was absent when later inspected.
+- **Independent reproduction:** compile `/tmp/cna-staging-concurrency-probe.cpp` with GCC14.2,
+  C++23, `-O2 -pthread -I../cna/tools/common`. It directly uses the unchanged CNA tool header.
+  One thread creates/destroys1,000 `ContentBuildStagingDirectory` objects in an initially empty
+  private parent; another repeatedly calls `ScavengeContentStagingDirectories` there. No malformed
+  staging fixture is fabricated and the production staging root is never scanned by the probe.
+  Run it only with a fresh private parent; the archived Python driver creates one per trial.
+- **Observed:** all three bounded trials reproduce the exact missing-owner-metadata diagnostic,
+  respectively3,175/3,079/3,089 times. Each completes1,000 owners with zero owner errors, zero
+  reported removals and an empty private parent afterwards. Other observed race diagnostics
+  concern vanished directory validation and incomplete/unreadable metadata. Each probe exits1
+  deliberately for the reproduced condition, with empty stderr. A sequential control creates
+  another1,000 owners and scans while each complete owner is alive and after destruction:
+  zero scan errors, zero diagnostics, final parent empty, exit0.
+- **Expected:** overlapping normal CNA staging lifecycles should not produce malformed-owner
+  warnings merely because another builder is publishing or removing its private staging state.
+  Conservative cleanup must remain safe; suspicious unrelated directories should still be
+  preserved and reported as appropriate. A warning-free successful consumer build should not
+  depend on the scheduling of independent content-tool invocations.
+- **Mechanism and limits:** enumeration, directory validation, metadata stat/size/read and lease
+  handling are separate filesystem operations. Creation exposes the candidate before its lease
+  and atomic metadata publication; destruction removes the metadata/directory. The scanner reads
+  metadata before checking age or claiming the lease. The isolated probe establishes diagnostics
+  during legitimate concurrent lifecycle operations. The original build's precise interleaving,
+  including creation versus teardown, was not observed. No asset corruption or unsafe removal
+  is claimed. The older checkpoint437 refusal involved the related vanished-directory message;
+  its original logs remain separate and are not retroactively a reproduction of this exact run.
+- **Evidence/environment:** Linux x86_64, GCC14.2, CNA tools observed at clean
+  `eff31310179168fb4f47258e6226a5234c2140d0`; relevant header snapshots and hashes are archived.
+  Original build/refusal/exits and post-refusal selected artifacts:
+  `build/linux-full/reports/checkpoint-470-query-initial-staging-refusal-*`.
+  Probe sources, executables, original streams, compiler logs, private-root identities and review:
+  `build/linux-full/reports/checkpoint-470-query-staging-probe-*`.
+  All35selected shipped binaries and four existing assets remained unchanged through the probes.
+  This is a source/selected-artifact observation, not an atomic full dependency snapshot.
+- **Recurrence on471-punctual:** initial focused build22225, demo HEADc173c11 plus the new
+  uncommitted punctual receiver, compiles/links33scheduled operations but exits1 at the
+  unchanged diagnostic gate (CMake exit0, gate1). The content-project step reports the same
+  missing-owner condition for `cna_content_stage_v1_477930_18dd5445705a3d88_0`. No new demo
+  metadata/native/CTest/smoke run follows that refusal. Both relevant tool headers are byte-
+  identical to the original independent probe; CNA remains cleaneff3131017 and all3909watched
+  build inputs stay unchanged. The exact candidate and its owner file are absent at later
+  inspection; creation versus teardown is still unobserved. Original build, source/input
+  observations, headers and post-build artifact hashes are preserved separately under
+  `build/linux-full/reports/checkpoint-471-punctual-initial-staging-refusal-*`. No directory
+  is removed, warning suppressed or CNA source changed. The fresh watched consistency retry
+  completes7scheduled operations with CMake0/gate0 and all3909inputs unchanged. Focused
+  SW/GL and27targeted CTests then pass (GL8pixels, exactSWskip, actual image inspected).
+  This permits native validation but does not resolve the staging race.
+- **Recurrence on Focused873:** the first SOFTWARE and OPENGLES3-labelled
+  `content.custom.multi_artifact_publication` runs were launched simultaneously while adding a
+  separate-process output-lease control. Both programs passed20/20, but the SOFTWARE stderr gained
+  the exact `owner metadata is absent or is not a regular file` warning for another live
+  `cna_content_stage_v1_*` directory. Immediate serial reruns passed20/20 with matching normalized
+  streams and only the eight deliberately exercised compiler diagnostics. This is a real compiler
+  workflow recurrence at CNA `d23e139de9e5c15511b6be745de290896a69ee37`, rather than the earlier
+  direct header probe; no artifact loss was observed. Evidence:
+  `/tmp/checkpoint-873-independent-process-lease-{software,opengles3}{,-serial}.*`.
+- **Recurrence on Focused878:** the first full `-j3` build succeeds, but the content-project step
+  reports `not a validated current-user staging directory` for a `cna_content_stage_v1_*`
+  candidate. This is another conservative validation outcome from the same enumeration/lifecycle
+  window; the candidate is absent after the build and no asset loss is observed. An immediate
+  unchanged `-j3` retry is warning-free. The retry log is
+  `/tmp/checkpoint-878-build-retry.log`; the initial diagnostic was observed in the interactive
+  build output and was not redirected to a file.
+- **Recurrence on Focused993:** the first `-j3` build compiles and links the bridge-context
+  extension, but the content-project step reports `owner metadata is absent or is not a regular
+  file` for `cna_content_stage_v1_23_18dc22105b79a260_0`. The candidate is absent on later
+  inspection, no artifact loss is observed, and an immediate unchanged `-j3` retry is warning-free.
+  The diagnostic was observed in the interactive build output and was not redirected to a file.
+- **Recurrence on Focused994:** one of twenty deliberately parallel renderer-labelled direct runs
+  completed with its expected26/28 result but added the same missing-owner warning for
+  `cna_content_stage_v1_16_18dc3fc3c769aa47_0`. All twenty subsequent serial repetitions produced
+  one identical normalized stderr hash without the warning. No artifact loss was observed.
+- **Handling:** keep the warning gate and original failure visible, retry the unchanged documented
+  full validation after recording the defect, and retain this issue even if scheduling permits a
+  clean retry. The eleven OcclusionQuery controls already pass on both renderers independently.
+  No sibling source was changed, unknown staging directory deleted or upstream message sent.
+
 
 ### CNA-DEMOS-ISSUE-047 -- AddOutputFile refuses a generated file in the configured output directory
 
