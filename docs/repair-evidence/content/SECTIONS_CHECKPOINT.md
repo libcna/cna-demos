@@ -1,8 +1,8 @@
 # Section ordering, external identities and corrected network checkpoint
 
-Date:2026-10-20. Status: **PENDING complete regression**, not issue closure.
-Historical inventory remains155 IDs,68 final/87 pending. This checkpoint combines
-pending088/090/111 with046 and verification of pre-campaign-fixed030;148 receives
+Date:2026-10-20. Status: **COMPLETE validated checkpoint**.
+Historical inventory remains155 IDs,73 final/82 pending. This checkpoint closes
+088/090/111 and046 and verifies pre-campaign-fixed030;148 receives
 only a partial repair and remains open. It supersedes the strict-failed registry
 GLES gate without erasing that result; see [registry evidence](REGISTRY_CHECKPOINT.md).
 
@@ -53,10 +53,29 @@ references pass. The GLES font capture was also inspected. Both complete719-demo
 sweeps now both pass strict comparison: SOFTWARE617PASS/51FAIL/48SKIP/three manual;
 OPENGLES3 656PASS/53FAIL/7SKIP/three manual. Both have exactly60 demo improvements
 versus initial HEAD (62 versus Complete1128), with `differences: []`; unrelated
-assertion failure multisets are unchanged. Final isolated serial CTest is running.
-Its inventory has735 cases,732 enabled/three disabled;046/030 now have WILL_FAIL
-false. All319 hashes match immediately before it. Closure still awaits its result
-and the final319-hash audit.
+assertion failure multisets are unchanged. Final isolated serial CTest completes
+with732 accepted results, zero unexpected failures,48 unchanged skips and three
+disabled tests,980.07s. Its inventory has735 cases;046/030 now have WILL_FAIL false.
+All319 hashes match immediately before and after it. The external freeze is now
+released for the separate048 repair; it was not rebuilt during these checks.
+
+## Final dispositions
+
+| Issue | Disposition | CNA repair |
+|---|---|---|
+| 046 | FIXED_VALIDATED | f421948fe |
+| 088 | FIXED_VALIDATED | 80b8e45b2 |
+| 090 | FIXED_VALIDATED | 7864dd5b1 |
+| 111 | FIXED_VALIDATED | 6823af99a |
+| 030 | ALREADY_FIXED, verified with corrected demo | 01534c2e7, before campaign |
+
+Runtime snapshotf421948fe and marker snapshot3d1f833 are the tested checkpoint;
+later048 work is not included in these results. Marker changesce04195/3d1f833
+retain all behavior assertions. Totals now:40 fixed runtime findings,23
+documentation corrections,eight already-fixed findings,one duplicate root cause
+and one standalone demo-expectation correction. The030 disposition also records
+its evidence-backed demo correction; these categories are not counted twice.
+Remaining048,089 and partial148 are not closed by this checkpoint.
 
 Reports: `build/linux-full/reports/repair-sections-*`,
 `repair-external-alias-final-sanitizer.log`, and `repair-network-*`.

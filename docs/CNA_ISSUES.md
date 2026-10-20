@@ -246,6 +246,14 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-111 -- Direct XNA XNB writer ignores its build environment platform and profile
 
+- **Campaign status (2026-10-20): Resolved.** CNA `6823af99a` honors explicit
+  platform/profile, preserves compression and default-overload behavior, and
+  versions the writer identity to invalidate incorrect cached output. Four native
+  regressions and exact external33/33 controls pass. Complete native, both719-demo
+  renderer sweeps,732 enabled CTests and319-artifact hash audits pass; see
+  [checkpoint](repair-evidence/content/SECTIONS_CHECKPOINT.md). Demo marker removed
+  in `ce04195`; original assertions and historical evidence below remain.
+
 - **Area/API:** `CNA::Content::Pipeline::RegisterXnaXnbOutput`, specifically the registered
   canonical writer's environment-aware `ContentTypeWriter::Write` overload.
 - **Demo/reproduction:** `content.custom.xml_xnb_pipeline` creates a default XNB compiler, adds its
@@ -850,6 +858,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-090 -- ContentTypeWriter Initialize deadlocks when retrieving a nested writer
 
+- **Campaign status (2026-10-20): Resolved.** CNA `7864dd5b1` invokes Initialize
+  outside the compiler lock, with duplicate/frozen validation before and after
+  callbacks. Genuine XNA8/8, bounded native9/9 and four native callback regressions
+  pass. Complete regression and frozen-artifact audit pass; see
+  [checkpoint](repair-evidence/content/SECTIONS_CHECKPOINT.md). Demo marker removed
+  in `ce04195`; the original deadlock reproduction and assertions remain.
+
 - **Area/API:** `ContentCompiler::AddTypeWriter`, `ContentTypeWriter::Initialize` and
   `ContentCompiler::GetTypeWriter` in the build-time XNB compiler façade.
 - **Reproduction:** `content.custom.xml_xnb_pipeline` registers a focused writer whose
@@ -913,6 +928,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   marker.
 
 ### CNA-DEMOS-ISSUE-088 -- Conflicting intermediate XML shortcuts create a non-round-trippable serializer registration
+
+- **Campaign status (2026-10-20): Resolved.** CNA `80b8e45b2` validates XML alias
+  collisions before mutation and separates shortcut/full-name lookup priority.
+  Genuine collision11/11 and priority12/12, original native16/16 and actual-TU
+  sanitizer5/5 pass. Complete regression and frozen-artifact audit pass; see
+  [checkpoint](repair-evidence/content/SECTIONS_CHECKPOINT.md). Demo `ce04195`
+  retains this assertion and changes the marker to the still-open ISSUE-089.
 
 - **Area/API:** `IntermediateSerializer::AddTypeSerializer`, `RegisterTypeSerializer`,
   `FindTypeSerializer` and intermediate XML `Type` shortcut resolution.
@@ -2065,7 +2087,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-030 -- `SimulatedPacketLoss` drops reliable packets for good
 
-- **Campaign verification (2026-10-20; final regression pending):** CNA
+- **Campaign status (2026-10-20): Resolved / ALREADY_FIXED before campaign.** CNA
   `01534c2e7f33d67191efe26c4434c874a244bfa3` repaired sender-side simulation and
   Reliable exemption before the campaign baseline. Genuine XNA4 simulator27/27
   proves the current demo's receiver-side setup and minimum-latency expectation
@@ -2073,8 +2095,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   counts and all six checks; one staged SOFTWARE and one OPENGLES3 execution
   pass6/6 each, native deterministic and ENet integration11/11. See
   [permanent evidence](repair-evidence/NETWORK_SIMULATOR.md). The earlier strict
-  GLES assertion-delta failure is retained. Do not close or remove knownIssue
-  until the rebuilt full regression confirms the correction.
+  GLES assertion-delta failure is retained. Rebuilt aggregate six checks pass on
+  both renderers; marker removed in `3d1f833`. Both complete719 sweeps and final
+  732-enabled CTest checkpoint pass, with319 hashes verified before/after. This
+  is local SystemLink validation, not an online-service or Xbox hardware claim.
 
 - **Area:** net -- `ENetBackend` applies `NetworkSession::SimulatedPacketLoss` where AppData is
   handed to a local gamer, after ENet's reliable transport has delivered it
@@ -2367,12 +2391,14 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-046 -- Intermediate XML cannot read its own aliased external TargetType
 
-- **Repair campaign (2026-10-20; full regression pending):** CNAf421948fe resolves
+- **Campaign status (2026-10-20): Resolved.** CNA `f421948fe` resolves
   external target identities in the node's namespace scope and canonicalizes both
   table entries and pending fixups, including generic targets without serializers.
   Genuine XNA15/15, native focus58/58 and actual-TU/corpus ASan/UBSan/leak44/44 pass.
-  Full552 native and external regression are pending; historical evidence below and
-  the knownIssue marker are retained. See `docs/repair-evidence/content/README.md`.
+  Full552 native and both719 external sweeps pass, as do732 enabled CTests and the
+  final319-artifact audit. Demo20/20 passes on each renderer; marker removed in
+  `3d1f833` with original assertions retained. Historical evidence below remains;
+  see [checkpoint](repair-evidence/content/SECTIONS_CHECKPOINT.md).
 
 - **Area:** IntermediateSerializer external-reference writing/reading and namespace resolution.
 - **Demo:** `content.custom.intermediate_external_references`; ten child checks, nine passing

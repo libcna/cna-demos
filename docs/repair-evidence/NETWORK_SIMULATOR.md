@@ -1,6 +1,8 @@
 # ISSUE-030 current-state audit — 2026-10-20
 
-Status: verification pending; do not close the issue or remove knownIssue yet.
+Status: ALREADY_FIXED before the campaign, now runtime and regression verified.
+The permanent issue and earlier failed evidence remain; the marker was removed
+only after corrected rebuilt focused executions passed.
 
 ## Why the registry checkpoint stopped at the strict comparator
 
@@ -39,7 +41,7 @@ normal/clamp cases (one Stopwatch-tick allowance only for floating-to-integer
 truncation). It uses private reflection deliberately; it does **not** run a network
 session, transport, Xbox LIVE or hardware. Native NetworkSimulatorTest7/7 passes2ms.
 
-## Runtime-validated demo correction (full regression still pending)
+## Runtime-validated demo correction
 
 The sender applies each phase's settings before sending; a separate recovery marker
 returns that same sender to zero loss. Exact24 reliable deliveries, zero unreliable
@@ -63,5 +65,11 @@ simulator tests and four sender/receiver ENet integration tests then passed11/11
 (164ms). Reports: `repair-network-corrected-driver.log`,
 `repair-network-corrected-{SOFTWARE,OPENGLES3}.log`, and
 `repair-network-sender-receiver-native.{log,xml}` under build/linux-full/reports.
-No knownIssue change or030 closure yet: the next complete regression checkpoint
-must validate the rebuilt executable together with the pending content repairs.
+The rebuilt aggregate runner subsequently passed all six checks on each renderer
+(13.319s SOFTWARE,9.033s OPENGLES3), then marker3d1f833 removed the knownIssue.
+Both full719 sweeps pass exact comparison, with no retry or030 whitelist. Final
+isolated serial CTest accepts all732 enabled cases (48 unchanged skips),980.07s;
+all319 frozen artifacts match before and after. ISSUE-030 is ALREADY_FIXED by the
+pre-campaign commit above, not a new runtime repair attributed to this campaign.
+See [complete checkpoint](content/SECTIONS_CHECKPOINT.md). No online-service or
+Xbox hardware validation is claimed.
