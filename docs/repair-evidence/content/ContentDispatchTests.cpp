@@ -191,4 +191,56 @@ TEST_F(ContentDispatchCompatibilityTest, RecorderExceptionRemainsUnwrapped)
         [](auto) { throw System::InvalidOperationException("recorder failure"); });
     EXPECT_THROW((void)input.ReadAsset<Item>(), System::InvalidOperationException);
 }
+
+TEST_F(ContentDispatchCompatibilityTest, NullExistingIsNewInEveryExistingInstanceOverload)
+{
+    for (const int mode : {1, 4, 5, 8})
+    {
+        SCOPED_TRACE(mode);
+        const auto bytes = Body(mode);
+        System::IO::MemoryStream stream(bytes.data(), static_cast<int32_t>(bytes.size()));
+        std::vector<std::shared_ptr<System::IDisposable>> recorded;
+        ContentReader input(nullptr, &stream, "null-existing", 5, 'w',
+            [&](auto value) { recorded.push_back(std::move(value)); });
+        input.InitializeTypeReaders();
+        const auto result = Read(input, mode, {});
+        ASSERT_NE(result, nullptr);
+        EXPECT_EQ(result->value, 73);
+        EXPECT_EQ(recorded.size(), 1U);
+        if (recorded.size() == 1U)
+        {
+            EXPECT_EQ(recorded.front().get(), result.get());
+        }
+        EXPECT_EQ(stream.getPositionProperty(), stream.getLengthProperty());
+    }
+}
+
+TEST_F(ContentDispatchCompatibilityTest, RequestedTypeIsCheckedBeforeRecordingOwnership)
+{
+    for (const int mode : {0, 3, 7})
+    {
+        SCOPED_TRACE(mode);
+        const auto bytes = Body(mode);
+        System::IO::MemoryStream stream(bytes.data(), static_cast<int32_t>(bytes.size()));
+        int recorded = 0;
+        ContentReader input(nullptr, &stream, "wrong-requested-type", 5, 'w',
+            [&](auto) { ++recorded; });
+        input.InitializeTypeReaders();
+        DispatchItemReader explicitReader;
+        if (mode == 0)
+        {
+            EXPECT_THROW((void)input.ReadObject<std::string>(), ContentLoadException);
+        }
+        else if (mode == 3)
+        {
+            EXPECT_THROW((void)input.ReadRawObject<std::string>(explicitReader), ContentLoadException);
+        }
+        else
+        {
+            EXPECT_THROW((void)input.ReadObject<std::string>(explicitReader), ContentLoadException);
+        }
+        EXPECT_EQ(recorded, 0);
+        EXPECT_EQ(stream.getPositionProperty(), stream.getLengthProperty());
+    }
+}
 }

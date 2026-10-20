@@ -389,3 +389,39 @@ This is focused validation, not closure or a CTest execution claim. The original
 marker and root-contract conflict remain. A complete external rebuild against
 the stable043 candidate and committed103 repair has started for subsequent
 focused demo validation; native043 pipeline continues independently.
+
+### Prepared087 boundary controls (not executed yet)
+
+The reference dispatch probe now appends14 checks to the original39: four
+existing-instance overloads given a null reference must create and record one
+new disposable; three incompatible requested-type reads must throw exact
+ContentLoadException without recording the otherwise-disposable result.
+The native source appends two grouped cases, preserving all original17 tests.
+These additions are PREPARED, not yet runtime evidence. Helper
+`build-probe/repair-content-dispatch-boundaries.mjs` is syntax-checked and will
+require all39 old genuine labels and17 old native outcomes unchanged.
+
+Source constraints for the next repair: shipped-XNA ContentReader.InvokeReader
+casts the requested type before checking existing-instance identity/recording.
+Explicit ReadObject(reader) dispatches according to the reader's target value/
+reference semantics, not the requested T. Sharp System.Type explicitly documents
+IsValueType as a permanent reflection stub returning false, so branching on it
+would introduce another defect. C++ by-value representation is not an adequate
+substitute either (String, Curve, Texture2D and Model are XNA reference types).
+No metadata/ownership design or087 production patch has been selected yet.
+
+These additions now execute against genuine XNA:53/53PASS with all39 original
+labels unchanged. The expanded native probe givesfivePASS/fourteenFAIL of19,
+all17 previous outcomes unchanged; both grouped boundary cases fail. Reports
+`repair-content-dispatch-boundaries-*`, exact audit `errors: []`. The first
+native Werror build refuses an unbraced `if` around a GoogleTest macro; adding
+explicit braces fixes only that test syntax. Its failed build/driver are retained,
+and the successful strict build/result use `native-before-braced`. No assertion
+is removed, widened or disabled. No087 production change yet.
+
+043 full552 pipeline completes in969.769s with551PASS/one unchanged XACT skip,
+exact prior outcome audit `errors: []` and all four native hashes matching.
+Broader1412/runtime241/XML runs continue on the same frozen build; external
+972-step rebuild continues separately. Prepared146 focused comparisons require
+only043's two lookup failures to disappear from the preceding039/045 focused
+reports, with all check counts and unrelated failures unchanged.

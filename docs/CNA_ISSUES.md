@@ -976,6 +976,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-087 -- Disposable XNB shared resources bypass the ReadAsset recorder
 
+- **Additional boundary evidence (2026-10-20):** genuine dispatch now passes53/53,
+  preserving the original39 labels and adding14 null-existing/wrong-requested-type
+  checks. Native19 givesfivePASS/fourteenFAIL, preserving all17 previous outcomes.
+  The two new grouped cases expose null-existing recording and wrong-type payload
+  consumption/ownership ordering; no production repair or closure is claimed.
+  Exact audit `repair-content-dispatch-boundaries-audit.json` has no differences
+  in the original controls. Initial strict-build bracing error is retained.
 - **Campaign verification (2026-10-20; still open):** genuine reference dispatch
   passes39/39 and value-type controls18/18. New native dispatch regressions give
   fivePASS/twelveFAIL, including this shared-table omission and related raw,
@@ -2359,6 +2366,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-043 -- GetTypeReader confuses the target type name with the reader factory key
 
+- **Current local candidate (2026-10-20; not closed):** actual registry-TU11/11
+  and ASan/UBSan/leak11/11 pass. Canonical content1929 gives1925PASS/four unchanged
+  skips; full pipeline552 gives551PASS/one unchanged skip. Exact previous outcomes
+  and all four native artifact hashes match. Broader consumers and external demo
+  build are still running; the runtime candidate is not yet committed.
 - **Campaign verification (2026-10-20; still open):** eight new native registry
   regressions give onePASS/sevenFAIL. Distinct reader/target identities reproduce
   the defect; coverage also preserves lazy construction, withdrawal/replacement

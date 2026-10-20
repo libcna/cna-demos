@@ -46,6 +46,9 @@ public sealed class DispatchRootReader : ContentTypeReader<DispatchRoot>
             case 7: item = input.ReadObject<DispatchItem>(itemReader); break;
             case 8: item = input.ReadObject<DispatchItem>(itemReader, Existing); break;
             case 9: item = input.ReadObject<DispatchItem>(Existing); break;
+            case 10: item = input.ReadObject<string>(); break;
+            case 11: item = input.ReadObject<string>(itemReader); break;
+            case 12: item = input.ReadRawObject<string>(itemReader); break;
             default: throw new InvalidOperationException("unknown dispatch mode");
         }
         return new DispatchRoot { Item = item };
@@ -81,7 +84,7 @@ static class ContentDispatchOracle
         writer.Write(typeof(DispatchItemReader).AssemblyQualifiedName); writer.Write(0);
         writer.Write((byte)0); // No shared resources.
         writer.Write((byte)1); // Root reader.
-        if (mode < 2 || mode >= 6) writer.Write((byte)(mode == 9 ? 0 : 2));
+        if (mode < 2 || (mode >= 6 && mode <= 11)) writer.Write((byte)(mode == 9 ? 0 : 2));
         if (mode != 9) writer.Write(73);
         writer.Flush();
         var file = new MemoryStream();
@@ -143,6 +146,35 @@ static class ContentDispatchOracle
                 var recorded = new List<IDisposable>();
                 Check(manager.Raw(recorded.Add).Item == null, "reader may return null for a new instance");
                 Check(recorded.Count == 0, "reader-produced null records nothing");
+            }
+            DispatchItemReader.ReturnNull = false;
+            DispatchRootReader.Existing = null;
+            foreach (int mode in new int[] { 1, 4, 5, 8 })
+            {
+                DispatchRootReader.Mode = mode;
+                var recorded = new List<IDisposable>();
+                using (var manager = new DispatchManager(Xnb(mode)))
+                {
+                    var root = manager.Raw(recorded.Add);
+                    Check(root.Item is DispatchItem && ((DispatchItem)root.Item).Value == 73,
+                          "mode " + mode + " null existing decodes exact new payload");
+                    Check(recorded.Count == 1 && Object.ReferenceEquals(recorded[0], root.Item),
+                          "mode " + mode + " null existing records the new disposable");
+                }
+            }
+            foreach (int mode in new int[] { 10, 11, 12 })
+            {
+                DispatchRootReader.Mode = mode;
+                var recorded = new List<IDisposable>();
+                using (var manager = new DispatchManager(Xnb(mode)))
+                {
+                    Exception observed = null;
+                    try { manager.Raw(recorded.Add); } catch (Exception error) { observed = error; }
+                    Check(observed != null && observed.GetType() == typeof(ContentLoadException),
+                          "mode " + mode + " rejects incompatible requested type");
+                    Check(recorded.Count == 0,
+                          "mode " + mode + " checks requested type before recording ownership");
+                }
             }
             Console.WriteLine("checks=" + checks + " failed=" + failures);
             return failures == 0 ? 0 : 1;
