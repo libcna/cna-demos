@@ -245,6 +245,16 @@ registration consumes a unique_ptr and has no cloning factory: genuine failed
 singleton reconstruction cannot be imitated by inventing fresh user instances.
 That boundary needs an explicit, evidence-backed translation, not an assumed retry.
 
+Additional native guard `IntermediateOwnerIsolationTests.cpp` now builds warning-free
+with C++23/Wall/Wextra/Werror. Both cases fail with exactly ten owner/initialization
+assertions and no other assertion failures: nested serialization already preserves
+the outer relocation path/namespace aliases; two simultaneous writes already keep
+their paths separate and emit identical XML. The missing stable initialized owner
+is exposed without sleeps or retries; a barrier guarantees simultaneous callbacks.
+Reports `repair-intermediate-owner-isolation-native-before-*`, exact audit errors[].
+These context-isolation checks protect existing documented CNAEXT behavior; they
+are not a claim that genuine XNA was concurrency-tested. No089 runtime patch yet.
+
 `IntermediateCollisionOracle.cs` passes11/11 on genuine XNA4. The real private
 registration entry rejects a distinct target with the same XML shortcut using
 exact InvalidOperationException. Its diagnostic identifies XmlTypeName and the
