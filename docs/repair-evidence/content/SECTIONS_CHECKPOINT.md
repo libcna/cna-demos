@@ -19,8 +19,11 @@ GLES gate without erasing that result; see [registry evidence](REGISTRY_CHECKPOI
   assertion RAII cleanup. It does not weaken goldens or production ownership.
 - Final actual Reader/Serializer translation units, whole intermediate corpus,
   18 section tests and17 external cases pass ASan/UBSan/leak44/44 in565ms.
-  Native focused58/58 passes706ms. Full native552 is still running; no full pass
-  is inferred from these focused results.
+  Native focused58/58 passes706ms. Full native552/123 suites completes with
+  551PASS/one unchanged XACT SKIP,973.298s: all517 previous outcomes unchanged,
+  all35 added section/order/external identity cases PASS. Four native hashes match
+  afterward. Original-fixture XML consumers6/6PASS4ms. Broader consumers remain
+  running; no full consumer pass is inferred from the content gate.
 - Network030 was fixed in CNA01534c2e7 before the initial campaign revision.
   Demo0b4d2ce corrects sender-side configuration and the mistaken minimum-latency
   expectation using actual XNA4 simulator27/27 evidence. Exact packet counts and
@@ -40,10 +43,12 @@ six host checks: SOFTWARE13.319s, OPENGLES3 9.033s. Its previous staged build pa
 both renderer selections, and the native simulator/ENet integration gate11/11.
 These are local SystemLink tests, not online-service or Xbox hardware validation.
 
-Only after these passes are046/030 markers removed. The final marker build,
-319-artifact freeze,95-case math sweeps, both complete719-demo sweeps, exact six
-visual references, tools, final isolated serial CTest and native consumer/hash
-audits must finish before closure. Expected cumulative improvements are60 versus
+Only after these passes are046/030 markers removed (demos3d1f833). The final marker
+build is warning-free and319 artifacts frozen. Both95-case math sweeps preserve
+the exact48 expected improvements; metadata/tools and all six pixel-exact visual
+references pass. The GLES font capture was also inspected. Both complete719-demo
+sweeps, final isolated serial CTest and native consumer/hash audits must finish
+before closure. Expected cumulative improvements are60 versus
 initial HEAD and62 versus Complete1128; these full results are not yet claimed.
 
 Reports: `build/linux-full/reports/repair-sections-*`,
