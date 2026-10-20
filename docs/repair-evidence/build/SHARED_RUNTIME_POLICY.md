@@ -1,5 +1,20 @@
 # ISSUE-001: cyclic whole-archive configuration contract
 
+## Closed checkpoint (2026-10-20,14:38 UTC)
+
+ISSUE-001 is FIXED_VALIDATED. External57606 completes0:50 printed tasks (three
+regeneration/prelude steps and47 build tasks), only the existing Draco CMP0148
+developer warning, no compiler warning. All319 artifacts are byte-identical to
+the completed roots/boundaries checkpoint; all11 repair-source hashes match.
+Fresh content146 focus2930 gives68PASS/five unchangedFAIL per renderer, exact
+audit errors[]. Fresh three catalog CTests53901 pass6.60s. The complete earlier
+both719/math95/six exact visuals/735 CTest outcomes apply to these identical
+runtime artifacts; a second full runtime sweep is not claimed. The unchanged
+C RootDirectory conflict still prevents global acceptance. All155 issue bodies
+are preserved; this closure brings the campaign to84 final/71 pending.
+
+The following notes retain the repair's earlier pending state chronologically.
+
 Repair committed CNA `b35fbc933`. Final four-version audit93677 passes all16
 scenarios with the final fixture source, plus actual top-level shared-ON configure
 refusals under3.28.6 and3.29.9. Eleven committed files are frozen in

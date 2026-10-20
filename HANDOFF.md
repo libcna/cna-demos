@@ -12,10 +12,18 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
-Current repair phase F (2026-10-20): all155 historical IDs retained,83 final/72
+Current repair phase F (2026-10-20): all155 historical IDs retained,84 final/71
 pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
+
+14:38 UTC: ISSUE-001 closes on actual four-version/native/external/fresh focused
+proof.50-step external build has only prior Draco warning;319 artifacts identical
+to completed full checkpoint,11 source hashes exact.146 focus/catalog3 pass; no
+second full sweep claimed. All155 historical bodies preserved,84final/71pending.
+No running jobs.016 --version independently aborts after removing only workaround;
+control passes, no asset dependency. Tiny negative models retained, no016 repair.
+Next actual-CNA minimal link consumer and correct shared/static ordering.
 
 14:28 UTC: six IDs013/014/105/106/108/110 close on complete combined proof; all155
 historical bodies preserved.24685 final exit1 solely original C-root residual;

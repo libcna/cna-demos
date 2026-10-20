@@ -1153,51 +1153,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   clean retry. The eleven OcclusionQuery controls already pass on both renderers independently.
   No sibling source was changed, unknown staging directory deleted or upstream message sent.
 
-### CNA-DEMOS-ISSUE-001 -- `libcna.so` fails to link with CMake 3.28 (duplicate symbols)
-
-- **Repair-campaign reproduction (2026-10-19): CONFIRMED_OPEN.** A two-library cyclic
-  fixture using the unchanged current CNA shared-runtime helper reproduces duplicate symbols
-  with official checksum-verified CMake 3.28.6 and 3.29.9. The identical fixture builds and its
-  consumer runs with 3.30.9 and 3.31.6, even with CMP0156 OLD. CMake 3.30's WHOLE_ARCHIVE
-  feature attributes deduplicate the archives; disabling that feature-level deduplication on
-  3.31 reproduces the failure. Therefore the historical 3.29 support-boundary hypothesis and
-  demo workaround below are insufficient. Evidence: `build-probe/shared-runtime-source/` and
-  `build/linux-full/reports/repair-baseline-shared-runtime-*.log`. No CNA repair applied yet.
-- **Area:** build system -- CNA's shared runtime library (`CNA_SHARED_LIBRARY`,
-  `cmake/SharedRuntimeLibrary.cmake`).
-- **Demos:** none specifically; it blocks building any consumer.
-- **Environment:** Ubuntu 24.04, CMake 3.28.3 (distribution package), GCC 14.2, lld (CNA's
-  default linker choice), multi-renderer build
-  `OPENGLES3;OPENGL33;SDL_RENDERER;VULKAN;SDL_GPU;SOFTWARE;HEADLESS;STUB`,
-  `CNA_CNAEXT=ON`, `CNA_DEVICES=ON`, CNA added with `add_subdirectory()`.
-- **Reproduction:**
-  1. Configure cna-demos with `/usr/bin/cmake` 3.28.3 and `-DCNA_SHARED_LIBRARY=ON`
-     (CNA's own default on Linux with CMake >= 3.27).
-  2. `cmake --build <dir> --target cna-demos`.
-- **Observed:** the `CNA/libcna.so` link fails with hundreds of
-  `ld.lld: error: duplicate symbol: ...` (first ones: `CNA::Internal::Xnb::XnbAssemblyQualifier`,
-  `CNA::Internal::Audio::DecodeMsAdpcm`, `CNA::Internal::Media::MediaLibraryIndex::...`,
-  `Microsoft::Xna::Framework::Audio::SoundBank::...`). The generated link line lists
-  `libcna_runtime.a` and `libcna_content.a` twice inside the first `--whole-archive` group, and
-  `libcna_media.a`/`libcna_audio.a` and the input/graphics/renderer archives twice inside later
-  groups -- the repetition CMake emits for static libraries in a dependency cycle. Inside
-  `--whole-archive` every repetition re-adds every object, hence the duplicates.
-- **Expected:** CNA builds on every CMake version its configuration admits. `CNA_SHARED_LIBRARY`
-  defaults to ON for CMake >= 3.27, and `cmake_minimum_required` is 3.20.
-- **Cross-check:** the identical configuration with CMake 4.4.4 (`pip install cmake`) generates a
-  link line with every archive exactly once and links successfully.
-- **Likely cause (not verified):** CMake 3.29 changed link-line de-duplication (policy CMP0156),
-  so 3.27/3.28 still repeat cyclic static libraries. Which exact CMake version is the first good
-  one, and whether CNA's default option set (CNAEXT/DEVICES off, single renderer) also
-  reproduces on 3.28, has not been tested.
-- **Workaround in cna-demos:** `cmake/CnaDemosCna.cmake` sets `CNA_SHARED_LIBRARY=OFF` (static
-  CNA) when CMake is older than 3.29 and the user did not choose a value. With CMake >= 3.29 CNA's
-  default is kept. This is a build-mode choice, not a change to CNA.
-- **Suggested upstream fix:** raise the `CNA_SHARED_LIBRARY` support gate in CNA's
-  `CMakeLists.txt` to the first CMake that de-duplicates correctly, or de-duplicate the
-  WHOLE_ARCHIVE list in `cmake/SharedRuntimeLibrary.cmake` so cycle repetition cannot occur.
-- **Status:** documented; not yet reported upstream.
-
 ### CNA-DEMOS-ISSUE-003 -- `SpriteBatch` does not leave its texture in `GraphicsDevice::Textures[0]`
 
 - **Area:** graphics -- `Microsoft::Xna::Framework::Graphics::SpriteBatch`
@@ -2341,6 +2296,62 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-001 -- `libcna.so` fails to link with CMake 3.28 (duplicate symbols)
+
+- **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `b35fbc933` corrects the
+  shared-runtime minimum to CMake3.30, with an early explicit diagnostic and the
+  existing static fallback. CNA's overall/static minimum is unchanged; this does
+  not claim shared mode works on3.28/3.29. Sixteen actual-version scenarios across
+  3.28.6/3.29.9/3.30.9/3.31.6, two real old-version top-level refusals, canonical
+  native/external builds, fresh/repeated native CTest and146 two-renderer content
+  focus pass. All319 external artifacts are byte-identical to the completed full
+  roots/boundaries checkpoint; no second full runtime sweep is claimed. Historical
+  evidence follows. See [version-policy evidence](repair-evidence/build/SHARED_RUNTIME_POLICY.md).
+
+- **Repair-campaign reproduction (2026-10-19): CONFIRMED_OPEN.** A two-library cyclic
+  fixture using the unchanged current CNA shared-runtime helper reproduces duplicate symbols
+  with official checksum-verified CMake 3.28.6 and 3.29.9. The identical fixture builds and its
+  consumer runs with 3.30.9 and 3.31.6, even with CMP0156 OLD. CMake 3.30's WHOLE_ARCHIVE
+  feature attributes deduplicate the archives; disabling that feature-level deduplication on
+  3.31 reproduces the failure. Therefore the historical 3.29 support-boundary hypothesis and
+  demo workaround below are insufficient. Evidence: `build-probe/shared-runtime-source/` and
+  `build/linux-full/reports/repair-baseline-shared-runtime-*.log`. No CNA repair applied yet.
+- **Area:** build system -- CNA's shared runtime library (`CNA_SHARED_LIBRARY`,
+  `cmake/SharedRuntimeLibrary.cmake`).
+- **Demos:** none specifically; it blocks building any consumer.
+- **Environment:** Ubuntu 24.04, CMake 3.28.3 (distribution package), GCC 14.2, lld (CNA's
+  default linker choice), multi-renderer build
+  `OPENGLES3;OPENGL33;SDL_RENDERER;VULKAN;SDL_GPU;SOFTWARE;HEADLESS;STUB`,
+  `CNA_CNAEXT=ON`, `CNA_DEVICES=ON`, CNA added with `add_subdirectory()`.
+- **Reproduction:**
+  1. Configure cna-demos with `/usr/bin/cmake` 3.28.3 and `-DCNA_SHARED_LIBRARY=ON`
+     (CNA's own default on Linux with CMake >= 3.27).
+  2. `cmake --build <dir> --target cna-demos`.
+- **Observed:** the `CNA/libcna.so` link fails with hundreds of
+  `ld.lld: error: duplicate symbol: ...` (first ones: `CNA::Internal::Xnb::XnbAssemblyQualifier`,
+  `CNA::Internal::Audio::DecodeMsAdpcm`, `CNA::Internal::Media::MediaLibraryIndex::...`,
+  `Microsoft::Xna::Framework::Audio::SoundBank::...`). The generated link line lists
+  `libcna_runtime.a` and `libcna_content.a` twice inside the first `--whole-archive` group, and
+  `libcna_media.a`/`libcna_audio.a` and the input/graphics/renderer archives twice inside later
+  groups -- the repetition CMake emits for static libraries in a dependency cycle. Inside
+  `--whole-archive` every repetition re-adds every object, hence the duplicates.
+- **Expected:** CNA builds on every CMake version its configuration admits. `CNA_SHARED_LIBRARY`
+  defaults to ON for CMake >= 3.27, and `cmake_minimum_required` is 3.20.
+- **Cross-check:** the identical configuration with CMake 4.4.4 (`pip install cmake`) generates a
+  link line with every archive exactly once and links successfully.
+- **Likely cause (not verified):** CMake 3.29 changed link-line de-duplication (policy CMP0156),
+  so 3.27/3.28 still repeat cyclic static libraries. Which exact CMake version is the first good
+  one, and whether CNA's default option set (CNAEXT/DEVICES off, single renderer) also
+  reproduces on 3.28, has not been tested.
+- **Workaround in cna-demos:** `cmake/CnaDemosCna.cmake` sets `CNA_SHARED_LIBRARY=OFF` (static
+  CNA) when CMake is older than 3.29 and the user did not choose a value. With CMake >= 3.29 CNA's
+  default is kept. This is a build-mode choice, not a change to CNA.
+- **Suggested upstream fix:** raise the `CNA_SHARED_LIBRARY` support gate in CNA's
+  `CMakeLists.txt` to the first CMake that de-duplicates correctly, or de-duplicate the
+  WHOLE_ARCHIVE list in `cmake/SharedRuntimeLibrary.cmake` so cycle repetition cannot occur.
+- **Status:** documented; not yet reported upstream.
+
 
 ### CNA-DEMOS-ISSUE-013 -- The content manifest lists the content pipeline's bookkeeping files
 
