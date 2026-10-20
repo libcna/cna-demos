@@ -300,6 +300,40 @@ resolves full names first with the existing array-alias fallback. All collision
 checks precede registry mutation. No public API or object layout changes. Native,
 external and actual-TU sanitizer builds are running; this is not an088 closure.
 
+## Next registry/compiler/environment checkpoint — validation in progress
+
+CNA088 is committed as `80b8e45b2`,090 as `7864dd5b1`, and111 as `6823af99a`.
+Corrected registry actual-TU ASan/UBSan/leak5/5 and the original16-check corruption
+probe16/16 pass. Native34/34 includes the complete intermediate corpus, compiler
+and registry controls. An initial invocation from the demo cwd produced ten missing-
+fixture failures; it is retained, and the corrected CNA-root invocation passes34/34
+in705ms. Always run native corpus tests from the CNA repository root.
+
+111's public CNA extension contract requires explicit build-environment targets.
+Four new native tests cover all three target bytes/two profiles, explicit override
+of nondefault registration with LZX retained, old no-environment defaults, and cache
+identity. Before repair:one PASS/three FAIL,18ms. The writer component version
+changes from1 to2 because ContentBuildManifest includes that version in fingerprints;
+otherwise old incorrect platform/profile bytes could remain cached. The demo's
+existing exact identity assertion changes only its required version to2, not its
+strength or count. No Windows Phone/Xbox runtime or genuine-XNA execution is claimed
+by these CNA extension tests.
+
+Combined native focus gives52PASS/one existing opt-in >2GiB-file SKIP of53,
+1007ms, including existing cache-fingerprint tests. Both111 builds are warning-free;
+the preceding registry native rebuild retains the same two pre-existing material
+nodiscard warnings. First strict56 external runs remove only088/090 failures;
+after111 repair, final strict56 runs give24PASS/four unchanged FAIL per renderer,
+no unexpected status/count/assertion differences. XML-to-XNB is33/33 on both.
+Only after these passes do markers change:088->089 for the remaining initialization
+defect;090/111 removed from the now-passing XML-to-XNB demo. All assertions remain.
+
+Full517 native content regression is running. External319-binary snapshot is frozen
+in `repair-registry-binaries.sha256` for full sweeps and final CTest. Expected full
+delta:58 demo-status improvements versus campaign HEAD (60 versus Complete1128),
+plus the existing two149 improvements and one088 assertion improvement in a still-
+failing089 demo. No088/090/111 closure until the full checkpoint passes.
+
 Initial setup attempts are retained: manual AddTypeWriter duplicated a writer that
 the genuine constructor had already discovered; public GetTypeWriter outside an
 initialization context failed its dependency-stack precondition. Neither is a CNA

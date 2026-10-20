@@ -451,7 +451,7 @@ int main()
             check(directRegistry.Writers() == firstDirectWriters &&
                       vitalWriter->Identity() == Pipeline::ContentComponentIdentity{
                           "CNA.XnaObjectXnbWriter[CnaDemos.XmlVital]",
-                          "1;" + Pipeline::XnbOutputOptionsDigest(directOptions)} &&
+                          "2;" + Pipeline::XnbOutputOptionsDigest(directOptions)} &&
                       vitalSchemas.size() == 1u &&
                       vitalSchemas.front().assetTypeId ==
                           static_cast<std::uint32_t>(Pipeline::XnbOutputAssetId::XnaObject) &&

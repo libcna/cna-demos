@@ -18,8 +18,6 @@ CNA_DEMOS_STANDALONE({
              "ContentTypeReader::Read", "ContentTypeReader::TypeVersion", "ContentManager::Load", "ContentManager::Unload"},
     .tags = {"content", "custom", "pipeline", "xml", "xnb", "cnaext"},
     .restrictions = "Requires CNA::ContentCompiler and CNA::ContentPipelineBuild. Uses original private XML fixtures. "
-                    "Checks serial source compilation and runtime loading. ISSUE-090: Initialize deadlocks when it follows its "
-                    "documented nested-writer caching contract. ISSUE-111: a direct XNB writer ignores the build environment's "
-                    "platform/profile. No genuine-XNA oracle, GPU or arbitrary-object CNB claim.",
-    .knownIssue = "CNA-DEMOS-ISSUE-090",
+                    "Checks serial source compilation and runtime loading. "
+                    "No genuine-XNA oracle, GPU or arbitrary-object CNB claim.",
 })
