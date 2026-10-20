@@ -17,6 +17,21 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+Active final gates37179(native full) and74592(external both719/math/visual/CTest).
+Do not rebuild native three test binaries or external319 artifacts during them.
+Canonical build27083 and marker build68007 complete with no compiler warnings.
+Focused both-renderer before/after-marker checks exact:XML36,C ContentManager67,
+C++ cache5. Only103/148 metadata markers removed, no source assertions changed.
+Historical039/103/148 remain open pending full gates. Counts85/70 unchanged.
+
+Latest active validation: CNA37179 full native suite RUNNING; external27083 full
+build RUNNING(two jobs). Sharp Runtime local97713eb2 now includes PI16993ac6 and
+character-BOM repair; whole18158/41 gate zeroFAIL/SKIP,574XML/352XML.Linq,actual-TU
+BOM sanitizer5/5 and parser4/4 clean. Native CNA build succeeds and strict original
+XML corpus9/9 passes after removing PI/BOM exemptions; exact goldens unchanged.
+ISSUE148/C-root markers remain until canonical focused/full gates. Counts85/70.
+Permanent XML_SUBSTRATE.md is pending commit. CNA92625c32b,demos6f307f4; no push.
+
 Latest completed checkpoint: ISSUE-016 FIXED_VALIDATED, CNA470b12a5d. Both demo
 link workarounds removed; no assertion changed. Full38847 completed with both719
 sweeps exactly matching the roots predecessor, both95 math/six exact visuals pass,

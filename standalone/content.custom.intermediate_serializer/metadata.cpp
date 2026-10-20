@@ -25,7 +25,5 @@ CNA_DEMOS_STANDALONE({
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::ContentMemberDescriptor::Ignore"},
     .tags = {"content", "custom", "xml", "serialization", "pipeline", "cnaext"},
     .restrictions = "Build-time tool in a separate process; requires CNA::ContentPipelineBuild. An unavailable "
-                    "tool is reported as NOT RUN. ISSUE-148: CNA rejects an in-element processing instruction and "
-                    "accepts self-closing empty sections and an in-memory UTF-8 BOM that XNA rejects.",
-    .knownIssue = "CNA-DEMOS-ISSUE-148",
+                    "tool is reported as NOT RUN.",
 })
