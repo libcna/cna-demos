@@ -12,7 +12,7 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
-Current repair phase F (2026-10-20): all155 historical IDs retained,74 final/81
+Current repair phase F (2026-10-20): all155 historical IDs retained,75 final/80
 pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
@@ -45,22 +45,17 @@ Both95 math, metadata/tools and six exact visuals pass. Final serial CTest has
 684PASS/48 unchangedSKIP/three disabled936.58s, all735 outcomes and319 hashes match.
 Its external freeze was released only afterward;048 remains the accepted checkpoint.
 
-NEXT (10:46 UTC):087 repair committed CNA3d254dfa7, FIXED_PENDING_REGRESSION.
-Genuine reference53 and value/nullable34 pass; all36 native regressions pass normally
-and with actual-TU ASan/UBSan/leak, also against rebuilt libraries. Whole CNA build
-passes with the same51 warnings; native1965/552 pipeline/1412 consumers/runtime241/
-default and original XML all preserve exact outcomes and four hashes. External
-1043-step build passes warning-free. Its first log audit had an incorrect fixed-gap
-assumption; retained failure and corrected exact prelude/body accounting are recorded.
-Original146 focus retains the demonstrated existing_objects zero-index oracle error:
-5/13 controls, only delta. Corrected demo expects null AND an unchanged offered
-fallback; all13 original behavior controls remain. Oracle146 focus passes exactly
-64PASS/nine unchangedFAIL per renderer, shared_resources17/17 unchanged passes.
-087 marker removed only afterward. Marker rebuild55301 passes warning-free;
-marker focus15417 is running. Then freeze319 artifacts and run prepared
-repair-content-dispatch-final-gates.mjs: math95/both719/six visuals, separate strict
-original-baseline AND predecessor audits, final serial CTest735/732 and hashes.
-Do not rebuild external during those gates. No087 closure before full validation.
+Latest local closure (11:13 UTC):087 FIXED_VALIDATED, CNA3d254dfa7/demos8b69456.
+Genuine53+34, native36/sanitizers and all native module/pipeline/consumer/XML gates
+pass. Both146 focus exact64PASS/nine unchangedFAIL per renderer; unchanged08717/17
+and reference-corrected null-fallback demo13/13. Full719 SW621/47/48/3,GLES660/49/7/3;
+only087 improves versus the preceding043 checkpoint. Both95 math/six zero-pixel
+visuals pass. Final CTest684PASS/48 unchangedSKIP/three disabled670.99s, all735
+statuses and319 pre/post hashes exact. Original-baseline audit still retains the
+C root-contract delta (overall driverexit1); this closure does NOT make the global
+campaign green. Last globally accepted checkpoint remains048. See
+`docs/repair-evidence/content/DISPATCH_CHECKPOINT.md`. External freeze released only
+after these audits, for the next089 build.039/045/043/103 remain pending.
 
 Independent089 has permanent21-control before evidence (fourPASS/seventeenFAIL)
 and two owner-isolation cases (ten owner/initialization assertion failures; nested/
@@ -70,9 +65,14 @@ be faked by retrying an explicitly registered unique_ptr instance. An uncommitte
 089 candidate now passes actual-TU21/11/6 controls plus four isolation/late/cold
 cases, normal and ASan/UBSan/leak. Seven CNA-native GTests and a fresh-process
 cold-start control also pass both modes. Canonical79-step build passes with two
-previously documented material warnings; native559 pipeline and1965 module gates
-are running on four frozen artifacts. No089 full-regression pass or closure yet.
-External087 final CTest still runs; do not overlap native consumers/SystemLink.
+previously documented material warnings;1965 module exact1961PASS/four sameSKIP.
+Native559 pipeline and consumers/runtime/XML gates are running on four frozen
+artifacts. The first module launcher exceeded Linux's136940-byte argument limit
+before any test; compact suite selection retains exact1965-case validation.
+External089 build is starting (one worker), no089 full-regression pass or closure.
+012 has a new strict four-case native baseline:onePASS/threeFAIL, no CNA routing
+edit. Direct ReadAsset works; ordinary override/cache, override exception and cold
+ResourceContentManager/reader-withdrawal workflows expose the remaining defects.
 See CNA's live handoff
 for exact commands, jobs and freezes; limit campaign compiler/test workers to THREE,
 private GPU only. Sharp99c2f79c/EasyGLf4d6afa/MetaGLdd3b300 freshly verified clean.

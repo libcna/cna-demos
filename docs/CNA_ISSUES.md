@@ -983,6 +983,15 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-087 -- Disposable XNB shared resources bypass the ReadAsset recorder
 
+- **Campaign status (2026-10-20): Resolved.** CNA `3d254dfa7`; demos `8b69456`.
+  Native36/sanitizers plus all affected native gates pass. Both renderer focus and
+  full719 comparisons preserve every predecessor outcome except087's improvement;
+  six exact visuals and final CTest684PASS/48 unchangedSKIP/three disabled pass,
+  with all319 artifact hashes unchanged. The independent C root-contract delta
+  remains explicitly unresolved, so this is not a globally green checkpoint.
+  See [complete evidence and scope](repair-evidence/content/DISPATCH_CHECKPOINT.md).
+  Historical candidate notes below are retained and superseded by this status.
+
 - **Repair committed (2026-10-20), FIXED_PENDING_REGRESSION:** CNA `3d254dfa7`
   contains the shared-resource/typed/raw dispatch repair and36 native regressions.
   All native gates below pass; complete external build is warning-free. Both

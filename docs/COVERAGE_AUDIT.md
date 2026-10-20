@@ -1443,7 +1443,8 @@ This is an evidence-backed demo expectation correction, not a CNA regression wai
 ISSUE-043 lookup had already passed13/13 before the distinct null-dispatch repair.
 Corrected oracle rebuild passes warning-free; both renderers pass13/13, with the
 entire146-case focus exactly64PASS/nine unchangedFAIL per renderer. CNA repair is
-`3d254dfa7`; full regression is pending. The historical table is retained as
+`3d254dfa7`; full087 local regression passes (DISPATCH_CHECKPOINT.md), with the
+separate C root-contract delta still explicitly open. The historical table is retained as
 Complete1128 evidence. Reports `repair-content-dispatch-focused-{initial,oracle}-*`.
 
 ### Intermediate XML serialization (member and behavior decisions)
