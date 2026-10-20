@@ -114,3 +114,14 @@ invoke extra managed callbacks. Reports `repair-component-c-disposal-corrected-b
 The initial probe's cleanup check assumed the earlier count had already reached2;
 its five-failure report is retained. The corrected cleanup control compares counts
 immediately before and after release, independently of the four actual failures.
+
+`DrawableDisposalOracle.cs` adds4/4 genuine passes: even before Initialize, every
+explicit derived disposal invokes UnloadContent before the base event; the false
+path is silent, and an UnloadContent exception does not suppress a later attempt.
+Two matching native tests fail. Combined standalone native lifecycle/collection/
+launch suite now has57tests:39 old controls pass,18 intended new failures,zero skips
+(907ms; `repair-drawable-lifecycle-native-before*`). The genuine report is
+`repair-drawable-disposal-xna*`. Include this directly related derived disposal
+contract in the141 repair; do not preserve initialized_ as a false one-shot guard
+for a virtual managed hook. Device-service Initialize/event hookup is a separate
+source limitation and is not claimed validated by this no-Initialize probe.

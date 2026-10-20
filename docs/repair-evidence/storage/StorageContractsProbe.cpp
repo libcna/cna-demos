@@ -115,7 +115,7 @@ int main(int argc, char** argv)
     for (const char* name : {"seed.bin", "new.bin", "child", "new"}) fs::remove(root / name);
     fs::remove(root.parent_path() / "outside");
     fs::remove(root); fs::remove(root.parent_path()); fs::remove(root.parent_path().parent_path()); fs::remove(fixture);
-    StorageDevice::SetAppNameEXT("");
+    // This standalone process now exits. Resetting the app name would create a new default root.
     std::cout << "checks=" << checks << " failed=" << failed << '\n';
     return failed ? 1 : 0;
 }

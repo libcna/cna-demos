@@ -75,3 +75,11 @@ The first probe did not catch the unexpected Append exception and terminated;
 The corrected probe reports that exception as a failed assertion and continues all
 independent checks; its own named fixtures are removed without recursive deletion.
 No product modification, suppression or storage closure is claimed.
+
+Cleanup-only follow-up retains the same170checks/141failures
+(`repair-storage-contracts-native-cleanup{,-build}.log`). A standalone process must
+not reset SetAppNameEXT after deleting its fixture: that reset creates a fresh
+default `game` directory. The probe now exits without that unnecessary reset,
+and its entire newly created fixture is verified absent afterward. The two empty
+directories left by the earlier reset were removed non-recursively; the original
+aborted run's evidence fixture remains retained.
