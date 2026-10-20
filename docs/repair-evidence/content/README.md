@@ -2,6 +2,15 @@
 
 ## ISSUE-012: stream routing baseline (2026-10-20)
 
+`ResourceContentColdOracle.cs` now passes14/14 against genuine XNA4 in the private
+SDK environment, strict C#4/x86 warnings-as-errors. No Game or graphics service is
+created. It verifies the authored Curve, loop values, managed cache identity,
+single resource lookup, fresh decode after Unload, exact missing-resource exception
+and cache retention after that failure. Reports `repair-content-resource-cold-xna-*`,
+exact audit errors[]. Native Curve's existing by-value carrier is not falsely
+claimed to reproduce managed reference identity; its resource/cache/read behavior
+is the relevant counterpart.
+
 `ContentStreamRoutingTests.cpp` runs without a Game, routing opt-in or manual
 built-in registration. Four strict native cases giveonePASS/threeFAIL against
 the frozen native tree (uncommitted089 initialization does not change these paths).
@@ -15,6 +24,24 @@ errors[], warning-free strict build. Genuine virtual Load/cache evidence remains
 in ContentOwnershipOracle; dedicated cold-resource reference evidence is next.
 
 ## ISSUE-089: initialization cycle and failure baseline (2026-10-20)
+
+Repair committed CNA `5d32ca58b` (full external regression pending). Canonical
+native559=558PASS/one unchangedSDK-fixtureSKIP818.582s; content1965=1961PASS/four
+unchangedSKIP; consumers1412=1408PASS/fourSKIP129.299s; runtime241=238PASS/threeSKIP
+9.367s; default XML4PASS/two fixtureSKIP and original XML6/6PASS11ms. Exact audits
+and all four post-gate native hashes match. Whole external105-step build passes
+warning-free; nine source hashes match.
+
+Initial146 external focus gives **65PASS/eight unchangedFAIL per renderer**.
+The tool's historical18-control count
+was stale: the immediately preceding frozen logs already contain20 labels
+(19 passing, one089 failure). The first helper rejected actual20 solely because
+of that18 assumption; its failed audit remains. A read-only re-audit of those same
+logs proves all20 ordered labels unchanged and only089 improving on both renderers,
+with no test rerun or demo assertion edit. Reports `*-focused-initial-label-audit.json`.
+Marker089 and its false never-initialized restriction were removed only afterward;
+warning-free nine-step marker build completes, marker focus is running. Full719,
+original-baseline residual audit, six visuals and final CTest remain pending.
 
 Candidate validation11:00 UTC (not a closure): four actual implementation TUs
 (`IntermediateSerializer`, `ContentTypeSerializer`, `IntermediateWriter`,

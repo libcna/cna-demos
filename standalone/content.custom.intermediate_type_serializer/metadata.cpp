@@ -28,7 +28,5 @@ CNA_DEMOS_STANDALONE({
              "Microsoft::Xna::Framework::Content::Pipeline::Serialization::Intermediate::IntermediateWriter::Xml"},
     .tags = {"content", "custom", "xml", "serialization", "validation", "cnaext"},
     .restrictions = "Build-time tool in a separate process; requires CNA::ContentPipelineBuild. "
-                    "Authored dice definitions use compact NdM syntax. ISSUE-089: "
-                    "registered intermediate serializers are never initialized.",
-    .knownIssue = "CNA-DEMOS-ISSUE-089",
+                    "Authored dice definitions use compact NdM syntax.",
 })
