@@ -237,7 +237,40 @@ not initialize a shared serializer with a temporary context it could retain.
 Current external strict content focus still reproduces both088/089 assertions
 (20 child controls, two failures) on both renderers. Source confirms unchecked
 name-map insertion after ownership/type mutation and no production InvokeInitialize
-caller. No088/089 production repair has been applied yet.
+caller.
+
+`IntermediateCollisionProbe.cpp` minimizes088 against the real native static
+library closure:16 controls, six PASS/ten FAIL. It observes unwanted target,
+carrier, full-name and additional-alias publication, failed clean re-registration,
+and a failed round trip, while preserving the original serializer and CNA's existing
+first-registration-wins policy for repeated targets. Its first harness compile
+used incorrect XML factory/ownership signatures; corrected strict C++23/Werror
+build is warning-free, and both logs remain. Reports
+`repair-intermediate-collision-native{,-corrected}-before*`.
+
+Five new CNA-native registry tests likewise reproduce one PASS/four FAIL against
+the unchanged frozen library in an isolated executable. An initial control wrongly
+expected an existing shortcut to be unknown; source shows IsKnownTypeName includes
+aliases. The corrected known-before/known-after control preserves that contract;
+the corrected baseline remains one PASS/four FAIL (2ms). Reports
+`repair-intermediate-registry-native{,-corrected}-before*`. A narrow preflight check
+has now been applied to source; its actual-TU sanitizer build is running separately.
+It is not in the frozen compiler or external full-regression binaries yet.
+
+`IntermediateInitializationEdgesOracle.cs` passes15/15 genuine checks: self and
+mutual nested lookups resolve already-published serializer identities. Discovered
+custom serializers initialize eagerly in singleton construction. A thrown initializer
+aborts singleton publication; the captured failed owner still retains its serializer
+without reinitializing, while the next successful construction owns fresh instances.
+The initial lazy-initialization setup hypothesis failed before its checks and is
+retained; it is not a passing reference result. The corrected explicit eager-failure
+probe is `repair-intermediate-initialization-edges-eager-xna*`.
+
+Targeted genuine reflection/IL inspection confirms the owner is process-wide, not
+ThreadStatic, and GetTypeSerializer registers a newly created serializer before
+calling Initialize. A native monodis attempt crashed before useful output; that log
+is retained. No089 production repair is applied yet; callback timing and lifetime
+must not be guessed from the initially incomplete hypothesis.
 
 Initial setup attempts are retained: manual AddTypeWriter duplicated a writer that
 the genuine constructor had already discovered; public GetTypeWriter outside an
