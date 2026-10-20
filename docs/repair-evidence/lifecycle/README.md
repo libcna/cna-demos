@@ -1,4 +1,4 @@
-# Prepared lifecycle audit and native witnesses (141–144; not repaired)
+# Lifecycle audit and native witnesses (141–144; external validation pending)
 
 Production audit while the geometry checkpoint is frozen. No lifecycle runtime
 code or demo assertions have been changed. The fresh `ComponentContractsOracle.cs` now
@@ -125,3 +125,82 @@ launch suite now has57tests:39 old controls pass,18 intended new failures,zero s
 contract in the141 repair; do not preserve initialized_ as a false one-shot guard
 for a virtual managed hook. Device-service Initialize/event hookup is a separate
 source limitation and is not claimed validated by this no-Initialize probe.
+
+## Native repair validation in progress
+
+The current local CNA batch repairs hook dispatch, repeated/self-removing disposal,
+the owning Game snapshot, callback-safe shared collection ownership, live-index
+Clear/null events and launch parsing/direct Add. Native first focused run passes
+all76 tests (57 lifecycle/collection/launch plus19 existing Game controls,4.519s).
+Three ignored Remove results in existing Game tests produced the exact warnings
+already present in the original baseline. Those controls now additionally assert
+successful removal, and the following native rebuild is warning-free.
+
+Actual GameComponent.cpp,DrawableGameComponent.cpp,GameComponentCollection.cpp,
+Game.cpp and LaunchParameters.cpp plus all57 regressions pass ASan/UBSan with leak
+detection (2.981s; `repair-lifecycle-sanitizer.log`), with no suppression. The first
+instrumented builder added Wall/Wextra to Game.cpp beyond its actual native flags;
+that rejected pre-existing unused renderer default-method parameters, initialization
+order and signed comparisons. The original build failure is retained. The corrected
+builder uses Game.cpp's native warning policy plus Werror and instrumentation;
+the other production/test TUs retain extra Wall/Wextra/Werror. No unrelated renderer
+rewrite or runtime assertion relaxation was used (`repair-lifecycle-sanitizer-corrected-build.log`).
+
+`LaunchArgumentsProbe.cpp` checks actual process arguments, including excluding
+argv0 while retaining the first explicit-vector parameter. The same executable
+links to verified old frozen external and repaired native libcna paths (ldd logs):
+before five failures/eight checks, after8/8pass. No process-level shortcut in the
+demo substitutes for the repaired parser (`repair-launch-process-*`).
+
+Broad native consumers/runtime source suites and the subsequent actual C ABI/demo
+checkpoint remain required. The external Color checkpoint is frozen separately;
+these native results do not claim it contains lifecycle repairs.
+
+The derived genuine oracle now also completes Initialize with a service exposing
+no graphics device:6/6 checks pass, including silent Dispose(false) after Initialize
+and two ordered UnloadContent/events on two later explicit calls. It does not claim
+device-creation/rendering coverage (`repair-drawable-disposal-initialized-xna*`).
+This directly supports correcting the adjacent existing drawable demo's one-unload
+expectation to two in the forthcoming lifecycle external batch; the assertion and
+its count must remain. The current frozen Color runtime/oracle are unchanged.
+
+The first broad repaired-native checkpoint passes the exact1,412 prior consumers:
+1,408PASS/four unchanged skips(284.362s). All33 suites found in runtime test sources
+also pass:233total/230PASS/three capability skips(10.789s). The three skips are
+window-system fullscreen synchronization and the unselected Headless/Terminal
+platform golden variants. Binary/DSO hashes stayed unchanged. Reports:
+`repair-lifecycle-native-consumers.log`, `repair-lifecycle-runtime-inventory.log`.
+The changed actual C adapter and both strict C17 smoke sources also compile;
+that is not a replacement for the still-pending actual C ABI runtime checkpoint.
+
+A further all-four-property ownership test then exposed premature destruction if
+the property event removes its last collection-owned reference:57 existing tests
+pass, one new test fails(1.377s; `repair-property-hook-ownership-before*`). Safe
+external liveness flags demonstrate destruction before both the event callback and
+derived virtual hook return, without dereferencing the destroyed object. The local
+companion reuses one private ownership-retention helper across Dispose and all four
+setters; no public layout/vtable change. All77 focused tests now pass(4.770s), and
+the native rebuild is warning-free (`repair-lifecycle-hook-lifetime-*`). Sanitizer
+and full native consumers have now been repeated for this final companion:
+58/58 ASan/UBSan/leak checks pass (1.771s), the exact1,412 prior consumers have
+1,408PASS/four unchanged skips (256.700s), and all33 runtime source suites have
+234total/231PASS/three unchanged capability skips (15.440s). Native executable and
+DSO hashes were verified unchanged after completion. Reports:
+`repair-lifecycle-hook-sanitizer.log`, `repair-lifecycle-hook-native-consumers.log`,
+`repair-lifecycle-hook-runtime-inventory.log`. The earlier57-test sanitizer result
+alone did not cover the new58th regression. Actual external C ABI/demo validation
+is still pending; the separate Color checkpoint remains frozen.
+
+The expanded `ComponentContractsOracle.cs` passes34/34 genuine checks, including
+the exact adjacent C launch demo's UTF-8 profile, duplicate mode, bare windowed and
+equals-containing name. It produces five names, retains both empty values and
+rejects direct duplicate Add without mutation (`repair-component-contracts-expanded-xna*`).
+Both updated strict C17 native smokes and the actual C adapter compile independently
+without touching the frozen external DSO (`repair-lifecycle-c-corrected-compile.log`).
+
+Three adjacent demo oracles need precise genuine-backed updates in the lifecycle
+external batch: the C++ drawable demo's second disposal must unload again; the C
+component-members demo's second explicit disposal must repeat its callback/event;
+the C launch demo must retain bare/equals names and reject duplicate Add. Preserve
+all assertion calls, UTF-8, buffer-guard and atomicity controls. These corrections
+are not permission to change unrelated expected failures or the frozen Color binary.

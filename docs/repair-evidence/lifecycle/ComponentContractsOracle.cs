@@ -88,6 +88,13 @@ static class ComponentContractsOracle
         Check(parameters["level"]=="3","duplicate value unchanged");
         parameters.Add("","empty key"); parameters.Add("blank","");
         Check(parameters[""]=="empty key" && parameters["blank"]=="","direct empty keys and values");
+        parameters.Clear();
+        parse.Invoke(parameters,new object[]{new[]{"ignored.exe","/profile:Caf\u00e9","--mode:first","/Zeta:last","/mode:second","--windowed","--equals=ignored"}});
+        Check(parameters.Count==5,"C demo input yields five names");
+        Check(parameters["mode"]=="first" && parameters["profile"]=="Caf\u00e9" && parameters["Zeta"]=="last","C demo value and duplicate controls");
+        Check(parameters["windowed"]=="" && parameters["equals=ignored"]=="","equals sign is part of a colonless empty-value name");
+        Expect<ArgumentException>(()=>parameters.Add("mode","replacement"),"C demo duplicate Add contract");
+        Check(parameters.Count==5 && parameters["mode"]=="first","C demo duplicate is atomic");
         Console.WriteLine("checks="+checks+" failed="+failed);
         return failed==0?0:1;
     }
