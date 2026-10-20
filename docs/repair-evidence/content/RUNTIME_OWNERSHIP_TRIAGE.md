@@ -1,5 +1,40 @@
 # Next content-runtime batch: source audit, not repair closure
 
+## Latest dispatch candidate (2026-10-20,09:34 UTC)
+
+Permanent `ContentValueDispatchTests.cpp` adds nine native counterparts of the
+genuine18 value controls. Before:fivePASS/fourFAIL; combined with the previous19
+reference controls,28=tenPASS/eighteenFAIL, every prior outcome unchanged.
+Reports `repair-content-dispatch-values-native-before-braced{,-build}.log/.xml`
+and `repair-content-dispatch-values-audit.json` retain this exact baseline.
+
+The first production candidate restores the erased/shared callback, giving
+12PASS/16FAIL with precisely those two improvements. The expanded candidate
+centralizes typed invocation (including raw reads), checks requested type before
+identity/ownership, rejects replacement existing references and boxed existing
+values, distinguishes null references from existing instances, and dispatches
+explicit reference readers through the serialized index. A common internal
+serialized-reference trait replaces the collection-only classification and also
+recognizes CNA's existing by-value wrappers of XNA reference types. It does not
+use Sharp's stub reflection or redesign those wrappers' ownership/identity.
+
+Actual ContentReader.cpp plus both regression TUs now pass28/28, exact comparison
+errors[] (`repair-content-dispatch-complete-split-policy-*`). First compilation
+had incorrectly applied the probe's extra Wextra/Werror to the production TU;
+pre-existing unused renderer parameters stopped it. That log remains. The helper
+now uses the actual production compile_commands flags for that TU and retains
+Wall/Wextra/Werror for both new test TUs; this successful build emits no warnings.
+No canonical build/full regression or087 closure is claimed yet. Sanitizers are
+running separately; manager fallback011 and by-value resource ownership remain
+independently unresolved. Existing by-value reference wrappers retain their
+C++ value-carrier semantics, not a fabricated managed ReferenceEquals identity.
+
+The old native test `ReadRawObjectReadsIntoAnExistingInstance` used a value struct
+and expected success. Genuine18 demonstrates the exact opposite for all four
+existing-value overloads. Its replacement expects InvalidOperationException,
+unchanged caller value and full payload consumption; direct reader bridge tests
+remain unchanged. This is an evidence-based oracle correction, not a relaxed gate.
+
 Date:2026-10-20. Current registry and sections SOFTWARE sweeps still reproduce
 the documented runtime failures. No production change for these IDs is included
 in the pending048 build.
