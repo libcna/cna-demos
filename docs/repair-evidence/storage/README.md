@@ -108,3 +108,27 @@ advisory flock: exclusive for None, shared for other policies, with documented
 weaker granularity than Windows. That platform limitation is evidence, not proof
 that all144 genuine Windows access/share combinations have been implemented on Unix.
 Do not claim cross-process Windows parity from a process-local reservation table.
+
+## Title paths (145): one historical subdefect was already repaired
+
+`TitlePathsOracle.cs` passes20/20 against genuine XNA4; the same public-native
+checks in `TitlePathsProbe.cpp` give6PASS/14FAIL. Both builds use warnings as errors.
+Four exact data/capability checks retain title-root resolution after changing cwd,
+backslashes and internal dot/parent normalization. The two missing-file cases
+(including a missing parent directory) already produce FileNotFoundException on
+current CNA, unlike the historical report. The complete Color smoke likewise has
+only two failures in the existing ten-check title demo: absolute and empty names.
+
+Remaining contracts include exact empty/rooted/drive-relative/escaping-parent and
+invalid-character categories, plus InvalidOperationException when the requested
+title entry is a directory. Source inspection finds public OpenStream skips XNA's
+cleaned-path validation and I/O exception translation. Its existing native absolute-
+path acceptance test and public relative-or-absolute comment contradict genuine
+XNA; neither contains an explicit intentional-extension rationale. Preserve the
+case-insensitive title lookup and platform asset loading when repairing this path.
+The C title-stream route and achievement catalog/picture callers are the only
+production callers found; no content-wide rewrite is justified.
+
+Reports: `repair-title-paths-xna{,-build}.log`,
+`repair-title-paths-native-before{,-build}.log`. Both new fixture roots were removed;
+no runtime source or demo assertion is changed by these probes.
