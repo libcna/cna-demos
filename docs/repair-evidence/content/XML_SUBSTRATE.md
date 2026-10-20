@@ -58,8 +58,8 @@ XmlReader.cpp/XmlDocument.cpp and five native controls also pass ASan/UBSan/leak
 checks, with normal linked dependencies; no full-dependency instrumentation
 claim. The incremental build is warning-free and module boundaries pass.
 
-Both native corpus exemptions for PI/BOM have now been removed in an uncommitted
-CNA candidate. Its native build and all nine original corpus tests pass. The
+Both native corpus exemptions for PI/BOM have now been removed in CNA commit
+**dbfe6b4c1**. Its native build and all nine original corpus tests pass. The
 original golden data and exact diagnostic comparisons remain unchanged.
 
 The complete external build and subsequent marker-only build pass. The actual
@@ -69,8 +69,17 @@ The separate owner-approved C-root correction also passes all67 controls on both
 renderers (commit `dab9d4f`, marker follow-up `aab4bf3`); C++ cache retains5/5.
 Focused comparisons have errors[] and preserve every previous serializer label.
 
-The full native suite and both719/CTest/visual regression are running with frozen
-artifacts. Historical ISSUE-148 remains open until those finish. The pending
+The full native suite now passes **10,690 / 101 unchanged skips** (10,791 cases)
+in 1,647.295 seconds. Exact case-by-case comparison against the published frustum
+baseline and all three frozen native artifact hashes pass. No failed native case
+was suppressed; the two removed corpus exemptions strengthen the original oracle.
+The full SOFTWARE719 sweep also passes its original-baseline and predecessor
+audits: 627 PASS / 41 unchanged FAIL / 48 SKIP / three manual, exactly the two
+expected XML/C-root improvements since ISSUE-016. Reports include
+`repair-xml-substrate-native-gates.json` and `full-SOFTWARE-{comparison,local-audit}.json`.
+
+OPENGLES3/CTest regression remains running with frozen external artifacts.
+Historical ISSUE-148 remains open until those finish. The pending
 full audit permits only the XML/C-root FAIL-to-PASS transitions versus the last
 checkpoint and requires all other statuses, checks and failing assertions to
 remain exact. No downstream full-suite pass is inferred from focused results.
