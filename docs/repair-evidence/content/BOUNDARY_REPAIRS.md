@@ -1,7 +1,7 @@
 # Public content boundary repair candidates
 
 2026-10-20. Four small, separate root causes in the content subsystem. No issue
-is closed here. Canonical native/external regression remains pending. Before
+is closed here. Canonical native regression passes; external regression is pending. Before
 sources/results are preserved in `PUBLIC_BOUNDARY_TRIAGE.md`; these CNA extension
 contracts are documented by CNA itself, not fabricated genuine-XNA observations.
 
@@ -65,6 +65,22 @@ Before21 controls gave16PASS/five missing-option-nameFAIL. Reports:
 `repair-content-compiler-options-candidate{,-sanitizer}-project-policy-*`.
 
 ## Validation limits and next gates
+
+Native gates completed:1990 module=1986PASS/four unchangedSKIP;562 pipeline=
+561PASS/one unchangedSDK-fixtureSKIP (830.126s); consumers1408PASS/four unchanged
+SKIP of1412, runtime238PASS/three unchangedSKIP of241; XML4/2 and original6/6;
+six link checks pass. All exact audits errors[], four native artifact hashes match.
+Separate CNA runtime/test commits:110 `2386155f2`,105 `1721b4182`,108 `0d63ac853`,
+106 `2ce326907`. None of these issues is closed before external validation.
+
+After012 final gates and a final319-hash check, the external freeze is released.
+Three historical diagnostic observations are converted to contract regressions:
+110 requires typed/contextual ContentLoadException for both independent limits
+and their combined original case;108 requires runtime_error for an inverted range;
+106 requires the selected XMA option in the diagnostic. Original positive controls
+and37/23/32 check counts remain. No105 marker or106/108 restriction removed yet.
+External build25644 uses three workers/private graphics; sources remain frozen.
+The following earlier paragraph records the ordering of the native candidate gates.
 
 Only the named implementation TU and its fixture are instrumented in each focused
 sanitizer executable; linked dependency libraries are not all instrumented. These

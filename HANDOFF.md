@@ -17,6 +17,21 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+13:16 UTC: boundary demo regressions/markers committed34e530e after both146
+focus gates68PASS/five unchangedFAIL each renderer. Builds243+11 steps warning-free.
+Final92630 RUNNING(1) over319 frozen external artifacts; math/exact visuals pass,
+full719 sweeps underway. Native next013/014 candidates pass actual-TU normal and
+sanitized witnesses/native fixtures (01316+8,01412+1). Three source files frozen;
+native build12705 RUNNING(2),1141 steps. No external rebuild, no overlapping
+SystemLink. ROOT_REPAIRS.md records design/evidence/next gates. Counts77/78 unchanged.
+
+13:06 UTC:012 closure commits CNA183328865/demos9b8bdf4; four boundary runtime
+commits1102386155f2/1051721b4182/1080d63ac853/1062ce326907. Final319 hashes match
+before releasing012 external freeze. Build25644 RUNNING(3),243 scheduled steps.
+Three uncommitted demo diagnostic assertions strengthened to repaired contracts;
+no controls removed, no105 marker/106108 restriction changed. No other jobs.
+Next exact build audit then146 initial focus; sources frozen until completion.
+
 13:03 UTC: ISSUE-012 closed after full regression; runtime CNA d7ce398d8,
 marker demos dc9bfac. See STREAM_ROUTING_CHECKPOINT.md. Both719 sweeps retain
 only the original C-root contract residual; final CTest684PASS/48sameSKIP/three
