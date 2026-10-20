@@ -41,6 +41,20 @@ a new runtime pass or a selected final architecture.
   establish and test that independent boundary for texture, font/atlas, cube,
   sound and effect adapters; no blanket cache-disposal patch is safe here.
 
+Further source walk while the057 final CTest runs: `SpriteFont` and `Model` are
+not themselves IDisposable. `SpriteFontContentTypeReader.cpp` calls
+`DecodeSpriteFontXnbData` then `CreateTexture2DFromXnbData` directly, so its atlas
+does not pass through an ordinary nested `ReadObject<Texture2D>` registration.
+This path needs explicit coverage; recording only disposable root values or
+enabling the current reader fallback cannot release every loaded GPU resource.
+`CnaCApiModels.cpp::MirrorLoadedModel` retains model ownership and publishes
+borrowed effects/buffers from its graph rather than cloning independent resources.
+Do not assume copying a Model at the C boundary detaches its GPU lifetime.
+The existing pure-C `ContentSmoke.c` already checks real texture pixels after
+several unloads and after manager destruction, not merely dimensions or handle
+validity. Preserve those controls and add equally meaningful font/model/effect
+lifetime checks where existing coverage only inspects metadata or tears down.
+
 Existing permanent tests remain the starting oracle: ten manager-lifecycle cases,
 four Texture2D value-wrapper cases and the genuine108-check XNA probe. Additional
 coverage must verify the other acquisition routes and C-owned handle lifetime,
