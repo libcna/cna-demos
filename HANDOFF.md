@@ -17,6 +17,14 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+047 isolated native baseline now confirms two output-root registration failures
+and five passing source/security controls; strict warning-free build, four frozen
+native artifacts/two109 sources unchanged, private fixtures removed. See
+GENERATED_OUTPUT_TRIAGE.md and ContentGeneratedOutputTests.cpp. No047 production
+change: manifest/fingerprint/publication currently model these as input files,
+so merely widening one containment check is insufficient.109 gates95074/8261
+remain live; no frozen source or binary was changed. Counts90/65 unchanged.
+
 109 demo/evidence committed86e7a89 after all146 post-metadata checks pass exactly;
 model29/29 each. Full8261 now runs719 sweeps after successful both95 math and
 six zero-pixel visuals. Native95074 still live in genuine XNA compilation.
