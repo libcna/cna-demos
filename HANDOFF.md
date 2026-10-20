@@ -17,6 +17,22 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+Latest: cache-policy build61683 COMPLETE0, configure/build successful, one
+compiler worker, shared base `/rv`, three ISSUE-109 source hashes unchanged and
+four final binary hashes recorded. Final diagnostic audit:138 warnings,
+122 pre-campaign owned-test call sites/16 vendor,zero errors/newer owned sites.
+No warning-free claim. Final native usernet gate5396 now RUNNING alone in its
+own MemoryHigh4GiB/Max6GiB/Swap0 scope, private display, owner UID/zero capabilities,
+dummy interface and explicit limited-broadcast route. Focused54/54 PASS with
+empty audit errors; full10798 RUNNING. Expected10697PASS/101unchangedSKIP with
+per-test comparison against the completed predecessor. Do not close109 or launch
+another heavy workload before this gate completes. External18-stage checkpoint
+is complete. Next: audit5396, commit/close109 only if green, then run047 host
+baseline. Three109 CNA source/test edits and two prepared047 demo fixtures remain
+uncommitted. Counts90FINAL/65PENDING unchanged.
+
+### Earlier checkpoint (superseded for live jobs and next actions)
+
 Post-OOM native86497 COMPLETE1:10798=10688PASS/105SKIP/fiveFAIL; retain every
 outcome. Root capabilities explain one failure/four extra skips; missing private
 broadcast route explains four real two-process discovery/migration failures.

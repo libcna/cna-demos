@@ -268,3 +268,22 @@ if a child exit status otherwise appeared successful. Its guard/snapshot prefix
 was evaluated alone in cna-repair-memory-audit-check.scope:6GiB maximum,zero swap,
 15,441,920-byte initial peak and all event counters zero. No CNA suite/compiler
 was launched by that check; the whole driver passes Node syntax checking.
+
+## Canonical cache-policy rebuild complete; final native gate running
+
+Job61683 completed with configure/build exit0. The complete configured native
+build took6,024,361ms with one compiler worker and persisted shared ccache base
+`/rv`. Its audit records four resulting binary hashes and verifies all three
+candidate source/test hashes unchanged, errors empty. It retains138 diagnostics.
+The final read-only provenance audit classifies122 owned-test call sites as
+predating688f3f23e and16 as vendor; no compiler errors/newer owned call sites.
+This is not a warning-free build, nor proof that every historical declaration or
+compiler option was identical. Reports:repair-model-encoder-native-cache-build-audit.json
+andrepair-model-encoder-native-cache-warning-provenance-final.json.
+
+The corrected full native gate is now job5396 in a new memory-limited scope,
+using private graphics plus the validated unprivileged broadcast network setup.
+Its actual guard checks accepted the memory limit, owner UID, zero capabilities,
+broadcast route, completed build audit and frozen hashes. Focused54/54 PASS,
+exit0, audit errors empty. The full10798-case run has started but is NOT COMPLETE;
+expected10697PASS/101unchangedSKIP. No ISSUE-109 closure is claimed yet.
