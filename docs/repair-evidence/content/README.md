@@ -139,3 +139,28 @@ e0601cd2; the two stress-only rename findings above remain unresolved. An invoca
 missing supported XNA_SAMPLES_ROOT produced five fixture skips; it is retained as
 *-components-missing-fixtures.log, and the complete final gate uses the original
 linked sample fixtures and isolated original Yacht service.
+
+## ISSUE-148: reader positions, BOM and exception timing
+
+`XmlReaderEnvelopeOracle.cs` passes61/61 on Framework4 and .NET8.0.31. Both accept
+processing instructions before, inside and after the root, after a comment, and
+with a non-reserved `xml-stylesheet` target. PI-looking comment/CDATA/escaped
+attribute data remains ordinary data. Nested/trailing XML declarations, reserved
+uppercase XML targets, unterminated instructions and a character-string BOM are
+rejected; a UTF-8 BOM in a byte stream is accepted.
+
+Five malformed-input controls also prove XmlReader creation succeeds in Initial
+state, Read throws XmlException and enters Error, subsequent Read returns false,
+and Close leaves a terminal Closed state. This matters because CNA's intermediate
+serializer must wrap a reader failure at the correct boundary; simply throwing
+early from CreateFromString would not match the genuine XNA contract.
+Reports `repair-xml-envelope-timing-{xna,net8}*`; the initial31-check position/BOM
+runs remain as `repair-xml-envelope-{xna,net8}*`. One modern compile command listed
+a nonexistent XPath facade; its failed build log remains and the corrected build
+uses actual installed reference assemblies. No XML reader/PI runtime repair yet.
+
+The tinyxml2 node model already represents both XML declarations and ordinary PIs
+as XMLDeclaration, and its placement check erroneously restricts both. A narrow
+vendor repair versus preserving the repository's documented unchanged-vendor
+policy was asked asynchronously; no answer or permission is inferred. No vendor
+file has been modified, and unrelated campaign work continues.
