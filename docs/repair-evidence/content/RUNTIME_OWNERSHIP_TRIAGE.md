@@ -176,3 +176,39 @@ the existing OpenStream opt-in solely to isolate011 from012; it is not a propose
 production workaround. These shared_ptr cases cannot close the separate value-
 handle Texture2D ownership requirement. All32 prepared cases can be compiled in
 one bounded probe once a worker and stable native dependency closure are available.
+
+## Canonical039/045 build and next-batch baseline
+
+The complete native configuration builds successfully (1194 scheduled steps).
+All52 emitted warnings match the original152-warning baseline by normalized file
+and diagnostic; no new warning. Four artifacts are frozen in
+`repair-content-runtime-native-frozen.sha256`. The complete manager fixture passes
+23/23; all1918 tests in172 content-module source files are running. The initial
+focus filter selected only the21 XNB tests and omitted the two constructor tests;
+all21 passed, but the inventory guard correctly failed. The corrected filter adds
+those two tests, retains the expected23 count and preserves the initial log.
+Reports: `repair-content-runtime-{manager-focus,manager-complete-focus}.*` and
+`repair-content-runtime-{gates-driver,complete-gates-driver}.log`.
+
+The next-batch32-case probe now compiles with Wall/Wextra/Werror and runs in8ms:
+eightPASS/24 expectedFAIL. Dispatch17 gives fivePASS/twelveFAIL; lookup8 gives
+onePASS/sevenFAIL; ownership7 gives twoPASS/fiveFAIL. Failures reproduce the missing
+callbacks, wrong existing/null/explicit dispatch semantics, broken factory-key
+resolution and absent manager disposal. Positive raw-existing/caller ownership
+and exception controls remain passes. Native039/045 is already present in the
+linked libraries; these are before results for011/043/087, not for039/045.
+Reports: `repair-content-dispatch-lookup-werror-native-before{,-build}.log`.
+
+The initial combined-source build failed Werror on generated GoogleTest classes
+outside their anonymous-namespace fixture. Moving those test classes inside the
+same namespace fixes linkage without suppressing warnings or changing assertions.
+The initial `repair-content-dispatch-lookup-native-before-build.log` is retained.
+
+Additional genuine `ContentValueDispatchOracle.cs` passes18/18, strict C#4/x86:
+explicit readers bypass the dispatch index for value targets, unlike reference
+targets; IDisposable structs are never recorded, including erased reads. All four
+existing-value overloads throw InvalidOperationException because boxed identity
+cannot be retained. This is measured XNA behavior, not a claim that CNA passes it.
+Reports: `repair-content-value-dispatch-xna{-build,}.log`. Preserve these controls
+when repairing the shared invocation boundary; the existing native value-instance
+test expectation must be reviewed against this evidence rather than copied blindly.

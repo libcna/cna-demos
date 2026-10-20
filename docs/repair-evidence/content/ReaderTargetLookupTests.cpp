@@ -39,8 +39,6 @@ namespace
         static std::unique_ptr<ContentTypeReaderBase> Resolve()
         { return ContentTypeReaderManager{}.GetTypeReader(System::Type::From<LookupValue>()); }
     };
-}
-
 TEST_F(ReaderTargetLookupCompatibilityTest, DistinctTargetAndFactoryNamesResolveFreshReaders)
 {
     Register();
@@ -136,4 +134,5 @@ TEST_F(ReaderTargetLookupCompatibilityTest, UnreturnedConstructedReaderDoesNotUs
     ASSERT_NE(ContentTypeReaderManager::CreateReader(key), nullptr);
     EXPECT_NE(Resolve(), nullptr);
     EXPECT_EQ(ContentTypeReaderManager{}.GetTypeReader(System::Type::From<OtherValue>()), nullptr);
+}
 }

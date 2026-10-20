@@ -961,6 +961,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-087 -- Disposable XNB shared resources bypass the ReadAsset recorder
 
+- **Campaign verification (2026-10-20; still open):** genuine reference dispatch
+  passes39/39 and value-type controls18/18. New native dispatch regressions give
+  fivePASS/twelveFAIL, including this shared-table omission and related raw,
+  existing-instance, explicit-reader and null dispatch contracts. These are
+  recorded subfindings, not additional historical IDs. No runtime repair yet;
+  [reference and native evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
+
 - **Area/API:** `ContentManager::ReadAsset`, `ContentReader::ReadSharedResources`,
   `ContentReader::InnerReadObjectAny` and disposal recording for XNB object graphs.
 - **Reproduction:** make the existing shared graph's `Item` implement `IDisposable`, expose
@@ -1688,6 +1695,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-011 -- `ContentManager::Unload` does not dispose loaded assets
 
+- **Campaign verification (2026-10-20; still open):** seven new native ownership
+  regressions give twoPASS/fiveFAIL against the stable current library. Missing
+  default disposal, partial-read retention and exceptional-Unload cleanup are
+  reproduced; caller-owned disposal and callback-exception controls pass. The
+  separate Texture2D value-handle lifetime requirement remains open. See
+  [ownership evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
+
 - **Area:** content -- `ContentManager::Unload()` (`ContentManager.cpp`) only clears the cache
   (`loadedAssets_.clear()`). Its header says it "unloads all cached assets and frees the associated
   resources". A texture handle the game still holds stays alive and usable.
@@ -2311,6 +2325,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   changed and no upstream report sent.
 
 ### CNA-DEMOS-ISSUE-043 -- GetTypeReader confuses the target type name with the reader factory key
+
+- **Campaign verification (2026-10-20; still open):** eight new native registry
+  regressions give onePASS/sevenFAIL. Distinct reader/target identities reproduce
+  the defect; coverage also preserves lazy construction, withdrawal/replacement
+  callbacks and CNA's documented fresh-reader ownership. No runtime repair yet;
+  [lookup evidence](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
 
 - **Area:** ContentTypeReaderManager::GetTypeReader/CreateReaderForTargetTypeEXT and the
   constructor association in ContentTypeReader<T>.

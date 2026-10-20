@@ -132,8 +132,6 @@ namespace
             EXPECT_EQ(recorded, 0);
         }
     };
-}
-
 TEST_F(ContentDispatchCompatibilityTest, TypedNew) { CheckMode(0); }
 TEST_F(ContentDispatchCompatibilityTest, TypedExisting) { CheckMode(1); }
 TEST_F(ContentDispatchCompatibilityTest, RawInferredNew) { CheckMode(2); }
@@ -192,4 +190,5 @@ TEST_F(ContentDispatchCompatibilityTest, RecorderExceptionRemainsUnwrapped)
     ContentReader input(nullptr, &stream, "throwing-recorder", 5, 'w',
         [](auto) { throw System::InvalidOperationException("recorder failure"); });
     EXPECT_THROW((void)input.ReadAsset<Item>(), System::InvalidOperationException);
+}
 }

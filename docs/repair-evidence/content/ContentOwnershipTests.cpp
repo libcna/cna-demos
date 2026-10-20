@@ -127,8 +127,6 @@ namespace
             }
         }
     };
-}
-
 TEST_F(ContentOwnershipCompatibilityTest, UnloadDisposesMaterializedObjectsAndClearsCache)
 {
     OwnershipProbeManager manager(Xnb());
@@ -222,4 +220,5 @@ TEST_F(ContentOwnershipCompatibilityTest, ThrowingCallerRecorderDoesNotTransferO
     ASSERT_EQ(OwnedItemReader::created.size(), 1U);
     manager.Unload();
     EXPECT_EQ(OwnedItemReader::created.front()->disposals, 0);
+}
 }
