@@ -17,6 +17,13 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+13:44 UTC: root module1993 passes1989/four unchangedSKIP; consumers1412/runtime241/
+XML/link outcomes exact, hashes match. Pipeline85718 RUNNING(1), external41603
+RUNNING(2),1183 scheduled steps (~705). All compiled sources frozen. Next content146,
+C API177 per renderer, external16/12 probes and full gates. Matrix six candidate
+rows updated but none closed. Prepared media path evidence/oracles in
+MEDIA_PATH_TRIAGE.md; not run, no media source change. Counts77/78 unchanged.
+
 13:32 UTC: C adapter fix committed CNAc57ecab8c; native strict C smoke normal/
 sanitizer and unchanged external demo25/25 exact labels both pass. Root canonical
 build12705 COMPLETE0,1141 steps/45 prior warnings/zero new/three source hashes exact.
