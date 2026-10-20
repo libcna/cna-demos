@@ -9,6 +9,14 @@ native artifacts are frozen. Canonical focus36/36PASS3ms; full module1965 gives
 value-oracle rename, differences[]. Pipeline552 and broader consumer/runtime/XML
 gates continue. Full external rebuild is still in progress; no087 closure yet.
 
+Consumers complete10:18 UTC:1412=1408PASS/four unchangedSKIP155.254s;
+runtime241=238PASS/three unchangedSKIP9.448s; default XML4PASS/two unchanged fixture
+SKIP1ms; original XML6/6PASS12ms. All exact comparisons and four frozen hashes pass.
+An initial consumer helper stopped before any test because its child log name
+collided with its outer log; the failed driver and successful pre-hashes are kept.
+Only the helper naming changed, and resumed60610 completes0.552 pipeline remains
+in progress; no lifetime/runtime test failure was retried or suppressed.
+
 Nullable follow-up09:50 UTC: genuine value oracle is now34/34PASS, all original18
 labels retained plus16 nullable controls. An empty Nullable existing argument boxes
 to null and must be read as new; a nonempty value still fails identity after reading.
@@ -504,3 +512,13 @@ full math/metadata/tools/visuals/both719 regression8777 is running. The separate
 C root-contract failure is not waived by the comparator. No full checkpoint or
 043 closure is claimed yet.103 generator consistency also passes:3197 routes in57
 files current, four generator regressions pass2.604s, no generated edits.
+
+The043 full external run subsequently finishes1: SOFTWARE620PASS/48FAIL/48SKIP/
+3manual and OPENGLES3659PASS/50FAIL/7SKIP/3manual, exactly63 intended status changes
+against campaign start (65 against Complete1128). Both retain the same unresolved
+C API root-contract assertion delta; it is not waived. Both95 math sweeps,
+metadata/tools and six exact visual references pass. Final serial CTest71529 passes
+684 with48 unchanged skips and3 disabled (735 inventory/732 enabled),936.58s;
+all735 statuses and319 pre/post artifact hashes match. That does not turn the strict
+assertion delta into a pass, so048 remains the last accepted global checkpoint.
+Only after these audits was the external freeze released for the087 build.
