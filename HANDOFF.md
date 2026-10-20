@@ -17,6 +17,31 @@ pending. The authoritative live state and complete machine-readable matrix are
 `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and `../cna/CNA_DEMOS_REPAIR_MATRIX.json`.
 Goal unchanged; CNA is the product being repaired, demos the evidence/oracle.
 
+109 extended sanitizer52903 COMPLETE0:61/61 PASS, actual encoder+decoder/both
+test TUs instrumented, zero warnings/findings; four native artifacts/three source
+hashes exact. Full native86497/external8261 remain running. No109 closure.
+
+109 corrected native build61320 COMPLETE0; new private network/display gate86497
+focused54/54 PASS and full10798 RUNNING. Four native binaries/three sources frozen.
+Extended actual encoder/decoder sanitizer52903 RUNNING(one compiler). External8261
+both719 complete with exact original/local audits:SW627/41/48/3,GLES666/43/7/3;
+serial finalCTest running on319 frozen artifacts. Do not rebuild either tree.
+Before next build after freezes, correct persisted CMake ccache base/launchers:
+existing native launcher overrides exported /rv with repository parent (details
+in CNA handoff). No109 closure; initial failed full/compile evidence retained.
+
+109 first native95074 COMPLETE1:10798 cases=10690PASS/101sameSKIP/sevenFAIL.
+One decoder fixture constructed bad data through the newly strict encoder;
+six discovery failures overlap external SOFTWARE net on61190 (foreign connect
+port observed). Unchanged binary passes13/13 in private network namespace74752.
+Decoder16/32-bit fixtures now independently corrupt encoded index chunks and
+assert both encoder/decoder refusals, preserving original diagnostics/high bytes.
+Three CNA109 source/test files uncommitted; corrected native build61320 RUNNING
+after a retained missing-Parse-filename compile error. External8261 continues:
+SW719 exact627/41/48/3 and both audits pass; GLES/CTest pending. External freeze
+unchanged. Next focused61/full10798 native gate uses private network plus display;
+do not close109 before all outcomes/hash audits pass. See MODEL_ENCODER_VALIDATION.md.
+
 047 isolated native baseline now confirms two output-root registration failures
 and five passing source/security controls; strict warning-free build, four frozen
 native artifacts/two109 sources unchanged, private fixtures removed. See
