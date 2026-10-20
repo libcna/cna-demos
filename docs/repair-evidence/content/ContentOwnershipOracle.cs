@@ -31,6 +31,7 @@ public sealed class OwnershipItemReader : ContentTypeReader<OwnershipItem>
     {
         if (FailureMode == 1) throw new IOException("reader IO sentinel");
         if (FailureMode == 2) throw new InvalidOperationException("reader user sentinel");
+        if (FailureMode == 3) throw new FileNotFoundException("reader missing-file sentinel");
         string label = input.ReadString();
         if (ReuseOne) return Reused ?? (Reused = new OwnershipItem(label));
         return new OwnershipItem(label);
@@ -241,16 +242,16 @@ static class ContentOwnershipOracle
                     Check(manager.RootDirectory == "after-refusal", "failed Load leaves root mutable " + length);
                 }
             }
-            for (int mode = 1; mode <= 2; ++mode)
+            for (int mode = 1; mode <= 3; ++mode)
             {
                 Reset();
                 OwnershipItemReader.FailureMode = mode;
                 using (var manager = new OwnershipManager(bytes))
                 {
-                    if (mode == 1)
-                        Throws<ContentLoadException>(() => manager.Raw(null), "reader IOException wrapped");
-                    else
+                    if (mode == 2)
                         Throws<InvalidOperationException>(() => manager.Raw(null), "reader user exception preserved");
+                    else
+                        Throws<ContentLoadException>(() => manager.Raw(null), "reader I/O exception wrapped mode " + mode);
                     Check(manager.LastStream.Closed, "reader refusal closes stream mode " + mode);
                 }
             }

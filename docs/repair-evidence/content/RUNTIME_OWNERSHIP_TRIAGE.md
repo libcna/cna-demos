@@ -212,3 +212,29 @@ cannot be retained. This is measured XNA behavior, not a claim that CNA passes i
 Reports: `repair-content-value-dispatch-xna{-build,}.log`. Preserve these controls
 when repairing the shared invocation boundary; the existing native value-instance
 test expectation must be reviewed against this evidence rather than copied blindly.
+
+## Full-module regression investigation
+
+The first complete1918 gate finishes in262.712s:1912PASS/four unchangedSKIP/twoFAIL.
+Both failures are retained in `repair-content-runtime-content-module-audit.json`.
+The earlier math fix correctly rejects a negative BoundingSphere constructor input,
+so one adversarial writer seed never reaches its writer. Assigning the same NaN
+center and negative radius through the public fields restores the intended input;
+the48-seed corpus and expected Written/Refused outcomes are unchanged.
+
+The other failure is an older end-to-end Song test expecting raw FileNotFoundException.
+Expanded genuine `ContentOwnershipOracle.cs` now passes91/91 and confirms that
+this IOException subtype is wrapped at ReadAsset, while user exceptions remain
+unwrapped and streams close. Report `repair-content-file-not-found-xna.log` retains
+the new measurement; the previous89-check log remains. The end-to-end expectation
+is corrected to ContentLoadException; the four direct Song reader tests keep their
+separate FileNotFoundException control. Its renamed test has an explicit old-to-new
+identity mapping in the baseline audit, not an ignored or newly accepted failure.
+
+All four frozen hashes matched after the failed run; only then was that native
+freeze released. The eight-step incremental build of these two fixture corrections
+is warning-free. Complete manager/writer/song focus passes33/33 in146ms, including
+48 adversarial seeds (32 refused/16 written) and400 generated mutations
+(204 refused/196 written). Corrected1918 gate is running under prefix
+`repair-content-runtime-corrected`; its four artifacts are frozen separately.
+No whole-module pass or039/045 closure is claimed until it finishes.
