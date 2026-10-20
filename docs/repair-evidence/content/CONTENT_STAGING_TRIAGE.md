@@ -50,3 +50,43 @@ Process-local locking alone cannot cover separate compiler processes. Directory
 publication/retirement, if used, must not overwrite an existing target or leave
 unscavengable crash debris. No design or platform-runtime validation is claimed
 yet. ISSUE-057 is **CONFIRMED_OPEN**, not fixed.
+
+## Read-only synchronization design review
+
+Reviewed while the ISSUE-047 native checkpoint is running; no staging source or
+test expectation has changed. A process-local mutex cannot protect independent
+compiler processes. Merely checking the lease before metadata still leaves the
+directory-creation/lease-creation interval and teardown visible. Treating a live
+PID or every missing metadata file as harmless would hide persistently malformed
+state and is not an acceptable repair.
+
+A shared parent lifecycle guard is a candidate, not an implemented design. It
+would cover enumeration/validation/removal and reservation initialization/
+destruction, but must not serialize the actual content builds. The constructor
+must not recursively acquire an independently opened file lock when invoking
+the scavenger. Linux documents that separate opens are independent lock owners,
+including within one process; inherited descriptors retain the lock until their
+last close. Any guard needs deliberate descriptor inheritance and crash-release
+semantics. [Linux flock documentation](https://www.man7.org/linux/man-pages/man2/flock.2.html).
+
+Do not assume a directory-only flock is a portable solution: Linux's NFS
+emulation requires a writable descriptor for an exclusive lock. A stable regular
+lock file is a possible alternative, but deleting/recreating that shared lock
+can split participants across different inodes. Introducing a persistent staging
+marker would change the existing empty-parent expectation: it must be explicitly
+justified/documented and tested as one exact housekeeping file, never handled by
+ignoring arbitrary leftovers. Existing cleanup, ownership and malformed-state
+assertions must remain meaningful; no such oracle change has been made.
+
+On Windows, a synchronous `LockFileEx` request without `LOCKFILE_FAIL_IMMEDIATELY`
+can wait in the kernel instead of adding sleeps/retries; even a second handle in
+the same process is excluded by an exclusive lock. [Microsoft LockFileEx
+documentation](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfileex).
+A named kernel mutex adds namespace, case-sensitive naming and security-descriptor
+considerations, so it is not automatically equivalent to locking the filesystem
+resource. [Microsoft CreateMutexW documentation](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createmutexw).
+
+Before selecting a repair, exercise both independent processes and threads,
+aliases of the same parent, owner termination, malformed/symlink/read-only
+controls, bounded scans and exact cleanup on Linux and available MinGW/Wine.
+No NFS/SMB/macOS/native-Windows runtime result is claimed by this design review.
