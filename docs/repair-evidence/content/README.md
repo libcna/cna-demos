@@ -345,4 +345,35 @@ passes the built-in lookup control, prints ENTER Initialize and deadlocks in the
 nested lookup. A single five-second process deadline terminates this isolated
 reproduction (SIGTERM/ETIMEDOUT, nonzero); it is not a retry or a pass. Nine required
 post-fix checks cover lookup/callback/cache, duplicate/frozen registration and
-independent compilers. Production remains unchanged; no090 closure is claimed.
+independent compilers. This records the pre-repair baseline; the committed090
+repair and subsequent validation are described above. No090 closure is claimed yet.
+
+## ISSUE-148: section traversal isolated from XML parser limitations
+
+`IntermediateSectionsOracle.cs` freshly passes13/13 against genuine XNA4.0 on
+Framework4. The five ordinary/paired-empty controls retain integer37. Seven
+self-closing variants fail with exact InvalidContentException and the measured
+`None` or `Element` XmlNodeType diagnostic; reversed paired-section order is also
+rejected with `Element`. This verifies traversal behavior, not simply a blanket
+ban on empty XML nodes. Reports: `repair-intermediate-sections-xna*`.
+
+The matching13 native parameterized cases, strictly compiled against the frozen
+registry checkpoint library, initially give sixPASS/sevenFAIL in2ms. Removing only
+the two premature empty-section returns in IntermediateReader preserves the
+ordinary traversal and its error timing. The actual modified production TU and
+the13 tests pass ASan/UBSan/leak checking in8ms, using the existing static library
+closure; the frozen checkpoint binaries are not rebuilt. Three obsolete corpus
+exemptions are removed, with all historical golden inputs/messages retained.
+
+The first exploratory sanitizer compile added Wall/Wextra and found an unchanged
+parentheses warning in DotNetTypeString at line57. That failed log is retained;
+it is not a passing stronger-warning gate. The successful sanitizer build uses
+the established actual-TU/project flags with Werror, as the prior sanitizer batch.
+Reports: `repair-intermediate-sections-native-before*`,
+`repair-intermediate-sections-sanitizer{,-policy}.log`.
+
+This is a **partial148 repair, not closure**. Full native/corpus/external validation
+must follow release of the088/090/111 binary freezes. The processing-instruction
+vendor-policy question remains unanswered; string-BOM handling must also preserve
+the measured deferred Read exception timing. Neither parser issue is repaired or
+hidden, and the demo148 knownIssue remains unchanged.

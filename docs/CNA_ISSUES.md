@@ -90,6 +90,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   the processing-instruction acceptance, both self-closing-section rejections and
   in-memory BOM rejection. Expanded paired empty sections remain accepted. See the
   direct `IntermediateEnvelopeOracle.cs` and its16-check combined148/149 evidence.
+  A further13-case `IntermediateSectionsOracle.cs` confirms paired/self-closing
+  combinations and exact exception/node categories. The owned-CNA section fix
+  has13/13 actual-TU sanitizer passes (before:sixPASS/sevenFAIL), but full native
+  and demo regression is pending. Processing-instruction and string-BOM defects
+  remain open; the historical description below is retained.
 
 - **Area/API:** `IntermediateSerializer::Deserialize<T>` and its `System::Xml::XmlReader`
   substrate while reading the XNA intermediate document envelope.
