@@ -12,6 +12,26 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+Current repair checkpoint (2026-10-20):141–144 FIXED_VALIDATED, runtime031693a9f/
+b086814f9, demo oracles61d344e. All155 IDs retained:62 final/93 pending. Full719
+SW609/59/48/3 and GLES648/61/7/3 have52 cumulative intended status improvements
+(54 versus Complete1128). SW strict comparison is exact; GLES retains one030
+unreliable-outage assertion fluctuation and exit1, investigated against unchanged
+source and the independently scheduled frozen CTest.030 remains open, no relaxed
+oracle. Full isolated CTest732accepted/zero unexpected failures,48skips/three
+disabled,911.46s; six pixel-exact visuals, three binary hashes reverified.
+See docs/repair-evidence/lifecycle/CHECKPOINT.md. External freeze RELEASED.
+
+NEXT: storage056/151 native repairs are committed (Sharp1c0fc9b5/CNA5865ae938),
+external closure pending. Sharp145 prerequisites551ced42 and82b57541 pass the full
+18142-test gate. Title145 native production/C adapter/tests are uncommitted;
+focused16/16 and actual-TU ASan/UBSan/leak6/6 pass, broader runtime240total237PASS/
+three unchanged skips. Its genuine probe28/28 and actual-assembly IL evidence are
+in docs/repair-evidence/storage/. C ABI pre-fix probe13checks/five failures retained.
+Follow CNA's CNA_DEMOS_REPAIR_HANDOFF.md for exact native job/commit/build state;
+never count these pending external repairs as resolved yet. FileShare152 platform
+policy question remains pending. No push or merge. The paragraphs below are history.
+
 Latest closure (2026-10-20):024/128/130/135 FIXED_VALIDATED;126 verified duplicate
 of024. All155 IDs retained,54 final/101 pending. Frozen runtimee1377c437/a8a60bf03:
 both719-ID sweeps exact42 cumulative changes,SW599/69/48/3,GLES638/71/7/3;
