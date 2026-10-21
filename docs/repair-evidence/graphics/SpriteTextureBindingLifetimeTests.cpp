@@ -57,7 +57,7 @@ protected:
     SpriteBatch batch{device};
     void SetUp() override
     {
-        CNA_SKIP_IF_RENDERER_IS_NONE_OF(Software, OpenGL33, OpenGLES3, SdlGpu);
+        CNA_SKIP_IF_RENDERER_IS_NONE_OF(Software, OpenGL33, OpenGLES3, SdlGpu, Fna3d, WebGPU, DirectX9);
         RecordProperty("renderer", std::string(device.GetGraphicsRendererName()));
         const Color white = Color::White;
         source.SetData(&white, 1);
