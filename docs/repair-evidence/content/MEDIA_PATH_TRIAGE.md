@@ -34,6 +34,22 @@ Reports `repair-media-reference-{framework,xact}-disassembly.log`.
 
 ## ISSUE-015
 
+2026-10-21 follow-up: `../media/SongFromUriPathTests.cpp` is a prepared,
+NOT-YET-COMPILED eight-case fixture (four cases for each string/typed overload).
+It separates title-only, cwd-only, duplicate-name decoy and absolute-path cases,
+without playback. The current genuine assembly's complete MediaSong_FromUri IL
+at RVA0x206a0 explicitly calls TitleLocation.Path and Path.Combine for a relative
+URI; local FNA has the same combination. Do not confuse this with028's cwd contract.
+
+Implementation constraints: media is below runtime. The existing core
+`CNA/Internal/TitlePath.hpp` bridge and platform filesystem base path are how
+ContentManager obtains this information without a runtime dependency. Preserve
+that layering if repairing Song. Public TitleLocation-based regression is a
+cross-module integration test, not a reason to add runtime to cna_media's link
+closure. Existing Song tests that compare a relative raw handle need reference-
+justified adjustment rather than retaining the wrong cwd resolution; preserve
+their actual file/name/exception assertions. No such adjustment is made yet.
+
 The installed framework's MediaSong_FromUri checks Uri.IsAbsoluteUri. For a relative
 URI, its complete managed method obtains TitleLocation.Path and combines it with the
 URI text before passing the path to native media creation. Current CNA Song.cpp's
