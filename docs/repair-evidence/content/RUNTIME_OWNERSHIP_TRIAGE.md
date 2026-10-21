@@ -1,5 +1,31 @@
 # Next content-runtime batch: source audit, not repair closure
 
+## Full native parity and actual C ABI control (2026-10-21)
+
+26923 completed0:10868=10767PASS/101sameSKIP, all10807 original057 outcomes
+unchanged plus61 newPASS; no missing or changed cases. Wider focus1524 has
+1519PASS/5SKIP. Build857043ms, focus65764ms, full1152852ms, compare118ms.
+Peak4296716288,high308,max/OOM0; source/artifact hashes unchanged. Reports
+repair-content-ownership-native-current-v3-*. All66 build warnings match the
+previous native build's normalized location/message multiset, with no new warning.
+
+The permanent real-C ContentIndependentHandleLifetimeProbe.c fills the old
+additional_loaders coverage gap (that scenario destroys cube/sound before Unload).
+It requires the requested renderer and playback capability, exact96 authored cube
+pixels, an existing looped sound instance and creation/playback of another sound
+instance at each boundary: before Unload, after Unload, after manager Destroy.
+No capability skip or tolerance. Cleanup attempts every retained handle.
+
+6476 baseline completed0 against the unchanged057 C shared library:
+C17/Wall/Wextra/Werror build261ms, SOFTWARE126ms, OPENGLES3 280ms, all assertions
+pass;peak278118400/events0, all hashes intact. Reports
+repair-content-independent-c-before-*. The candidate must reuse the exact same
+compiled C binary and source, with only its C shared-library dependency rebuilt.
+16171 now builds that external closure serially in the existing linux-full tree,
+then runs both candidate renderer cases. No candidate C pass is claimed yet.
+Existing C texture/font/effect scenario remains unchanged; effect/model lifetime
+contract decision is still pending. This is not ISSUE-011 closure.
+
 ## Integrated sanitizers61PASS; current native regression running (2026-10-21)
 
 90369 completes0: existing libraries checked160ms, fixture compile35927ms,

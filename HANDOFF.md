@@ -12,6 +12,29 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+ACTIVE011:26923 TERMINAL0. Full native10868=10767PASS/101sameSKIP;
+all10807 previous057 outcomes unchanged, exactly61 addedPASS. Wider focus
+1524=1519PASS/5SKIP. Build857043ms, focus65764ms, full1152852ms, comparison118ms;
+peak4296716288,high308,max/OOM0, frozen hashes unchanged. This supersedes the
+older RUNNING notes below; sanitizer61PASS remains valid.
+
+6476 TERMINAL0: new permanent ContentIndependentHandleLifetimeProbe.c compiles
+with C17/Wall/Wextra/Werror and passes against the original057 C ABI library on
+SOFTWARE and OPENGLES3. Each checks96 exact cube pixels, existing looped playback
+and a fresh playable sound instance before Unload, after Unload and after manager
+Destroy. Build261ms, SOFTWARE126ms, OPENGLES3 280ms;peak278118400/events0.
+Reports repair-content-independent-c-before-*, all frozen hashes unchanged.
+
+16171 RUNNING: existing build/linux-full incremental external C API/demos rebuild,
+then the SAME compiled C fixture against the candidate library on both renderers.
+Driver build-probe/repair-content-ownership-external.mjs; reports
+repair-content-ownership-external-*. Private display, one compiler/shared cache,
+4GiB high/6GiB max/no swap. No concurrent heavy job or production-source changes.
+Next inspect candidate C results, run existing C content scenarios and complete
+SOFTWARE/OPENGLES3/CTest/visual comparisons. C effect/model policy still pending;
+do not weaken their existing post-Unload assertions.93FINAL/62PENDING;011 open.
+No new production commit, issue-marker removal, push or merge.
+
 ACTIVE011:90369 TERMINAL0, integrated61/61 native ownership tests PASS under
 ASan/leak/UBSan/float-cast-overflow on SOFTWARE. Existing instrumented libraries
 reused160ms; fixture build35927ms; exact145 unchanged renderer diagnostics verified
