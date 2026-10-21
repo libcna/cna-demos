@@ -1,5 +1,26 @@
 # Next content-runtime batch: source audit, not repair closure
 
+## Actual C effect regression retained (2026-10-21)
+
+After external16171 linked libcna_c_api.so,53232 ran the existing pure-C
+c_api.content.content_manager binary directly (only C ABI dependency, not the
+still-stale C++ launcher). Both SOFTWARE and OPENGLES3 fail exactly two of67
+checks: loaded Effect applies after Unload, and after manager destruction. All
+other65 checks pass, including texture/font lifetime checks. No demo edits.
+Actual renderer log identities and before/after binary/source hashes match.
+Runs1377ms/524ms,scope peak158732288/all events0. Reports
+repair-content-c-contract-early-*. This short no-compile diagnostic used a separate
+512MiB/no-swap private-display scope while the sole external compiler continued;
+it is not the completed external regression gate or a passing checkpoint.
+
+The candidate now disposes the shared Effect held by ContentManager; the C loader
+returns that same shared_ptr, and Effect::ApplyPassInternal refuses disposal.
+This reproduces the earlier source-predicted C contract conflict. The owner was
+asked to select either preserving documented independent C effect/model resources
+or explicitly changing that C contract to XNA/C++ disposal with corresponding
+documentation/assertions. No decision is inferred; no failure converted to a
+knownIssue, assertion relaxed, or resource clone architecture introduced yet.
+
 ## Full native parity and actual C ABI control (2026-10-21)
 
 26923 completed0:10868=10767PASS/101sameSKIP, all10807 original057 outcomes

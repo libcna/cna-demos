@@ -12,6 +12,21 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+ACTIVE011 follow-up:53232 TERMINAL1, early existing pure-C content_manager
+diagnostic against the newly linked candidate C library. SOFTWARE and OPENGLES3
+each fail exactly2/67 checks: Effect use after Unload and after manager Destroy;
+other65 checks pass. Renderer identities verified, all binary/source hashes
+unchanged;peak158732288/events0. Reports repair-content-c-contract-early-*.
+No C++ binary with stale layout was run. This brief no-compile diagnostic used a
+separate512MiB scope while the sole compiler continued16171; it is not a second
+heavy build or full external acceptance. Existing assertions/markers unchanged.
+Owner asked to choose preserving documented independent C effect/model lifetime
+versus explicitly unifying those C contracts with XNA/C++; no answer presumed.
+Continue16171, then actual independent-C candidate gate and prepared50-case
+build-probe/repair-content-ownership-c-focused.mjs. ISSUE-058 baseline driver
+build-probe/repair-media-queue-replay-before.mjs is prepared, NOT run; use the
+existing integrated build-asan after heavy jobs finish. No new production edits.
+
 ACTIVE011:26923 TERMINAL0. Full native10868=10767PASS/101sameSKIP;
 all10807 previous057 outcomes unchanged, exactly61 addedPASS. Wider focus
 1524=1519PASS/5SKIP. Build857043ms, focus65764ms, full1152852ms, comparison118ms;
