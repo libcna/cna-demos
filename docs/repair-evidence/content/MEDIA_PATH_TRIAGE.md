@@ -127,6 +127,15 @@ execution remain to be performed. No audio/playback/hardware pass is claimed.
 
 ## ISSUE-028: historical expectation needs correction evidence
 
+Prepared `WaveBankRetainedFileProbe.cpp`, NOT compiled/run: absolute-path control
+plus rename and rename-with-invalid-replacement cases, six checks, existing read
+seam and real valid XWB. This separates stream identity from cwd resolution.
+Genuine WaveBank keeps `pFileStream = File.OpenRead(fullPath)` until Dispose,
+whereas current CNA closes the metadata stream and reopens sourcePath later.
+An absolute-path-only repair might therefore leave the same root lifetime issue.
+No conclusion from the unrun probe yet; rename semantics are platform-specific
+and this witness does not claim Windows runtime compatibility.
+
 8353 completed the lazy-path witness on2026-10-21: strict compile1680ms/run114ms,
 exactly6PASS/2FAIL, unchanged source/artifact hashes,peak357634048/all events0.
 All four banks are initially prepared. The relative changed-cwd and relative

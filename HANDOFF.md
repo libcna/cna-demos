@@ -12,6 +12,47 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+Prepared follow-up drivers while60977 runs (not executed): integrated sanitizer
+`repair-audio-instance-guards-sanitizer.mjs` reuses CNA build-asan audio link closure;
+external `repair-audio-instance-guards-external.mjs` checks original23 fixtures
+against the actual external library and112 scenarios, retaining both knownIssue
+markers until the original038/073 demos pass. THEN remove only those two marker
+lines and073's obsolete restriction sentence; `...-external-final.mjs` requires
+exact metadata-only edits, sanitizer success and318 unchanged non-browser artifacts,
+and reruns112 comparisons. Do NOT commit demo metadata before that driver: its
+proof reads the original from git HEAD. Final `...-ctest.mjs` expects32 native and
+18 demo CTests. All must run serially; no source changes during active gates.
+Separate commits:073 code/tests;038 code/tests; four nodiscard casts; missing-device
+harness; ledger/evidence. No final acceptance yet. A further028 retained-file
+rename/replacement six-check probe/driver is prepared, UNCOMPILED/UNRUN; do not
+claim an absolute-path-only fix sufficient before checking open-stream identity.
+
+LATEST60977 RUNNING native-v3 FULL10905. Build9521ms/zero diagnostics PASS;
+all three modern/legacy/both SDL-driver controls PASS55/54/58ms; audio775=
+771PASS/4sameSKIP8923ms, focused175PASS2601ms. Final full comparison/audit pending.
+12090 TERMINAL1: audio had two failures (no full run): existing no-hardware harness
+set only legacy SDL_AUDIODRIVER, which inherited SDL_AUDIO_DRIVER=dummy overrides;
+and the stress test's final disposed PendingBufferCount call now correctly throws.
+No final audit was emitted. Logs preserved. Harness now forces both driver names;
+stress test retains its same1000 bound through the existing new read-only seam and
+adds public ObjectDisposedException. No new skips/tolerance changes. Source only
+changes since focused41722 are explicitly checked in v3, including the prior four
+nodiscard casts and harness fix. Commit harness/cast corrections separately later.
+60977 is the sole heavy job, same private GPU/network/UID/capability/memory limits.
+Prepared external/sanitizer drivers now require native-v3, not v2. Sources frozen.
+
+LATEST12090 RUNNING native-v2.21670 TERMINAL1 after successful222655ms build,
+before any tests: strict diagnostic review found four pre-existing nodiscard
+warnings in clean HEAD CnjCapabilityMatrixTests.cpp (lines253/265/277/288). Logs
+retained; no final hash/memory audit was emitted. Only explicit(void) casts were
+added to those four EXPECT_THROW expressions, preserving inputs/exceptions/tests;
+keep this warning-only edit separate from audio commits.12090 verifies those exact
+old diagnostics and unchanged sources, acknowledges only the expected rebuilt
+CnaTests artifact, then builds/runs normally. Incremental build8290ms/zero diagnostics
+PASS; audio module is RUNNING. Same serial/private GPU+network/6GiB/no-swap limits.
+Prepared external and integrated-ASan drivers now require the native-v2 audit,
+not the incomplete original audit. Sources frozen; no additional heavy process.
+
 LATEST21670 RUNNING `cna-repair-audio-instance-guards-native.scope`: existing native
 CnaTests/CnaAudioTests rebuild, module/focus/full regression, exact015-baseline
 comparison with only the two documented helper-test renames and23 new cases.
