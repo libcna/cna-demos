@@ -12,6 +12,28 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+LATEST closure: ISSUE-058 resolved in CNA 380c32153c8063c38f6354dc9e37a3c23c2dd0f0.
+Sanitizers, full native10874 exact parity, external original probe,112 audio/media/C
+renderer comparisons and six registered CTests all meet the documented gates.
+Each renderer's56 catalog cases remain46PASS/9historicalFAIL/1manualNOT RUN;
+these failures are not product passes. No marker existed for058. Matrix94FINAL/
+61pending, all155 IDs retained. No push/merge;011 candidate remains uncommitted
+and open with C Effect lifetime regression. Next run committed015 decoy fixture
+and029 genuine managed stream oracle, serially. No live heavy job at this checkpoint.
+
+LATEST058:90349 TERMINAL0. Full10874=10773PASS/101sameSKIP, every previous10868
+outcome unchanged plus sixPASS. Full1235135ms, compare96ms;peak4297822208/high2020/
+max/OOM0, hashes unchanged. Media312/312 and wider625PASS/4SKIP also pass.
+External driver build-probe/repair-media-queue-replay-external.mjs now launched
+serially: rebuild existing linux-full, run unchanged original probe against its
+actual shared library, then56 audio/media/C demos on each SOFTWARE/OPENGLES3.
+Compare all statuses, check counts, issue markers and failed assertions exactly;
+historical failures and manual NOT RUN results stay explicit. No overlapping job.
+Demos c206224 includes prepared but unrun015 eight-case title/cwd fixture and029
+genuine managed WAV/stream oracle. Corresponding before/reference drivers prepared.
+Next finish058 external gate/commit, then run015/029 evidence serially.011 remains
+open with two C effect checks failing per renderer; no owner policy answer presumed.
+
 LATEST058:98405 TERMINAL0, sanitizer after-v3 passes the unchanged original
 caller/queue probe and all six unchanged native cases. Incremental media build
 6516ms, original probe1581ms, fixture2458ms, zero diagnostics; peak654491648,

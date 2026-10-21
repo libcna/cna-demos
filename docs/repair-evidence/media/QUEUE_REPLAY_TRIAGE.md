@@ -1,5 +1,37 @@
 # ISSUE-058: queue-owned Song replay
 
+Resolved in CNA `380c32153c8063c38f6354dc9e37a3c23c2dd0f0`. Six registered CTests additionally pass
+in2.10s (`repair-media-queue-replay-ctest.log/xml`). The source commit includes only
+the five-line queue-retention fix, six byte-identical native regressions and their
+narrow one-reference dummy-audio classification. The separate011 ownership work
+remains uncommitted/unaccepted; it was present during validation and is not hidden.
+No push or merge. Older proposed/not-run statements below are retained chronology.
+
+## External regression after the repair (2026-10-21)
+
+31597 completed0: existing linux-full incremental build49748ms/zero diagnostics.
+The byte-identical original probe links to the external libcna.so (ldd verified),
+build1323ms, caller109ms/queue110ms bothPASS. All56 audio/media/C scenarios on
+each SOFTWARE/OPENGLES3 preserve their exact statuses, check counts, knownIssue
+markers and failed assertion labels. Per renderer:46PASS/9 historicalFAIL/1 manual
+NOT RUN. This is112-case exact regression parity, not112 passing product tests.
+All319 external binary hashes and frozen native/source inputs remain unchanged
+through execution; peak4306530304/high924/max/OOM0. No physical microphone/audio
+output claim. Reports `repair-media-queue-replay-external-*`.
+No full719 renderer/visual/735-CTest acceptance is claimed for the still-open011
+ownership candidate; its C Effect regression remains explicitly recorded.
+
+## Full native regression after the repair (2026-10-21)
+
+90349 completed0: incremental build18594ms, media312/312PASS12263ms,
+wider focus625PASS/4SKIP6143ms, full1235135ms and exact comparison96ms.
+Full10874=10773PASS/101SKIP: all10868 previous ownership-checkpoint outcomes
+unchanged, exactly six new passing replay cases. No missing/changed original case.
+All frozen sources/artifacts unchanged; peak4297822208/high2020/max/OOM0.
+Private OPENGLES3 display and isolated network, owner UID/all capabilities dropped.
+Reports `repair-media-queue-replay-native-*`. External media/C regression is next;
+the unrelated ISSUE-011 C effect lifetime regression is not accepted or suppressed.
+
 ## Local repair and sanitizer delta (2026-10-21)
 
 The local MediaPlayer repair retains the old queue in a stack-owned moved

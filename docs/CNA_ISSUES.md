@@ -911,6 +911,15 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-058 -- Replaying the active MediaQueue Song uses it after freeing it
 
+- **Status:** Resolved in CNA `380c32153c8063c38f6354dc9e37a3c23c2dd0f0` (2026-10-21).
+  Both Play overloads retain the old queue until all supplied Song pointers have
+  been consumed. The unchanged original probe and six native regressions pass
+  integrated sanitizers; full native10874 preserves all prior10868 outcomes plus
+  sixPASS, media312PASS, registered CTest6PASS.112 audio/media/C runs preserve exact
+  previous results on SOFTWARE/OPENGLES3. Historical failures remain visible; this
+  does not accept the separate011 C effect regression. No runtime marker existed
+  for058, so none is removed. [Full retained evidence](repair-evidence/media/QUEUE_REPLAY_TRIAGE.md).
+
 - **Current reproduction (2026-10-21):** fully instrumented CNA build-asan
   reproduces heap-use-after-free in the unchanged original queue replay probe.
   Six additional native-style cases preserve two passing caller-owned controls
@@ -946,7 +955,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `build/linux-full/reports/checkpoint-473-hierarchy-*queue-replay*`. All36selected project
   binaries stayed unchanged through compile and both runs. This is selected-artifact evidence,
   not an atomic dependency snapshot.
-- **Status/handling:** open. No CNA source was edited and no upstream message was sent. The normal
+- **Historical status/handling:** open at discovery. No CNA source was edited and no upstream message was sent. The normal
   smoke catalog does not invoke undefined behavior merely to retain a failing assertion; this is
   tracked as a probe-backed issue without a runtime knownIssue marker. Existing MediaPlayer queue
   demos remain valid because they pass caller-owned Songs/collections. Revisit a safe regression
