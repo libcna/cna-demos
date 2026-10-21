@@ -2,6 +2,79 @@
 
 ## Latest evidence (2026-10-21)
 
+Broader132-case comparison70430 is complete, exit2:123PASS/8FAIL/1sameSKIP.
+All four begin_end_rules cases retain the original accounting failure and gain
+the callback-before-disposed failure; all four C resource_lifecycle cases fail
+their existing callback-before-disposed assertion. Those eight082 deltas remain
+unaccepted, with no assertion/marker change. The only other delta is156's SDL_GPU
+depth improvement, independently committed7097e1684 after full native11005 exact
+parity and focused pixel/bias/visual gates. No082 product commit or closure.
+003 now reproduces fiveFAIL/onePASS on each of four renderers in61003; its separate
+evidence is SPRITE_TEXTURE_BINDING_TRIAGE.md. Neither next batch settles082 policy.
+
+Event sanitizer83569 accepted all6 original lifetime cases, no findings. Original
+external17557:16PASS on four renderers. After the rebuilt event+156 candidates,
+observation72013 reports12 C++PASS and four C resource_lifecycle FAIL, each only
+"explicit disposal synchronously raises one callback before the disposed state
+changes" (1/30 child checks). No new knownIssue marker, skip or oracle edit.
+This is NOT accepted external regression. Public C timing choice and separate
+SpriteBatch post-disposal guard choice remain pending; do not commit/close082
+as though those contracts were settled. Independent156 focused20/bias72/exact
+four visuals are accepted; sole heavy98308 now checks its native11005 parity.
+
+Native-v2/88430 ACCEPTED:10899PASS/101unchangedSKIP1508686ms, exact10994 old
+outcomes plus6 eventPASS, no frozen drift/OOM. Audio stress sanitizer75848 accepted
+both original cases with ASan/UBSan/float-cast/leaks, no findings; test-only repair
+committed CNA2af199aad4d11053a7549bee01f9efff272cd9e0. Original failed30524 retained.
+Sole heavy83569 is now original6 event sanitizer. No graphics candidate commit,
+C contract/oracle correction or082 closure yet. After acceptance preserve original
+external16, then execute prepared156 before20 against still-old external004 library.
+
+Original30524 is now TERMINAL1:10898PASS/101unchangedSKIP/one audio coverageFAIL,
+1442390ms, frozenunchanged/peak4297887744/maxOOM0. Only the recorded stress assertion
+regressed; original6 added event cases PASS. After source-backed test-only repair,
+sole heavy88430/native-v2 has buildPASS11796ms,20/20 stressPASS804ms,audio771PASS/
+4unchangedSKIP9070ms,focus6PASS218ms,graphics2912PASS/73SKIP41221ms. Full11000 LIVE.
+After full acceptance run newly prepared audio stress sanitizer2 FIRST, then
+event sanitizer6 (now requires that audio audit), then original external16 capture
+(now requires native-v2, never failed30524). Prepared drivers are syntax checked,
+UNRUN. Private-display check uses private Wayland/runtime identity, not a display
+number: the isolated Xwayland may legitimately be named:0. Original failure and
+all assertions retained; no new issue closure, no audio production change.
+
+Native30524 is still live, but the full log has a real failed coverage assertion
+in the unchanged dynamic-audio alternating-format stress test (`callsThrown==0`).
+Do not accept this run or start the prepared sanitizer as though it passed.
+`../audio/DYNAMIC_STRESS_SCHEDULING.md` records the exact original failure,
+previous passes and source-backed missing rendezvous. The proposed test-only
+repair preserves free-running stress and adds deterministic live-format coverage.
+Prepared `repair-resource-event-native-v2.mjs` is syntax/plan checked, UNRUN:
+it requires original30524's terminal failed audit with exactly that one failure,
+permits only the audio test source to change, requires all20 fixed scheduling
+iterations plus the audio module, original6 event cases, graphics2985 and exact
+full11000 parity. It preserves the original failed logs/audit and forbids extra
+production changes. No native test source has been changed yet.
+
+Prepared `repair-resource-event-external-before.mjs` is syntax/plan checked,
+UNRUN. After native and sanitizer acceptance it verifies all319 canonical external
+artifacts still match the004 final checkpoint, then captures16 additional original
+resource-lifecycle/C observations on SW/GLES/GL33/SDL_GPU without a rebuild or
+oracle change. Its frozen-key inventory was checked (319 present, none missing).
+This preserves old C contract evidence before the external library is replaced.
+30524 has advanced past the genuine XNA differential build test and is now in
+XnaErrorParityTest; original process still live, no full acceptance yet.
+
+Continuation confirms native30524 still live in its original process/scope,
+running the long genuine XNA differential corpus. No restart or concurrent build.
+Prepared `SpriteDepthProjectionTests.cpp` is UNCOMPILED/UNRUN and unregistered:
+five ISSUE-156 witnesses for Immediate depth order in both submission orders,
+FrontToBack depth versus no-depth control, numeric depth agreement with ordinary
+BasicEffect geometry (four near/far comparisons), and Z translation/scale.
+HiDef and an explicit Depth24Stencil8 buffer avoid the earlier readback setup
+pitfall. APIs mirror existing native depth tests. Future baseline must run on
+SDL_GPU and SW/GLES/GL33 before modifying projection code; preparation is not
+evidence of runtime coverage. This file is outside082's candidate and frozen build.
+
 30524 candidate native build55531ms/focused6PASS350ms/graphics2912PASS+73SKIP
 54259ms accepted; full11000 remains LIVE, not accepted yet. Prepared actual
 SOFTWARE sanitizer6 driver is transform/syntax checked, UNRUN. The SDL_GPU depth

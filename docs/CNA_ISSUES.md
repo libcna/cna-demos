@@ -807,6 +807,24 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-082 -- Disposing an open SpriteBatch leaves its device batch active
 
+- **Repair-campaign clarification (2026-10-21), still open:** genuine XNA retains
+  the open-batch accounting, so the historical expectation below is incorrect.
+  Separate positive controls exposed a real native defect: IsDisposed must be
+  published before Disposing, including reentrant/throwing callbacks. Eight actual
+  managed XNA checks and a six-case native regression establish that contract;
+  the local native repair passes the full10899PASS/101unchangedSKIP checkpoint and
+  all six ASan/UBSan lifetime cases. However, the C API explicitly documents the
+  opposite callback timing. Its original30-check lifecycle demo passed on all
+  four renderers before the rebuild and now fails the callback-state assertion
+  on all four; these remain visible FAILED results, without a new knownIssue
+  marker or weakened assertion. Owner decisions on this explicit C contract and
+  the separate post-disposal SpriteBatch guards remain pending. No native event
+  fix commit, demo-oracle correction or082 closure is claimed. The historical
+  report is retained below; see `docs/repair-evidence/graphics/SPRITE_BATCH_TRIAGE.md`.
+  Subsequent original132-case comparison70430 also confirms the same callback
+  expectation fails in begin_end_rules on each renderer, alongside its original
+  accounting failure. Eight082 delta rows remain unaccepted; the separate156
+  projection repair is committed without changing these assertions.
 - **Area/API:** `SpriteBatch::Dispose(bool)`, `SpriteBatch::Begin/End` and the per-device
   `spriteBeginCount_` / `spriteImmediateBeginCount_` coordination in
   `modules/graphics/src/Xna/SpriteBatch.cpp`.
