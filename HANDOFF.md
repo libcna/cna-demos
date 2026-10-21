@@ -12,6 +12,32 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**Current: no running job.** External37654 finished with an unaccepted gate:
+099 C++27/27 and100 pixel9/9 now PASS on SOFTWARE and OPENGLES3, but the unchanged
+C VideoPlayer scenario regresses on five assertions on each renderer; pure-C smoke
+also fails. Native full10,833PASS/101unchangedSKIP and sanitizer29PASS are complete.
+URI baseline94692 reproduces101 with fiveFAIL/fourPASS; no101 production edit.
+See [complete checkpoint](docs/repair-evidence/media/VIDEO_REPAIR_VALIDATION_CHECKPOINT.md)
+for exact deltas, timings, memory, log-parser correction and next steps. The099 C
+contract owner choice remains unanswered. Do not commit/close099 or weaken its C
+tests without resolving that choice. No new product commit/push/merge. Preserve011.
+Matrix155 IDs/97final/58pending;099/100/101 CONFIRMED_OPEN.
+
+**Latest (supersedes running states below):** native-v2 session86932 finished
+successfully: 10,833 PASS / 101 unchanged SKIP (10,934 total), full run1,328,138ms,
+comparison121ms. All original10,905 outcomes remain unchanged after the one
+reference-corrected Volume test rename; exactly29 new tests PASS. Media340/340
+PASS. Frozen hashes unchanged; memory peak3,127,988,224 bytes, all memory events0.
+External session37654 (`cna-repair-video-external.scope`) is now RUNNING with one
+worker, private GPU, 6GiB/no swap. It rebuilds the existing linux-full tree, then
+runs29 original witnesses,112 renderer scenarios and the unchanged pure-C video
+smoke. The C ABI embeds static CNA modules, so its linkage check verifies the
+external libcna_c_api.so rather than requiring a nonexistent libcna.so dependency.
+No product expectation was relaxed. C contract choice remains unanswered; keep
+all099/100 markers and sources frozen. CNA d1ed3d9ae / demos c847549 plus pending
+099/100 and preserved011. Next inspect the complete external audit, including
+any C regressions; do not call the native pass final acceptance.
+
 **Current live job86932:** native-v2 full10934 RUNNING; media340/340PASS11990ms,
 build45964ms/zero diagnostics.92340 after-v2 finished0: all29 focusedPASS,
 build61433ms/zero diagnostics, unchanged hashes,peak1226051584/events0.4221

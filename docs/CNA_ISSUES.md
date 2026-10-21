@@ -273,6 +273,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-101 -- Video URI resolution and deferred file failures diverge from FNA
 
+- **Current verification (2026-10-21; CONFIRMED_OPEN):** unchanged original demo
+  retains exactly four failures on SOFTWARE and OPENGLES3. New focused native
+  reproduction confirms those contracts plus percent-decoding: fiveFAIL/fourPASS,
+  no skips or production edit. See [checkpoint](repair-evidence/media/VIDEO_REPAIR_VALIDATION_CHECKPOINT.md).
+
 - **Area/API:** `Video::FromUriEXT`, the trusted-metadata Video constructor and
   `VideoPlayer::Play`.
 - **Demo:** `media.video.uri_and_metadata`.
@@ -308,8 +313,9 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   reproduction gives three failures/one passing control before repair; all four
   unchanged cases pass after applying per-Video overrides before output setup.
   They also pass within the29-case integrated sanitizer gate without findings.
-  Fresh media340/340PASS; full native and original public-pixel external regression
-  are still pending. Marker retained, no final closure. See
+  Media340/340PASS and full native10,833PASS/101unchangedSKIP are complete. Original
+  public-pixel scenario passes9/9 on both renderers. Batch acceptance still waits
+  for099's C contract resolution; marker retained, no final closure. See
   [extension evidence](repair-evidence/media/VIDEO_EXTENSIONS_TRIAGE.md).
 
 - **Area/API:** `Video::SetVideoTrackEXT`, the symmetric `Video::SetAudioTrackEXT`, and
@@ -338,6 +344,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   upgrading it to runtime proof. No CNA source was modified and no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-099 -- VideoPlayer validation and lifecycle contracts diverge from XNA
+
+- **Latest candidate gate (2026-10-21; not accepted):** native full10,833PASS/
+  101unchangedSKIP, integrated sanitizer29PASS, and original C++27/27 checks on both
+  renderers. The original C VideoPlayer demo now fails five contract assertions
+  on both renderers, and pure-C VideoSmoke fails. Owner choice remains pending;
+  no expectation/marker changed or issue closed. See the
+  [complete checkpoint](repair-evidence/media/VIDEO_REPAIR_VALIDATION_CHECKPOINT.md).
 
 - **Current repair candidate (2026-10-21; CONFIRMED_OPEN):** original native
   guards9=5FAIL/4PASS and lifetime6=4FAIL/2PASS reproduced before editing. The

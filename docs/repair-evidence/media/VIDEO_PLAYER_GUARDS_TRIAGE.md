@@ -2,6 +2,19 @@
 
 ## Candidate validation, 2026-10-21
 
+**Latest:** all native/external jobs finished. The original099 C++27 checks pass
+on both renderers; five unchanged C contract assertions regress on both, and
+pure-C VideoSmoke fails. Candidate remains unaccepted pending the owner's C choice.
+See [final candidate checkpoint](VIDEO_REPAIR_VALIDATION_CHECKPOINT.md), including
+the separately retained log-parser correction; no product assertion was relaxed.
+
+Native-v2 session86932 has now finished: full10,934 =10,833PASS/101unchangedSKIP,
+1,328,138ms; comparison121ms. Exact original10,905 outcome parity, with the same
+reference-corrected Volume rename and29 newPASS. Media340/340PASS. Sources stayed
+unchanged; peak3,127,988,224 bytes/all memory events0. External session37654 is
+running the strict original29/112/pure-C gate. No C contract decision or final
+acceptance yet; all original C expectations and knownIssue markers remain.
+
 92340 after-v2 completed0: original guards9/lifetime6/association9 plus destroyed1/
 tracks4 allPASS. Build61433ms/zero diagnostics, unchanged hashes,
 peak1226051584/events0.4221 sanitizer-v2 completed0:29/29PASS, libraries12500ms/

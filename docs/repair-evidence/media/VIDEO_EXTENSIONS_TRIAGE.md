@@ -1,5 +1,18 @@
 # ISSUE-100/101: Video extension follow-up
 
+**Latest:** external100 public-pixel scenario now passes9/9 on SOFTWARE and
+OPENGLES3; full native and sanitizer gates also pass. Batch acceptance still waits
+for099's C contract decision; no100 marker removal/source commit. New101 baseline
+94692 confirms fiveFAIL/fourPASS (2,332ms build/351ms run/23ms audit), unchanged
+hashes,peak475,160,576/events0. No101 production edit. Full evidence and next tasks:
+[candidate checkpoint](VIDEO_REPAIR_VALIDATION_CHECKPOINT.md). All jobs terminated.
+
+Latest: native-v2 completed successfully,10,833PASS/101unchangedSKIP, including
+all29 new tests. Exact prior outcome parity; unchanged hashes, no memory events.
+External session37654 is now running the unchanged public-pixel oracle on
+SOFTWARE and OPENGLES3, plus the original C routes. ISSUE-100 remains open until
+those results are checked; ISSUE-101 source is untouched.
+
 Latest:92340 after-v2 all29 focusedPASS (including all four unchanged100 cases),
 4221 sanitizer-v2 all29PASS without findings; 86932 native-v2 media340/340PASS
 and full10934 ongoing. Frozen hashes unchanged on completed gates. See the099
