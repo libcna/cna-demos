@@ -2,6 +2,39 @@
 
 ## Latest outcome (supersedes running states below)
 
+**Runtime reference confirmed:** VideoFileFailureOracle.cs compiled with genuine
+.NET4 csc /platform:x86 /warnaserror+ in3,018ms and passed32/32checks in620ms.
+It calls the genuine XNA pre-decoder guard for null/empty/relative-missing/
+absolute-missing/directory/embedded-NUL inputs, each independently verified
+not to be a file before invocation. All return E_INVALIDARG; the actual public
+Play HRESULT translator maps/throws exact ArgumentException, null ParamName.
+Two success controls pass. No decoder/player/texture was created, no existing
+file was submitted, and no native playback or arbitrary codec error is claimed.
+Framework MVID and all pinned reference/source hashes unchanged. Peak278,560,768
+bytes/events0 under1GiB/no swap. Reports: repair-video-file-failure-xna-*.
+Thus the earlier FNA-based FileNotFound expectation and proposed C IO result
+are not genuine-XNA-compatible for this guard. Preserve their history and
+correct them explicitly when this video batch resumes; do not silently weaken
+exception assertions or conflate the CNA URI factory extension with XNA Play.
+No production/video/demo assertion edits during the frozen shadow gates.
+
+**Reference caution discovered during read-only follow-up,15:40 CEST:** the
+genuine Framework IL's WmpInterface.VideoDecoder_Play checks File.Exists before
+native handle lookup and returns E_INVALIDARG (0x80070057) for a missing/non-file
+path. Helpers.GetExceptionFromResult maps that code to exact ArgumentException,
+not FNA's FileNotFoundException. VideoPlayer.Play calls this error translator
+after VideoDecoder_Play. The current installed Framework module MVID matches
+the inspected IL:34d977ae-c3ec-4d07-aa6d-6fed6d8e3864. This is source/IL evidence,
+**not yet a runtime reference result**. VideoFileFailureOracle.cs and its driver
+are prepared/unrun; execute serially after active shadow native45760. It invokes
+only the pre-decoder guard on verified non-files and the actual HRESULT mapper,
+never a valid file/decoder/texture/GPU. If confirmed, correct the exact missing-
+file exception expectation according to XNA precedence, preserving the original
+FNA finding/history. Do not treat the existing green FileNotFound assertion as
+proof of XNA compatibility. The earlier101 owner question's proposed IO mapping
+must be revisited with that evidence, not silently assumed. No expectation or
+production video change was made during frozen shadow validation.
+
 External-v2 session68581 completed with exit1: **gate not accepted**.
 Existing linux-full build passed in2,576,494ms with zero compiler diagnostics;
 43 original witnesses passed against its actual libcna.so (compile13,362ms,

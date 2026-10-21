@@ -12,6 +12,55 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**Live45102 external shadow gate:** sanitizer89823 completed27/27PASS, actual
+four effect implementations and runtime instrumented with ASan/UBSan/float-cast/
+leaks;30,047ms libraries/6,386ms strict fixture/136ms run/19ms audit, no findings,
+peak851,980,288/events0, frozen hashes unchanged. Stock66 BEFORE accepted:
+52PASS/12rendererSKIP/2known070FAIL. External incremental335 tasks now runs with
+one worker/6GiB/no swap. A wrapper ambiguity stopped the first external launch
+before any build; fixed by selecting only the C++ command, preserving C17 flags.
+After45102: stock66 AFTER and four exact images, then review/commit102 only.
+New corrected101 C contract question sent: genuine XNA guard means
+ArgumentException/INVALID_ARGUMENT, not the earlier proposed IO mapping.
+Both video contract decisions remain pending; no C contract/expectation edit.
+
+**Current continuation, 2026-10-21 after native45760:** shadow native-v2
+finished successfully: focused20PASS, graphics2890PASS/73SKIP, full10867PASS/
+101unchangedSKIP in1,259,563ms. Exact old10948 outcomes unchanged plus20PASS;
+comparison177ms, frozen hashes unchanged, peak1,357,451,264 bytes/events0.
+Genuine XNA missing-file oracle also completed32/32PASS: pre-decoder
+E_INVALIDARG maps to exact ArgumentException with null ParamName. This tests
+the real guard/translator, not native decoding/playback; supersedes the UNRUN
+reference caution below. Do not adopt the earlier proposed C IO mapping.
+Stock-effect66 BEFORE gate now running against pre-shadow external binaries;
+next sanitizer27, external six-renderer120 plus112 parity, stock66 AFTER,
+four exact visual comparisons. One heavy job, one compiler,6GiB/no swap.
+102 remains open pending those gates; inherited011/video candidates preserved.
+
+### Earlier checkpoints (historical; the current continuation above takes precedence)
+
+**Important reference follow-up,15:40 CEST:** read-only genuine Framework IL
+maps missing-file VideoDecoder_Play to E_INVALIDARG→ArgumentException, contrary
+to FNA/demo FileNotFoundException. Current Framework MVID matches the inspected
+IL. Prepared VideoFileFailureOracle.cs/repair-video-file-failure-reference.mjs
+are UNRUN; execute serially after45760, before changing101 expectations or
+accepting the earlier C IO proposal. See VIDEO_URI_REPAIR_CHECKPOINT.md caution.
+This does not change active shadow sources.070 PBR clone fixture/triage also
+prepared outside registered tests, UNRUN. Native45760 full is in its normal
+long genuine-XNA differential compile; no second heavy job.
+
+**LIVE45760,15:30 CEST:** shadow native-v2 build460ms and all20 original
+boundary witnesses PASS498ms. Full graphics module now RUNNING, then full10968
+parity. First93255 build succeeded364819ms but diagnostic review stopped before
+tests on five pre-existing content EXPECT_THROW/nodiscard warnings in three
+unchanged test files. Original log retained; v2 pins all first-build source
+hashes and reuses only its owned rebuilt artifacts. No content edits, assertions
+or warning flags changed in native CMake. Same private GPU/network/6GiB/one worker.
+After full gate: run prepared stock-effect66 baseline against still-pre-shadow
+external artifacts, sanitizer27, external120 typed witnesses across six configured
+renderers plus112 outcome parity, stock66 after and four exact visual comparisons.
+No claim those pending gates passed. No source edits while45760 runs.
+
 **LIVE93255,15:24 CEST:** safe102 baseline reproduced8FAIL/12PASS; original
 shadow images16+6 checks pass on each OPENGLES3/OPENGL33. Minimal four-setter
 guard/docs candidate and identical20 native tests now added. Native graphics/
