@@ -794,6 +794,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-073 -- Refused live-3D pan setter changes the public pan value
 
+- **Repair reference (2026-10-21; not fixed):**33 genuine managed checks confirm
+  that refused assignments preserve the prior pan and that live3D refusal precedes
+  range validation. The initial reference draft's wrong ordering assumption and
+  its four failures remain preserved. No native XNA playback claim. See
+  [triage](repair-evidence/media/SPATIAL_PAN_TRIAGE.md).
+
 - **Area/API:** `SoundEffectInstance::setPanProperty` and the C
   `cna_sound_effect_instance_set_pan`/`cna_sound_effect_instance_get_info` routes.
 - **Reproduction:** create a mono `SoundEffect`, create an instance, call `Apply3D` before `Play`,
@@ -1648,9 +1654,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 - **Repair triage (2026-10-21; still open):** the currently installed genuine XNA
   IL confirms the two historical guards and the same disposal-before-validation
-  rule for GetSampleDuration/GetSampleSizeInBytes. Prepared24-check managed and
-  five-case native witnesses are not yet executed. Existing FNA-based native tests
-  do not override the XNA contract. See [triage](repair-evidence/media/DYNAMIC_DISPOSAL_TRIAGE.md).
+  rule for GetSampleDuration/GetSampleSizeInBytes. All24 genuine managed guard
+  checks now PASS (no native voice/real disposal claim); the five-case native
+  witness is still unrun. Existing FNA-based native tests do not override the XNA
+  contract. See [triage](repair-evidence/media/DYNAMIC_DISPOSAL_TRIAGE.md).
 
 - **Area:** `DynamicSoundEffectInstance::getPendingBufferCountProperty` and
   `getIsLoopedProperty`, `modules/audio/src/Xna/DynamicSoundEffectInstance.cpp`.

@@ -1,5 +1,12 @@
 # ISSUE-038: dynamic audio disposal guard preparation
 
+18009 TERMINAL0 (2026-10-21): all24 genuine managed controls PASS with exact
+Framework hash/MVID and unchanged source. Strict C# build3248ms, run780ms;
+peak268726272/all memory events0 in a separate1GiB no-swap scope. Reports
+`repair-dynamic-audio-disposed-xna-*`. The native five-case fixture remains
+UNCOMPILED/UNRUN. This verifies real XNA guard/exception order on the deliberately
+limited managed fixture, not native voice creation, disposal or audible output.
+
 2026-10-21. Read-only source investigation while015 external regression runs.
 No production repair, new runtime reproduction or closure is claimed here.
 

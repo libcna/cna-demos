@@ -1,5 +1,17 @@
 # ISSUE-029: stream shape and ownership constraints
 
+## Extended genuine execution (2026-10-21)
+
+52326 TERMINAL0: all71 extended managed WAV checks PASS, with exact Framework
+hash/MVID and unchanged source. Strict C# build2708ms, run585ms;
+peak285597696/all memory events0 in a separate1GiB no-swap scope. Reports
+`repair-sound-effect-wave-chunks-xna-*`. This small reference ran while the sole
+C++ external015 build continued; no second heavy build or CNA source mutation.
+It confirms complete-frame truncation, inclusive SMPL end, WSMP precedence even
+when its loop is invalid, success-only stream closure, and millisecond-rounded
+duration. As before, this is the genuine managed parser, not successful public
+native sound creation or physical output. The nine native cases remain UNCOMPILED.
+
 ## Prepared native parity fixture (2026-10-21)
 
 `SoundEffectWaveChunksOracle.cs` additionally prepares71 managed reference checks

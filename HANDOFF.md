@@ -12,6 +12,22 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+073 reference follow-up:69388 first draft TERMINAL1 (10PASS/4FAIL) disproved its
+range-before-live3D assumption, not the historical CNA finding. Source/logs kept.
+Actual installed IL0x1ac10 and corrected extended67026 give33/33PASS (strict C#
+build4003ms/run837ms,peak262078464/events0); original five pan-preservation controls
+remain. See SPATIAL_PAN_TRIAGE.md for exact validation/latch order and limitations.
+No CNA code changed and no native audio/playback claim for these managed fixtures.
+23738 remains the only live job; source freeze stays in force.
+
+LATEST small references:52326 TERMINAL0, extended029 genuine71/71PASS (C#
+build2708ms/run585ms,peak285597696/events0);18009 TERMINAL0,038 genuine24/24PASS
+(build3248ms/run780ms,peak268726272/events0). Both pin Framework hash/MVID and
+preserve source hashes, each in a separate1GiB/private-display/no-swap scope.
+They ran serially beside the ONE heavy C++ build23738, without modifying CNA.
+Neither native audio creation nor hardware output is claimed. Both native new
+fixtures and028 lazy-path probe remain UNRUN. No heavy second job is active.
+
 Preparation during23738 (no second build):038 genuine24-check managed disposal
 oracle plus five native cases and DYNAMIC_DISPOSAL_TRIAGE.md now exist, UNRUN.
 The installed XNA IL also guards GetSampleDuration/GetSampleSizeInBytes, whereas
