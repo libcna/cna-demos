@@ -273,6 +273,15 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-101 -- Video URI resolution and deferred file failures diverge from FNA
 
+- **Local candidate (2026-10-21; still CONFIRMED_OPEN):** URI classification/
+  LocalPath now live in Sharp Runtime; File.Exists rejects embedded NUL rather
+  than naming the existing prefix. Dependency baseline18,158 PASS becomes
+  18,193 PASS, zero skips/failures. CNA uses that layer for file URIs, resolves
+  relative URIs through the existing title-path bridge and reports deferred
+  missing files. Native/external/sanitizer acceptance is pending; no marker
+  removed or production commit/closure. The historical reproduction below is
+  retained. See [URI checkpoint](repair-evidence/media/VIDEO_URI_REPAIR_CHECKPOINT.md).
+
 - **Current verification (2026-10-21; CONFIRMED_OPEN):** unchanged original demo
   retains exactly four failures on SOFTWARE and OPENGLES3. New focused native
   reproduction confirms those contracts plus percent-decoding: fiveFAIL/fourPASS,

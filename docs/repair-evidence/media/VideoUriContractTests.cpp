@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <typeinfo>
+#include "CNA/Internal/PathUtf8.hpp"
 #include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
 #include "Microsoft/Xna/Framework/Media/Video/Video.hpp"
 #include "Microsoft/Xna/Framework/Media/Video/VideoPlayer.hpp"
@@ -41,7 +42,7 @@ namespace
             originalTitle = TitleLocation::Path();
             fixture = originalCwd / relative;
             ASSERT_TRUE(std::filesystem::is_regular_file(fixture));
-            TitleLocation::setPathProperty(originalCwd.generic_string());
+            TitleLocation::setPathProperty(CNA::Internal::PathToGenericUtf8(originalCwd));
         }
 
         void TearDown() override
@@ -54,20 +55,20 @@ namespace
 
         std::string FileUri() const
         {
-            const auto path = fixture.generic_string();
+            const auto path = CNA::Internal::PathToGenericUtf8(fixture);
             return (path.starts_with('/') ? "file://" : "file:///") + path;
         }
 
         std::string MissingPath() const
         {
-            return (fixture.parent_path() / "repair_video_uri_missing.mkv").generic_string();
+            return CNA::Internal::PathToGenericUtf8(fixture.parent_path() / "repair_video_uri_missing.mkv");
         }
     };
 
     TEST_F(VideoUriContractTest, PlainAbsolutePathRemainsSupported)
     {
         GraphicsDevice device;
-        std::unique_ptr<Video> video(Video::FromUriEXT(fixture.generic_string(), &device));
+        std::unique_ptr<Video> video(Video::FromUriEXT(CNA::Internal::PathToGenericUtf8(fixture), &device));
         ASSERT_NE(video, nullptr);
         EXPECT_EQ(video->getWidthProperty(), 160);
         EXPECT_EQ(video->getHeightProperty(), 90);
@@ -152,7 +153,7 @@ namespace
     TEST_F(VideoUriContractTest, MetadataMismatchStillClosesAtomically)
     {
         GraphicsDevice device;
-        Video video(fixture.generic_string(), &device, 2000, 159, 90, 25.0f,
+        Video video(CNA::Internal::PathToGenericUtf8(fixture), &device, 2000, 159, 90, 25.0f,
                     VideoSoundtrackType::MusicAndDialog);
         VideoPlayer player;
         EXPECT_TRUE(ThrowsExactly<System::InvalidOperationException>([&] {

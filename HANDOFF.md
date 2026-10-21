@@ -12,6 +12,33 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**LIVE59093 native-v3:** build18,503ms/zero diagnostics, focused43PASS1,037ms,
+media345PASS12,715ms; full10948 RUNNING with source hashes frozen. Previous14068
+stopped before build because the first attempt had already rebuilt libcna.so;
+the driver now explicitly records that rebuild artifact. Old failed logs retained.
+One worker/private GPU/network/6GiB/no swap; no other heavy job. Runtime c26614e8
+committed/clean/not pushed. Next full parity→sanitizer43→external112; C failures
+remain rejected. This is progress, not batch or campaign completion.
+
+**Latest:** dependency repair committed locally c26614e8, clean runtime worktree,
+not pushed. Native18544 build failed at isolated media-test linkage (new test
+calls public TitleLocation). All9 checks preserved; fixture now lives in CNA's
+existing cross-module tests group. Native-v2 job14068 RUNNING, same one-worker/
+6GiB/private GPU/network limits; planned43focus/345media/10948full. Sources frozen.
+Original failed log retained. No C assertion edit, issue closure or remote write.
+
+**Current, superseding the historical notes below:** ISSUE-101 URI/file-path
+candidate is uncommitted and under validation. Sharp Runtime full gate is
+18,193/18,193 PASS, zero skips/failures; original baseline18,158 PASS. Native
+job18544 (repair-video-uri-native) now builds in the existing tree with one worker,
+private GPU/network,6GiB max/no swap, then focused43/media354/full10948 parity.
+Sources frozen during this job. Boundary reproduction5 allFAIL before repair;
+original URI9 baseline5FAIL/4PASS retained. No demo assertion/knownIssue changed.
+099 C contract choice still unanswered; existing C regressions remain rejected.
+CNA ba56ddf5a / demos ca6310b / runtime97713eb2 plus local candidates, no new
+commits/push/merge/closure. Preserve011 owner changes. Next inspect native gate,
+document dependency migration/consumer evidence and refresh external/sanitizer.
+
 **Current: no running job.** External37654 finished with an unaccepted gate:
 099 C++27/27 and100 pixel9/9 now PASS on SOFTWARE and OPENGLES3, but the unchanged
 C VideoPlayer scenario regresses on five assertions on each renderer; pure-C smoke
