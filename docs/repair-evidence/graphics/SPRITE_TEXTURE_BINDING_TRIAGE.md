@@ -2,6 +2,44 @@
 
 ## Current evidence boundary (2026-10-21)
 
+**Retry candidate focused gate ACCEPTED45982; native84495 LIVE.** Build of
+`cna_shared`148080ms, strict original22 compilation10008ms. SOFTWARE1452ms,
+OPENGLES3832ms, OPENGL33814ms each22PASS; SDL_GPU2267ms13PASS/9 compiledSKIP.
+Every original before-failure assertion remains unchanged, including exact64-pixel
+control/retry equality and the nontransparent control. The six failing compiled
+lifecycle observations and three failing pixel observations now PASS; all earlier
+passing controls retained. Frozen inputs unchanged; peak1653633024, all memory
+events0. This is focused acceptance only, not native/external/sanitizer closure.
+
+Native84495 is the sole heavy job, scope `cna-repair-sprite-binding-native`, driver
+`build-probe/repair-sprite-binding-native.mjs`. Existing debug build, one compiler,
+shared cache/private GPU+isolated broadcast network, owner UID/all capabilities
+dropped, MemoryHigh4GiB/Max6GiB/no swap. It checks native22, graphics3012 and
+full11027 against the previous11005 outcome identities. Native compiled support
+is deliberately unchanged/OFF, so the new native cases must be13PASS/9 explicit
+compiledSKIP; enabled compiled routes have actual external evidence above.
+Inputs frozen again. External ABI consumers, sanitizer, visuals and additional
+renderer paths remain pending. No product commit/marker change/003 closure.
+
+**Retry candidate now validating as45982.** Reproductions are committed in
+demos2fdf525. The correction adds `FlushPendingSpritesEXT` and noexcept
+`DiscardPendingSpritesEXT` to the internal sprite-renderer contract. The common
+End submits pending work before entering renderer-shutdown recovery; on failure
+it discards backend staging but retains the original deferred queue/Begin pair.
+Immediate Draw discards failed staging and rethrows, leaving no queue for End
+to replay. All six affected renderer families delegate to their existing flush
+and clear only unsubmitted geometry. Already submitted side effects remain.
+Existing synthetic renderer-End failure behavior is preserved by the separate
+boundary. The original pixel witness is native-registered byte-identically.
+
+Sole heavy45982: `cna-repair-sprite-binding-retry-candidate`, driver
+`build-probe/repair-sprite-binding-retry-candidate.mjs`. Existing external shared
+runtime target `cna_shared` only, one worker/shared cache/private GPU/6GiB/no swap;
+then all22 unchanged witnesses on four renderers. This is NOT a rebuild of the
+C API/demo ABI consumers; rebuild those before external regression. Reports
+`repair-sprite-binding-retry-candidate-*` freeze source inputs. No result yet,
+no product commit, marker change or003 closure. Do not edit frozen sources.
+
 **Enabled compiled baseline now captured; no heavy job remains.**48754
 terminated1 only at the diagnostic gate: configure7428ms/build721899ms both
 exit0, frozen sources unchanged, peak4304211968/high4145/max0/OOM0/kill0.

@@ -12,6 +12,37 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**ISSUE-003 retry focus ACCEPTED; native84495 LIVE.**45982 terminal0:
+shared-runtime build148080ms, strict22 compilation10008ms; SW1452/GLES832/
+GL33814ms each22PASS, SDL2267ms13PASS/9 compiledSKIP. Original assertions and
+pixel equality unchanged; all frozen inputs unchanged. Peak1653633024/all memory
+events0. No full regression/sanitizer/003 closure or product commit yet.
+Sole heavy84495, scope `cna-repair-sprite-binding-native`, driver
+`build-probe/repair-sprite-binding-native.mjs`, existing native debug tree,
+one worker/shared cache/6GiB/no swap/private GPU+network, owner UID/all caps0.
+It builds CnaTests/CnaGraphicsTests, then native22/graphics3012/full11027 with
+exact prior11005 identity/outcome parity. Default native compiled support remains
+OFF: expected new13PASS/9 explicit compiledSKIP; enabled routes passed separately
+above. Source inputs frozen; do not edit production or start another heavy job.
+Next collect84495, then lifetime sanitizer, external ABI-consumer rebuild and
+full external/visual deltas, FNA3D/WebGPU/available cross-build validation.
+No push/merge; preserve011/082 and pending082/131 choices.
+
+**Retry correction in validation45982; original evidence committed2fdf525.**
+Candidate adds internal pending-submit/discard hooks to separate pass/binding
+failures from renderer End. Common End preserves the deferred queue/Begin on
+submission failure; Immediate drops failed staging without replay. Six renderer
+families implement their existing queue flush/discard locally. Original pixel
+witness registered byte-identically in native tests; all22 assertions unchanged.
+Sole heavy45982, scope `cna-repair-sprite-binding-retry-candidate`, driver
+`build-probe/repair-sprite-binding-retry-candidate.mjs`: existing external
+`cna_shared` target only, one worker/shared cache/private GPU/6GiB/no swap, then
+22 cases on each SW/GLES/GL33/SDL. C API/demo ABI consumers are NOT rebuilt by
+this focused gate and must be rebuilt before external regression. Sources frozen
+again; do not edit production while45982 lives. No pass/closure/product commit.
+Next collect45982, then native/full external/visual/lifetime sanitizer and unbuilt
+renderer paths. Preserve inherited011/082 and pending owner choices. No push/merge.
+
 **Compiled baseline collected; no live heavy job.**48754 buildPASS721899ms but
 diagnostic gateFAIL on16 pre-existing Draco warnings (exact original-baseline
 matches; no suppression/vendor edit). First continuation9598 failed before tests
