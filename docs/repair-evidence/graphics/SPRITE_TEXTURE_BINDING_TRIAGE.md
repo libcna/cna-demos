@@ -2,6 +2,36 @@
 
 ## Current evidence boundary (2026-10-21)
 
+Supplementary baseline collected after continuation (CNA `3dcf72f35`, demos
+`f42b305`, inherited011/082 work unchanged):
+
+- `SpriteTextureBindingLifetimeTests.cpp`: seven cases per renderer, each of
+  SOFTWARE/OPENGLES3/OPENGL33/SDL_GPU gives six FAIL and one PASS. The existing
+  destroyed-wrapper retained-renderer control passes; stock-effect pass ordering,
+  explicitly disposed live wrappers, move construction/assignment, Immediate slot
+  publication and independent copied-wrapper identity fail. Strict C++23
+  `-Wall -Wextra -Werror` compilation2153ms; runs73/414/382/934ms.
+  `repair-sprite-texture-lifetime-before-audit.json` records unchanged frozen
+  inputs, peak427597824 bytes and zero memory events. These are defect
+  reproductions, not a passing product checkpoint.
+- `SpriteCompiledTextureBindingTests.cpp`: the first compiler attempt correctly
+  refused an ambiguous GTest-macro `else` under `-Werror`; its build log remains.
+  Adding braces only allowed v2 to compile in2707ms. All three cases SKIP on
+  all four renderers because their current CMake configurations disable compiled
+  effects (`CNA_{SOFTWARE,EASYGL,SDL_GPU}_COMPILED_EFFECTS=OFF`). Runs76/294/248/568ms;
+  peak445546496 bytes, zero memory events, unchanged frozen inputs. The v2 audit
+  correctly says `reproduced:false`; this is **no compiled-effect runtime proof**.
+  The previous tool handle28520 is now absent and its systemd scope is
+  inactive/dead, Result=success; no job was restarted. Child exit0 here means
+  skipped tests, not successful behavior. Reports are in `build/linux-full/reports/`
+  under `repair-sprite-compiled-binding-before[-v2]-*`.
+
+The original six-case source remains unchanged. No003 production repair, marker
+change or closure has been made. Source inspection still requires binding after
+each custom pass, including renderer-owned compiled passes, not merely before
+renderer Draw or after End. Existing configurations cannot validate the compiled
+route; obtain an enabled configuration or clearly retain that validation gap.
+
 **Confirmed by actual baseline61003 after156 commit7097e1684:** strict compile
 2210ms, six original tests on each SOFTWARE/OPENGLES3/OPENGL33/SDL_GPU. Every
 renderer gives the same fiveFAIL/onePASS: deferred/immediate publication, both

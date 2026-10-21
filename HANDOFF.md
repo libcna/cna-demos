@@ -12,6 +12,19 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**ISSUE-003 supplemental evidence recovered:** CNA remains `3dcf72f35`, demos
+started at `f42b305`; inherited011/082 changes preserved. Lifetime/stock-pass
+witnesses: sixFAIL/onePASS on each SW/GLES/GL33/SDL_GPU, original six-case source
+unchanged. Compiled-effect v2: strict compile passes, all12 observations SKIP
+because all configured compiled-effect capabilities are OFF; reproduced=false,
+not a runtime pass. Original Werror harness failure retained. Tool28520 is absent,
+host scope inactive/dead; no campaign heavy job remains. Both runs have unchanged
+frozen inputs and zero memory events. Full details and exact report prefixes are
+in graphics/SPRITE_TEXTURE_BINDING_TRIAGE.md. No production repair or closure.
+Next: lifetime-safe public binding with correct stock/compiled pass boundaries;
+do not treat compiled-route skips as verification. Preserve pending082/131 owner
+choices and inherited011 work. No push/merge.
+
 **Safe continuation checkpoint:** CNA product7097e1684/status2f6eac0f1;
 demos closure23bbbaf,003 baseline d8ed678,082 evidence c07e948. All156 IDs retained,
 105final/51pending. No heavy job is live:98308 terminal0,70430 terminal2 with
