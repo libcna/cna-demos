@@ -65,9 +65,13 @@ namespace
             {
                 EXPECT_EQ(typeid(error), typeid(Exception));
                 if constexpr (std::is_same_v<Exception, System::ArgumentOutOfRangeException>)
+                {
                     EXPECT_EQ(error.getParamNameProperty(), "value");
+                }
                 if constexpr (std::is_same_v<Exception, System::ObjectDisposedException>)
+                {
                     EXPECT_EQ(error.getObjectNameProperty(), "SoundEffectInstance");
+                }
             }
             catch (...)
             {

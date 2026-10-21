@@ -127,6 +127,14 @@ execution remain to be performed. No audio/playback/hardware pass is claimed.
 
 ## ISSUE-028: historical expectation needs correction evidence
 
+8353 completed the lazy-path witness on2026-10-21: strict compile1680ms/run114ms,
+exactly6PASS/2FAIL, unchanged source/artifact hashes,peak357634048/all events0.
+All four banks are initially prepared. The relative changed-cwd and relative
+decoy-cwd lazy reads fail; unchanged-cwd and absolute-path reads pass. Reports
+`repair-wave-bank-lazy-path-before-*`. This confirms a real retained-path defect
+separate from the disproved title-root expectation. No production028 repair yet;
+retain the original oracle and original historical description.
+
 Prepared follow-up `WaveBankLazyPathProbe.cpp` (2026-10-21), NOT compiled/run:
 four valid streaming-bank constructions, then first access to an entry through
 the existing native WaveBankTestAccess seam. It separates unchanged cwd, absolute

@@ -1491,6 +1491,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-028 -- A streaming WaveBank opens a relative path from the working directory
 
+- **Confirmed related defect (2026-10-21):** the original eight-check lazy-read
+  probe now gives6PASS/2FAIL: changing cwd after relative-path construction loses
+  the selected bank, including a same-name invalid decoy. All four constructors
+  prepare successfully; absolute and unchanged-cwd controls pass. Keep this real
+  retained-path defect separate from the incorrect historical title-root expectation.
+  No production repair or issue closure yet. Evidence `repair-wave-bank-lazy-path-before-*`.
+
 - **Repair triage (2026-10-20, not closed):** genuine XNA's two WaveBank constructors
   use `Path.GetFullPath`, not TitleLocation. A genuine14-control pre-native-header
   oracle and current native6-control streaming probe confirm cwd lookup. The historical

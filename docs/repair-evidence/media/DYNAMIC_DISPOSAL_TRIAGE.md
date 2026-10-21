@@ -1,5 +1,22 @@
 # ISSUE-038: dynamic audio disposal guard preparation
 
+41722 focused candidate completed0: native build116708ms/no diagnostics; unchanged
+five-case fixture5/5PASS (strict compile2702ms/run53ms/XML29ms); pan18/18 alsoPASS.
+Hashes unchanged,peak1260371968/all events0.21670 native audio/focus/full gate is
+running; demo knownIssue stays until its original runtime assertions pass.
+
+Native34449 completed the unchanged five-case fixture: exactly four disposal
+failures and the existing setter control PASS. Strict compile1968ms/run45ms/XML22ms;
+hashes unchanged,peak410947584/all events0. Reports `repair-dynamic-audio-disposed-before-*`.
+Local candidate adds the four missing guards and copies this exact fixture into
+CNA's audio tests. The older disposal queue-cleanup test keeps its actual zero
+buffer assertion through a narrow read-only friend seam, plus the public refusal.
+Two FNA-derived helper no-throw tests are corrected and renamed to ThrowsObjectDisposed;
+full regression must explicitly map these two IDs, retaining their inputs and
+checking the newly measured XNA exception contract. 41722 focused candidate build
+and original23-case validation (including073) is RUNNING; no closure yet.
+Older preparation statements below are historical.
+
 18009 TERMINAL0 (2026-10-21): all24 genuine managed controls PASS with exact
 Framework hash/MVID and unchanged source. Strict C# build3248ms, run780ms;
 peak268726272/all memory events0 in a separate1GiB no-swap scope. Reports

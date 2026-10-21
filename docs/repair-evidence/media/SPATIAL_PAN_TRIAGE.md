@@ -1,5 +1,26 @@
 # ISSUE-073: failed pan assignment and XNA validation order
 
+## Native reproduction, 2026-10-21
+
+41722 focused candidate completed0: build116708ms/no diagnostics; original18/18
+pan cases PASS (strict compile3448ms/run131ms/XML32ms), original5/5 dynamic cases
+PASS, hashes unchanged,peak1260371968/all memory events0. Wider21670 native gate
+is running; no issue closure or external original-demo pass is claimed yet.
+
+59404 strict compile failed on two dangling-else warnings caused by GoogleTest
+macros inside unbraced if-constexpr statements. No native cases ran and no final
+audit was emitted. Original source is committed in50d0c97; original compile log
+is retained. Braces correct the fixture syntax without changing any expectation.
+75902 (`repair-spatial-pan-refusal-before-v2-*`) then reproduces exactly10FAIL/
+8PASS across18 cases. Real looping voices are confirmed Playing; strict compile
+2456ms/run110ms/XML18ms, hashes unchanged,peak454631424/all memory events0.
+
+Local candidate now orders disposal, prepacket latch reset, live3D refusal, range
+validation and stored pan mutation. It adds the unchanged18-case fixture to CNA
+native audio tests and corrects contradictory public/internal comments. Focused
+41722 rebuild/original-fixture validation is RUNNING together with038's guards;
+no repair acceptance or closure yet. Other preparation notes below are historical.
+
 2026-10-21. No production fix yet. The completed058 external baseline still has
 the original one failing C assertion on both SOFTWARE/OPENGLES3: refusing direct
 pan on a live3D instance changes its public pan. The implementation remains the

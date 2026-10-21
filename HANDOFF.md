@@ -12,6 +12,38 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+LATEST21670 RUNNING `cna-repair-audio-instance-guards-native.scope`: existing native
+CnaTests/CnaAudioTests rebuild, module/focus/full regression, exact015-baseline
+comparison with only the two documented helper-test renames and23 new cases.
+41722 TERMINAL0: build116708ms/zero diagnostics; unchanged pan18/18PASS (strict
+compile3448ms/run131ms) and disposed5/5PASS (compile2702ms/run53ms), hashes intact,
+peak1260371968/all memory events0. No038/073 closure yet. Current21670 is serial,
+private GPU/network cna-test0, owner UID/all capabilities dropped,6GiB max/no swap.
+Freeze native inputs until final audit. External gates and CTests remain pending;
+both demo knownIssue markers remain unchanged until their real scenarios pass.
+
+LATEST41722 RUNNING `cna-repair-audio-instance-guards-after.scope`: rebuild existing
+native cna_shared, then rerun the unchanged07318-case and0385-case fixtures. Candidate
+changes only audio instance refusal/disposal guards and matching comments/tests;
+all011 work preserved. Sources frozen until gate ends. One worker/sharedcache/
+private display/6GiB max/no swap. No other heavy job.
+
+Baselines completed:8353 WaveBank lazy-path8 checks =6PASS/2FAIL (reproduced),
+build1680ms/run114ms,peak357634048/events0;028 now CONFIRMED_OPEN for lazy path
+retention, NOT for its disproved historical title-root expectation. No028 fix yet.
+073 first native compile59404 refused ambiguous GoogleTest macro else under Werror;
+source commit50d0c97 and log retained, braces added without changing expectations.
+75902 corrected compile2456ms/run110ms:18 cases=8PASS/10FAIL exactly,peak454631424/
+events0.03834449 compile1968ms/run45ms:5cases=1setterPASS/4FAIL exactly,
+peak410947584/events0. All baseline source/artifact hashes unchanged.
+
+Native candidate preserves disposal queue cleanup through a narrow read-only test
+seam. Two old wrongly FNA-derived DoesNotThrow tests are explicitly replaced by
+ThrowsObjectDisposed counterparts, not silently lost; full comparison must map
+those two IDs and add exactly23 new cases. No038/073 closure or repair commit yet.
+Matrix95FINAL/60pending, now51PENDING_VERIFICATION/9CONFIRMED_OPEN. CNA94423036b
+plus candidate/011; demosaf5a986 plus current evidence updates. No push/merge.
+
 LATEST015 CLOSED: CNA `9639707991b589914d8db8224b6d79f3867d60d0`; only title-path
 fix/comments/tests committed, overlapping011 ownership hunks remain uncommitted.
 79454 TERMINAL0: external build917304ms/zero diagnostics, original8/8 and both
