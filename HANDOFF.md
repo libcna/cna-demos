@@ -12,6 +12,37 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+ACTIVE011:90369 TERMINAL0, integrated61/61 native ownership tests PASS under
+ASan/leak/UBSan/float-cast-overflow on SOFTWARE. Existing instrumented libraries
+reused160ms; fixture build35927ms; exact145 unchanged renderer diagnostics verified
+20ms; runtime462ms; XML audit21ms. All frozen hashes intact;peak1215119360/events0.
+No suppressions or weakened assertions. CNA/129 Sharp Runtime TUs instrumented,
+vendors not. Original compile/preflight failures retained in evidence below.
+26923 RUNNING rebuilds canonical CnaTests, then focused/full native suites with
+exact057 outcome comparison plus61 newPASS (expected10868 total). Private GPU/
+network, owner UID/capabilities dropped, one worker/shared ccache/6GiB max.
+Driver build-probe/repair-content-ownership-native-current.mjs; reports
+repair-content-ownership-native-current-v3-*. Freeze production/native tests;
+poll26923, no overlapping heavy jobs. Next rebuild external C API/demos and run
+their ownership/renderer/CTest/visual gates. C model/effect owner decision pending.
+93FINAL/62PENDING;011 open, no marker/production commit/push/merge. CNA handoff
+authoritative; older RUNNING notes below are chronology.
+
+ACTIVE011:13324 TERMINAL1. Instrumented libraries built0/1262919ms; fixture
+compile1/37387ms exposed145 existing unused-parameter diagnostics in unchanged
+HEAD IGraphicsRenderer.hpp. Runtime tests did not start. All hashes unchanged;
+peak4297129984,high1707,max/OOM0.16 existing Draco library warnings also retained.
+90369 RUNNING reuses build-asan without reconfiguration/clean rebuild; same driver,
+reports repair-content-ownership-integrated-asan-v2-*. Wall/Wextra/Werror retained,
+only unused-parameter errors become visible warnings, and an exact145 location/
+message comparison rejects any new diagnostic before all61 unchanged tests run.
+No assertion/source change or sanitizer suppression. One worker/private display/
+shared ccache/6GiB max. Poll90369; no overlapping build. Native-current-v3 prepared
+but NOT launched; it requires completed v2 sanitizer gate and matching hashes.
+93FINAL/62PENDING,011 open. CNA top handoff authoritative; older notes are chronology.
+35869 stopped before compiling: cache guard expected literal ccache instead of
+the verified CNA CMake env wrapper setting CCACHE_BASEDIR=/rv; guard corrected.
+
 ACTIVE011:57618 TERMINAL0, metadata/ownership39PASS. Libraries rebuild353534ms
 and strict fixture build20631ms have zero diagnostics; runtime747ms. Exact compare
 preserves previous30PASS, improves the two metadata failures, retains other two

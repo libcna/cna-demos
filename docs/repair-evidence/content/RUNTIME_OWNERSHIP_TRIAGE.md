@@ -1,5 +1,46 @@
 # Next content-runtime batch: source audit, not repair closure
 
+## Integrated sanitizers61PASS; current native regression running (2026-10-21)
+
+90369 completes0: existing libraries checked160ms, fixture compile35927ms,
+diagnostics comparison20ms verifies all145 original unused-parameter location/
+message pairs unchanged and no additional diagnostic. Actual61 tests from11
+native suites allPASS (462ms process,238ms GTest), XML audit21ms. ASan with leaks,
+UBSan and float-cast-overflow are enabled with halt-on-error and no suppressions.
+Affected CNA and129 enabled Sharp Runtime translation units are instrumented;
+vendored libraries are not. SOFTWARE runtime, peak1215119360/all memory events0,
+all frozen source/library/fixture hashes unchanged. Reports:
+repair-content-ownership-integrated-asan-v2-*. This is integrated resource-lifetime
+coverage, not merely the earlier standalone ownership helper result.
+
+26923 now rebuilds canonical CnaTests before wider/full native regression, with
+private display/network, owner UID/all capabilities dropped and one worker/6GiB
+max. Driver requires completed sanitizer evidence/hashes, then compares every057
+outcome and exactly61 addedPASS, expected10868 total. Reports native-current-v3.
+External C API/demos binaries still need rebuilding; no all-renderer/CTest/visual
+claim. No011 closure/knownIssue removal; C model/effect lifetime policy pending.
+
+## Integrated sanitizer validation: preserved compile diagnostics (2026-10-21)
+
+13324 completed all725 instrumented-library steps in1262919ms. Sixteen warnings
+are in unchanged vendored Draco; configuration also warned about an unused
+FetchContent flag. The subsequent61-test fixture compile failed in37387ms because
+Wall/Wextra/Werror exposed145 pre-existing unused parameters in unchanged HEAD
+IGraphicsRenderer.hpp. The native cube regression needs this interface to assert
+actual renderer expiry; do not delete that assertion or hide the diagnostics.
+No runtime test ran. All frozen hashes match; scope peak4297129984,high1707,
+max/OOM0. Original failing report prefix remains repair-content-ownership-integrated-asan.
+
+The v2 continuation preserves all61 native tests and existing libraries/cache,
+retains Wall/Wextra/Werror, and uses Wno-error=unused-parameter only alongside an
+exact original145 location/message multiset check. Any new/different diagnostic
+fails; warnings stay in the log. Production and test sources remain unchanged.
+35869 stopped at preflight before compiling: CNA's actual ccache launcher is the
+project CMake env wrapper setting CCACHE_BASEDIR=/rv, not the literal string
+ccache. Verified the existing cache and corrected the guard to that exact wrapper.
+90369 is now RUNNING; same serial/private-display/6GiB scope and v2 report prefix.
+Runtime sanitizer results are still pending. No knownIssue or disposition change.
+
 ## Metadata repaired in focused integration; full sanitizer build active (2026-10-21)
 
 GraphicsResource has opt-in shared Name/Tag storage, separate from its existing
