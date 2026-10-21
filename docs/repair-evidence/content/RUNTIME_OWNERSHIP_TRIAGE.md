@@ -1,5 +1,50 @@
 # Next content-runtime batch: source audit, not repair closure
 
+## Residual repairs and child-resource controls (2026-10-21)
+
+Candidate adds an internal polymorphic ownership capability, preserving recording
+through Object/IDisposable and const shared pointers without casting away const.
+Non-XNB model acquisition records completed buffers, effects and embedded/generated
+textures, including CNB-v2 and material variants; cached custom effects are not
+recorded again. Buffer ownership is shared with the manager so completed child
+reads remain owned after a later model-read failure. Native tests include the
+unchanged seven permanent residual cases. Actual core helper11 passes strict
+ASan/UBSan/leak (39862,4441ms build/19ms run,peak335880192,events0).
+
+An important validation failure is retained:58839 built archives cleanly but its
+25-case run SIGSEGV after10 managerPASS. Debugger76318 identified invalid virtual
+dispatch; the driver omitted `libcna.so` from its target list while the canonical
+link line still loaded that old shared library. This was a mixed-ABI validation
+error, not OOM (peak2182914048/events0). No runtime workaround was added. Corrected
+driver builds relative shared libraries as well as archives and requires both CNA
+and content targets.44058 completes0: shared relink673ms,strict25-case build13569ms
+with zero diagnostics,25PASS/487ms,peak848592896/events0. Original18 remainPASS and
+all six measured residual failures improve. Original crash/backtrace/logs survive.
+
+`ContentModelChildOwnershipTests.cpp` adds five further candidate controls:
+CNB-v2's five stock effects and two shared buffers; completed-child retention on
+failed CNJ loading; exactly one Dispose call for a cached effect reused by two
+meshes; an embedded glTF texture; and a generated white SkinnedEffect texture.
+Both texture controls test retained value copies, actual pixels before unload,
+renderer expiry and exact ObjectDisposedException afterward. All5PASS in93419:
+strict build0/6156ms/zero diagnostics,run324ms,peak526106624/events0. These controls
+were not run against a pre-fix binary and are not claimed as measured red/green.
+
+The fixture development failures are also retained:36218 rejected ambiguous
+Google Test macro `if` syntax under Werror; explicit braces fixed it.8582 compiled
+strictly and passed4 controls, while the new CNB fixture incorrectly left its
+SkinnedEffect weightsPerVertex at0; the codec correctly refused that invalid
+input. Setting the fixture to its documented valid4 weights fixed construction,
+without changing any ownership assertion or production code. Five native copies
+are now added. Reports repair-content-ownership-children-{candidate,v2,v3}-*.
+
+42874 now rebuilds CnaTests and runs wider focus then the full native suite,
+comparing every old057 outcome and frozen source/binary hashes. One worker,
+private display,shared ccache,4GiB high/6GiB max/no swap. Production/native tests
+are frozen until terminal. Reports repair-content-ownership-native-current-*.
+No current full-native/C-API/all-renderer/integrated-resource-sanitizer pass yet.
+C model/effect lifetime policy still awaits the owner;93FINAL/62PENDING unchanged.
+
 ## Value-resource candidate passes original probes; residual routes reproduced (2026-10-21)
 
 Uncommitted CNA candidate on8d73b19c0 now tracks live value wrappers through a core

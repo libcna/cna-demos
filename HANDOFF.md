@@ -12,6 +12,22 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+ACTIVE011:42874 RUNNING, rebuilding CnaTests then wider focus/full native suite
+against current public layouts, automatic057 outcome/frozen-hash comparison.
+Driver build-probe/repair-content-ownership-native-current.mjs;reports same prefix.
+One worker,private display,shared cache,4GiB high/6GiB max/no swap; freeze CNA
+production/native tests. Do not restart blindly or run stale native executables.
+Latest candidate25PASS (44058) plus5 child controlsPASS (93419), and actual core
+helper11 ASan/UBSan/leakPASS. All6 measured residual failures improve. An earlier
+driver omitted shared libcna.so and caused a mixed-ABI SIGSEGV; original failure
+and debugger evidence retained, fixed only by rebuilding the correct link closure.
+Two new-fixture authoring errors (macro braces and invalid0 skin weights) were
+corrected without altering ownership assertions; all details in ownership triage.
+CNA remains uncommitted on8d73b19c0; C model/effect policy answer pending/nonblocking.
+No full-native/C-API/renderer-wide/integrated sanitizer claim, no011 closure or
+marker changes;93FINAL/62PENDING. CNA top handoff remains authoritative.
+Completed checkpoints and RUNNING launch notes below are retained chronology.
+
 LATEST011:94457 TERMINAL0. CnaTests build0/1291420ms; native1414=1409PASS/5SKIP,
 all1377 previous057 outcomes exactly preserved plus37 newPASS. Strict external
 fixture build0/zero diagnostics; original14+nested4 allPASS. Original two C++
