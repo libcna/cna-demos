@@ -1,5 +1,27 @@
 # Next content-runtime batch: source audit, not repair closure
 
+## Wider native source-guard correction and isolated continuation (2026-10-21)
+
+42874 ends1: native build succeeds in834467ms; wider focus1513 has1507PASS,
+five unchanged skips and one failure in72359ms. The source-structure test
+`CnbSharedModelBuilderTest.TheSharedBuilderIsTheOneEveryModelFrontEndCalls`
+still searched `BuildModelMeshPartGeometryEXT(device, geometry)`. Source inspection
+proves the same three glTF/CNJ/CNB callers now pass `cm` for ownership recording.
+Only the exact expected call spelling changes to `(device, cm, geometry)`;
+count3, the single definition and other structural checks remain unchanged.
+No behavioral assertion is relaxed. Full native did not start. Original failure
+reports remain; frozen hashes match, peak4298309632/high1225/max0/OOM0.
+
+The original driver lacked the previous complete checkpoint's private network
+namespace. Its results are not accepted as a comparable full gate. Corrected
+launch preserves repository-owner UID, drops all capability sets and sets up
+only private loopback/cna-test0 with its limited-broadcast route; driver verifies
+these preconditions. Private GPU runner and one-worker6GiB/no-swap scope remain.
+80015 is RUNNING: incremental build0/8175ms, wider focus then full native and
+exact057 comparison including50 newPASS. No full pass claimed. Reports
+`repair-content-ownership-native-current-v2-*`; source/test freeze applies.
+No issue closure, marker changes, push or merge;93FINAL/62PENDING unchanged.
+
 ## Residual repairs and child-resource controls (2026-10-21)
 
 Candidate adds an internal polymorphic ownership capability, preserving recording

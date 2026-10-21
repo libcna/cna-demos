@@ -12,6 +12,23 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+ACTIVE011 resume:80015 RUNNING, superseding42874. Original42874 ended1:
+build0/834467ms; focus1513=1507PASS/5SKIP/1FAIL,72359ms. The sole failure was a
+source guard searching the old shared-model-helper call signature. All three
+callers still use the same builder, now with ContentManager cm; updated that
+exact search string only, retaining count3 and all other assertions. Full native
+never started. Peak4298309632/high1225/max0/OOM0; frozen hashes unchanged.
+Original reports retained. Its launcher also lacked baseline network isolation;
+do not claim a comparable full pass. New driver requires owner UID/zero caps/
+private cna-test0 broadcast route before execution, in addition to private GPU
+display and one worker/4GiB high/6GiB max/no swap.80015 incremental build passes
+0/8175ms and wider focus is running before full native. Reports
+repair-content-ownership-native-current-v2-*. Freeze CNA production/native tests;
+poll80015, no overlapping heavy job. Codex host RSS measured352-358MiB, not9GB;
+scope limits constrain tests, not Codex. No process was stopped.93FINAL/62PENDING,
+no011 closure/knownIssue changes. CNA's top handoff records the exact next work.
+Older RUNNING statements below are retained chronology, not current process state.
+
 ACTIVE011:42874 RUNNING, rebuilding CnaTests then wider focus/full native suite
 against current public layouts, automatic057 outcome/frozen-hash comparison.
 Driver build-probe/repair-content-ownership-native-current.mjs;reports same prefix.
