@@ -246,6 +246,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-102 -- Oversized shadow cascade count overruns fixed draw-parameter arrays
 
+- **Current verification (2026-10-21; CONFIRMED_OPEN):** all four setters still
+  accept invalid counts and mutate state. Safe native reproduction20 cases:
+  8 boundary failures,12 valid-count/self-assignment/draw-parameter controls PASS.
+  No invalid count is drawn. No repair or closure yet; see
+  [current triage](repair-evidence/graphics/SHADOW_CASCADE_COUNT_TRIAGE.md).
+
 - **Area/API:** `ShadowCascadeStateEXT::Count` and `setShadowCascadesEXT` on `BasicEffect`,
   `SkinnedEffect`, `PbrEffect` and `SkinnedPbrEffect`.
 - **Discovery:** the Focused918 audit first completes safe maximum-count rendering with Count4 and
@@ -272,6 +278,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   safety issue adds no runtime knownIssue marker.
 
 ### CNA-DEMOS-ISSUE-101 -- Video URI resolution and deferred file failures diverge from FNA
+
+- **Latest validation (2026-10-21; still CONFIRMED_OPEN):** native full
+  10,847PASS/101unchangedSKIP, sanitizer43PASS/no findings and actual external
+  43PASS. Original URI9 nowPASS on SOFTWARE and OPENGLES3. Combined video gate
+  remains unaccepted due to unchanged public C contract conflicts; actual
+  decoder-open failures also need follow-up. No marker removed or CNA production
+  commit. See [latest checkpoint](repair-evidence/media/VIDEO_URI_REPAIR_CHECKPOINT.md).
 
 - **Local candidate (2026-10-21; still CONFIRMED_OPEN):** URI classification/
   LocalPath now live in Sharp Runtime; File.Exists rejects embedded NUL rather

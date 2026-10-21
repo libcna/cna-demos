@@ -12,6 +12,59 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**LIVE93255,15:24 CEST:** safe102 baseline reproduced8FAIL/12PASS; original
+shadow images16+6 checks pass on each OPENGLES3/OPENGL33. Minimal four-setter
+guard/docs candidate and identical20 native tests now added. Native graphics/
+full parity RUNNING, existing tree/one worker/private GPU/network/6GiB/no swap.
+Sources frozen. Next sanitizer27, external applicable renderer/public regression
+and exact same-renderer images. Video external gate remains unaccepted as below;
+do not silently convert its C failures. No new issue closure/product commit/push.
+
+**Current authoritative checkpoint, 15:20 CEST:** external68581 completed1,
+not accepted: actual external43PASS; each renderer50PASS/5FAIL/1manual,
+099 C++27/100 pixels9/101 URI9 nowPASS, four unrelated failures unchanged.
+Same five C VideoPlayer assertions fail on each renderer; pure-C smoke exits2.
+No expectation/marker change. Peak4,302,946,304/high3924/max0/OOM0, frozen hashes
+unchanged. Full details: VIDEO_URI_REPAIR_CHECKPOINT.md latest section.
+Safe102 baseline93365 completed0:20 cases=12PASS/8expected boundaryFAIL, no invalid
+draw; build3873/run679/audit30ms,peak473071616/events0,unchanged hashes. First
+compile failure retained: extra Wextra diagnosed pre-existing unused parameters;
+v2 keeps Wall/Werror without adding that non-native policy, assertions unchanged.
+45372 original shadow visual baseline now RUNNING on private OPENGLES3/OPENGL33.
+Next inspect it, then add the four pre-assignment count guards and register the
+unchanged20 native witnesses; native/full/sanitizer/external/visual validation.
+No shadow production edits yet. Preserve inherited011 and pending C decisions.
+Matrix remains155 historical/97final/58pending. Nothing newly pushed or merged.
+
+**LIVE68581 external-v2:** sanitizer97309 completed0,43PASS/no findings,
+libraries57823ms/strict witnesses22209ms/run501ms/audit27ms,peak920498176/events0,
+unchanged hashes. External43227 stopped before build on superseded ASan hashes;
+v2 uses its accepted sanitizer audit while retaining every native source/artifact
+check.68581 now builds linux-full and runs43 witnesses/112 renderer scenarios/
+pure-C smoke. One worker/private GPU/6GiB/no swap, C099/101 conflicts still pending.
+Native59093 remains accepted10847PASS/101sameSKIP. No new closure/push/merge.
+
+Resume detail: external build reached 807/1022 at 15:06 CEST. Scope memory
+high4GiB/max6GiB/no swap, one worker; no overlapping heavy job. After this gate,
+run the prepared safe ISSUE-102 baseline, then its original EasyGL visual
+baseline before modifying the four effect setters. Prepared drivers are
+`build-probe/repair-shadow-{count-before,native,sanitizer,visual}.mjs`
+(the first filename is `repair-shadow-count-before.mjs`). All remain UNRUN.
+The separate `VideoDeferredOpenFailureTests.cpp` witness is also UNCOMPILED/
+UNRUN: actual decoder-open failure remains a root-cause follow-up before101
+closure, beyond the passing file-existence/URI checks. It is not a C contract
+decision. Preserve pending owner choices and inherited011 work.
+
+### Earlier checkpoints (historical; the live state above takes precedence)
+
+**Current97309 sanitizer RUNNING:** native59093 finished0: full10,847PASS/
+101sameSKIP, exact old10,934 outcomes plus14newPASS;1,341,053ms/compare136ms,
+unchanged hashes,peak2,626,609,152 bytes/all memory events0. Sanitizer43 uses
+existing ASan media archives plus actual CMake TitleLocation object, private GPU,
+one worker/shared cache/6GiB/no swap. No other heavy job. Next external43/112 and
+pure-C smoke;099/101 C contract choices explicitly pending, C expectations unchanged.
+Safe102 graphics fixture/driver prepared but UNRUN. No issue closure/push/merge.
+
 **LIVE59093 native-v3:** build18,503ms/zero diagnostics, focused43PASS1,037ms,
 media345PASS12,715ms; full10948 RUNNING with source hashes frozen. Previous14068
 stopped before build because the first attempt had already rebuilt libcna.so;

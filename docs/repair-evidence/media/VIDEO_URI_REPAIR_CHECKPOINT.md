@@ -1,5 +1,30 @@
 # ISSUE-101 URI dependency and CNA candidate
 
+## Latest outcome (supersedes running states below)
+
+External-v2 session68581 completed with exit1: **gate not accepted**.
+Existing linux-full build passed in2,576,494ms with zero compiler diagnostics;
+43 original witnesses passed against its actual libcna.so (compile13,362ms,
+run938ms, XML audit23ms). Each renderer, SOFTWARE and OPENGLES3, completed56
+original scenarios:50PASS/5FAIL/1manual NOT RUN. Original099 C++27,100 pixel9
+and101 URI9 now pass on both. Four unrelated failing scenarios and every
+unrelated assertion outcome are unchanged. C VideoPlayer still fails the same
+five assertions on each renderer: fresh GetTexture, fresh frame descriptor,
+Volume clamping, Stop Video identity and stopped frame absence. Those failures
+are **not** converted to knownIssue or expected failures. Pure-C VideoSmoke
+compiles348ms but exits2 in237ms; its log does not identify the failing assertion,
+so do not infer a precise failure line from that exit alone.
+
+All frozen sources/artifacts unchanged. Scope peak4,302,946,304 bytes;
+memory.high3924 (reclaim/throttling), max0/oom0/oom_kill0. One compiler worker,
+4GiB high/6GiB hard cap/no swap, private GPU. Original reports retained under
+`build/linux-full/reports/repair-video-uri-external-v2-*`.
+
+099/100/101 remain open; C contract choices are still unanswered and actual
+decoder-open failure is a101 follow-up. No C source/assertion/marker edit,
+production CNA commit, issue closure, push or merge. Continue independent102
+while those decisions remain pending; the campaign is not blocked as a whole.
+
 2026-10-21. Starting revisions: CNA ba56ddf5a, demos ca6310b, Sharp Runtime
 97713eb292093b4d81f7e29c1965d5a317a57680. No issue is closed by this checkpoint.
 The earlier VIDEO_REPAIR_VALIDATION_CHECKPOINT.md remains the historical099/100
@@ -34,6 +59,25 @@ the failed association and throws FileNotFoundException. Existing but undecodabl
 files still take the pre-existing silent decoder-failure path: **not** a claim of
 complete FNA codec-failure parity. The C Play contract needs separate review.
 
+The101 C contract conflict is concrete, not inferred from099: pure_c/VideoSmoke.c
+173–190 explicitly requires `http://example.com/v.mp4` to return CNA_RESULT_IO,
+and docs/c-api/MEDIA.md describes the factory as deliberately forwarding URI text
+without parsing. video.h's Play comment also promises success/stopped for a file
+the platform cannot decode. The owner has now been asked separately whether to
+align URI resolution/refusal and missing-file Play with corrected FNA/C++, or
+preserve these C differences in an adapter. Neither099 nor101 has an explicit
+answer yet. No C source, header, specification, smoke or demo assertion was edited.
+An existing-but-undecodable file remains distinct from an absent file in the
+candidate; do not silently expand this fix to every codec-open failure.
+
+Root-cause follow-up before101 closure: the File.Exists precheck does not itself
+propagate an actual decoder-open failure (including a file disappearing between
+check and open). FNA VideoPlayerTheora.cs304–307 and VideoPlayerAV1.cs225–228 throw FileNotFoundException when
+their decoder open fails. Review/minimize that broader path and the documented C
+success/stopped difference; the green URI9 must not be mistaken for proof that
+every deferred-open failure is repaired. No additional codec behavior changed
+during the frozen external run.
+
 ## Completed runtime gates
 
 | Gate | Result |
@@ -52,7 +96,25 @@ bytes, all memory events0, frozen input hashes unchanged. One worker/shared cach
 existing build/, no temporary build tree. Migration/source/version boundaries and
 downstream spelling inventory are in runtime docs/Migration-UriLocalPathAndFileExists.md.
 
-## CNA validation now running
+## CNA validation sequence (historical running states retained)
+
+**Completed sanitizer:**97309 terminated0: libraries57,823ms, strict fixture
+compile22,209ms,43PASS501ms, XML inspection27ms. Actual Video/VideoPlayer,
+Sharp Runtime and canonical TitleLocation object instrumented; no ASan/UBSan/
+float-cast/leak findings or suppressions. Third-party libraries are not claimed
+instrumented. Frozen hashes unchanged,peak920498176 bytes/all memory events0.
+External43227 stopped before build because native audit retained old ASan
+archives; v2 explicitly takes the successful sanitizer's updated ASan hashes
+and rejects any changed native source/artifact.68581 external-v2 now builds
+and runs43 original witnesses/112 scenarios/pure-C smoke; gate remains pending.
+
+**Completed native-v3:**59093 terminated0. Build18,503ms, focused43PASS1,037ms,
+media345PASS12,715ms, full10,948=10,847PASS/101unchangedSKIP1,341,053ms.
+Comparison136ms confirms all prior10,934 outcomes unchanged and exactly14newPASS.
+No build diagnostics; frozen hashes unchanged; peak2,626,609,152 bytes and all
+memory events0. Native Linux/OPENGLES3, private Wayland and network, no hardware
+or other-platform claim. Sanitizer97309 now runs the43 witnesses with the scoped
+TitleLocation object approach described below. External gate still pending.
 
 Latest: native-v3 job59093 completed build18,503ms/zero diagnostics, focused43/43
 PASS1,037ms and media345/345PASS12,715ms. Full10948 is RUNNING, not a completed
@@ -90,10 +152,53 @@ instrumented Video/runtime); repair-video-uri-external.mjs (actual external
 library,43 witnesses,112 unchanged scenarios, pure-C smoke). C regressions still
 reject the external gate; no new expected failure is introduced.
 
+Sanitizer preparation refinement: the existing ASan tree has no umbrella
+libcna.so or runtime archive. Rather than build unrelated modules just for this
+fixture, the driver retains the canonical Media static link closure and requests
+the real CMake object target for modules/runtime/src/TitleLocation.cpp. Its
+instrumentation flags/source/header/object hashes are checked, and that object
+is linked into the43-case witness. No stub, copied implementation, new build tree
+or production dependency change. This supersedes the initially prepared whole
+CnaTests link-closure approach above; still unrun while native59093 is active.
+
 Reports: build/linux-full/reports/repair-uri-local-path-oracle-*,
 repair-uri-runtime-{before,before-v2,after,after-v2}-*, repair-video-uri-before-*,
 repair-video-file-path-before-{*,v2-*}, repair-video-uri-native-*.
 
-Next: inspect native outcome comparison; run sanitizer/external sequentially,
-record results and coherent dependency commit. Preserve inherited011 and all
-historical issue IDs.099/100/101 remain open; matrix155 IDs/97final/58pending.
+## Accepted gates and current continuation
+
+Native-v3 completed: 10,948 cases = 10,847 PASS / 101 unchanged SKIP.
+All previous 10,934 outcomes are unchanged and exactly 14 new cases pass.
+Build 18,503 ms; focused 43/43 PASS in 1,037 ms; media 345/345 PASS in
+12,715 ms; full suite 1,341,053 ms; parity comparison 136 ms. Frozen hashes
+unchanged, peak 2,626,609,152 bytes, all memory events zero.
+
+Sanitizer gate completed: all 43 cases PASS with actual Video/VideoPlayer and
+runtime ASan/UBSan/float-cast/leak instrumentation, no findings or suppressions.
+Libraries 57,823 ms, strict witnesses 22,209 ms, run 501 ms, audit 27 ms;
+peak 920,498,176 bytes, all memory events zero, frozen hashes unchanged.
+This does not claim third-party codec instrumentation.
+
+Sharp Runtime dependency repair is committed as
+`c26614e85dffff4cadc5c4803b00d78953706b21`; its worktree was clean at the
+checkpoint. No push. External-v2 session 68581 is still running, rebuilding
+the existing linux-full tree with one compiler worker before 43 witnesses,
+112 original renderer scenarios and unchanged pure-C VideoSmoke. The first
+external attempt stopped before building on superseded sanitizer artifact
+hashes; v2 merges only accepted ASan artifacts, preserving all native input
+checks. No source/expectation changes during the frozen run.
+
+Root-cause follow-up before ISSUE-101 closure: the File.Exists precheck does
+not itself propagate an actual decoder-open failure, including a file
+disappearing between check and open. FNA VideoPlayerTheora.cs lines 304–307
+and VideoPlayerAV1.cs lines 225–228 throw FileNotFoundException when decoder
+open fails. Minimize that
+broader path and review the documented C success/stopped difference; green
+URI checks do not prove every deferred-open failure repaired. No additional
+codec behavior changed during the frozen external run.
+
+Next: inspect the external gate, preserve exact C regressions, then continue
+the independent ISSUE-102 safe setter-boundary reproduction while the two
+explicit C video contract choices remain unanswered. Preserve inherited 011
+and every historical ID. 099/100/101 remain open; matrix 155 IDs / 97 final /
+58 pending. No campaign completion, new closure, push or merge.
