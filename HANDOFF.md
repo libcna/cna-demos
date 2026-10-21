@@ -12,6 +12,20 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**ISSUE-003 first gate ACCEPTED; compiled gate LIVE48754.**78015 terminal0:
+external build1678789ms, strict original16 build4948ms;13PASS/3 compiledSKIP on
+each SW/GLES/GL33/SDL_GPU (106/678/598/1662ms). Original11 failing tests per renderer
+now pass; two original controls per renderer stay passing. Frozen inputs unchanged;
+peak4298645504 bytes, high1262/max0/OOM0/kill0. No full regression/003 closure.
+FNA3D identifier correction APPLIED plus parameter docs. Supplemental five compiled
+lifetime/error witnesses now native-registered byte-identically, not yet compiled/run.
+Sole48754 scope `cna-repair-sprite-binding-compiled-enabled`: configuration7428ms
+exit0 enables SOFTWARE/EasyGL compiled support in existing build; both dependency
+patch helpers explicitly skipped already-applied patches. Now building serially
+under6GiB/private GPU/shared cache, then21 cases per renderer (SDL_GPU compiled
+still OFF/eight skips). Poll48754; preserve frozen source/dependency inputs.
+No product commit/marker change/push/merge.105final/51pending; preserve011/082.
+
 **ISSUE-003 candidate IN VALIDATION:** tool78015, scope
 `cna-repair-sprite-binding-candidate`; one external incremental build worker,
 6GiB/no swap/private GPU/shared cache. Driver `build-probe/repair-sprite-binding-candidate.mjs`
@@ -23,7 +37,7 @@ then validate enabled compiled effects, exception/retry timing, lifetime sanitiz
 native and external regressions. Full CNA candidate file list is in its repair
 handoff. No003 closure/marker change/product commit/push/merge.
 Additional untracked `docs/repair-evidence/graphics/SpriteCompiledBindingLifetimeTests.cpp`
-contains four UNCOMPILED/UNRUN supplemental witnesses, not part of78015's frozen
+contains five UNCOMPILED/UNRUN supplemental witnesses, not part of78015's frozen
 inputs. Source analysis flags compiled End exception/retry timing; obtain actual
 enabled compiled-runtime evidence before correction. Reuse existing shared
 FNA3D dependency (`/home/robertvokac/deps/FNA3D`) if enabling a configuration.
@@ -33,6 +47,15 @@ After78015 terminates, first apply `build-probe/repair-sprite-binding-fna3d-name
 static review found the new FNA3D binding parameter collides with its existing local
 vertex binding. Prepared identifier-only correction is UNAPPLIED to preserve live
 input hashes. FNA3D is not built by this external configuration; no build claim.
+Prepared `build-probe/repair-sprite-binding-compiled-enabled.mjs` passes host
+syntax/transform checks only, UNRUN. After accepted78015 and the FNA3D identifier
+fix, register the new five cases byte-identically in native graphics tests, then
+run the prepared driver serially. It enables SOFTWARE/EasyGL compiled capabilities
+in the existing external tree and observes21 cases per renderer; only SDL_GPU's
+eight compiled cases may SKIP. Shared FNA3D/MojoShader are already patched; exact
+133-patch stamp plus tracked diff match was checked. The driver refuses a changed
+stamp because the dependency helper otherwise has a destructive checkout fallback.
+See SPRITE_TEXTURE_BINDING_TRIAGE.md for hashes and reference error-path evidence.
 
 **ISSUE-003 supplemental evidence recovered:** CNA remains `3dcf72f35`, demos
 started at `f42b305`; inherited011/082 changes preserved. Lifetime/stock-pass

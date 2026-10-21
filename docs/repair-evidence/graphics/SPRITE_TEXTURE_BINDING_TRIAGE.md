@@ -2,6 +2,23 @@
 
 ## Current evidence boundary (2026-10-21)
 
+**Latest actual result:**78015 TERMINAL0. External build1678789ms, strict
+original16 witness build4948ms, SW/GLES/GL33/SDL_GPU106/678/598/1662ms. Each
+renderer has13PASS/3 compiledSKIP: all11 originally failing tests per renderer
+now PASS, and both original passing controls stay PASS. All frozen inputs unchanged.
+Peak4298645504 bytes, high1262/max0/OOM0/kill0. No native/full-external/sanitizer
+acceptance, no003 closure. Exact original test sources remain unchanged.
+
+The FNA3D identifier-only correction and parameter documentation are applied;
+that renderer is not yet compiled. The five new compiled-lifetime/error tests
+are native-registered byte-identically, still uncompiled/unrun. Sole heavy48754
+now runs `repair-sprite-binding-compiled-enabled.mjs`: configuration7428ms/exit0,
+actual SOFTWARE/EasyGL compiled options ON, SDL_GPU OFF. Shared dependency
+helpers both explicitly reported already applied/skipping. Serial existing-tree
+build is live under6GiB/no swap/private GPU. Collect its21-case observations on
+each renderer before editing frozen sources; no successful compiled runtime
+claim until actual results. Below, the78015 launch/preparation notes are history.
+
 ### Candidate now in progress (not accepted)
 
 Demos evidence commit `82ee978` preserves the following baselines. A subsequent
@@ -20,9 +37,10 @@ display, MemoryHigh4GiB/MemoryMax6GiB/no swap. Texture2D/interface layout change
 require rebuilding consumers and the probes; do not run the old probe executables
 against the changed ABI. No focused result is claimed before the audit completes.
 
-`SpriteCompiledBindingLifetimeTests.cpp` adds four **UNCOMPILED/UNRUN** witnesses
+`SpriteCompiledBindingLifetimeTests.cpp` adds five **UNCOMPILED/UNRUN** witnesses
 outside that frozen input set: deferred failure/retry, distinct copied-wrapper
-runs, destroyed wrappers and moved wrappers. The copy test describes CNA's C++
+runs, destroyed wrappers, moved wrappers and no replay of failed Immediate Draw.
+The copy test describes CNA's C++
 extension, not a claim of XNA value-copy textures. Read-only analysis identifies
 a further risk: compiled flush exceptions originating inside renderer End enter
 SpriteBatch's renderer-End recovery branch, whereas genuine XNA End clears its
@@ -33,6 +51,33 @@ already references shared `/home/robertvokac/deps/FNA3D`; reuse that dependency 
 enabling SOFTWARE/EasyGL compiled support, never clone another copy. Do not
 reconfigure or launch a second heavy job while78015 is live. Native regression,
 all external deltas, lifetime sanitizers and unbuilt renderer paths remain pending.
+
+Continuation preparation while78015 remains live: genuine local XNA SpriteBatch
+InternalDraw calls RenderBatch directly in Immediate mode and returns without
+incrementing spriteQueueCount; End only clears the pair after Flush succeeds.
+That source evidence motivates the two error-path assertions; no new genuine-XNA
+GPU execution is claimed. The new five-case file is not yet native-registered,
+compiled or run, and is separate from the frozen original16.
+
+Prepared `build-probe/repair-sprite-binding-compiled-enabled.mjs` passes its
+syntax/transformation-only `--check-plan` on the host; it is **UNRUN**. A sandbox
+child-Node EPERM was not treated as a syntax failure or a runtime result. The
+driver requires78015's accepted13-case gate and unchanged inputs (except the
+reviewed FNA3D identifier fix), then enables actual SOFTWARE/EasyGL compiled
+effects in the existing external tree and runs21 cases on each renderer. Only
+SDL_GPU's eight compiled cases may SKIP. This does not make any regression or
+sanitizer acceptance claim. Register the five unchanged witnesses natively after
+78015 terminates before starting this driver. Do not alter the original16.
+
+Dependency safety preflight: shared FNA3D HEAD32401479a3ab5bd6b2e7f786e87bf4166aa03b0f,
+MojoShader6333f74dbd5644789a63e903816441b16c1e8b60. Both have existing patch changes;
+do not erase them. CNA's MojoShader helper has a destructive checkout fallback.
+The current133-patch series hash is
+`a6a5be0734d6fd0b320f17746a393126116ee30ede89296dd9c794ff8e90bcb1` and tracked diff hash
+`3e62f014f5564c9b5bf40780fed78f754b0b9ed3e8d0f67952c565ec45a5d568`; both exactly match
+the helper's stored no-op stamp. The final FNA3D patch reverse-check also passes.
+The prepared driver rechecks this before configure and refuses a changed stamp,
+then freezes the shared sources. It must never invoke the destructive fallback.
 
 Supplementary baseline collected after continuation (CNA `3dcf72f35`, demos
 `f42b305`, inherited011/082 work unchanged):
