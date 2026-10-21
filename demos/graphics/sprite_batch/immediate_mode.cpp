@@ -162,5 +162,4 @@ CNA_DEMOS_GAME(ImmediateSamplerStateDemo, {
     .frames = 3,
     .deterministic = true,
     .assets = {"textures/checker.png"},
-    .knownIssue = "CNA-DEMOS-ISSUE-004",
 })

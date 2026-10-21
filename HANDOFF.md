@@ -12,6 +12,91 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**Accepted checkpoint: ISSUE-004 fixed and committed in CNA9359a26b6.**
+Product `9359a26b61ded101eff35ee4008fbee3a490e9dc` contains only common sampler
+propagation and four native pixel tests. Native10893PASS/101sameSKIP, graphics
+2906PASS/73sameSKIP, SOFTWARE sanitizer4PASS/no findings; external116 exact delta
+is only004 improving on four renderers. Actual images inspected, blend framebuffer
+and first sprite unchanged. Final58657 terminal0: marker-only build/catalog delta,
+eight Immediate sibling runs and five CTests PASS, frozenunchanged/OOM0.
+Original log-evaluator mistake retained and corrected by read-only83834; no
+test/oracle weakened. See IMMEDIATE_SAMPLER_REPAIR.md. Only004 marker removed,
+historical report preserved underResolved.155 permanent IDs/104final/51withoutfinal.
+Separate unmarked SDL_GPU layer_depth_sorting failure is retained for follow-up.
+Next: ISSUE-082 event-order/reentrant/throwing-callback audit. Genuine managed
+reference97591 is now the sole live job (1GiB/private display); poll it before
+starting any other heavy task. Native event witness remains unregistered/unrun.
+Preserve inherited011 content/metadata work. No push or merge. Earlier LIVE notes
+below are historical; all004 validation sessions are terminal and accepted.
+
+**Latest: ISSUE-004 sanitizer93821 ACCEPTED; external86378 LIVE.** Original4
+SOFTWARE pixels PASS under production/Runtime ASan+UBSan+float-cast+leaks,
+build20836ms/strict fixture6387ms/run298ms/inspect35ms, no findings/frozen drift,
+peak4,297,469,952bytes/max0/OOM0. Native42945 remains accepted below. Sole heavy
+job86378: capture29 old SDL_GPU cases, one external rebuild, exact116 observations
+(only004 may improve;082 stays failed), four pixel witnesses on SW/GLES/GL33.
+Its pre-rebuild SDL_GPU capture also exposes an unmarked depth-test assertion
+failure in graphics.sprite_batch.layer_depth_sorting (other assertions pass).
+This is not a sampler regression: retain/reproduce and investigate separately
+after004; no skip or expected-failure marker added. See SPRITE_BATCH_TRIAGE.md.
+Poll86378; then actually inspect images and run prepared marker-only final gate.
+No marker removed, no004 closure or new commit yet. Other work remains untouched.
+
+**Latest verified: ISSUE-004 native42945 ACCEPTED; sanitizer93821 LIVE.**
+Full native10,893PASS/101unchangedSKIP in1,655,437ms; exact old10,990 outcomes
+unchanged, exactly four new pixelPASS. Graphics2906PASS/73SKIP and focused4PASS.
+No frozen source drift, peak4,299,186,176bytes/high8179/max0/OOM0. Native process
+is terminal0; do not restart it. Sole current heavy job93821 is prepared original4
+SOFTWARE sanitizer gate (one worker/private GPU/shared cache/6GiB/no swap), actual
+SpriteBatch/Texture2D/GraphicsResource and Runtime instrumentation. Poll93821,
+then external116; after real image inspection use prepared marker-only final
+gate (syntax/plan checked, UNRUN). Original004 marker/assertions intact. Dedicated
+evidence: IMMEDIATE_SAMPLER_REPAIR.md. Inherited011 edits preserved. Counts155/103
+final/52withoutfinal unchanged until complete004 closure. No push/merge.
+The older LIVE entries below are historical and superseded by this paragraph.
+
+**Current live task: ISSUE-004 native42945.** Minimized75809/v3 accepted actual
+OPENGLES3 HiDef baseline: three filter/address failures, one Deferred PASS,
+build3069ms/run383ms/inspect31ms, frozen unchanged/peak609665024/events0. Added only
+18 common SpriteBatch lines forwarding all seven live slot-zero sampler properties
+before Immediate Draw, without reapplying Begin's other device state. Four original
+pixel witnesses copied unchanged to native graphics tests.42945 sole heavy job:
+native focus4, graphics2979, full10990+4 exact old-outcome comparison, private
+GPU/network/owner UID/caps0/one worker/shared cache/6GiB/no swap. Poll42945; do not
+edit frozen production/tests. After acceptance run original87 external comparisons,
+four native witnesses on actual available pixel renderers and inspect repaired
+images; then final marker gate/commits.004 marker remains;082 lifecycle audit and
+003 ownership-sensitive binding still pending. Prior setup failures retained.
+42945 update: buildPASS42759ms, original focused4PASS331ms, graphics2979=
+2906PASS/73SKIP55342ms. Full native is authoritatively running; no full pass or
+final acceptance yet. Poll42945, never restart for a quiet Wine differential test.
+Continuation independently verified live CnaTests/fxc processes and active scope;
+current4208435200/peak4299186176 bytes under6GiB. No final result yet.
+Prepared `repair-sprite-sampler-external.mjs` is syntax/plan checked, UNRUN: after
+native acceptance,29 extra SDL_GPU baseline cases, one external build, exact116
+comparisons (only004 improves), four original pixel witnesses on three renderers.
+Run serially, inspect real images, then marker gates. Separate prepared UNRUN
+GraphicsResourceEventOrderTests.cpp belongs to082 follow-up, not004's commit.
+42945 advanced: genuine XNA differential763587ms and error parity130170ms PASS;
+later native tests still running. Exact next after acceptance is prepared
+`repair-sprite-sampler-sanitizer.mjs` (original4 SOFTWARE pixels, actual production
+ASan/UBSan/float-cast/leaks, same one-worker/private GPU/6GiB policy), THEN external116.
+Both drivers syntax checked, not executed. External gate now requires SAN acceptance.
+
+**Latest work: SpriteBatch baseline complete; minimized004 probe75809 LIVE.**
+CNA statusd2bef7020/product1ba26ed18; demos a445241; prior055 closure below remains
+accepted. Original87-case baseline94606:80PASS/6FAIL/1GLES capabilitySKIP; exactly
+004 and082 fail on all three tested renderers, no source drift/OOM. Actual three
+004 screenshots inspected: both sprites remain point-filtered. Genuine08213PASS
+confirms its accounting oracle is wrong, but additional event/exception controls
+also differ; no marker/oracle changed yet. Preserve inherited011 GraphicsResource.
+004 minimized tests first hit harness setup errors (uncompiled SOFTWARE selection,
+then Reach readback refusal); neither is product reproduction.75809/v3 now uses
+actual OPENGLES3 and explicit HiDef, unchanged four behavioral assertions. Poll
+75809 before another heavy task. Source remains unmodified; next reproduce3FAIL/
+1DeferredPASS, repair common sampler propagation, register native tests, validate
+native/module/full and external87 before closure. No new push/merge.
+
 **Latest accepted checkpoint: ISSUE-055 fixed and product committed.** CNA
 `1ba26ed18b520b3469a8250a8a6fe032e664c84e`, Runtimec26614e85. Demos closure commit
 is this checkpoint; previous demosb325b6a. Native10889PASS/101unchangedSKIP,

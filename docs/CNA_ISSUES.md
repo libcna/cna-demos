@@ -1122,33 +1122,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment:** CNA 0.1.0, Linux, SOFTWARE and OPENGLES3 renderers.
 - **Status:** open; observed behaviour above; not reported upstream yet.
 
-### CNA-DEMOS-ISSUE-004 -- Immediate `SpriteBatch` ignores sampler states set between `Draw` calls
-
-- **Area:** graphics -- `SpriteBatch` with `SpriteSortMode::Immediate`
-  (`modules/graphics/src/Xna/SpriteBatch.cpp`, `Begin`): the batch's `SamplerState` is passed to the
-  sprite renderer once, in `Begin` (`renderer_->SetSamplerState(...)`), and `flushSingle` draws
-  each sprite with it without consulting `GraphicsDevice::SamplerStates`.
-- **Demo:** `graphics.sprite_batch.immediate_mode.sampler_state` (marked `knownIssue`); its sibling
-  `graphics.sprite_batch.immediate_mode.blend_state` passes.
-- **Reproduction:**
-  ```cpp
-  spriteBatch.Begin(SpriteSortMode::Immediate, &BlendState::Opaque, &SamplerState::PointClamp,
-                    nullptr, nullptr);
-  spriteBatch.Draw(checker, Rectangle(20, 40, 370, 370), Color::White);
-  device.getSamplerStatesProperty()(0, SamplerState::LinearClamp);
-  spriteBatch.Draw(checker, Rectangle(410, 40, 370, 370), Color::White);   // still point-sampled
-  spriteBatch.End();
-  ```
-- **Observed:** both sprites are point-sampled (only the checker's two colours along a row) on
-  SOFTWARE and OPENGLES3. A `BlendState` set on the device between the same two calls *is*
-  honoured, so the problem is specific to sampler state.
-- **Expected:** XNA 4.0, `SpriteSortMode.Immediate` (xna4-spec `SpriteSortMode.xml`): *"Begin will
-  apply new graphics device settings, and sprites will be drawn within each Draw call."* Each Draw
-  therefore draws with the device's current state, so the second sprite is filtered linearly --
-  changing states or effect parameters between sprites is what Immediate mode is for.
-- **Environment:** CNA 0.1.0, Linux, SOFTWARE and OPENGLES3 renderers.
-- **Status:** open; minimal reproduction above; not reported upstream yet.
-
 ### CNA-DEMOS-ISSUE-005 -- `Color` is polymorphic, so XNA-style custom vertex structs silently break
 
 - **Area:** math/graphics -- `Microsoft::Xna::Framework::Color` derives from
@@ -1970,6 +1943,54 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   no atomic build-input snapshot is claimed. Open; no upstream message or genuine-XNA execution.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-004 -- Immediate `SpriteBatch` ignores sampler states set between `Draw` calls
+
+- **Resolved (2026-10-21), FIXED_VALIDATED:** CNA
+  `9359a26b61ded101eff35ee4008fbee3a490e9dc` forwards all seven live slot-zero
+  sampler properties before ordinary Immediate draws through the existing renderer
+  hook. Deferred and stock-effect paths are unchanged; no renderer-specific hack.
+  Four native pixel regressions retain the exact original minimized assertions.
+- **Repair validation:** focused4 PASS; graphics2906 PASS/73 unchanged SKIP;
+  full10893 PASS/101 unchanged SKIP, preserving all10990 old outcomes plus4PASS.
+  Instrumented SOFTWARE4 PASS under ASan/UBSan/float-cast/leaks, no findings.
+  Original116 paired demo observations on SOFTWARE/OPENGLES3/OPENGL33/SDL_GPU:
+  exactly004 becomes PASS on each; all other outcomes unchanged. Original four
+  pixel witnesses pass on SW/GLES/GL33; SDL_GPU coverage is through real demos.
+  Four repaired sampler images inspected; exact left sprites and entire blend
+  images unchanged. Final marker-only build/catalog comparison, eight Immediate
+  demo runs and five CTests PASS. Original assertions retained, only004 marker
+  removed. Separate082 failures and a pre-existing unmarked SDL_GPU depth-test
+  failure remain explicitly tracked; this is not a global green-suite claim.
+  The original log-evaluator failure and source-backed read-only correction are
+  preserved in [repair evidence](repair-evidence/graphics/IMMEDIATE_SAMPLER_REPAIR.md).
+- **Historical report follows unchanged:** its Open statements describe the
+  original reproduction, not the repaired revision above.
+
+- **Area:** graphics -- `SpriteBatch` with `SpriteSortMode::Immediate`
+  (`modules/graphics/src/Xna/SpriteBatch.cpp`, `Begin`): the batch's `SamplerState` is passed to the
+  sprite renderer once, in `Begin` (`renderer_->SetSamplerState(...)`), and `flushSingle` draws
+  each sprite with it without consulting `GraphicsDevice::SamplerStates`.
+- **Demo:** `graphics.sprite_batch.immediate_mode.sampler_state` (marked `knownIssue`); its sibling
+  `graphics.sprite_batch.immediate_mode.blend_state` passes.
+- **Reproduction:**
+  ```cpp
+  spriteBatch.Begin(SpriteSortMode::Immediate, &BlendState::Opaque, &SamplerState::PointClamp,
+                    nullptr, nullptr);
+  spriteBatch.Draw(checker, Rectangle(20, 40, 370, 370), Color::White);
+  device.getSamplerStatesProperty()(0, SamplerState::LinearClamp);
+  spriteBatch.Draw(checker, Rectangle(410, 40, 370, 370), Color::White);   // still point-sampled
+  spriteBatch.End();
+  ```
+- **Observed:** both sprites are point-sampled (only the checker's two colours along a row) on
+  SOFTWARE and OPENGLES3. A `BlendState` set on the device between the same two calls *is*
+  honoured, so the problem is specific to sampler state.
+- **Expected:** XNA 4.0, `SpriteSortMode.Immediate` (xna4-spec `SpriteSortMode.xml`): *"Begin will
+  apply new graphics device settings, and sprites will be drawn within each Draw call."* Each Draw
+  therefore draws with the device's current state, so the second sprite is filtered linearly --
+  changing states or effect parameters between sprites is what Immediate mode is for.
+- **Environment:** CNA 0.1.0, Linux, SOFTWARE and OPENGLES3 renderers.
+- **Status:** open; minimal reproduction above; not reported upstream yet.
 
 ### CNA-DEMOS-ISSUE-055 -- ShaderEffect clone loses matrices and accepts a disposed original
 
