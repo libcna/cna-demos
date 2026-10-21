@@ -2,6 +2,18 @@
 
 ## Native reproduction, 2026-10-21
 
+16641 native-v4 accepted: full10905=10804PASS/101unchangedSKIP, all10882 prior
+outcomes retained with two explicit038 helper renames and23 newPASS; full1202840ms,
+compare115ms. Audio775=771PASS/4sameSKIP, focused175PASS, hashes unchanged;
+peak1140305920/events0. The v3 extra Wayland SKIP comparison failure remains
+recorded; forced-X11 versus private-Wayland controls identify the launch error,
+not a test defect. Same unchanged Wayland case passes in the corrected full run.
+76943 integrated sanitizer27/27PASS: instrumented audio/Sharp Runtime, ASan/UBSan/
+float-cast-overflow/leaks enabled, no suppressions or findings. Library build32465ms,
+strict fixtures15999ms/run223ms/XML22ms, hashes unchanged;peak1258749952/events0.
+Original external112 scenario validation37318 is now running with both markers
+retained. No073 closure until the original C scenario and remaining gates pass.
+
 41722 focused candidate completed0: build116708ms/no diagnostics; original18/18
 pan cases PASS (strict compile3448ms/run131ms/XML32ms), original5/5 dynamic cases
 PASS, hashes unchanged,peak1260371968/all memory events0. Wider21670 native gate

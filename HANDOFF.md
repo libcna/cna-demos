@@ -12,6 +12,30 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+LATEST 08:45 UTC:76943 sanitizer TERMINAL0,27/27PASS with actual audio/runtime
+ASan/UBSan/float-cast-overflow/leak instrumentation, no suppressions/findings.
+Library build32465ms/zero diagnostics, strict fixtures15999ms/run223ms/XML22ms;
+hashes unchanged,peak1258749952/all events0.37318 is now the sole heavy job:
+`cna-repair-audio-instance-guards-external.scope`, existing linux-full build1002
+scheduled tasks, ONE worker/6GiB/no swap/private GPU. Original23 fixtures plus112
+audio/media/C scenarios follow, retaining markers038/073 until real passes.
+55931 follow-up028 baselines completed: retained-file6=4PASS/2FAIL and constructor
+14=5PASS/9FAIL exactly, source hashes unchanged. See MEDIA_PATH_TRIAGE.md for timing
+and memory.56438 genuine09941/41PASS with no real decoder/playback claim.
+No028/029/099 production change, no audio closure, no push/merge. Freeze sources
+until external/final/CTest gates complete; do not commit metadata removals early.
+
+LATEST 2026-10-21 08:42 UTC:16641 native-v4 TERMINAL0. Full10905=
+10804PASS/101sameSKIP in1202840ms, exact previous10882 outcomes retained with
+two explicit genuine-XNA helper renames and23 newPASS. Wayland recentering PASS88ms;
+compare115ms; frozen sources unchanged,peak1140305920/all memory events0. Audio
+775=771PASS/4sameSKIP8726ms and focus175PASS2468ms. No038/073 closure yet: next
+sanitizer27, original external112, marker-only final external112, registered
+32native/18demo CTests. Prepared small099 managed reference is running only AFTER
+the native full suite ended. No source changes until the remaining gates finish.
+CNA622d0bd1a adds only validated SDL inventory counts; five static platform gates
+PASS, prior failure retained (the additional test file was committed in058).
+
 Prepared during16641, NOT compiled/run:028 `WaveBankConstructorContractTests.cpp`
 mirrors fourteen genuine path/refusal controls; `repair-wave-bank-constructor-before.mjs`
 requires native-v4 acceptance and expects nine current failures/five controls only

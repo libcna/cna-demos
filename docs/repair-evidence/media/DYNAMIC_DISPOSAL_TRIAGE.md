@@ -1,5 +1,17 @@
 # ISSUE-038: dynamic audio disposal guard preparation
 
+16641 native-v4 accepted: full10905=10804PASS/101sameSKIP, every prior10882 outcome
+preserved with the two explicitly corrected genuine-XNA helper IDs and23newPASS;
+full1202840ms/compare115ms, audio775=771PASS/4sameSKIP, focus175PASS. Source hashes
+unchanged;peak1140305920/all memory events0. The previous v3 comparison failure
+from forced-X11 Wayland SKIP remains recorded and was corrected only in the launcher.
+76943 integrated sanitizer27/27PASS includes both prior cleanup/stress assertions
+and corrected helper cases, as well as the original23 new fixtures. Audio and
+Sharp Runtime are instrumented; ASan/UBSan/float-cast-overflow/leaks enabled, no
+suppressions/findings. Library build32465ms, strict fixtures15999ms/run223ms/XML22ms;
+hashes unchanged,peak1258749952/events0. Original external112 gate37318 is running;
+both knownIssue markers remain. No038 closure before real demos and final gates.
+
 41722 focused candidate completed0: native build116708ms/no diagnostics; unchanged
 five-case fixture5/5PASS (strict compile2702ms/run53ms/XML29ms); pan18/18 alsoPASS.
 Hashes unchanged,peak1260371968/all events0.21670 native audio/focus/full gate is

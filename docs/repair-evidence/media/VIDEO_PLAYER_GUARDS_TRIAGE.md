@@ -1,5 +1,17 @@
 # ISSUE-099: current reference preparation
 
+## Genuine execution, 2026-10-21
+
+56438 completed0 after the native full suite ended: all41 managed guard/retention
+checks PASS on the exact pinned current Video/Graphics/Framework assemblies.
+Strict C# build2246ms/run445ms, source hashes unchanged;peak295788544/all memory
+events0 under1GiB/no swap. Reports `repair-video-player-guards-xna-*`.
+This confirms the managed ordering, exact exception/object/parameter names,
+retained identity and NaN boundary for the initialized-field/invalid-decoder seam.
+It does NOT validate actual decoder creation/destruction, playback, texture pixels
+or audio output. No099 production fix or closure is claimed. Earlier notes below
+are preparation history, superseded only by this explicitly limited execution.
+
 2026-10-21, read-only investigation while038/073 native full regression runs.
 `VideoPlayerGuardsOracle.cs` is prepared, NOT compiled/run. Its41 managed checks
 use explicitly populated uninitialized players with invalid decoder handles and

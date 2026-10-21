@@ -331,6 +331,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-099 -- VideoPlayer validation and lifecycle contracts diverge from XNA
 
+- **Current reference validation (2026-10-21; still open):**41/41 genuine managed
+  guard/retention controls pass on the explicitly pinned current Video assembly
+  `63c7673c936747abd9ebe779e8837c8b8add2c078a31216684fbf8c6bcab2745`.
+  This differs from the historical reference below. The initialized-field,
+  invalid-decoder seam verifies guards and identity, not native playback or cleanup.
+  [Evidence](repair-evidence/media/VIDEO_PLAYER_GUARDS_TRIAGE.md).
+
 - **Area/API:** `VideoPlayer::Play`, `GetTexture`, `Volume`, `Stop`, `Dispose`, `State`,
   `PlayPosition`, `IsLooped`, `IsMuted` and their post-disposal behavior.
 - **Demo:** `media.video_player.pause_and_loop`; its singular `knownIssue` field names this issue.
@@ -1490,6 +1497,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 ---
 
 ### CNA-DEMOS-ISSUE-028 -- A streaming WaveBank opens a relative path from the working directory
+
+- **Further current reproduction (2026-10-21; still open):** absolute-path banks
+  also lose the originally opened file after rename/replacement (4 control checks
+  PASS,2 lazy-read FAIL). Fourteen constructor controls derived from genuine XNA
+  yield5PASS/9FAIL: cwd/title selection and exact missing-file/header refusals
+  remain incorrect. An absolute-path-only change cannot fix the retained-file
+  root cause. [Evidence](repair-evidence/content/MEDIA_PATH_TRIAGE.md).
 
 - **Confirmed related defect (2026-10-21):** the original eight-check lazy-read
   probe now gives6PASS/2FAIL: changing cwd after relative-path construction loses

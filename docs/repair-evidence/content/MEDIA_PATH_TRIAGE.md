@@ -127,6 +127,23 @@ execution remain to be performed. No audio/playback/hardware pass is claimed.
 
 ## ISSUE-028: historical expectation needs correction evidence
 
+55931 completed both follow-up native baselines on2026-10-21, serially AFTER the
+accepted038/073 native-v4 gate. Retained-file probe: strict compile1449ms/run113ms,
+4PASS/2FAIL exactly; both renamed and renamed-plus-replaced absolute paths fail
+their first lazy read, while initial preparation and unchanged-path controls pass.
+Peak365621248/events0, hashes unchanged. Reports `repair-wave-bank-retained-file-before-*`.
+This proves that resolving an absolute filename alone cannot fix the observed
+streaming identity defect; the opened file itself must survive until disposal.
+Linux rename evidence does not assert Windows sharing/deletion behavior.
+
+Constructor contract fixture: strict compile2704ms/run45ms/XML21ms,14cases=
+5PASS/9FAIL exactly, no skips;peak476516352/events0, hashes unchanged. Reports
+`repair-wave-bank-constructor-before-*`. Both overloads fail the four relative/
+invalid-header contracts; streaming also fails missing-absolute-file refusal.
+Both null-engine/empty-name controls and the nonstreaming absolute-missing control
+pass. These are product defect reproductions, NOT successful product tests.
+The genuine fourteen-case constructor oracle remains unchanged. No028 repair yet.
+
 2026-10-21 preparation during the unrelated native audio guard regression:
 `WaveBankConstructorContractTests.cpp` mirrors the fourteen genuine constructor
 path/refusal controls with a real minimal native AudioEngine. It is NOT compiled
