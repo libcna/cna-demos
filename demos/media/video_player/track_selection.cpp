@@ -128,5 +128,4 @@ CNA_DEMOS_GAME(TrackSelectionDemo, {
     .restrictions = "The generated MKV has two visible video streams and two audio streams. Public texture dimensions "
                     "and pixels identify video selection; audio checks establish call-path isolation only, not audible "
                     "content or sample-rate selection.",
-    .knownIssue = "CNA-DEMOS-ISSUE-100",
 })

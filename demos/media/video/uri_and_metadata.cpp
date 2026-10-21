@@ -12,6 +12,7 @@
 #include "Microsoft/Xna/Framework/Media/VideoSoundtrackType.hpp"
 #include "Microsoft/Xna/Framework/TitleLocation.hpp"
 #include "System/IO/FileNotFoundException.hpp"
+#include "System/ArgumentException.hpp"
 #include "System/InvalidOperationException.hpp"
 
 using namespace Microsoft::Xna::Framework;
@@ -118,7 +119,7 @@ namespace
                           deferred.getVideoSoundtrackTypeProperty() == VideoSoundtrackType::Dialog,
                       "trusted metadata construction defers touching the referenced file");
             VideoPlayer missingPlayer;
-            const bool missingPlayRejected = ThrowsExactly<System::IO::FileNotFoundException>(
+            const bool missingPlayRejected = ThrowsExactly<System::ArgumentException>(
                 [&] { missingPlayer.Play(&deferred); });
             ctx.Check(missingPlayRejected && missingPlayer.getStateProperty() == MediaState::Stopped &&
                           missingPlayer.getVideoProperty() == nullptr,
@@ -157,7 +158,6 @@ CNA_DEMOS_GAME(UriAndMetadataDemo, {
     .needs = CnaDemos::Need::Video,
     .frames = 1,
     .assets = {"media/videos/track_matrix.mkv"},
-    .restrictions = "Uses FNA's public URI and deferred-load contracts. All observations are local path, metadata, "
+    .restrictions = "Uses FNA's URI extension and genuine XNA's deferred missing-file exception contract. All observations are local path, metadata, "
                     "exception and state checks; no network request, audio, screenshot or visual judgment is used.",
-    .knownIssue = "CNA-DEMOS-ISSUE-101",
 })

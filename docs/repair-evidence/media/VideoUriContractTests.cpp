@@ -11,6 +11,7 @@
 #include "Microsoft/Xna/Framework/Media/Video/VideoPlayer.hpp"
 #include "Microsoft/Xna/Framework/TitleLocation.hpp"
 #include "System/IO/FileNotFoundException.hpp"
+#include "System/ArgumentException.hpp"
 #include "System/InvalidOperationException.hpp"
 
 namespace
@@ -143,7 +144,7 @@ namespace
         Video video(MissingPath(), &device, 2000, 160, 90, 25.0f,
                     VideoSoundtrackType::Dialog);
         VideoPlayer player;
-        EXPECT_TRUE(ThrowsExactly<System::IO::FileNotFoundException>([&] {
+        EXPECT_TRUE(ThrowsExactly<System::ArgumentException>([&] {
             player.Play(&video);
         }));
         EXPECT_EQ(player.getStateProperty(), MediaState::Stopped);

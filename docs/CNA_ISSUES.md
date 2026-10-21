@@ -291,6 +291,28 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-101 -- Video URI resolution and deferred file failures diverge from FNA
 
+- **Resolved locally; native Windows validation pending (2026-10-21):** CNA
+  `abbd8a4ea7ae3f511e0f3aac3faaba411f6de0a4`, using Sharp Runtime `c26614e85`,
+  fixes URI resolution and genuine-XNA deferred missing-file ArgumentException.
+  Native53/media355/full10885PASS+101sameSKIP, sanitizer53, external112 comparisons,
+  original URI9 on both renderers, pure-C real-frame smoke and final10 renderer/
+  8CTest checks pass. The knownIssue marker is removed; behavior assertions remain.
+  Existing invalid-codec/public-Play timing still requires a functional native
+  Windows reference: Wine failed its valid WMV control. No speculative FNA-based
+  exception change was made. Final disposition: FIXED_PLATFORM_VALIDATION_PENDING.
+  See [validated repair](repair-evidence/media/VIDEO_C_CONTRACT_ALIGNMENT.md) and
+  [exact platform requirement](repair-evidence/media/VIDEO_CODEC_REFERENCE_LIMITATION.md).
+  All earlier open-state observations below are historical.
+
+- **Latest candidate validation (2026-10-21; CONFIRMED_OPEN):** owner approved
+  genuine-XNA ArgumentException/INVALID_ARGUMENT and URI contract correction.
+  Exact new baseline5FAIL/1PASS becomes6PASS; combined49 focused and351 media
+  cases pass, full10881PASS/101sameSKIP retains every previous outcome. C API
+  metadata gate still fails on stale content/audio inventory; sanitizer/external
+  acceptance remains pending. No marker removed or final repair commit. This
+  supersedes older pending-decision/no-correction notes, preserving their history.
+  See [contract alignment](repair-evidence/media/VIDEO_C_CONTRACT_ALIGNMENT.md).
+
 - **Reference correction (2026-10-21; still CONFIRMED_OPEN):**32 genuine XNA
   guard/translator checks establish exact ArgumentException for deferred missing
   files, not the FNA-based FileNotFoundException expectation. No production/test
@@ -352,6 +374,21 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-100 -- Detached Video track preferences are ignored by VideoPlayer::Play
 
+- **Resolved (2026-10-21):** CNA `abbd8a4ea7ae3f511e0f3aac3faaba411f6de0a4`
+  applies detached Video preferences before output setup without mutating player
+  defaults. Native decoder-rate controls, original public-pixel9 on SOFTWARE and
+  OPENGLES3, sanitizer53 and the complete video regression checkpoint pass.
+  Marker removed with all assertions retained; no audible-output claim.
+  See [validated repair](repair-evidence/media/VIDEO_C_CONTRACT_ALIGNMENT.md).
+  Earlier open-state observations below are retained as history.
+
+- **Latest candidate validation (2026-10-21; CONFIRMED_OPEN):** combined video
+  native49focused/351media/full10881PASS/101sameSKIP is complete, with exact
+  old-outcome parity. Owner approved the related C contract corrections. C API
+  inventory and sanitizer/external gates still prevent batch acceptance; no
+  marker removal or final repair commit. See
+  [contract alignment](repair-evidence/media/VIDEO_C_CONTRACT_ALIGNMENT.md).
+
 - **Current repair candidate (2026-10-21; CONFIRMED_OPEN):** native decoder-rate
   reproduction gives three failures/one passing control before repair; all four
   unchanged cases pass after applying per-Video overrides before output setup.
@@ -387,6 +424,27 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   upgrading it to runtime proof. No CNA source was modified and no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-099 -- VideoPlayer validation and lifecycle contracts diverge from XNA
+
+- **Resolved (2026-10-21):** CNA `abbd8a4ea7ae3f511e0f3aac3faaba411f6de0a4`
+  matches genuine XNA guards/range refusal and retained Video/frame semantics,
+  protects C++ owner destruction/multiple players, and separates displayed-frame
+  time from loop-seek scheduling. Native53/media355/full10885PASS+101sameSKIP,
+  sanitizer53, external112 exact comparisons, seven metadata gates, additional
+  C ABI and final10 renderer/8CTest checks pass. C player33 and original C++27
+  pass on both renderers; the timestamp assertion was not weakened. The owner's
+  C contract corrections and failed-before evidence remain documented. Marker
+  removed with original behavior checks retained. See
+  [validated repair](repair-evidence/media/VIDEO_C_CONTRACT_ALIGNMENT.md).
+  Earlier open-state observations below are historical.
+
+- **Latest candidate validation (2026-10-21; CONFIRMED_OPEN):** owner approved
+  C XNA/C++ alignment; five original C predicates were explicitly corrected,
+  with the same assertion count and retained history. Combined49focused/351media
+  and full10881PASS/101sameSKIP pass with exact old-outcome parity. C API inventory
+  gate fails on stale content/audio declarations; sanitizer/external acceptance
+  remains pending. No marker removal or final repair commit. Earlier statements
+  that the owner decision remains pending are historical. See
+  [contract alignment](repair-evidence/media/VIDEO_C_CONTRACT_ALIGNMENT.md).
 
 - **Latest candidate gate (2026-10-21; not accepted):** native full10,833PASS/
   101unchangedSKIP, integrated sanitizer29PASS, and original C++27/27 checks on both

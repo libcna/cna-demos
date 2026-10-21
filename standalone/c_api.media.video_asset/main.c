@@ -58,6 +58,7 @@ static CNA_Result inspect_video(
     int64_t ticks = 0;
     uint64_t bytes = 0U;
     char path[2048];
+    char file_uri[2060];
     char text[2048];
     char before[2048];
     (void)game_time;
@@ -191,7 +192,53 @@ static CNA_Result inspect_video(
         cna_video_create_from_uri_ext(
             device, view("file:///definitely/missing/video.wmv"), &rejected) == CNA_RESULT_IO &&
             rejected == CNA_INVALID_HANDLE,
-        "the URI extension factory forwards scheme text as a literal path");
+        "the URI extension factory rejects a missing resolved file without publishing a handle");
+    cna_demo_check(
+        state->demo,
+        cna_video_create_from_uri_ext(device, view("https://example.invalid/video.wmv"),
+                                     &rejected) == CNA_RESULT_INVALID_STATE &&
+            rejected == CNA_INVALID_HANDLE,
+        "the URI factory refuses non-file absolute URIs before any network request");
+    /* File URI spelling differs only for an absolute DOS drive path. */
+    strcpy(file_uri, path[0] == '/' ? "file://" : "file:///");
+    strcat(file_uri, path);
+    {
+        CNA_VideoHandle resolved = CNA_INVALID_HANDLE;
+        cna_demo_check(
+            state->demo,
+            cna_video_create_from_uri_ext(device, view(file_uri), &resolved) == CNA_RESULT_SUCCESS &&
+                cna_video_get_width(resolved, &width) == CNA_RESULT_SUCCESS && width == 160 &&
+                cna_video_get_height(resolved, &height) == CNA_RESULT_SUCCESS && height == 120,
+            "an absolute file URI resolves the real authored video");
+        if (resolved != CNA_INVALID_HANDLE) (void)cna_video_destroy(resolved);
+        resolved = CNA_INVALID_HANDLE;
+        cna_demo_check(
+            state->demo,
+            cna_video_create_from_uri_ext(device, view("assets/media/videos/bounce.wmv"),
+                                         &resolved) == CNA_RESULT_SUCCESS &&
+                cna_video_get_width(resolved, &width) == CNA_RESULT_SUCCESS && width == 160,
+            "a relative video URI resolves against TitleLocation");
+        if (resolved != CNA_INVALID_HANDLE) (void)cna_video_destroy(resolved);
+    }
+    if (declared != CNA_INVALID_HANDLE) {
+        CNA_VideoPlayerHandle player = CNA_INVALID_HANDLE;
+        CNA_VideoHandle active = UINT64_C(99);
+        CNA_Bool available = CNA_TRUE;
+        CNA_MediaState playback = CNA_MEDIA_STATE_PLAYING;
+        if (cna_demo_check_result(state->demo, cna_video_player_create(game, &player),
+                                 "create a player for the deferred missing-file contract")) {
+            cna_demo_check(
+                state->demo,
+                cna_video_player_play(player, declared) == CNA_RESULT_INVALID_ARGUMENT &&
+                    cna_video_player_get_state(player, &playback) == CNA_RESULT_SUCCESS &&
+                    playback == CNA_MEDIA_STATE_STOPPED &&
+                    cna_video_player_get_video(player, &active, &available) == CNA_RESULT_SUCCESS &&
+                    available == CNA_FALSE && active == CNA_INVALID_HANDLE,
+                "deferred missing-file Play reports XNA INVALID_ARGUMENT and remains closed");
+            cna_demo_check_result(state->demo, cna_video_player_destroy(player),
+                                 "destroy the deferred-file player independently");
+        }
+    }
     if (from_uri != CNA_INVALID_HANDLE) {
         cna_demo_check_result(state->demo, cna_video_destroy(from_uri),
                               "destroy the URI-factory Video independently");

@@ -12,6 +12,115 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**Video batch locally complete; next ISSUE-055.** CNA repair
+`abbd8a4ea7ae3f511e0f3aac3faaba411f6de0a4`, Runtimec26614e85; this evidence/marker
+commit has parent788bf0ee013b4c590ad9fb97122dd8aede87e7de.099/100 FIXED_VALIDATED;
+101 FIXED_PLATFORM_VALIDATION_PENDING for native Windows codec timing only.
+155historical/102final dispositions/53withoutfinal (one final has that explicit
+platform requirement). Full native10885PASS/101sameSKIP, focus53/media355,
+sanitizer53, external53+112 exact comparisons, seven C metadata gates, C17/C++23
+ABI/error/bool, real-frame C smoke and final10 renderer/8CTest checks accepted.
+Three markers removed; assertions retained. See VIDEO_C_CONTRACT_ALIGNMENT.md.
+Nothing pushed/merged; no heavy process live. Use repair-video-commit-whitespace.json
+for current frozen pins (only two native EOF blank lines removed after tests).
+
+Next: reproduce055's prepared four structural cases plus unchanged real GL
+clone_state demo, then narrow guard/World/View/Projection clone fix. No055 product
+edit yet. Preserve inherited011 and its mapping/generated-summary hunks in CNA.
+Provisional codec failure witness remains UNRUN/unregistered. Keep global
+docs/COVERAGE.md as historical full baseline until the actual full rerun, not an
+apparently complete report synthesized from this112 subset.
+
+### Earlier repair checkpoints (historical)
+
+**External62468 LIVE:** native62083 full10,885PASS/101sameSKIP accepted;
+inventory-v3 seven gatesPASS (earlier stale generated-doc failures retained),
+sanitizer63740 all53PASS/no findings/peak1,726,898,176/events0. Only external62468
+now runs: one worker/6GiB/no swap/private GPU, existing build, exact112 unchanged
+oracles plus53actual witnesses and real-frame pure-C smoke. Then extra C ABI
+requires loop-external and inventory-v3 audits. Three generated C API summaries
+and SoundEffect pins depend on inherited011; don't sweep them into video commit.
+No marker removal/closure/commit/push; current matrices remain155/99final/56pending.
+
+**Native62083 completed0; inventory29275 LIVE:** full10,885PASS/101unchangedSKIP,
+exact old10,982 outcomes plus4newPASS,1,869,465ms/compare159ms.53focus/355mediaPASS,
+frozen unchanged,peak4,299,919,360/max0/OOM0. Current sole heavy job is inventory
+under1GiB high/2GiB max/no swap. Collect29275; then sanitizer53, external112 and
+extra C ABI serially. Video markers/closure remain pending; no new commit/push.
+Historical62083 LIVE notes below are superseded; do not restart that completed run.
+
+Continuation18:10 CEST:62083 still authoritatively live, now past XNA differential,
+error/effect and public sample content phases into device tests. No second heavy
+job or frozen-source edit. Matrix155/99final/56pending rechecked. Additional C ABI
+driver now requires accepted loop-external AND six-gate inventory audits; syntax
+checked, UNRUN. Older prerequisite-change instruction below is superseded.
+Next collect62083, run inventory under1GiB high/2GiB max/no swap, then sanitizer53,
+external112 and extra C ABI serially with established private GPU/6GiB scopes.
+No marker removal, new commit, push or merge; inherited ownership work preserved.
+
+Inventory metadata follow-up prepared while62083 runs: removed one orphan trait
+mapping from committed3d254dfa7, repinned exactly two inherited SoundEffect move
+declarations, corrected video mapping prose only. Actual inventory/regeneration/
+five C gates remain pending; old3PASS/2FAIL not overwritten. No content/audio
+source modified. See VIDEO_C_INVENTORY_REVIEW.md: preserve SoundEffect pin hunk
+for011's coherent commit, not video; no derived summary regenerated yet. Native
+full62083 remains the sole heavy job (currently genuine-XNA differential phase).
+
+62083 progress: build71,620ms/zero diagnostics,53focusedPASS1,350ms,
+355mediaPASS12,721ms; full10986 LIVE. Prepared loop-sanitizer53 and loop-external112
+drivers are UNRUN, syntax checked only. Collect the existing handle before starting
+another heavy job. Keep original C33 assertion labels/predicates fixed. The prepared
+extra C contract driver still references the FAILED prior external gate; update it
+to accepted loop external evidence before use. No video closure or new commit.
+
+**62083 LIVE loop-frame follow-up:** external84138 FAILED, retained:49actual
+witnessesPASS and pure-C real-decode smokePASS, but C player retains one Stop-frame
+failure on both renderers; all unrelated112 outcomes/labels unchanged. Native
+deterministic4 baseline74000 confirms2FAIL/2PASS without sleeps: loop EOF resets
+the decode cursor to-1 while a frame remains visible, and public PTS exposes it.
+Original C assertion remains unchanged. Minimal CNA candidate gives the held
+frame its own presentation timestamp, updated on upload/reset on decoder close;
+registered original4 and decoder-off selector. Native53focus/355media/full10982+4
+now runs one worker/private GPU/net/caps0/6GiB/no swap. Collect62083 before any
+other heavy job or frozen-source edit. Then sanitizer53/external112/pure-C and
+C contract gates. Existing metadata failures remain unaccepted; no video closure,
+commit, marker removal, push or merge. See VIDEO_C_CONTRACT_ALIGNMENT.md.
+
+**External84138 LIVE after sanitizer15652 PASS:** all49 video witnesses pass
+under actual ASan/UBSan/float-cast/leaks, no findings/suppressions. Libraries
+15,639ms/strict fixture37,028ms/run756ms/audit36ms; peak685,629,440/events0,
+frozen unchanged. Existing linux-full rebuild now runs one worker/private GPU/
+6GiB/no swap, followed by actual external49,112 exact/authorized-delta scenarios
+and pure-C smoke requiring decoded-frame coverage. Do not edit frozen sources
+or launch another heavy job. C inventory3PASS/2FAIL remains unaccepted; no video
+closure/commit/marker removal/push/merge. Next collect84138, then resolve remaining
+C gates and documentation, preserving inherited011 and the failed gate history.
+
+**90148 native complete; C inventory NOT accepted:** full10881PASS/101sameSKIP,
+all prior10976 outcomes unchanged plus6PASS,1,653,247ms;49focused/351mediaPASS.
+Frozen hashes unchanged,peak4,297,699,328/max0/OOM0. Post-review20536 verifies
+decoder TRUE/FALSE selection, build23,490ms/zero diagnostics, exact native binary
+identity, but C metadata CTests3PASS/2FAIL. CoverageMatrix/ReleaseGate name the
+obsolete content-reader-detail-traits rule removed by prior commit3d254dfa7;
+read-only inventory diagnostic additionally finds inherited011 SoundEffect move
+pins stale. Preserve those source changes and all failed logs. Independent runtime
+checkpoint explicitly sets contractAccepted=false/closureBlocked=true; sanitizer49
+and external112/pure-C diagnosis can continue, but no video closure or passing
+release-gate claim. No video marker removed/commit/push/merge. Next collect the
+runtime checkpoint, run repair-video-xna-sanitizer.mjs serially under6GiB/no swap,
+then external. Matrix still155 historical/99final/56pending.
+
+**Video XNA alignment RUNNING:** new exact reference regression85836 reproduces
+5FAIL/1real-decodePASS,7,651/554/55ms,peak3,427,909,632/events0; inputs unchanged.
+Six witnesses registered in CNA; missing-file Play now ArgumentException.
+Owner-approved C docs/smoke/demo changes are explicitly mapped in
+VIDEO_C_CONTRACT_ALIGNMENT.md; original11files captured before edits. No marker
+removed, no invalid-codec inference. Native49focused/351media/full10976+6 now
+runs serially in private GPU/network/zero-capabilities/6GiB/no-swap scope via
+repair-video-xna-native.mjs. Sources frozen. Next sanitizer/external112 with
+authorized-only deltas/real pure-C smoke, then scoped acceptance. Preserve011;
+no video product commit/closure/push/merge.070 remains closed,99final/56pending.
+
 **070 resolved:** CNA `1c8bbb6b83bab2fc3b15bf2370b426226fd87204`; eight local
 copy assignments/eight native regression cases. Full10875PASS/101sameSKIP,
 sanitizer35PASS, eight witnesses PASS on six actual renderers; stock66 now

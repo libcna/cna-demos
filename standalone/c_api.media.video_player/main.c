@@ -79,14 +79,14 @@ static CNA_Result finish_player(State* state, CNA_Handle game)
                 CNA_RESULT_SUCCESS &&
             state->previous_ticks == INT64_C(0) &&
             cna_video_player_get_video(state->player, &current, &available) == CNA_RESULT_SUCCESS &&
-            available == CNA_FALSE && current == CNA_INVALID_HANDLE,
-        "Stop clears the active Video and resets state and position");
+            available == CNA_TRUE && current == state->video,
+        "Stop retains the active Video and resets state and position");
     cna_demo_check(
         state->demo,
         cna_video_player_get_frame_ext(state->player, &stopped) == CNA_RESULT_SUCCESS &&
-            stopped.available == CNA_FALSE && stopped.texture == CNA_INVALID_HANDLE &&
-            stopped.generation >= before_replay && stopped.presentation_time < 0.0,
-        "the stopped frame is absent without restarting the lifetime generation");
+            stopped.available == CNA_TRUE && stopped.texture != CNA_INVALID_HANDLE &&
+            stopped.generation == before_replay && stopped.presentation_time >= 0.0,
+        "Stop retains the frame without advancing or restarting its generation");
     cna_demo_check(
         state->demo,
         cna_video_player_play(state->player, state->video) == CNA_RESULT_SUCCESS &&
@@ -173,15 +173,16 @@ static CNA_Result load_content(
     frame_init(&empty);
     cna_demo_check(
         state->demo,
-        cna_video_player_get_frame_ext(state->player, &empty) == CNA_RESULT_SUCCESS &&
+        cna_video_player_get_frame_ext(state->player, &empty) == CNA_RESULT_INVALID_STATE &&
             empty.available == CNA_FALSE && empty.texture == CNA_INVALID_HANDLE &&
             empty.generation == UINT64_C(0) && empty.presentation_time < 0.0,
-        "a fresh player reports an ordinary absent frame with generation zero");
+        "a fresh player refuses frame queries with a cleared descriptor");
+    flag = UINT8_C(77);
     cna_demo_check(
         state->demo,
-        cna_video_player_get_texture(state->player, &first_texture, &flag) == CNA_RESULT_SUCCESS &&
-            flag == CNA_FALSE && first_texture == CNA_INVALID_HANDLE,
-        "GetTexture before Play reports no frame without failing");
+        cna_video_player_get_texture(state->player, &first_texture, &flag) == CNA_RESULT_INVALID_STATE &&
+            flag == UINT8_C(77) && first_texture == CNA_INVALID_HANDLE,
+        "GetTexture before Play refuses without publishing a texture or availability");
 
     cna_demo_check(
         state->demo,
@@ -204,16 +205,17 @@ static CNA_Result load_content(
         "muting round-trips and is restored before playback");
     cna_demo_check(
         state->demo,
-        cna_video_player_set_volume(state->player, -0.5F) == CNA_RESULT_SUCCESS &&
+        cna_video_player_set_volume(state->player, 0.25F) == CNA_RESULT_SUCCESS &&
+            cna_video_player_set_volume(state->player, -0.5F) == CNA_RESULT_INVALID_ARGUMENT &&
             cna_video_player_get_volume(state->player, &volume) == CNA_RESULT_SUCCESS &&
-            volume == 0.0F &&
-            cna_video_player_set_volume(state->player, 1.5F) == CNA_RESULT_SUCCESS &&
+            volume == 0.25F &&
+            cna_video_player_set_volume(state->player, 1.5F) == CNA_RESULT_INVALID_ARGUMENT &&
             cna_video_player_get_volume(state->player, &volume) == CNA_RESULT_SUCCESS &&
-            volume == 1.0F &&
+            volume == 0.25F &&
             cna_video_player_set_volume(state->player, 0.5F) == CNA_RESULT_SUCCESS &&
             cna_video_player_get_volume(state->player, &volume) == CNA_RESULT_SUCCESS &&
             volume == 0.5F,
-        "volume clamps below and above the public range and preserves an interior value");
+        "volume refuses out-of-range values atomically and accepts an interior value");
     cna_demo_check(
         state->demo,
         cna_video_player_set_audio_track_ext(state->player, 0) == CNA_RESULT_SUCCESS &&

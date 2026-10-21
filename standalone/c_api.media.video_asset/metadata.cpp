@@ -14,12 +14,12 @@ CNA_DEMOS_STANDALONE({
              "cna_video_get_file_name_size", "cna_video_copy_file_name",
              "cna_video_get_has_graphics_device", "cna_video_get_type_name_size",
              "cna_video_copy_type_name", "cna_video_destroy", "CNA_VideoInfo",
+             "cna_video_player_create", "cna_video_player_play", "cna_video_player_get_state", "cna_video_player_get_video", "cna_video_player_destroy",
              "CNA_VideoSoundtrackType"},
     .tags = {"c", "binding", "media", "video", "metadata", "file", "ownership"},
     .needs = CnaDemos::Need::CApi | CnaDemos::Need::Video,
     .frames = 1,
     .deterministic = true,
     .assets = {"media/videos/bounce.wmv"},
-    .restrictions = "Probes the committed generated WMV and validates metadata only. Track selections "
-                    "are stored but no playback, audio output, decoded frame or visual result is claimed.",
+    .restrictions = "Probes the generated WMV, resolves local URIs and checks deferred missing-file Play refusal. Track preferences and stopped-state cleanup are checked; no successful player decoding, audible output or visual result is claimed.",
 })

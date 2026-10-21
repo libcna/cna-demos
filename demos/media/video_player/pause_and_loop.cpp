@@ -313,5 +313,4 @@ CNA_DEMOS_GAME(PauseAndLoopDemo, {
     .restrictions = "Uses Windows XNA 4.0 VideoPlayer IL for exception, retained-Video and disposal contracts. "
                     "Frame pixels are drawn but only transport/state and an existing programmatic texture path are checked; "
                     "no audible or manual visual-quality result is claimed.",
-    .knownIssue = "CNA-DEMOS-ISSUE-099",
 })
