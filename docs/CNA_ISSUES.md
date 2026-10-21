@@ -15,6 +15,39 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+### CNA-DEMOS-ISSUE-156 -- SDL_GPU SpriteBatch reverses layer depth in its default projection
+
+- **Discovered during repair campaign (2026-10-21), CONFIRMED_OPEN:** this finding
+  extends the original155-issue Complete1128 inventory; no historical ID is replaced.
+- **Area/API:** SDL_GPU `SdlGpuRenderer::QueueSprite`, `SpriteBatch::Draw` layerDepth
+  and default sprite depth projection; `modules/renderers/sdl-gpu/src/SdlGpuRenderer.cpp`.
+- **Reproduction:** original `graphics.sprite_batch.layer_depth_sorting` on SDL_GPU.
+  Draw near red at0.1 and far blue at0.9 with FrontToBack sorting and
+  `DepthStencilState::Default`; the overlap must retain near red. A no-depth-test
+  sibling region must retain painter-order blue. No demo change is required.
+- **Observed:** seven original checks run; only "enabled depth testing makes nearer
+  layerDepth win over painter order" fails. The same demo passes on SOFTWARE,
+  OPENGLES3 and OPENGL33. SDL_GPU fails identically before and after the independent
+  ISSUE-004 sampler repair. Its `knownIssue` remains empty: no new expected-failure
+  marker, skip or tolerance was introduced to conceal this finding.
+- **Source/contract evidence:** `QueueSprite` computes projected depth as
+  `(0.5 * transformedW - 0.5 * transformedZ) / transformedW`, reversing increasing
+  layerDepth for the identity transform. Its comment cites an FNA orthographic
+  projection. Genuine XNA Windows `SpriteBatch.SetRenderState` instead constructs
+  the sprite projection with `M33=1`, `M44=1`, no Z translation, and multiplies the
+  supplied transform by it. Existing XNA-over-FNA policy applies. The source
+  evidence points to this projection; a focused minimized before/after regression
+  must still verify the repair, including transforms and depth-bias controls.
+- **Evidence/revisions:** pre-repair CNA `d2bef7020`, repaired sampler product
+  `9359a26b6`; original demo source unchanged in demos `a445241` and `99f4069`.
+  Reports `build/linux-full/reports/repair-sprite-sampler-external-before-SDL_GPU-graphics.sprite_batch.layer_depth_sorting.*`
+  and corresponding `after-SDL_GPU` files, plus accepted `external-v2-audit.json`.
+  Actual SDL_GPU runtime used its Vulkan renderer on a private GPU display. No
+  genuine XNA native GPU execution or other SDL_GPU platform validation is claimed.
+- **Next:** minimize projection/depth-order failure, fix at the SDL_GPU layer,
+  preserve original assertions, validate default and transformed depth plus existing
+  SDL_GPU depth-bias examples and cross-renderer controls. No repair applied yet.
+
 ### CNA-DEMOS-ISSUE-152 -- StorageContainer ignores the requested FileShare policy
 
 - **Repair-campaign clarification (2026-10-20):** genuine XNA/.NET execution disproves
