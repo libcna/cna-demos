@@ -12,6 +12,36 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+LATEST011:94457 TERMINAL0. CnaTests build0/1291420ms; native1414=1409PASS/5SKIP,
+all1377 previous057 outcomes exactly preserved plus37 newPASS. Strict external
+fixture build0/zero diagnostics; original14+nested4 allPASS. Original two C++
+fixtures and genuine108-check oracle byte-identical to005899e9. Native66 warnings
+are in unchanged tests. Scope peak4300394496/high2551/max0/OOM0.
+37046 TERMINAL1,not a crash: new model/polymorphic fixtures compile strictly with
+zero diagnostics;7=1PASS(XNB model)/6FAIL/20 assertions. CNB/CNJ/glTF buffers/effects
+remain undisposed; Object/const shared texture routes lose value-wrapper ownership.
+Initial loads/use succeed; no relaxed checks. Peak507011072/events0. No heavy job
+live; prior freezes lifted. CNA handoff lists the exact next repairs, uncommitted
+implementation and pending nonblocking C model/effect policy question. No closure,
+marker change/push/merge;93FINAL/62PENDING. Logs repair-content-ownership-values-
+candidate-* and repair-content-ownership-model-formats-candidate-*.
+All RUNNING notes below are now superseded chronology, not live jobs.
+
+LIVE011: native session94457 remains RUNNING (one worker, private display,
+shared ccache, MemoryHigh4GiB/MemoryMax6GiB/no swap). Do not restart its driver
+or edit CNA production/native tests until terminal. It builds CnaTests and then
+runs the wider resource focus plus the unchanged14 original and4 nested cases.
+Reports: repair-content-ownership-values-candidate-*. Actual core ownership helper
+has10 passing ASan/UBSan/leak tests; that is NOT an integrated-resource or full
+regression pass. CNA8d73b19c0 has the uncommitted value-wrapper/reader/registry/C
+boundary implementation detailed in its top handoff. Demos3f5bf7e now additionally
+has prepared ContentModelOwnershipTests.cpp and ContentPolymorphicOwnershipTests.cpp,
+not yet compiled/run. These probe non-XNB model children and an Object-typed texture
+whose later value copy must remain manager-owned. Run their serial bounded driver
+only after94457 finishes. No011 closure/knownIssue change;93FINAL/62PENDING.
+The following completed registry results remain historical evidence, not the
+current list of live jobs.
+
 LATEST011:40668 TERMINAL exit1,not a crash. Native build0/709535ms;
 focus101PASS (90prior exact057 XML outcomes +11new). Strict original-fixture
 build0/zero diagnostics; original14 improve3PASS/11FAIL ->11PASS/3FAIL, all15

@@ -1,5 +1,42 @@
 # Next content-runtime batch: source audit, not repair closure
 
+## Value-resource candidate passes original probes; residual routes reproduced (2026-10-21)
+
+Uncommitted CNA candidate on8d73b19c0 now tracks live value wrappers through a core
+ownership link and a retained concrete disposer. Texture2D/TextureCube copies and
+moves, move-only SoundEffect, Song, direct font atlases and non-XNB root results
+participate. Explicit independent wrapper disposal remains independent; C texture/
+font/sound boundaries detach or transfer ownership. C model/effect policy remains
+pending, and its exploratory lifetime probe is not an approved oracle.
+
+94457 completes0: native build0/1291420ms; focus1414=1409PASS/5SKIP in54862ms.
+Independent XML comparison retains all1377 prior057 outcomes exactly, including
+five skips, plus37 newPASS. Strict external build0/9617ms/zero diagnostics; all18
+original+nested casesPASS/365ms. Original two C++ sources and genuine108-check C#
+oracle are byte-identical to005899e9. Native build66 warnings are all in unchanged
+test files. Peak4300394496,high2551,max0,OOM0. Actual core-helper10 tests previously
+passed ASan/UBSan/leak; no integrated/full-library sanitizer pass claimed.
+
+Additional permanent probes deliberately cover paths beyond those18:
+
+- `ContentModelOwnershipTests.cpp`: XNB control PASS; CNB/CNJ/glTF each FAIL three
+  post-Unload assertions for the actual vertex buffer, index buffer and effect.
+  CNJ uses a generated minimal triangle with exact-file cleanup; other formats
+  use existing CNA fixtures. All four initial model loads and resource checks pass.
+- `ContentPolymorphicOwnershipTests.cpp`: ordinary Object, const Object and const
+  Texture2D shared-pointer loads all FAIL. Ordinary Object recording disposes its
+  original wrapper but not its subsequent value copy; both const cases miss all
+  recording. Pre-Unload pixel reads pass; post-Unload disposal, actual renderer
+  expiry and exact ObjectDisposedException assertions expose11 failures total.
+
+37046 compiles these strictly0/7240ms/zero diagnostics, then exits1 honestly:
+seven cases1PASS/6FAIL/20 assertions in384ms. Peak507011072,all memory events0.
+Reports: repair-content-ownership-values-candidate-* and
+repair-content-ownership-model-formats-candidate-*. These are remaining routes of
+ISSUE-011, not permission to close it or weaken its oracle. Next repair runtime
+type-aware/const value recording and non-XNB child materialization; preserve
+partial-load retention and cache-hit semantics. No knownIssue/disposition change.
+
 ## Ordered-disposal candidate and additional runtime evidence (2026-10-21)
 
 Uncommitted candidate on CNA8d73b19c0 / demos9e62467 now implements the ordered
