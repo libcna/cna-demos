@@ -2,7 +2,41 @@
 
 ## Status
 
-**Actual repaired focused gates accepted; native98308 now LIVE.** External96584
+**Resolved by CNA7097e1684cc7d4956b94224ab51f62f11970210d.** The commit contains
+only the SDL_GPU Z/W fix, unchanged five-test native regression, bias fixture
+coplanarity correction and156 reference row. No082 or inherited011 code was
+staged. No demo assertion or knownIssue was changed.
+
+External70430 terminated2, deliberately **not accepted globally**:132 cases,
+123PASS/8FAIL/1unchangedSKIP; frozen inputs unchanged, peak164077568bytes,
+all memory events0. Reviewed every one of nine delta rows: SDL_GPU's original
+layer-depth demo changes FAIL-to-PASS; four begin_end_rules cases gain the
+callback-state failure from082; four C resource_lifecycle cases change PASS-to-FAIL
+for that same pending callback-contract correction. The other123 renderer/case
+rows retain their status, check count, knownIssue and reported assertion data.
+No additional156 regression was found. No C contract choice is implied.
+
+The raw comparator flags nine rows, not eight, because the C++ demo log prints
+failed checks but not successful checks: fixing156 removes its sole logged
+assertion label. This is a reviewed harness false positive, not a product
+regression or an oracle edit. The original raw audit remains unchanged and
+unaccepted; all eight082 regressions remain visible. No blanket green claim.
+
+Linux SOFTWARE/OPENGLES3/OPENGL33/SDL_GPU runtime coverage only. The arithmetic
+repair changes no lifetime/ownership code; no new projection-specific sanitizer
+run, genuine-XNA GPU run or other SDL_GPU platform runtime is claimed.
+
+The earlier candidate checkpoints below are retained as chronological evidence;
+this closure supersedes their LIVE/pending/no-commit wording.
+
+**Native98308 ACCEPTED; broader external70430 LIVE.** Full11005 completed0 in
+1323219ms:10904PASS/101unchangedSKIP, all11000 old outcomes unchanged and exactly
+five added depthPASS (comparison134ms). Graphics2917PASS/73unchangedSKIP;
+frozen inputs unchanged, peak4301795328bytes, max/OOM/kill0. Sole heavy70430
+now captures132 original external observations with every assertion/marker delta,
+including the pending082 C failures; no full external acceptance is implied.
+
+**Actual repaired focused gates accepted.** External96584
 build98700ms, original20 pixel cases allPASS (SW828/GLES493/GL33451/SDL1517ms),
 frozenunchanged/peak4300664832/maxOOM0. Only cna-content/libcna/libcna_c_api changed
 in the319-artifact inventory. Bias61930 strict4564ms/run668ms: all72 labels and
@@ -10,7 +44,7 @@ outcomes byte-identical to the original baseline, frozenunchanged/no memory even
 Original demo98930: seven checks PASS on each renderer; every repaired RGBA pixel
 equals the original correct SOFTWARE image. All four repaired images actually
 viewed. No tolerance or golden update was used. Native five-test/graphics2990/
-full11005 regression is running in98308, not yet accepted; no156 commit/closure.
+full11005 regression is accepted above; no156 product commit/closure yet.
 
 Read-only platform boundary gates also passed on this candidate (2026-10-21):
 `sdl_inventory.py --check` matches the measured plan inventory;
@@ -26,8 +60,8 @@ They are not projection failures and are not hidden or converted to expected
 failures. The explicit public C contract choice remains pending, so the overall
 external checkpoint is not accepted. See SPRITE_BATCH_TRIAGE.md.
 
-CONFIRMED_OPEN; candidate repair has passed the focused gates above and awaits
-full native and broader external comparison. The original source was unchanged
+CONFIRMED_OPEN; candidate repair has passed the focused/native gates above and
+awaits broader external comparison. The original source was unchanged
 when all baselines below were captured. No issue closure is claimed yet.
 
 Measured minimized baseline49609: strict compile3141ms; original five pixel
