@@ -41,3 +41,11 @@ retain CNA's current range-before-mode ordering merely because it seems cleaner.
 Add native coverage through both C++ setter overloads and preserve the existing
 C assertion and its original label. Verify live3D, non3D, prepacket and disposed
 ordering without introducing sleeps or altering the original playback oracle.
+
+Prepared native witness (not yet compiled or run): `SpatialPanRefusalTests.cpp`
+has nine scenarios through each C++ setter overload (18 cases). It constructs
+real looping instances with the configured dummy device, retains public pan and
+checks the existing read-only spatial-latch seam. A missing device fails instead
+of skipping. Live spatial, nonspatial, prepacket and disposed controls mirror the
+measured refusal order; no sleeps, retries or new production seam are required.
+Keep the native sources frozen until the ongoing015 external/CTest gates finish.

@@ -12,6 +12,32 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+Prepared during79454 without changing its frozen sources:073 now has the native
+18-case `docs/repair-evidence/media/SpatialPanRefusalTests.cpp`, both setter
+overloads, real looping dummy voices and existing read-only latch accessor.
+UNCOMPILED/UNRUN. Driver `repair-spatial-pan-refusal-before.mjs` expects exactly
+ten measured-order/state failures and eight controls before any repair. Finish015
+external-v2/CTest first; then run028 and073 baselines serially. Genuine07333/33
+reference PASS is separate and must not be reported as native test coverage.
+
+79454 RUNNING `cna-repair-song-uri-path-external-v2.scope`; incremental continuation
+has324 remaining steps (38 complete at07:19UTC). Same frozen inputs, no compiler
+diagnostics. No other heavy process. Follow `repair-song-uri-path-external-v2-*`,
+then use `repair-song-uri-path-ctest-v2.mjs`. Old23738 is TERMINAL, not running.
+
+LATEST 2026-10-21 07:16 UTC:23738 TERMINAL1 from the driver's30-minute BUILD
+timeout (elapsed1800106ms, SIGTERM, ETIMEDOUT), not a compiler/test failure.
+Last completed step683/1001, no warning/error diagnostics; no runtime cases ran.
+Original logs/progress retained; final memory/hash audit was not emitted by the
+early-exit driver. Host check confirms its scope inactive/dead and no remaining
+build subprocess before restart. External-v2 driver now resumes incrementally,
+same build tree/one worker/sharedcache/private display/4GiB high/6GiB max/no swap,
+with90-minute BUILD allowance. No source/test change, cleanup or clean rebuild.
+Reports `repair-song-uri-path-external-v2-*`; CTest follow-up must use prepared
+`repair-song-uri-path-ctest-v2.mjs`. Original058 comparison and all assertions
+unchanged. No015 closure/commit. Demos ee116cf plus the pending play_song change;
+CNA a9d74c023 plus separately pending011/015 sources and handoff/matrix updates.
+
 073 reference follow-up:69388 first draft TERMINAL1 (10PASS/4FAIL) disproved its
 range-before-live3D assumption, not the historical CNA finding. Source/logs kept.
 Actual installed IL0x1ac10 and corrected extended67026 give33/33PASS (strict C#
