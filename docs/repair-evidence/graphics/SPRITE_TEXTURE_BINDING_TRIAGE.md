@@ -2,6 +2,58 @@
 
 ## Current evidence boundary (2026-10-21)
 
+**Enabled compiled baseline now captured; no heavy job remains.**48754
+terminated1 only at the diagnostic gate: configure7428ms/build721899ms both
+exit0, frozen sources unchanged, peak4304211968/high4145/max0/OOM0/kill0.
+The16 Draco deprecated implicit-this-capture warnings are all present verbatim
+(apart from path prefix) in `repair-baseline-native-build.log`. No warning was
+suppressed or vendor source edited. The first continuation9598 failed before
+compilation because Draco has a gitlink but no nested Git metadata; its headers
+cannot be read with parent `git show HEAD:path`. No clean-submodule claim is made.
+
+Corrected observation82479 terminated1 with complete unchanged-source results:
+strict21 compilation6437ms; SOFTWARE1365ms, OPENGLES3752ms, OPENGL33738ms each
+**19PASS/2FAIL**, SDL_GPU2069ms **13PASS/8 compiledSKIP**. Peak472776704,
+all memory events0. The original public-state/stock/compiled binding controls
+pass. Both failure paths are genuine: disposed-before-flush calls OnApply twice
+inside the first End (cleanup calls SetCustomEffect, which flushes again), and
+failed Immediate Draw remains in the private queue and is replayed by End.
+Original test sources/assertions are unchanged.
+
+Pixel baseline44928 terminated0 as an observation, **not a product pass**:
+strict2073ms; SW58/GLES252/GL33193ms eachFAIL, SDL168ms capabilitySKIP.
+Every enabled-renderer nontransparent control passes. Injected failure calls
+OnApply twice, clears the Begin pair, rejects the retry and leaves transparent
+pixels instead of the control. Exact64-pixel comparison fails as intended.
+Peak446980096/all events0/frozen unchanged. All raw failures are preserved in
+`repair-sprite-binding-retry-pixels-before-*`;21-case evidence is
+`repair-sprite-binding-compiled-observed-*`, with explicit diagnostic review.
+
+Next repair: separate pending sprite submission from renderer End, discard
+unsubmitted backend staging on a failed submission, preserve the front-end
+deferred queue/Begin pair for retry, and discard failed Immediate staging without
+replaying it. Preserve existing native renderer-End recovery and retained-texture
+lifetime tests. Do not roll back already rendered side effects or weaken the
+original22 witnesses. Native/full external/visual/sanitizer validation remains.
+
+Continuation revalidated48754 through its live tool handle and host systemd
+scope: active/running, MemoryCurrent4263153664/Peak4301078528 bytes, hard cap
+6442450944. No second heavy job or production edit. The existing build has
+passed step1461/1878; that is progress, not test acceptance.
+
+`SpriteCompiledRetryPixelTests.cpp` and the syntax-checked serial driver
+`build-probe/repair-sprite-binding-retry-pixels.mjs` are prepared, **UNCOMPILED/
+UNRUN**, outside48754's frozen21. The pixel witness compares a successful
+two-pass compiled draw with a retry after the first OnApply throws. The existing
+conformance effect's second pass uses SrcAlpha blending, so a retained backend
+quad replayed twice changes the image. The control must draw nontransparent
+pixels; no reference-image regeneration or tolerance is involved. This prevents
+a shallow retry repair that preserves the Begin pair but duplicates queued work.
+Run only after48754 is terminal and its complete source-stable audit is inspected;
+the driver deliberately permits recorded product failures in that preceding
+audit but refuses incomplete observations or source drift. No new runtime result
+or closure is claimed.
+
 **Latest actual result:**78015 TERMINAL0. External build1678789ms, strict
 original16 witness build4948ms, SW/GLES/GL33/SDL_GPU106/678/598/1662ms. Each
 renderer has13PASS/3 compiledSKIP: all11 originally failing tests per renderer

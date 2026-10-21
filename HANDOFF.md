@@ -12,6 +12,29 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**Compiled baseline collected; no live heavy job.**48754 buildPASS721899ms but
+diagnostic gateFAIL on16 pre-existing Draco warnings (exact original-baseline
+matches; no suppression/vendor edit). First continuation9598 failed before tests
+on absent Draco nested Git metadata. Corrected82479 strict6437ms: SW/GLES/GL33
+each19PASS/2FAIL, SDL_GPU13PASS/8 compiledSKIP; source-stable/all memory events0.
+Failures prove duplicate Apply during End cleanup and replay of failed Immediate
+Draw. Pixel44928 strict2073ms: enabled three renderersFAIL with nontransparent
+controlsPASS, SDL capabilitySKIP; source-stable/events0. Original22 assertions
+unchanged. See SPRITE_TEXTURE_BINDING_TRIAGE.md and both raw audit prefixes.
+Next implement separate pending-submit/discard lifecycle seams, preserve deferred
+Begin/queue on failure and no Immediate replay; retain old native renderer-End
+recovery/lifetime controls. No003 closure/marker change/product commit/push.
+
+Continuation:48754 is still verified live (tool plus host scope active/running;
+current4263153664/peak4301078528 bytes,6GiB hard cap); build passed1461/1878.
+No production inputs changed and no second heavy job. New separate
+`SpriteCompiledRetryPixelTests.cpp` and syntax-checked
+`build-probe/repair-sprite-binding-retry-pixels.mjs` are **UNCOMPILED/UNRUN**.
+After48754 terminates, inspect its21-case/four-renderer audit, then run the pixel
+retry witness before modifying the candidate. It detects duplicate backend
+geometry on retry using exact pixels and a nontransparent control. No new pass,
+product commit, issue closure or knownIssue change is claimed.
+
 **ISSUE-003 first gate ACCEPTED; compiled gate LIVE48754.**78015 terminal0:
 external build1678789ms, strict original16 build4948ms;13PASS/3 compiledSKIP on
 each SW/GLES/GL33/SDL_GPU (106/678/598/1662ms). Original11 failing tests per renderer
