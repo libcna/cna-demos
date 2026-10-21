@@ -127,6 +127,21 @@ execution remain to be performed. No audio/playback/hardware pass is claimed.
 
 ## ISSUE-028: historical expectation needs correction evidence
 
+Prepared during37318, NOT compiled/run: `WaveBankLargeOffsetProbe.cpp` is a
+Linux sparse-file safeguard against narrowing streaming offsets to signed32 IO.
+It moves only the existing small fixture's wave-data segment beyond2GiB, requires
+less than1MiB physically allocated, and checks lazy metadata residency plus equal
+decoded duration. No2GiB buffer is allocated. This must be measured before choosing
+an IO-layer migration; Sharp Runtime Stream currently exposes intcs positions and
+length, whereas the existing native XWB path uses64-bit stream offsets. Do not
+introduce a large-bank regression while repairing file identity. No claim about
+other platforms or reference-XNA large-bank execution is made by preparation.
+Its prepared driver is `build-probe/repair-wave-bank-large-offset-before.mjs`;
+run only after37318 and its final external/CTest gates finish, with the same
+one-worker/private-display/6GiB limit. Native integration must reuse the existing
+WaveBankTestAccess definition in WaveBankTests.cpp (or extract one shared header),
+not link token-different friend-seam definitions from these standalone probes.
+
 55931 completed both follow-up native baselines on2026-10-21, serially AFTER the
 accepted038/073 native-v4 gate. Retained-file probe: strict compile1449ms/run113ms,
 4PASS/2FAIL exactly; both renamed and renamed-plus-replaced absolute paths fail

@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <typeinfo>
+#include <utility>
 #include <vector>
 #include "Microsoft/Xna/Framework/Audio/SoundEffect.hpp"
 #include "SoundEffectInstanceTestAccess.hpp"

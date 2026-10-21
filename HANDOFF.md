@@ -12,6 +12,16 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+Prepared while37318 builds (NOT compiled/run): `WaveBankLargeOffsetProbe.cpp`
+and `repair-wave-bank-large-offset-before.mjs` safeguard sparse offsets above2GiB
+without allocating a large buffer (nine checks planned). Do not narrow the existing
+streaming IO or lose lazy residency. `VideoPlayerValidationTests.cpp` and
+`repair-video-player-validation-before.mjs` prepare nine guard cases based on the
+completed41-check genuine oracle, expected five native failures/four controls.
+These do not cover real decoder/video lifetime. Both drivers pin the accepted
+native-v4 library and must run serially AFTER the active external/final/CTest gates,
+before any028/099 production edits. All current audio source hashes stay frozen.
+
 LATEST 08:45 UTC:76943 sanitizer TERMINAL0,27/27PASS with actual audio/runtime
 ASan/UBSan/float-cast-overflow/leak instrumentation, no suppressions/findings.
 Library build32465ms/zero diagnostics, strict fixtures15999ms/run223ms/XML22ms;

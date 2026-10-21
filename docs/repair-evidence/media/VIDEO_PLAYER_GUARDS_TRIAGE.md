@@ -1,5 +1,19 @@
 # ISSUE-099: current reference preparation
 
+Prepared during37318, NOT compiled/run: `VideoPlayerValidationTests.cpp` covers
+nine native guard scenarios with real default-constructed players and no decoder,
+device or playback. It checks exact exceptions/parameter/object names, refusal
+before mutation, NaN/boundary controls, readable disposed configuration getters,
+and existing transport/idempotence guards. The expected pre-fix split is five
+failures/four controls; this is only a hypothesis until execution. It deliberately
+does not substitute a fake Video token for actual native lifetime validation.
+The existing real-video demo and future sanitizer lifetime cases remain required.
+Prepared driver `build-probe/repair-video-player-validation-before.mjs` requires
+the completed native-v4 gate and pins the four Video/VideoPlayer source files to
+the validated622d0bd1a code. Run serially after the active038/073 external/final/
+CTest gates, before any099 source change; do not treat the hypothesized split as
+already reproduced.
+
 ## Genuine execution, 2026-10-21
 
 56438 completed0 after the native full suite ended: all41 managed guard/retention
