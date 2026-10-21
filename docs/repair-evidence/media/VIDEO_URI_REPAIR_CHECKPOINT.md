@@ -2,6 +2,26 @@
 
 ## Latest outcome (supersedes running states below)
 
+Native decoder observer19914 was attempted and is **not accepted**: missing-file
+return confirms ArgumentException; existing text/empty/truncated inputs returned
+immediate success under Wine, but the valid silent WMV control aborted at Wine's
+unimplemented MFCreateVideoMediaType and entered WineDbg. Only this owned scope
+was stopped (observer130); no public Play/asynchronous/Windows-codec success is
+claimed. See VIDEO_CODEC_REFERENCE_LIMITATION.md for exact raw observations,
+scope cleanup and log hashes. Do not convert the provisional FNA-only existing-
+invalid-file exception assertion into a native test. The accepted32 managed
+guard reference remains valid independently. No video source/expectation change.
+
+Prepared follow-up only (not executed): VideoCodecFailureOracle.cs observes
+actual decoder-open results through UnsafeNativeMethods' normal proxy thread
+using normally constructed/disposed VideoPlayer objects. It uses missing/text/
+empty/truncated files and the existing provenance-documented64x48 silent WMV as
+a positive codec control, without a GraphicsDevice or public Play call. It does
+not impose an exception hypothesis on invalid existing files. Constructor or
+positive-control unavailability is exit77, never PASS. Run serially after native
+PBR72714, under1GiB/no swap; do not confuse it with the accepted32 managed guard
+checks below. No codec observations exist yet and no video behavior was changed.
+
 **Runtime reference confirmed:** VideoFileFailureOracle.cs compiled with genuine
 .NET4 csc /platform:x86 /warnaserror+ in3,018ms and passed32/32checks in620ms.
 It calls the genuine XNA pre-decoder guard for null/empty/relative-missing/

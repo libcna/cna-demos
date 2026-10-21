@@ -12,6 +12,43 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**LIVE38861 PBR external:** sanitizer12049 completed35/35PASS/no findings;
+14,068ms libraries/9,239ms fixture/172ms run/22ms audit,peak816,594,944/events0,
+frozen hashes unchanged. External now builds existing linux-full with one worker,
+then48 clone witnesses across six renderers and112 exact scenario parity.
+Next stock66 with exactly070 improvements/four exact shadow images/marker gate.
+Video codec observer19914 was platform-limited, NOT PASS: valid WMV hit Wine's
+unimplemented MFCreateVideoMediaType/debugger. Only its inspected owned scope
+was stopped; observer130 and one lingering winedevice killed within that scope.
+See VIDEO_CODEC_REFERENCE_LIMITATION.md; no speculative video exception fix.
+
+**72714 completed0:** PBR native full10875PASS/101sameSKIP in1,245,153ms;
+all previous10968 outcomes unchanged plus8PASS, comparison127ms. Graphics2898PASS/
+73SKIP; all frozen hashes unchanged. Peak4,296,978,432/high1602/max0/OOM0.
+Real video decoder observer now runs alone under1GiB/no swap; next required
+PBR sanitizer35, external48/112, stock66 improvement, shadow images and marker
+gate.070 remains uncommitted/open pending those gates. Do not restart native full.
+
+**LIVE72714, PBR clone batch:** CNA cbe9b9388 (repair102 in ce88b5f9b), demos
+03ed687. Safe070 C++ baseline67425 reproduced6FAIL/2PASS, build2,836ms/run363ms/
+audit23ms,peak447,148,032/events0, hashes unchanged. Both PBR copy constructors
+now copy exactly the missing VertexColorEnabledEXT/alphaMode_/alphaCutoff_/
+doubleSided_ (8 assignments total). Original8 witness bodies registered natively;
+only their stale preparation comment changed, explicitly hash-checked by driver.
+Native graphics/full10968+8 parity RUNNING, one worker/private GPU/network/
+6GiB/no swap. Sources frozen. Next sanitizer, external renderer/C070 improvement
+and unchanged other stock/video/visual checks, then scoped commit/marker update.
+No070 closure yet; preserve inherited011/video and unanswered C decisions.
+
+72714 update: build22,793ms, focused8PASS320ms, full graphics module passes
+44,459ms; native full now in its long genuine-XNA compiler differential. After
+it completes, the prepared1GiB real decoder observer may run serially (constructor
+and valid-WMV availability are controls, exit77 is NOT PASS), then PBR sanitizer35,
+external8x6/112 parity, stock66 with exactly070 improvements and four unchanged
+shadow images. Drivers prepared/unrun: repair-pbr-clone-{sanitizer,external,demos,
+visual}.mjs. Shader055 structural4 fixture/triage also prepared outside CNA,
+uncompiled/unrun. No055 product changes or image claims.
+
 **Committed ISSUE-102 checkpoint:** CNA ce88b5f9bf4a6771d4650d182c014944837452a0
 rejects invalid cascade counts atomically in all four receivers; original20
 witnesses nowPASS. Full native10867PASS/101unchangedSKIP; sanitizer27PASS/no

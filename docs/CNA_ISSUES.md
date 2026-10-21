@@ -291,6 +291,15 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-101 -- Video URI resolution and deferred file failures diverge from FNA
 
+- **Reference correction (2026-10-21; still CONFIRMED_OPEN):**32 genuine XNA
+  guard/translator checks establish exact ArgumentException for deferred missing
+  files, not the FNA-based FileNotFoundException expectation. No production/test
+  correction has been applied yet. A subsequent normal-decoder observer recorded
+  partial immediate returns under Wine, but its valid WMV control hit unimplemented
+  MFCreateVideoMediaType; it is NOT a passing codec/public-Play reference. Do not
+  infer immediate refusal for every existing invalid file from FNA alone. Preserve
+  the historical finding below; see [reference limitation](repair-evidence/media/VIDEO_CODEC_REFERENCE_LIMITATION.md).
+
 - **Latest validation (2026-10-21; still CONFIRMED_OPEN):** native full
   10,847PASS/101unchangedSKIP, sanitizer43PASS/no findings and actual external
   43PASS. Original URI9 nowPASS on SOFTWARE and OPENGLES3. Combined video gate
