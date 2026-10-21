@@ -12,6 +12,14 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+Additional read-only preparation during60977:099 `VideoPlayerGuardsOracle.cs` and
+`VIDEO_PLAYER_GUARDS_TRIAGE.md`,41 managed checks, NOT compiled/run. Current Video
+assembly GAC_MSIL hash63c7673c.../MVID6bc5f328... differs from historical099 pin.
+Prepared `repair-video-player-guards-reference.mjs` pins current Video/Graphics/
+Framework explicitly. It uses invalid-decoder initialized-field fixtures, not
+real playback. Do not run it alongside native full-suite Wine subprocesses.
+No099 CNA change/status upgrade. Native full is still the only heavy job.
+
 Prepared follow-up drivers while60977 runs (not executed): integrated sanitizer
 `repair-audio-instance-guards-sanitizer.mjs` reuses CNA build-asan audio link closure;
 external `repair-audio-instance-guards-external.mjs` checks original23 fixtures
