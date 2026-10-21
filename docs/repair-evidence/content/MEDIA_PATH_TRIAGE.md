@@ -34,6 +34,36 @@ Reports `repair-media-reference-{framework,xact}-disassembly.log`.
 
 ## ISSUE-015
 
+### Accepted repair, 2026-10-21
+
+CNA `9639707991b589914d8db8224b6d79f3867d60d0` contains only the015 path fix,
+public comments and native regressions. Pending011 ownership changes in the same
+Song files were excluded by selective staging and remain uncommitted/unaccepted.
+Validation used that explicitly dirty shared worktree; it is not a clean global
+campaign acceptance or a closure of011.
+
+Native31828:10882=10781PASS/101sameSKIP, every10874 prior outcome preserved plus
+eight newPASS; media311PASS, focused247 cases without failures, fresh-process
+string/typed cold-title probes PASS. Native build147276ms, full1228182ms, compare124ms;
+source hashes unchanged;peak4297228288/high943/max/OOM0.
+
+External23738 hit its driver's30-minute build limit after683/1001 steps (1800106ms,
+SIGTERM/ETIMEDOUT, no compiler diagnostics). No runtime cases or final audit were
+emitted. Logs retained, process tree confirmed exited.79454 resumed incrementally
+without changing sources or expectations and with a90-minute build allowance:
+build917304ms/zero diagnostics, strict original probe2231ms and unchanged8/8PASS41ms;
+cold probe build1388ms/string39ms/typed38ms PASS. All112 audio/media/C comparisons
+match058 exactly except the one added play_song identity check (now6PASS on both
+renderers). Each renderer still has46PASS/9historicalFAIL/1manual NOT RUN. C labels,
+failed assertions and knownIssue values unchanged. Frozen319 artifacts and sources
+unchanged;peak2254340096/all memory events0. Reports `repair-song-uri-path-external-v2-*`.
+
+Registered49056: native9PASS3621ms and demos16PASS11881ms, exact JUnit audits,
+unchanged hashes;peak211771392/all events0. Reports `repair-song-uri-path-ctest-v2-*`.
+All heavy runs serial, shared ccache, existing trees, private GPU,6GiB max/no swap.
+No new sanitizer claim for this path-only change, no physical audio/other-platform
+claim, no new full719-demo/visual/global CTest claim. Historical notes below remain.
+
 Native31828 completed0: full10882=10781PASS/101unchangedSKIP; every10874 previous
 outcome retained, exactly eight newPASS. Full1228182ms, compare124ms, frozen inputs
 unchanged;peak4297228288/high943/max/OOM0. Media311PASS; focused247 cases have no

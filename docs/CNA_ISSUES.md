@@ -1278,12 +1278,17 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-015 -- `Song::FromUri` resolves a relative path against the working directory
 
-- **Current repair evidence (2026-10-21; still open):** genuine XNA IL and FNA
-  both resolve relative URI input from TitleLocation. Eight current native tests
-  reproduce six relative title/cwd/decoy failures and preserve two absolute passes.
-  The local lower-layer title-bridge repair makes all eight unchanged tests pass;
-  wider native/default-title and external validation remains pending. No runtime
-  marker removed or issue closure. [Evidence](repair-evidence/content/MEDIA_PATH_TRIAGE.md).
+- **Resolved (2026-10-21):** CNA `9639707991b589914d8db8224b6d79f3867d60d0`
+  resolves both URI overloads through the existing lower-layer title bridge,
+  including fresh-process default-title lookup, without adding a runtime dependency.
+  Original eight-case fixture: six failures/two controls before, eight passes after
+  in both native and external builds. Full native10882=10781PASS/101unchangedSKIP;
+  all10874 previous outcomes retained plus eight new passes. External112 audio/media/C
+  cases preserve all previous statuses, markers and failing labels on SOFTWARE and
+  OPENGLES3; play_song adds one passing title-file identity check and retains its five
+  playback assertions. Registered native9 and demo CLI/play_song16 CTests pass.
+  No marker existed; the demo's absolute-path workaround is removed, not its oracle.
+  [Evidence and limits](repair-evidence/content/MEDIA_PATH_TRIAGE.md).
 
 - **Area:** media -- `Song::FromUri` (`Song.cpp`) uses a scheme-less path as it is, so a relative
   one is opened relative to the process's working directory. Its comment notes that FNA combines
@@ -1299,7 +1304,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Expected:** the same resolution as FNA (and as CNA's own content paths): relative to the title
   location, so a game finds its music however it was started (desktop shortcut, launcher, IDE).
 - **Environment:** CNA 0.1.0, Linux.
-- **Status:** open (low impact); not reported upstream yet.
+- **Status:** Resolved in CNA `9639707991b589914d8db8224b6d79f3867d60d0`;
+  Linux runtime validation above. Other platforms are not claimed tested.
 
 ### CNA-DEMOS-ISSUE-017 -- `Achievement::EarnedOnline` is always true
 

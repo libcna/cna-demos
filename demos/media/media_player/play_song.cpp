@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // MediaPlayer: play a Song as background music, follow PlayPosition and see it end.
+#include <filesystem>
 #include <memory>
 #include <optional>
 #include <string>
@@ -41,9 +42,12 @@ namespace
             pixel_->SetData(&white, 1);
 
             // A Song is streamed music: one plays at a time, through MediaPlayer, beside any
-            // number of SoundEffects. FromUri takes a local file; CNA resolves a relative path
-            // against the working directory, so build it from TitleLocation (CNA-DEMOS-ISSUE-015).
-            song_.reset(Song::FromUri("Rising", TitleLocation::Path() + "/assets/music/rising.wav"));
+            // number of SoundEffects. A relative FromUri path is rooted at the title directory,
+            // independently of the process working directory.
+            song_.reset(Song::FromUri("Rising", "assets/music/rising.wav"));
+            Context().Check(std::filesystem::equivalent(song_->getHandle(),
+                                std::filesystem::path(TitleLocation::Path()) / "assets/music/rising.wav"),
+                            "relative Song URI selects the file in the title directory");
             Context().Check(MediaPlayer::getStateProperty() == MediaState::Stopped, "MediaPlayer starts out Stopped");
             // On a phone the user's own music may be playing: a game plays its soundtrack only
             // when GameHasControl (always true on a desktop).

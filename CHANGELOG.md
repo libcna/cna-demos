@@ -6,6 +6,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Closed finding015 against CNA `9639707991`: relative Song URI paths now select
+  the title file rather than cwd, including cold initialization. Eight unchanged
+  reproductions pass in native/external builds; full native regression retains all
+  prior outcomes,112 audio/media/C renderer comparisons have only the added demo
+  identity assertion, and25 registered CTests pass. Historical failures stay visible.
 - Closed Quaternion finding 119 against CNA `df9234202`: wide intermediates preserve
   finite inverse/division results, including subnormal contributions and input aliases.
   Native/C ABI regressions, both math sweeps, all 732 CTests and six exact visuals pass.

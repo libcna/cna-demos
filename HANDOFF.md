@@ -12,6 +12,20 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+LATEST015 CLOSED: CNA `9639707991b589914d8db8224b6d79f3867d60d0`; only title-path
+fix/comments/tests committed, overlapping011 ownership hunks remain uncommitted.
+79454 TERMINAL0: external build917304ms/zero diagnostics, original8/8 and both
+cold-title overloads PASS,112 renderer comparisons with no unexpected differences.
+Only play_song adds its sixth passing identity check; every original assertion,
+marker and historical failed label retained. Per renderer46PASS/9FAIL/1manual NOT RUN.
+Hashes unchanged;peak2254340096/events0.49056 TERMINAL0:9 native+16 demo registered
+CTests PASS (3621/11881ms), hashes unchanged;peak211771392/events0. Full native015
+checkpoint remains10882=10781PASS/101sameSKIP. No global011 acceptance/new visual
+or sanitizer claim. Matrix95FINAL/60pending (87RESOLVED/7ALREADY_FIXED/1demo correction).
+No live heavy job at this checkpoint. Next028 lazy-path baseline, then073 native
+refusal baseline serially;029/038 witnesses remain prepared. No push or merge.
+Earlier RUNNING paragraphs below are historical and superseded by this checkpoint.
+
 Prepared during79454 without changing its frozen sources:073 now has the native
 18-case `docs/repair-evidence/media/SpatialPanRefusalTests.cpp`, both setter
 overloads, real looping dummy voices and existing read-only latch accessor.
