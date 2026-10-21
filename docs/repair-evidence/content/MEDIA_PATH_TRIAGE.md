@@ -34,6 +34,29 @@ Reports `repair-media-reference-{framework,xact}-disassembly.log`.
 
 ## ISSUE-015
 
+Focused candidate23666 completed0: existing cna_shared rebuild103408ms, then the
+unchanged eight-case baseline fixture8/8PASS (build2858ms/run43ms/XML22ms), zero
+diagnostics. Frozen sources intact; expected library rebuild deltas recorded;
+peak1353715712/all memory events0. Wider native31828 is now running with an added
+fresh-process cold-title witness before full regression. No closure yet.
+
+Current native baseline (2026-10-21):11469 completed the strict eight-case probe
+against CNA a9d74c023 plus the separately uncommitted011 candidate. Six relative
+title/cwd/decoy cases fail and both absolute controls pass; all inputs unchanged.
+Build2196ms/no diagnostics, run35ms, XML audit20ms;peak867409920/all events0.
+Reports `repair-song-uri-path-before-*`. This now confirms OPEN015 at runtime.
+
+A local repair now uses the existing lower-layer title bridge and platform base
+path for relative URI input, preserving absolute paths and the existing empty/
+invalid-path refusal. It adds no runtime dependency to media. The exact eight-case
+fixture is copied to top-level cross-module tests. The existing typed-relative
+case keeps its name and assertions but moves there to configure public TitleLocation;
+its expected handle becomes title-rooted, as the measured contract requires.
+The two plain-path factory controls now use their existing asset's absolute path,
+so they do not accidentally depend on a cwd-resolution bug. No tests are dropped.
+Candidate build/unchanged-fixture validation23666 is RUNNING; no pass/closure yet.
+Song.cpp/Song.hpp also contain pending011 changes: stage only015 hunks later.
+
 2026-10-21 follow-up: `../media/SongFromUriPathTests.cpp` is a prepared,
 NOT-YET-COMPILED eight-case fixture (four cases for each string/typed overload).
 It separates title-only, cwd-only, duplicate-name decoy and absolute-path cases,

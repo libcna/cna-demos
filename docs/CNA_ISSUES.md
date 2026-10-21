@@ -1272,6 +1272,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-015 -- `Song::FromUri` resolves a relative path against the working directory
 
+- **Current repair evidence (2026-10-21; still open):** genuine XNA IL and FNA
+  both resolve relative URI input from TitleLocation. Eight current native tests
+  reproduce six relative title/cwd/decoy failures and preserve two absolute passes.
+  The local lower-layer title-bridge repair makes all eight unchanged tests pass;
+  wider native/default-title and external validation remains pending. No runtime
+  marker removed or issue closure. [Evidence](repair-evidence/content/MEDIA_PATH_TRIAGE.md).
+
 - **Area:** media -- `Song::FromUri` (`Song.cpp`) uses a scheme-less path as it is, so a relative
   one is opened relative to the process's working directory. Its comment notes that FNA combines
   a relative URI with `TitleLocation.Path` but says CNA "has no such content-root concept for
@@ -1502,6 +1509,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 ---
 
 ### CNA-DEMOS-ISSUE-029 -- `SoundEffect::FromStream` takes a `std::istream`, not a `System::IO::Stream`
+
+- **Reference contract (2026-10-21; still open):**25 genuine managed XNA controls
+  pass for short reads, success-only stream closure, exact invalid-input exceptions
+  and the public pre-native refusal boundary. No successful public native audio
+  creation or physical playback claim. The missing CNA overload is not yet repaired;
+  preserve these semantics when adding it. [Evidence](repair-evidence/api-shape/SOUND_EFFECT_STREAM_TRIAGE.md).
 
 - **Area:** audio API -- XNA's `SoundEffect.FromStream(Stream)` takes the same `Stream` type as
   `Texture2D.FromStream` and `TitleContainer.OpenStream`; CNA's `Texture2D::FromStream` and

@@ -12,6 +12,28 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+LATEST015:23666 TERMINAL0. Existing native cna_shared rebuild103408ms/zero
+diagnostics; unchanged original eight-case fixture8PASS (build2858/run43/audit22ms).
+Hashes intact,peak1353715712/events0.31828 RUNNING native rebuild plus fresh-process
+default-title controls, media/focus/full regression. Expected every10874 preceding
+outcome unchanged plus eightPASS. One existing relative-URI test moves to integration
+under the same ID, so media count becomes311 without losing a full-suite case.
+Driver build-probe/repair-song-uri-path-native.mjs; private GPU/network, owner UID/
+capabilities dropped, serial sharedcache/6GiB max/no swap. No concurrent heavy job;
+freeze CNA sources/tests. New cold-title probe source is prepared, not yet run.
+94FINAL/61pending,015 CONFIRMED_OPEN; native/external/CTest acceptance still pending.
+
+LATEST015/029:11469 baseline completed0, eight native015 cases give six relative
+failures/two absolutePASS (strict build2196ms,run35ms,audit20ms;peak867409920/events0).
+95566 genuine029 managed WAV/public refusal oracle25/25PASS;peak317890560/events0.
+Evidence sources unchanged. Neither issue is closed. CNA a9d74c023 now has local015
+Song path repair and cross-module tests;23666 RUNNING builds existing cna_shared
+then reruns the unchanged eight-case fixture. Driver repair-song-uri-path-after.mjs.
+No concurrent heavy job. Song.cpp/Song.hpp overlap pending011 ownership work:
+commit only015 hunks when validated; preserve011 and the C Effect lifetime blocker.
+The old typed-relative native test is moved, not deleted; full suite must retain
+its ID and add exactly eight cases. Source/test freeze until current gate ends.
+
 LATEST closure: ISSUE-058 resolved in CNA 380c32153c8063c38f6354dc9e37a3c23c2dd0f0.
 Sanitizers, full native10874 exact parity, external original probe,112 audio/media/C
 renderer comparisons and six registered CTests all meet the documented gates.

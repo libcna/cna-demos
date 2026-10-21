@@ -1,5 +1,17 @@
 # ISSUE-029: stream shape and ownership constraints
 
+## Genuine execution (2026-10-21)
+
+95566 completed0: all25 oracle checks pass against the installed XNA4 Framework
+assembly with MVID34d977ae-c3ec-4d07-aa6d-6fed6d8e3864. Strict C# compilation and
+genuine execution are retained in `repair-sound-effect-stream-contract-xna-*`.
+Peak317890560/all memory events0. Successful managed parses with reads capped at
+one/three bytes retain all16 sample bytes and the eight-frame default loop, then
+close the source. Failure cases retain the exact exception family/parameter and
+leave the source open. This validates the managed parser and public pre-native
+refusal boundaries only, not successful public sound creation or physical audio.
+The original prepared source is unchanged; no production029 repair exists yet.
+
 Read-only follow-up, 2026-10-21. The existing SoundEffectStreamProbe.cpp still
 describes a real API gap: only std::istream& is declared. It has not been rerun
 against today's ownership candidate; the older failure remains in README.md.
