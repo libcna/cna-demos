@@ -2,6 +2,73 @@
 
 ## Current evidence boundary (2026-10-21)
 
+**Latest continuation: native68394 LIVE; older live notes below are historical.**
+CNA0d1a9bdfb/demosc07f1bd verified; old campaign scope inactive/dead.
+84495 terminal: build0/897240ms, then diagnostic guard1; no tests ran.
+All45 warnings (44 nodiscard, one volatile) exactly match the original baseline
+and13 HEAD-identical files; no suppression or warning-free claim.
+Reviewed47617 terminal1: focus13PASS/9 compiledSKIP/906ms;
+graphics3012=2929PASS/82SKIP/1FAIL/40304ms. Exact old2990 comparison has only
+ClassicTextureFormat.DxtAlphaBlocksSampleTheirOwnEncoding PASS->FAIL.
+No old case missing;22 additions13PASS/9SKIP. No full-native run was reached.
+Frozen inputs unchanged; peak672497664 bytes/all memory events0.
+
+Genuine local XNA SpriteBatch.RenderBatch leaves Textures[0] bound, and
+Texture2D.CopyData refuses SetData while bound. The DXT fixture wrongly refilled
+the sampled texture without unbinding. Added identity/refusal assertions and
+explicit unbind before refill. All original RGB/alpha assertions, bytes and
+tolerances remain unchanged; original failing XML retained. No product guard
+weakened. This fixture is own003 work, not inherited011.
+
+Sole heavy68394, scope cna-repair-sprite-binding-native-unbound, demos driver
+build-probe/repair-sprite-binding-native-unbound.mjs. One worker/shared cache/
+existing debug tree/private GPU+network/caps0/6GiB/no swap. Exact fixture-only
+diff verified and other inputs frozen. Incremental build11472ms exit0 without
+diagnostics; original22 focus2667ms exit0; corrected refill342ms PASS.
+Graphics3012 completed43532ms exit0:2930PASS/82SKIP, no failure. Full11027
+and exact old11005 comparison are still running/pending. Host scope verified
+active/running, CnaTests PID2417036, peak2646577152 bytes under6GiB.
+Inventory audit:156 unique IDs exactly match all156 issue headings; no missing
+or extra entry. Final dispositions:71 fixed,23 documentation,8 already fixed,
+one platform-validation pending, one demo correction, one duplicate;51 pending.
+Next collect68394; change sanitizer prerequisite only after accepted comparison.
+Sanitizer/external ABI rebuild+regression/visuals/unbuilt renderer checks remain.
+Preserve011/082 and owner choices.003 open,105final/51pending; no push/merge.
+
+
+Native84495 still live, build passed251/347. Its zero-diagnostic guard will
+require review of13 `nodiscard` warnings in unchanged
+`GamerServicesServiceTests.cpp`. Read-only comparison confirms all13 exact lines
+already occur in `repair-baseline-native-build.log`; no new diagnostic is present
+at this checkpoint. No test/source/assertion change or warning suppression.
+Prepared `build-probe/repair-sprite-binding-native-observe.mjs` is syntax/transform
+checked, **UNRUN**. Only after84495 is terminal: verify completed build exit0,
+exact13 diagnostics and unchanged HEAD/source hashes, then run the original
+native22/graphics3012/full11027 with exact old11005 parity, without rebuilding.
+The first wrapper preparation had a JavaScript quoting syntax error, detected
+before executing any test/build and corrected; no product failure inferred.
+Sanitizer prerequisite now names this future observed native audit, which does
+not exist yet. If any additional diagnostic appears, review it rather than
+bypassing the exact check. No native acceptance or sanitizer result claimed.
+
+Continuation audit while84495 remains live: exact identities across the21-case
+baseline plus pixel baseline and repaired22-case gate reconcile88 observations:
+**70PASS/9FAIL/9SKIP -> 79PASS/9SKIP**, exactly nineFAIL->PASS and no other delta.
+This includes every renderer/case identity, not just aggregate counts; all three
+source-stability audits are unchanged. All five platform-boundary gates pass:
+inventory matches,956 SDL identifiers/16 areas, renderer allowlist exactly
+fna3d+sdl-gpu, ratchet0/0, hot-path181 methods across1769 production sources.
+
+Prepared `build-probe/repair-sprite-binding-sanitizer.mjs` passes host syntax/
+transformation checks, **UNRUN**. Requires accepted native84495. Reuses existing
+build-asan and safely enables SOFTWARE compiled effects, verifies shared patched
+dependency hashes/133-patch no-op stamp before configure, instruments actual
+SpriteBatch/Texture2D/GraphicsResource/SpriteTextureBinding/Software compiled
+paths and Sharp Runtime, then requires original22PASS/noSKIP with ASan/UBSan/
+float-cast/leak detection. No vendor reset or warning suppression. Only the exact
+original16 Draco diagnostics may be documented if rebuilt; any other diagnostic
+fails the gate. No sanitizer or compiled-lifetime memory-safety result yet.
+
 **Retry candidate focused gate ACCEPTED45982; native84495 LIVE.** Build of
 `cna_shared`148080ms, strict original22 compilation10008ms. SOFTWARE1452ms,
 OPENGLES3832ms, OPENGL33814ms each22PASS; SDL_GPU2267ms13PASS/9 compiledSKIP.

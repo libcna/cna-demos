@@ -12,6 +12,61 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**Latest continuation: native68394 LIVE; older live notes below are historical.**
+CNA0d1a9bdfb/demosc07f1bd verified; old campaign scope inactive/dead.
+84495 terminal: build0/897240ms, then diagnostic guard1; no tests ran.
+All45 warnings (44 nodiscard, one volatile) exactly match the original baseline
+and13 HEAD-identical files; no suppression or warning-free claim.
+Reviewed47617 terminal1: focus13PASS/9 compiledSKIP/906ms;
+graphics3012=2929PASS/82SKIP/1FAIL/40304ms. Exact old2990 comparison has only
+ClassicTextureFormat.DxtAlphaBlocksSampleTheirOwnEncoding PASS->FAIL.
+No old case missing;22 additions13PASS/9SKIP. No full-native run was reached.
+Frozen inputs unchanged; peak672497664 bytes/all memory events0.
+
+Genuine local XNA SpriteBatch.RenderBatch leaves Textures[0] bound, and
+Texture2D.CopyData refuses SetData while bound. The DXT fixture wrongly refilled
+the sampled texture without unbinding. Added identity/refusal assertions and
+explicit unbind before refill. All original RGB/alpha assertions, bytes and
+tolerances remain unchanged; original failing XML retained. No product guard
+weakened. This fixture is own003 work, not inherited011.
+
+Sole heavy68394, scope cna-repair-sprite-binding-native-unbound, demos driver
+build-probe/repair-sprite-binding-native-unbound.mjs. One worker/shared cache/
+existing debug tree/private GPU+network/caps0/6GiB/no swap. Exact fixture-only
+diff verified and other inputs frozen. Incremental build11472ms exit0 without
+diagnostics; original22 focus2667ms exit0; corrected refill342ms PASS.
+Graphics3012 completed43532ms exit0:2930PASS/82SKIP, no failure. Full11027
+and exact old11005 comparison are still running/pending. Host scope verified
+active/running, CnaTests PID2417036, peak2646577152 bytes under6GiB.
+Inventory audit:156 unique IDs exactly match all156 issue headings; no missing
+or extra entry. Final dispositions:71 fixed,23 documentation,8 already fixed,
+one platform-validation pending, one demo correction, one duplicate;51 pending.
+Next collect68394; change sanitizer prerequisite only after accepted comparison.
+Sanitizer/external ABI rebuild+regression/visuals/unbuilt renderer checks remain.
+Preserve011/082 and owner choices.003 open,105final/51pending; no push/merge.
+
+
+Native84495 still live, build passed251/347. It now has13 pre-existing Guide
+nodiscard warnings, all exactly matched to original campaign build log and in
+an unchanged HEAD test file. Its strict diagnostic guard will stop before tests;
+do not call this warning-free. Prepared
+`build-probe/repair-sprite-binding-native-observe.mjs` passes syntax/transform
+checks, UNRUN, and must run only after84495 terminal/build0. It records exact
+diagnostic/source review then native22/graphics3012/full11027 without rebuilding;
+all failure assertions remain unchanged. Initial wrapper syntax-only quoting
+failure corrected before execution. Sanitizer now requires that future observed
+native audit. No second heavy job, new native result or source edit.
+
+Follow-up verified wait:84495 remains live, native build passed146/347 without
+observed diagnostics. Exact88 focused before/after observations reconcile
+70PASS/9FAIL/9SKIP ->79PASS/9SKIP, only the nine intended FAIL->PASS transitions.
+All five platform-boundary gates PASS (956/16, allowlist fna3d+sdl-gpu, ratchet0/0,
+hot-path181/1769). Prepared sanitizer driver
+`build-probe/repair-sprite-binding-sanitizer.mjs` is syntax/transform checked,
+UNRUN; requires accepted84495 before enabling compiled SOFTWARE in existing
+build-asan with exact shared-dependency no-op checks. It requires22PASS/noSKIP
+under actual CNA/Runtime ASan/UBSan/float-cast/leaks. No new heavy job launched.
+
 **ISSUE-003 retry focus ACCEPTED; native84495 LIVE.**45982 terminal0:
 shared-runtime build148080ms, strict22 compilation10008ms; SW1452/GLES832/
 GL33814ms each22PASS, SDL2267ms13PASS/9 compiledSKIP. Original assertions and
