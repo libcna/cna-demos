@@ -304,6 +304,14 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-100 -- Detached Video track preferences are ignored by VideoPlayer::Play
 
+- **Current repair candidate (2026-10-21; CONFIRMED_OPEN):** native decoder-rate
+  reproduction gives three failures/one passing control before repair; all four
+  unchanged cases pass after applying per-Video overrides before output setup.
+  They also pass within the29-case integrated sanitizer gate without findings.
+  Fresh media340/340PASS; full native and original public-pixel external regression
+  are still pending. Marker retained, no final closure. See
+  [extension evidence](repair-evidence/media/VIDEO_EXTENSIONS_TRIAGE.md).
+
 - **Area/API:** `Video::SetVideoTrackEXT`, the symmetric `Video::SetAudioTrackEXT`, and
   `VideoPlayer::Play`.
 - **Demo:** `media.video_player.track_selection`.
@@ -330,6 +338,17 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   upgrading it to runtime proof. No CNA source was modified and no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-099 -- VideoPlayer validation and lifecycle contracts diverge from XNA
+
+- **Current repair candidate (2026-10-21; CONFIRMED_OPEN):** original native
+  guards9=5FAIL/4PASS and lifetime6=4FAIL/2PASS reproduced before editing. The
+  uncommitted candidate passes all15 plus9 copy/multiple-player/resource cases,
+  also24/24 under ASan/UBSan/float-cast/leaks with no findings. Media335/335PASS;
+  full native regression remains running. The original demo's C++ Video-destruction
+  no-frame assertion needs an additional focused check; it is not being relaxed.
+  C API's documented fresh no-frame/clamped-volume behavior and its Stop demo
+  expectations conflict with XNA; an explicit owner decision is pending. No
+  knownIssue removal, C API expectation edit or final closure is claimed.
+  Details and retained baseline logs are in the evidence linked below.
 
 - **Current reference validation (2026-10-21; still open):**41/41 genuine managed
   guard/retention controls pass on the explicitly pinned current Video assembly

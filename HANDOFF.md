@@ -12,6 +12,61 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**Current live job86932:** native-v2 full10934 RUNNING; media340/340PASS11990ms,
+build45964ms/zero diagnostics.92340 after-v2 finished0: all29 focusedPASS,
+build61433ms/zero diagnostics, unchanged hashes,peak1226051584/events0.4221
+sanitizer-v2 finished0: all29PASS, libraries12500ms/strict fixture14043ms/run399ms/
+XML23ms, actual Video/runtime instrumentation, no suppressions/findings; unchanged
+hashes,peak629182464/events0. One worker/private GPU/network/6GiB/no swap; keep
+sources frozen until the final audit. Next run prepared repair-video-external.mjs
+serially: actual external rebuild, original29 fixtures and original112 renderer
+scenarios. It retains markers and rejects any C API regression instead of making
+it expected. C contract choice still unanswered; no C edits or new issue closure.
+Current CNA ab97df323 / demos7b94712 plus recorded uncommitted099/100 and011 work.
+
+**Latest:**15439 full TERMINAL0:10929=10828PASS/101sameSKIP1416421ms,compare123ms;
+all old10905 outcomes retained, exactly24 newPASS and one XNA Volume rename.
+Hashes unchanged,peak4295897088/high61/max0/OOM0.63091 then reproduced the missed
+099 destruction contract1FAIL and100 track preference3FAIL/1PASS (3302/342/20ms,
+peak459255808/events0). Local follow-up fixes those paths, preserves every original
+assertion, and accounts for decoder-free test registration.92340 after-v2 focused29
+RUNNING, sole heavy job; sources frozen. Next updated sanitizer29/native10934,
+then external112 and C routes. C owner question remains unanswered; no C API edits,
+no additional closure/source commit/push/merge. Preserve unaccepted011. Matrix still
+155IDs/97final/58pending;099 and100 are CONFIRMED_OPEN. Earlier entries are history.
+
+**Latest099 candidate, 2026-10-21:** CNA ab97df323 / demos7b94712 plus uncommitted
+Video/VideoPlayer guard and private association repair.25907 focused TERMINAL0:
+build80477ms/zero diagnostics; original guards9, original lifetime6 and new
+copy/multiple-player/resource association9 all PASS. Source hashes unchanged,
+peak1191071744 bytes/all memory events0. Not issue closure or full regression.
+41878 sanitizer TERMINAL0: all24 PASS, libraries17306ms/strict fixtures12219ms/
+run472ms/XML30ms; actual Video/VideoPlayer and runtime ASan/UBSan/float-cast/leaks,
+no suppressions/findings, peak1118015488/events0, hashes unchanged.15439 native
+RUNNING: build79272ms/zero diagnostics, media335/335PASS14598ms, full10929 ongoing.
+One worker/private GPU and network/6GiB/no swap; no other heavy job. Freeze sources.
+Read-only demo review found its existing after-Video-destruction GetTexture==null
+contract is not covered by those24. Prepared `VideoDestroyedFrameTests.cpp` (UNRUN)
+preserves the exact demo conjunction; run after15439 before claiming acceptance.
+Pending owner decision: C API explicitly promises SUCCESS/no frame before Play,
+while genuine XNA and the corrected C++ require InvalidOperationException. Asked
+whether C should become INVALID_STATE with explicit docs/tests correction or keep
+an intentional C-only difference. No C API source/test change; no answer yet.
+Next: finish sanitizer24, native media/full parity, resolve that contract, then
+external reproductions and registered gates. Preserve unaccepted011 changes;
+markers unchanged, no099 commit/closure, no new push/merge.
+
+Continuation: sanitizer24 is now complete as recorded above.15439 full is still
+running (XnaDifferentialBuild parity PASS696715ms; no full acceptance yet).
+Prepared `repair-video-followup-before.mjs` combines the original demo-destruction
+conjunction with four new ISSUE-100 decoder-track witnesses (five cases total,
+UNRUN); run it immediately after15439, before more production edits. Source review
+and current official FNA extension reference are in VIDEO_EXTENSIONS_TRIAGE.md.
+The C API question was expanded to include its documented Volume clamping and
+demo's Stop-clears-video/frame expectations; no answer yet. Also account for
+no-FFmpeg fixture registration and the old OFF-profile fresh-texture expectation.
+No100/101 production change; no additional issue closed.
+
 **Current accepted audio checkpoint:**038 resolved by CNA85a23569c,073 by514a6a8c2;
 supporting warning/harness commits a52d6f0ce/7af2cd42b. Full native10905=
 10804PASS/101sameSKIP, integrated sanitizer27PASS, final external112 exact comparisons

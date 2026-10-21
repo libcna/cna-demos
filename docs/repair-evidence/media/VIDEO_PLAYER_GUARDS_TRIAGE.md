@@ -1,5 +1,87 @@
 # ISSUE-099: current reference preparation
 
+## Candidate validation, 2026-10-21
+
+92340 after-v2 completed0: original guards9/lifetime6/association9 plus destroyed1/
+tracks4 allPASS. Build61433ms/zero diagnostics, unchanged hashes,
+peak1226051584/events0.4221 sanitizer-v2 completed0:29/29PASS, libraries12500ms/
+strict fixtures14043ms/run399ms/XML23ms, unchanged hashes,peak629182464/events0.
+Actual Video/VideoPlayer/runtime ASan/UBSan/float-cast/leak instrumentation remains;
+no suppressions/findings, third-party instrumentation still not claimed.
+86932 native-v2 build45964ms/zero diagnostics, media340/340PASS11990ms; full10934
+RUNNING. External112 and the unresolved C contract remain; no closure.
+Copy audit: native Validation/Lifetime fixtures differ from their preserved demo
+sources only by one extra trailing LF (5574/5573 and4168/4167 bytes). Their complete
+content before trailing whitespace is identical; no input/assertion changed.
+Destroyed/TrackPreference copies are byte-identical (2272 and2663 bytes). The
+standalone gates compile the preserved demo originals, not the copies.
+
+15439 full completed0:10929=10828PASS/101unchangedSKIP,1416421ms, compare123ms.
+Every old10905 outcome is retained with the one documented Volume test rename;
+exactly24 newPASS. Hashes unchanged;peak4295897088/high61/max0/OOM0. This is the
+pre-follow-up candidate checkpoint, not final099 acceptance or C API validation.
+
+63091 follow-up then reproduced the missed original C++ destruction contract:
+one test FAIL because GetTexture throws after its Video is destroyed. The same
+strict fixture batch reproduced ISSUE-100's three failures/one passing control.
+Build3302ms/run342ms/XML20ms, hashes unchanged,peak459255808/events0. Reports
+`repair-video-followup-before-*`; these expected defect results are not product
+passes. No original demo assertion was changed. The local candidate now records
+independent C++ Video destruction separately from fresh/failed Play, preserving
+the existing null-frame result and resetting that state when a new Play begins.
+Its new exact witness also protects replay, failed replacement and disposed refusal.
+92340 `repair-video-player-after-v2` is running29 strict cases after this adjustment
+and the related100 selection repair. Source inputs frozen; no final acceptance.
+
+41878 integrated sanitizer completed0: all24 cases PASS, library build17306ms/
+strict fixtures12219ms/run472ms/XML30ms. Actual Video/VideoPlayer translation units
+and Sharp Runtime are instrumented with ASan/UBSan/float-cast-overflow/leaks;
+third-party libraries are not. No suppressions/findings, hashes unchanged,
+peak1118015488/all memory events0. Reports `repair-video-player-sanitizer-*`.
+15439 native build79272ms/zero diagnostics and media335/335PASS14598ms; full
+regression remains RUNNING, not accepted yet.
+
+Read-only oracle review additionally found the pre-existing pause_and_loop check
+requiring GetTexture==null after a C++ owner destroys its Video. Genuine XNA GC
+cannot expose that situation; this is a previously passing C++ lifetime extension,
+not permission to weaken a test. `VideoDestroyedFrameTests.cpp` preserves that
+conjunction and adds initial fresh refusal/real-play controls; it is UNRUN until
+the serial full native job finishes. The current guard appears to reject this
+state as well, so candidate acceptance remains pending a measured reproduction.
+
+The owner question is now expanded to the complete C contract: video.h also
+documents clamped Volume, and standalone/c_api.media.video_player expects Stop
+to clear Video and the frame. No C code/docs/test expectations have been changed.
+Whether to align these routes with XNA/C++ or preserve explicit C adapter
+differences is awaiting the owner's response, separately from011's handle choice.
+
+25907 focused candidate completed0: build80477ms/zero diagnostics; original nine
+guards PASS (compile2606/run54/XML30ms), original six lifetime cases PASS
+(3016/428/31ms), nine new native copy/multiple-player/resource association cases
+PASS (3533/460/30ms). Frozen source hashes unchanged; peak1191071744 bytes,
+all memory events0. Reports `repair-video-player-after-*`. No closure yet.
+The candidate separates Stop from decoder destruction, retains observed Video
+identity after Stop/Dispose, detaches replaced/destroyed players safely, and adds
+the genuine-XNA guards without changing public method signatures. Private Video
+association copies are deliberately not copied; assignment preserves destination
+observers. Sanitizer and broader regression remain required.
+
+Current installed Video assembly disassembly `video-current-v2.il` confirms Stop
+RVA0x2644 retains decoder/activeVideo and GetTexture RVA0x26a8 refuses absent video
+or invalid decoder. Dispose(bool) RVA0x2250 releases native/texture resources while
+retaining activeVideo. First monodis attempt lacked Graphics assembly resolution
+and exited139; the successful repeat supplied the pinned dependencies via MONO_PATH.
+This is static reference evidence, not execution of genuine native GetTexture
+after Stop or genuine pixels. Local FNA's null-implementation NRE is not XNA's
+InvalidOperationException and must not be described as such.
+
+**Owner choice pending:** `modules/c-api/include/CNA/C/video.h` explicitly promises
+SUCCESS/no frame before Play and `VideoSmoke.c` asserts it. The C++ repair changes
+what the existing wrapper observes. Asked whether to align C with XNA/C++ using
+INVALID_STATE and explicit docs/tests corrections, or retain the documented C-only
+extension. No reply yet, no C API edit or claim of C compatibility. Earlier039
+RootDirectory approval does not authorize this separate contract decision.
+
 ## Current native baselines, 2026-10-21
 
 95880 ran serially after the accepted038/073 gates: guard fixture9=5FAIL/4PASS,
