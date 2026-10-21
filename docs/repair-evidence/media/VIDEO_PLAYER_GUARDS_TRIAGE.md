@@ -1,5 +1,47 @@
 # ISSUE-099: current reference preparation
 
+## Current native baselines, 2026-10-21
+
+95880 ran serially after the accepted038/073 gates: guard fixture9=5FAIL/4PASS,
+exactly the predicted named failures, no skips; strict build2231ms/run47ms/XML25ms,
+hashes unchanged,peak420233216/events0. The preceding028 large-offset witness passed.
+This confirms current CNA guards, not a fix. Reports `repair-video-player-validation-before-*`.
+
+The first lifetime fixture failed strict compilation on an unbraced GoogleTest
+macro (dangling-else/Werror), build1798ms, no runtime/no final audit. Original source
+is retained as `build/linux-full/reports/repair-video-player-lifetime-before-source.cpp`,
+SHA256 `76b1088d81d5325b6a83678c469978b3530f9efae4a8671efd14c148a9f2d515`,
+with its original compile log. Braces-only correction69241 (`...lifetime-before-v2-*`)
+then reproduced6 cases=4FAIL/2PASS exactly: Stop retention, Dispose retention,
+retained-player-first destruction's identity assertion, and destruction of the
+replaced video. Strict build2180ms/run302ms/XML23ms; hashes unchanged,
+peak445419520/events0. Both active-video destruction and replay controls pass.
+Every case proves actual CNA playback/160x90 texture creation first. This is not
+a sanitizer, pixel-exact visual or genuine-XNA native playback result.
+
+The replacement ordering concern below is now confirmed: destroying the first
+Video after Play(second) stops the second player's current playback. Combined
+with retained identity, this needs correct observer detachment rather than simply
+removing `video_ = nullptr`. A single active `parent_` cannot protect several
+retained players or safely copy association state into a different C++ Video.
+Keep public API unchanged if a local private relationship repair suffices; test
+copy and multi-player lifetime safety as well as the original six cases.
+No099 production repair yet. Earlier preparation statements below are history.
+
+Prepared during37318 (NOT compiled/run): `VideoPlayerLifetimeTests.cpp` adds six
+real-decoder cases using CNA's existing synthetic `chroma_420.mkv`, with initial
+Playing/identity/160x90 texture checks. They cover retained identity after Stop
+and Dispose, both destruction orders, replacement of a playing video, active
+video destruction, and replay. Four failures/two controls are a source-derived
+hypothesis, not runtime evidence. The replacement case additionally checks the
+old video's back-reference: `Play` currently assigns `video_` before `OpenDecoder`
+closes the old decoder, so closing detaches the incoming rather than old video.
+Do not treat this as confirmed until the reproduction runs. The prepared driver
+`build-probe/repair-video-player-lifetime-before.mjs` pins the four source files
+and fixture bytes. Run serially after the existing external gates, before any
+099 production edit. These cases also need later instrumented lifetime validation;
+a plain native run alone is not an ASan result. No lifetime architecture chosen.
+
 Prepared during37318, NOT compiled/run: `VideoPlayerValidationTests.cpp` covers
 nine native guard scenarios with real default-constructed players and no decoder,
 device or playback. It checks exact exceptions/parameter/object names, refusal

@@ -127,6 +127,15 @@ execution remain to be performed. No audio/playback/hardware pass is claimed.
 
 ## ISSUE-028: historical expectation needs correction evidence
 
+95880 large-offset safeguard completed after038/073 acceptance:9/9PASS,
+strict build1911ms/run128ms, hashes unchanged,peak365604864/events0. The owned
+Linux sparse bank places PCM beyond2GiB while allocating less than1MiB; both
+ordinary/large banks prepare, retain less than64KiB metadata, decode lazily and
+return identical positive duration. No large buffer is allocated. Reports
+`repair-wave-bank-large-offset-before-*`. This confirms a working property that
+must survive028 repair, not closure of its path/retained-file/constructor defects.
+No reference-XNA large-file or Windows sharing behavior is claimed.
+
 Prepared during37318, NOT compiled/run: `WaveBankLargeOffsetProbe.cpp` is a
 Linux sparse-file safeguard against narrowing streaming offsets to signed32 IO.
 It moves only the existing small fixture's wave-data segment beyond2GiB, requires
