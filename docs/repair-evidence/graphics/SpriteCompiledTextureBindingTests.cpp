@@ -88,6 +88,11 @@ protected:
         {
             EXPECT_TRUE(effect.observedBeforeApply.empty());
         }
+        else
+        {
+            EXPECT_EQ(effect.observedBeforeApply.size(), 2u);
+            EXPECT_EQ(device.getTexturesProperty()[0], &source);
+        }
         batch.End();
         ASSERT_EQ(effect.observedBeforeApply.size(), 2u);
         EXPECT_EQ(effect.observedBeforeApply[0], nullptr);
