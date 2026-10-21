@@ -1,5 +1,12 @@
 # ISSUE-038: dynamic audio disposal guard preparation
 
+**Resolved:** CNA85a23569cf8df6ce048eb34fcd9bb0f30ba54f53. The four guards,
+native regressions and preserved private cleanup/stress checks pass the full native,
+integrated sanitizer27, external112 and32native/19demo CTest gates. The original
+streaming demo retains all13 checks, without its knownIssue marker. See
+[the accepted checkpoint](AUDIO_INSTANCE_GUARDS_CHECKPOINT.md). Earlier RUNNING/
+not-fixed statements below are retained history, not current status.
+
 16641 native-v4 accepted: full10905=10804PASS/101sameSKIP, every prior10882 outcome
 preserved with the two explicitly corrected genuine-XNA helper IDs and23newPASS;
 full1202840ms/compare115ms, audio775=771PASS/4sameSKIP, focus175PASS. Source hashes

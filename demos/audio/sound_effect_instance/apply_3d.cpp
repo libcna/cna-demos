@@ -124,10 +124,10 @@ namespace
         catch (const System::InvalidOperationException&) { refused = true; }
         ctx.Check(refused && voice.getStateProperty() == SoundState::Paused,
                   "a paused 3D voice refuses Pan without resuming or stopping");
-        // CNA stores the public Pan value before its mode gate. This getter is not an
-        // output-meter reading and does not imply that refused Pan changed the spatial mix.
-        ctx.Check(voice.getPanProperty() == .75f,
-                  "the refused Pan setter still exposes its assigned public property value");
+        // XNA set_Pan refuses the spatial mode before mutating Pan (ISSUE-073).
+        // The previous expectation accidentally required CNA's failed-assignment bug.
+        ctx.Check(voice.getPanProperty() == -.5f,
+                  "the refused Pan setter preserves its prior public property value");
         voice.Apply3D(listener, emitter);
         ctx.Check(voice.getStateProperty() == SoundState::Paused,
                   "a 3D voice can be re-aimed while paused after a refused Pan change");

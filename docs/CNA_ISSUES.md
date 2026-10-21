@@ -799,32 +799,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   Evidence:`checkpoint-583-c-local-packets-focused-*-direct.*`; runtime uses the last completed CNA
   libraries while unrelated renderer-retirement work remains in flight.
 
-### CNA-DEMOS-ISSUE-073 -- Refused live-3D pan setter changes the public pan value
-
-- **Repair reference (2026-10-21; not fixed):**33 genuine managed checks confirm
-  that refused assignments preserve the prior pan and that live3D refusal precedes
-  range validation. The initial reference draft's wrong ordering assumption and
-  its four failures remain preserved. No native XNA playback claim. See
-  [triage](repair-evidence/media/SPATIAL_PAN_TRIAGE.md).
-
-- **Area/API:** `SoundEffectInstance::setPanProperty` and the C
-  `cna_sound_effect_instance_set_pan`/`cna_sound_effect_instance_get_info` routes.
-- **Reproduction:** create a mono `SoundEffect`, create an instance, call `Apply3D` before `Play`,
-  start playback, then request direct pan0.5. The setter correctly refuses the incompatible mode
-  with `CNA_RESULT_INVALID_STATE`; immediately read the instance snapshot.
-- **Observed:** the snapshot reports pan0.5 even though the setter failed. The canonical setter
-  stores `Pan_ = pan` before checking the latched live-3D state and throwing. The real spatial mixer
-  still selects its separate `spatialPan_`, so this is a public property/failed-operation side
-  effect rather than an audible-output observation.
-- **Expected:** validate the live-3D state before assigning `Pan_`, so a refused setter leaves the
-  public property unchanged at its prior value (zero in the focused reproduction).
-- **Scope/status:** open CNA implementation defect. The focused C demo retains one expected failing
-  assertion and continues through cleanup; no CNA source was modified or upstream message sent.
-  Direct runtime currently uses the last completed CNA libraries from `b2ded99da9`; project-built
-  evidence awaits completion of the unrelated in-progress Vulkan retirement. Both direct renderer
-  selections pass21 of22 controls with identical stdout and empty stderr; evidence is archived as
-  `checkpoint-530-c-spatial-state-focused-*-direct.*`.
-
 ### CNA-DEMOS-ISSUE-070 -- PBR clones lose vertex-color and alpha-coverage state
 
 - **Area/API:** `PbrEffect::Clone`, `SkinnedPbrEffect::Clone`, and their shared C routes in
@@ -1677,43 +1651,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ---
 
-### CNA-DEMOS-ISSUE-038 -- Dynamic audio getters ignore disposal
-
-- **Repair triage (2026-10-21; still open):** the currently installed genuine XNA
-  IL confirms the two historical guards and the same disposal-before-validation
-  rule for GetSampleDuration/GetSampleSizeInBytes. All24 genuine managed guard
-  checks now PASS (no native voice/real disposal claim); the five-case native
-  witness is still unrun. Existing FNA-based native tests do not override the XNA
-  contract. See [triage](repair-evidence/media/DYNAMIC_DISPOSAL_TRIAGE.md).
-
-- **Area:** `DynamicSoundEffectInstance::getPendingBufferCountProperty` and
-  `getIsLoopedProperty`, `modules/audio/src/Xna/DynamicSoundEffectInstance.cpp`.
-- **Demo:** `audio.dynamic_sound_effect_instance.streaming` (marked `knownIssue`).
-- **Reproduction:** construct the dynamic instance, submit and play PCM, stop it, call Dispose,
-  verify IsDisposed, then read PendingBufferCount and IsLooped.
-- **Observed:** PendingBufferCount returns 0 and IsLooped returns false; neither getter throws.
-  The implementation returns queue size / false without
-  checking IsDisposed. The streamed playback, duration conversion and unsupported-request
-  checks pass independently; the failing checks concern only the two post-disposal getters.
-- **Expected:** both getters throw System::ObjectDisposedException. This is stated in the local
-  xna4-spec DynamicSoundEffectInstance.xml and appears explicitly in the genuine-XNA 4.0
-  decompilation's two getters. That reference was read, not executed.
-- **Investigation:** CNA's PendingBufferCountResetsToZeroAfterDisposeWhilePlaying unit test
-  currently expects zero after disposal. Queue cleanup is appropriate, but exposing its count
-  through a disposed public object conflicts with XNA; that upstream test does not establish
-  compatibility. The same unguarded implementations exist at the CI-pinned CNA revision
-  (source checked only). No upstream source was changed.
-- **Environment/evidence:** CNA `d23e139de9e5c15511b6be745de290896a69ee37`, Linux GCC 14.2,
-  SOFTWARE and OPENGLES3/private Xvfb, SDL dummy audio. Both focused793 runs execute 13 checks:
-  eleven pass and exactly these two fail. An independent empty-start control receives exactly
-  three canonical BufferNeeded callbacks, safely removes a one-shot listener during dispatch,
-  refills synchronously to three pending buffers and remains Playing, so the disposal failures are
-  isolated from basic starvation recovery and event mutation. Direct logs:
-  `/tmp/checkpoint-793-dynamic-listeners-{SOFTWARE,OPENGLES3}.{log,stderr}`. Targeted CTest,
-  catalog and metadata validation pass. No audible validation is claimed.
-- **Status:** runtime-confirmed missing disposal guards; not reported upstream.
-
-
 ### CNA-DEMOS-ISSUE-050 -- Owner-only C game operations enter the foreign-thread queue
 
 - **Area:** C ABI game-thread affinity; generated `Runtime.inc`, `CnaCApiRuntime.cpp` and
@@ -1928,6 +1865,95 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-073 -- Refused live-3D pan setter changes the public pan value
+
+- **Resolved (2026-10-21), FIXED_VALIDATED:** CNA `514a6a8c2a1d81b9dd54187f7a3a0aecb925414c`.
+  Failed Pan writes preserve the prior value and follow XNA disposal/mode/range
+  ordering. The older Apply3D demo required the opposite mutation; that single strict
+  expected value is corrected using measured XNA, retaining all18 checks.
+  Full native10905:10804PASS/101 unchanged SKIP; integrated sanitizer27/27PASS;
+  original23 external fixtures and112 exact SOFTWARE/OPENGLES3 comparisons pass.
+  Each renderer improves46PASS/9FAIL/1NOT RUN to48PASS/7 unchangedFAIL/1NOT RUN.
+  Registered32native/19demo CTests pass; this issue's knownIssue marker is removed.
+  No physical audio, new full719 sweep or visual claim. Inherited011 ownership work
+  remains unaccepted. [Validated checkpoint](repair-evidence/media/AUDIO_INSTANCE_GUARDS_CHECKPOINT.md).
+  Historical reproduction and earlier status statements follow unchanged.
+
+
+- **Repair reference (2026-10-21; not fixed):**33 genuine managed checks confirm
+  that refused assignments preserve the prior pan and that live3D refusal precedes
+  range validation. The initial reference draft's wrong ordering assumption and
+  its four failures remain preserved. No native XNA playback claim. See
+  [triage](repair-evidence/media/SPATIAL_PAN_TRIAGE.md).
+
+- **Area/API:** `SoundEffectInstance::setPanProperty` and the C
+  `cna_sound_effect_instance_set_pan`/`cna_sound_effect_instance_get_info` routes.
+- **Reproduction:** create a mono `SoundEffect`, create an instance, call `Apply3D` before `Play`,
+  start playback, then request direct pan0.5. The setter correctly refuses the incompatible mode
+  with `CNA_RESULT_INVALID_STATE`; immediately read the instance snapshot.
+- **Observed:** the snapshot reports pan0.5 even though the setter failed. The canonical setter
+  stores `Pan_ = pan` before checking the latched live-3D state and throwing. The real spatial mixer
+  still selects its separate `spatialPan_`, so this is a public property/failed-operation side
+  effect rather than an audible-output observation.
+- **Expected:** validate the live-3D state before assigning `Pan_`, so a refused setter leaves the
+  public property unchanged at its prior value (zero in the focused reproduction).
+- **Scope/status:** open CNA implementation defect. The focused C demo retains one expected failing
+  assertion and continues through cleanup; no CNA source was modified or upstream message sent.
+  Direct runtime currently uses the last completed CNA libraries from `b2ded99da9`; project-built
+  evidence awaits completion of the unrelated in-progress Vulkan retirement. Both direct renderer
+  selections pass21 of22 controls with identical stdout and empty stderr; evidence is archived as
+  `checkpoint-530-c-spatial-state-focused-*-direct.*`.
+
+### CNA-DEMOS-ISSUE-038 -- Dynamic audio getters ignore disposal
+
+- **Resolved (2026-10-21), FIXED_VALIDATED:** CNA `85a23569cf8df6ce048eb34fcd9bb0f30ba54f53`.
+  The four missing disposal guards are restored; native cleanup/stress assertions
+  remain, and two FNA-derived helper expectations explicitly adopt genuine XNA.
+  Full native10905:10804PASS/101 unchanged SKIP; integrated sanitizer27/27PASS;
+  original23 external fixtures and112 exact SOFTWARE/OPENGLES3 comparisons pass.
+  Each renderer improves46PASS/9FAIL/1NOT RUN to48PASS/7 unchangedFAIL/1NOT RUN.
+  Registered32native/19demo CTests pass; this issue's knownIssue marker is removed.
+  No physical audio, new full719 sweep or visual claim. Inherited011 ownership work
+  remains unaccepted. [Validated checkpoint](repair-evidence/media/AUDIO_INSTANCE_GUARDS_CHECKPOINT.md).
+  Historical reproduction and earlier status statements follow unchanged.
+
+
+- **Repair triage (2026-10-21; still open):** the currently installed genuine XNA
+  IL confirms the two historical guards and the same disposal-before-validation
+  rule for GetSampleDuration/GetSampleSizeInBytes. All24 genuine managed guard
+  checks now PASS (no native voice/real disposal claim); the five-case native
+  witness is still unrun. Existing FNA-based native tests do not override the XNA
+  contract. See [triage](repair-evidence/media/DYNAMIC_DISPOSAL_TRIAGE.md).
+
+- **Area:** `DynamicSoundEffectInstance::getPendingBufferCountProperty` and
+  `getIsLoopedProperty`, `modules/audio/src/Xna/DynamicSoundEffectInstance.cpp`.
+- **Demo:** `audio.dynamic_sound_effect_instance.streaming` (marked `knownIssue`).
+- **Reproduction:** construct the dynamic instance, submit and play PCM, stop it, call Dispose,
+  verify IsDisposed, then read PendingBufferCount and IsLooped.
+- **Observed:** PendingBufferCount returns 0 and IsLooped returns false; neither getter throws.
+  The implementation returns queue size / false without
+  checking IsDisposed. The streamed playback, duration conversion and unsupported-request
+  checks pass independently; the failing checks concern only the two post-disposal getters.
+- **Expected:** both getters throw System::ObjectDisposedException. This is stated in the local
+  xna4-spec DynamicSoundEffectInstance.xml and appears explicitly in the genuine-XNA 4.0
+  decompilation's two getters. That reference was read, not executed.
+- **Investigation:** CNA's PendingBufferCountResetsToZeroAfterDisposeWhilePlaying unit test
+  currently expects zero after disposal. Queue cleanup is appropriate, but exposing its count
+  through a disposed public object conflicts with XNA; that upstream test does not establish
+  compatibility. The same unguarded implementations exist at the CI-pinned CNA revision
+  (source checked only). No upstream source was changed.
+- **Environment/evidence:** CNA `d23e139de9e5c15511b6be745de290896a69ee37`, Linux GCC 14.2,
+  SOFTWARE and OPENGLES3/private Xvfb, SDL dummy audio. Both focused793 runs execute 13 checks:
+  eleven pass and exactly these two fail. An independent empty-start control receives exactly
+  three canonical BufferNeeded callbacks, safely removes a one-shot listener during dispatch,
+  refills synchronously to three pending buffers and remains Playing, so the disposal failures are
+  isolated from basic starvation recovery and event mutation. Direct logs:
+  `/tmp/checkpoint-793-dynamic-listeners-{SOFTWARE,OPENGLES3}.{log,stderr}`. Targeted CTest,
+  catalog and metadata validation pass. No audible validation is claimed.
+- **Status:** runtime-confirmed missing disposal guards; not reported upstream.
+
+
 
 ### CNA-DEMOS-ISSUE-057 -- Content staging scavenger warns during normal concurrent lifecycle
 

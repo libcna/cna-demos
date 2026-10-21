@@ -12,6 +12,52 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**Current accepted audio checkpoint:**038 resolved by CNA85a23569c,073 by514a6a8c2;
+supporting warning/harness commits a52d6f0ce/7af2cd42b. Full native10905=
+10804PASS/101sameSKIP, integrated sanitizer27PASS, final external112 exact comparisons
+(48PASS/7 historicalFAIL/1manualNOTRUN per renderer), registered32native/19demo PASS.
+Only the two knownIssue markers and obsolete073 restriction were removed; the
+older Apply3D demo's strict value is explicitly corrected from measured XNA, all18
+checks retained. See `docs/repair-evidence/media/AUDIO_INSTANCE_GUARDS_CHECKPOINT.md`.
+Matrix155IDs:97 final/58 pending; inherited011 remains unaccepted and uncommitted.
+No push/merge, no new global719/visual/physical-hardware claim. Closure docs/metadata
+are being committed separately from CNA repairs and the new VideoPlayer fixture.
+
+**Next baselines completed:**95880 measured028 sparse >2GiB offsets9/9PASS and
+099 guards9=5FAIL/4PASS as expected. Its lifetime fixture failed strict compile
+on an unbraced GoogleTest macro (original source/log retained), not in runtime.
+Braces-only69241 v2 then measured099 lifetime6=4FAIL/2PASS. No source drift,
+all recorded memory events0; peaks365604864/420233216/445419520 bytes. These are
+pre-repair measurements, not product passes. No heavy task remains running.
+**Exact next task:** repair099 guard ordering and retained Video lifetime, including
+the measured old-video detach error; preserve C++ destruction, copy and multiple-
+player safety with focused/sanitizer/native/external regression. No028/029/099
+production edits yet. Earlier checkpoint entries below are history, not current
+RUNNING state. See MEDIA_PATH_TRIAGE and VIDEO_PLAYER_GUARDS_TRIAGE.
+
+LATEST:37318 original external TERMINAL1, exactly the two renderer instances of
+`audio.sound_effect_instance.apply_3d` failed strict baseline comparison. Both
+original038/073 demos and all23 original native fixtures PASS against the external
+library. Build2680774ms/zero diagnostics; hashes unchanged,peak4303581184/high2623/
+max0/OOM0. The unrelated older Apply3D demo incorrectly required the refused Pan
+write to change-0.5 to0.75, contradicting measured XNA and073's C oracle. Corrected
+ONLY its strict value/comment/label, preserving all18 checks; original7486b2b and
+failed reports retained.69886 external-v2 RUNNING, same112 comparisons plus exact
+oracle-diff proof. Final driver now requires v2 and freezes this corrected source.
+Do not remove038/073 markers or commit the oracle edit until the gates accept it.
+See SPATIAL_PAN_TRIAGE.md. No native source change or issue closure.
+
+Continuation during37318: prepared `VideoPlayerLifetimeTests.cpp` and
+`repair-video-player-lifetime-before.mjs`, six real-decoder ownership/retention
+cases (UNCOMPILED/UNRUN), expected four failures/two controls pending measurement.
+The existing synthetic CNA video fixture is reused and hash-pinned. Run after
+external/final/CTest, together with the other prepared baseline probes, before
+099 edits. Retaining Video after Stop/Dispose must preserve C++ destruction safety;
+also inspect the current Play/OpenDecoder old-video detach ordering. No production
+source changes, marker removal or closure. At09:15UTC the external scope was
+active, memory current3867758592/peak4297302016/max6442450944/no swap; host22GiB
+available. Compilation remains one worker; no other heavy campaign task started.
+
 Prepared while37318 builds (NOT compiled/run): `WaveBankLargeOffsetProbe.cpp`
 and `repair-wave-bank-large-offset-before.mjs` safeguard sparse offsets above2GiB
 without allocating a large buffer (nine checks planned). Do not narrow the existing

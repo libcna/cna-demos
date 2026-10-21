@@ -172,5 +172,4 @@ CNA_DEMOS_GAME(StreamingDemo, {
     .tags = {"audio", "streaming", "synthesis", "procedural"},
     .needs = CnaDemos::Need::Audio,
     .frames = 60,
-    .knownIssue = "CNA-DEMOS-ISSUE-038",
 })

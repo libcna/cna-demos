@@ -1,6 +1,30 @@
 # ISSUE-073: failed pan assignment and XNA validation order
 
+**Resolved:** CNA514a6a8c2a1d81b9dd54187f7a3a0aecb925414c. Accepted native full,
+sanitizer27, original/final external112 and32native/19demo CTest gates are recorded
+in [the checkpoint](AUDIO_INSTANCE_GUARDS_CHECKPOINT.md). The C assertion is unchanged;
+only its knownIssue marker/obsolete restriction are removed. The separate old
+Apply3D demo expectation correction is fully documented below, not suppressed.
+All earlier RUNNING/not-fixed statements below are retained chronological history.
+
 ## Native reproduction, 2026-10-21
+
+37318 original external gate TERMINAL1: build2680774ms/zero diagnostics, original
+18 pan and5 disposal cases PASS against the actual external library, and both
+original038/073 demos PASS on both renderers. Strict112-case comparison correctly
+rejected exactly two unexpected failures: `audio.sound_effect_instance.apply_3d`
+on SOFTWARE/OPENGLES3, each its same18 checks with one failure. Its older assertion
+explicitly expected the refused Pan write to expose0.75 instead of retaining-0.5;
+the comment acknowledged CNA mutation before its mode gate. This conflicts with
+the genuine33-check oracle and original073 C oracle. Original source is preserved
+in demos7486b2b (introduced by9a6234b); original logs/audit are retained. This is a
+demo-expectation correction within073, not a new runtime defect or an extra closed
+historical ID. Replace only that strict expected value/comment/label, retaining
+the check and all other17 assertions. No tolerance, suppression or changed status.
+Source hashes unchanged during the failed run;peak4303581184/high2623/max0/OOM0.
+69886 external-v2 RUNNING with exact-diff verification of this one oracle change,
+the same112 baseline comparisons and both knownIssue markers still present.
+No closure until v2, metadata-final and registered CTests pass.
 
 16641 native-v4 accepted: full10905=10804PASS/101unchangedSKIP, all10882 prior
 outcomes retained with two explicit038 helper renames and23 newPASS; full1202840ms,

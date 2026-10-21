@@ -20,7 +20,5 @@ CNA_DEMOS_STANDALONE({
     .restrictions = "Standalone C program using SDL dummy audio during automation. It validates "
                     "public values, settings and call ordering; the C ABI exposes no spatial-output "
                     "readback, so attenuation, spatial pan, Doppler and audible quality are not claimed. "
-                    "One property-atomicity check retains CNA-DEMOS-ISSUE-073. "
                     "Built only when CNA_BUILD_C_API=ON.",
-    .knownIssue = "CNA-DEMOS-ISSUE-073",
 })
