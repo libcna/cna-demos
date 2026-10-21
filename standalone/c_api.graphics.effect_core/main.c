@@ -40,6 +40,30 @@ typedef struct EffectCoreState {
     CNA_EffectPassHandle compiled_second_pass;
 } EffectCoreState;
 
+/* Read the refusal before another effect call replaces the thread-local diagnostic. */
+static int non_current_pass_is_refused(CNA_EffectPassHandle pass)
+{
+    static const char expected[] = "System.InvalidOperationException";
+    CNA_ErrorInfo info = {0};
+    char exception_type[sizeof(expected)] = {0};
+    uint64_t needed = 0, copied = 0;
+    CNA_Result result = cna_effect_pass_apply(pass);
+    info.struct_size = (uint32_t)sizeof(info);
+    info.struct_version = UINT32_C(1);
+    if (result != CNA_RESULT_INVALID_STATE ||
+        cna_error_get_last_info(&info) != CNA_RESULT_SUCCESS ||
+        info.result != CNA_RESULT_INVALID_STATE || info.category != CNA_ERROR_CATEGORY_STATE ||
+        cna_error_get_last_exception_type_size_ext(&needed) != CNA_RESULT_SUCCESS ||
+        needed != sizeof(expected) - 1U ||
+        cna_error_copy_last_exception_type_ext(exception_type, needed, &copied) !=
+            CNA_RESULT_SUCCESS ||
+        copied != needed || memcmp(exception_type, expected, sizeof(expected)) != 0) {
+        return 0;
+    }
+    printf("  non-current pass diagnostic: %s (INVALID_STATE / STATE)\n", exception_type);
+    return 1;
+}
+
 static CNA_StringView text_view(const char* text)
 {
     CNA_StringView view;
@@ -389,14 +413,14 @@ static CNA_Result inspect_compiled_effect(
             cna_effect_get_is_compiled_ext(state->compiled, &is_compiled) == CNA_RESULT_SUCCESS &&
             is_compiled == CNA_TRUE &&
             cna_effect_has_renderer(state->compiled, &has_renderer) == CNA_RESULT_SUCCESS &&
-            has_renderer == CNA_TRUE &&
+            has_renderer == CNA_FALSE &&
             cna_effect_is_exact_stock_sprite_effect(state->compiled, &is_sprite) ==
                 CNA_RESULT_SUCCESS &&
             is_sprite == CNA_FALSE &&
             expect_effect_text(
                 state->compiled, "Microsoft.Xna.Framework.Graphics.Effect",
                 cna_effect_get_type_name_byte_count, cna_effect_copy_type_name),
-        "the compiled Effect reports its device, runtime, live renderer and non-stock concrete identity");
+        "the compiled Effect reports its device, bytecode runtime, no source program and non-stock concrete identity");
 
     result = cna_effect_get_parameters(state->compiled, &state->compiled_parameters);
     if (result == CNA_RESULT_SUCCESS) {
@@ -461,7 +485,7 @@ static CNA_Result inspect_compiled_effect(
             cna_effect_pass_collection_get_count(state->compiled_second_passes, &count) ==
                 CNA_RESULT_SUCCESS &&
             count == UINT64_C(1) &&
-            cna_effect_pass_apply(state->compiled_first_pass) == CNA_RESULT_INVALID_ARGUMENT &&
+            non_current_pass_is_refused(state->compiled_first_pass) &&
             cna_effect_apply(state->compiled) == CNA_RESULT_SUCCESS &&
             cna_effect_pass_apply(state->compiled_second_pass) == CNA_RESULT_SUCCESS,
         "switching current technique rejects the old owned pass and enables the new P1 pass");

@@ -1,6 +1,28 @@
 # C compiled-effect expectations exposed by ISSUE-003 validation
 
-## Observation (2026-10-22; not a completed repair)
+## Validated correction (2026-10-22)
+
+The complete full-smoke logs retain the original32PASS/2FAIL on both SOFTWARE and
+OPENGLES3. The demo now expects false for the source-program query on a bytecode
+Effect and INVALID_STATE for a non-current pass. The latter additionally verifies
+the STATE category and exact System.InvalidOperationException diagnostic before
+any later API call replaces it. All34 original checks and other controls remain.
+No native or C API runtime behavior changed. The C header and EFFECTS.md now make
+the source-program/bytecode-runtime distinction and pass-refusal result explicit.
+Validation25303 completed: actual C demo target build224911ms/no diagnostics;
+SOFTWARE34PASS71ms, OPENGLES334PASS257ms, compiled-off SDL_GPU27PASS249ms,
+and11 existing native EffectApply checks PASS1103ms. Both compiled-on logs
+contain the exact System.InvalidOperationException / INVALID_STATE / STATE
+diagnostic. No frozen-input drift; peak1394274304 bytes, all memory events zero.
+Raw logs and audit: build/linux-full/reports/repair-compiled-c-expectations-*.
+The original full-smoke observations remain unchanged; this is focused validation,
+not a new full-smoke result. ISSUE-011/082 failures are not waived.
+
+The matching CNA documentation commit is recorded by its message
+`Clarify C Effect source-program and pass-state contracts`; no CNA runtime fix
+was necessary for these two expectation corrections.
+
+## Historical observation (2026-10-22)
 
 The ongoing full SOFTWARE smoke at CNA `e582aa93d` / demos `4162e76`, including
 the uncommitted ISSUE-003 candidate and preserved ISSUE-011/082 candidates,
@@ -46,7 +68,7 @@ SpriteBatch candidate regressed an already-executed compiled-effect path.
    uses this exception barrier. The demo incorrectly expects INVALID_ARGUMENT.
    This is genuine-XNA source evidence, not a new managed GPU execution.
 
-## Next action and required evidence
+## Original validation requirements (fulfilled above)
 
 Wait for the frozen full-smoke run to terminate. Preserve its original failures.
 Then correct only the two proven demo expectations and clarify the C header's
