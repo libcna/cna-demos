@@ -1,5 +1,23 @@
 # ISSUE-029: stream shape and ownership constraints
 
+## Additional native format fixture prepared (2026-10-21)
+
+`SoundEffectXnaWaveFormatTests.cpp` adds nineteen UNCOMPILED/UNRUN native cases
+corresponding to the completed71-check managed format/chunk reference: eleven
+successful inputs and eight exact refusals. It preserves source ownership, loop
+endpoints and exact rounded duration, using the existing read-only loop seam.
+It does not claim direct access to the parsed payload array, which is internal to
+the genuine parser. Together with the nine initial stream cases this prepares28
+native regressions; none can pass until the real Stream overload is implemented.
+No native source changed during the ongoing038/073 regression gate.
+
+Source inspection found another implementation constraint: existing SoundEffect
+Duration is derived from mixer frames via TimeSpan::FromSeconds, whereas genuine
+WavFile records a millisecond-rounded duration (including zero for eight frames at
+48000Hz). Preserve the measured metadata when implementing the new overload;
+do not silently route it through the extension and assume identical semantics.
+This is not permission to alter unrelated extension or pipeline decoding rules.
+
 ## Extended genuine execution (2026-10-21)
 
 52326 TERMINAL0: all71 extended managed WAV checks PASS, with exact Framework

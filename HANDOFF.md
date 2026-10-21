@@ -12,6 +12,31 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+Prepared during16641, NOT compiled/run:028 `WaveBankConstructorContractTests.cpp`
+mirrors fourteen genuine path/refusal controls; `repair-wave-bank-constructor-before.mjs`
+requires native-v4 acceptance and expects nine current failures/five controls only
+as a hypothesis.029 `SoundEffectXnaWaveFormatTests.cpp` adds nineteen format/loop/
+rounded-duration/refusal cases from the already executed71-check genuine oracle;
+together with the nine original stream cases,28 native cases await the missing
+Stream overload. Both are future regression evidence, not passed CNA tests.
+No production source/knownIssue changes while16641 runs. The full suite remains
+in XnaDifferentialBuildTest.CnaAcceptsAndRefusesTheSameSourcesXnaDoes at08:31 UTC;
+audio775 and focused175 passed, no full parity acceptance yet.
+
+LATEST 2026-10-21 08:21 UTC:16641 native-v4 RUNNING, sole campaign heavy job.
+60977 TERMINAL1 at comparison, NOT accepted: full10905=10803PASS/102SKIP,
+no failed tests, but the former PASS Wayland recentering test became SKIP.
+Full1298418ms; hashes unchanged; peak2213658624/all memory events0. The prior
+launch incorrectly forced SDL_VIDEO_DRIVER=x11 and removed private WAYLAND_DISPLAY.
+Two fresh controls on the same binary prove the cause: forced-X11 SKIP versus
+private-Wayland PASS93ms, no test/source changes. v4 retains the private compositor,
+unsets both video overrides and modern audio override, uses legacy overridable
+SDL_AUDIODRIVER=dummy. Its wrapper executes the identical v3 full/parity assertions
+with only a new report prefix; v3 evidence stays intact. Build429ms/zero diagnostics,
+driver modern/legacy/both controls41/44/44ms PASS. Audio/full pending. Follow-up
+sanitizer/external/retained-file drivers now require accepted native-v4 audit.
+Do not accept the additional SKIP or rewrite prior results. Sources remain frozen.
+
 Additional read-only preparation during60977:099 `VideoPlayerGuardsOracle.cs` and
 `VIDEO_PLAYER_GUARDS_TRIAGE.md`,41 managed checks, NOT compiled/run. Current Video
 assembly GAC_MSIL hash63c7673c.../MVID6bc5f328... differs from historical099 pin.

@@ -127,6 +127,18 @@ execution remain to be performed. No audio/playback/hardware pass is claimed.
 
 ## ISSUE-028: historical expectation needs correction evidence
 
+2026-10-21 preparation during the unrelated native audio guard regression:
+`WaveBankConstructorContractTests.cpp` mirrors the fourteen genuine constructor
+path/refusal controls with a real minimal native AudioEngine. It is NOT compiled
+or run. Both constructors must resolve cwd rather than substitute a title file,
+preserve the absolute missing filename, reject a bad header with ArgumentException,
+and validate null engine/empty name before file lookup. The dedicated prepared
+`repair-wave-bank-constructor-before.mjs` will require the completed native-v4
+gate and audit all fourteen cases; its hypothesized nine failures are not evidence
+until execution. This is distinct from the retained-file lazy-read probe below.
+Do not change the shared AudioEngine/SoundBank title helper merely to repair
+WaveBank; their contracts require separate evidence. No production changes yet.
+
 Prepared `WaveBankRetainedFileProbe.cpp`, NOT compiled/run: absolute-path control
 plus rename and rename-with-invalid-replacement cases, six checks, existing read
 seam and real valid XWB. This separates stream identity from cwd resolution.
