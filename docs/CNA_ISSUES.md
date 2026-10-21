@@ -1171,6 +1171,16 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-011 -- `ContentManager::Unload` does not dispose loaded assets
 
+- **Candidate validation (2026-10-21; still open):** the uncommitted CNA ownership
+  repair passes all61 new native regression cases, including integrated ASan/leak/
+  UBSan/float-cast-overflow validation. Full native10868=10767PASS/101sameSKIP
+  preserves every original057 outcome and adds exactly61PASS. A new real-C
+  sound/cube lifetime control passes against the original057 library on SOFTWARE
+  and OPENGLES3; the repaired external C API/demos closure is still being rebuilt.
+  Independent C effect/model lifetime remains under review. This is not full
+  renderer/CTest/visual acceptance or issue closure; no knownIssue marker changed.
+  See [ownership validation](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).
+
 - **Refreshed baseline after057 (2026-10-21; still open):** CNA31a580d2e/demosaf858e4
   reproduce all14 original ownership cases as3PASS/11FAIL, including the exact50
   earlier failed assertions. Both permanent test sources and the genuine oracle

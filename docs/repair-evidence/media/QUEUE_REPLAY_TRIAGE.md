@@ -55,3 +55,11 @@ closure. Verify instrumentation of MediaPlayer, MediaQueue and Song, source and
 library hashes, and run caller/queue in separate processes with dummy audio,
 ASan/leaks/UBSan and no suppressions. Record the actual diagnostic before any
 repair. Then add native regressions and repair the smallest lifetime boundary.
+
+A local candidate worth testing is to move the old MediaQueue into a stack-owned
+retainer before clearing/repopulating the public queue, keeping its Song objects
+alive until the entire Play call returns. MediaQueue already supports move; this
+does not need a new public API or unconditional Song cloning. Both overloads can
+then keep their existing LoadSong/PlaySong paths and caller mutation semantics.
+Check exception cleanup and existing event tests; this is a proposed approach,
+not an implemented or validated fix.
