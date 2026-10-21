@@ -12,6 +12,30 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**Current: ISSUE-082 resource-event candidate validating in native30524.**
+CNA status7ad1f8470/product0049359a26b6; demos99f4069. Genuine event reference97591
+accepted8PASS. Before65198 accepted original6 native cases on SW/GLES/GL33:
+5callback/retirementFAIL+1finalizerPASS each; strict build6750ms, runs191/446/401ms,
+frozenunchanged/peak3603423232/events0. Candidate changes only old non-shared
+GraphicsResource::Dispose: publish disposed/diagnostic state before callbacks,
+retire device registration on success or exception, preserve callback order and
+original exception. No shared-identity or inherited011 metadata change. Original
+six witnesses registered byte-for-byte; reference decision row added to CNA plan.
+30524 sole heavy job: build/focused6/graphics2985/full10994+6 exact comparison,
+private GPU/network/owner UID/caps0/one worker/shared cache/6GiB/no swap. Poll it,
+do not edit frozen production/tests. Next actual sanitizer6 and external lifecycle
+regressions before any event repair commit.082 marker/oracle unchanged; owner
+question pending about post-disposal SpriteBatch guards versus measured XNA.
+Additional owner question pending: explicit C resource callback contract says
+is_disposed=false, conflicting with measured XNA. C docs/fixtures not edited.
+Unmarked SDL_GPU layer_depth_sorting residual is now permanent ISSUE-156, separate
+and unhidden: original155+1new=156 total,104final/52pending (51 historical+156).
+30524 build55531ms/focused6PASS350ms/graphics2912PASS+73SKIP54259ms accepted;
+full11000 is authoritatively live, no final result. Prepared sanitizer driver
+repair-resource-event-sanitizer.mjs is syntax/transform checked, UNRUN, original6
+on actual SOFTWARE with production/Runtime instrumentation and no suppressions.
+No push/merge. Older LIVE notes superseded.
+
 **Accepted checkpoint: ISSUE-004 fixed and committed in CNA9359a26b6.**
 Product `9359a26b61ded101eff35ee4008fbee3a490e9dc` contains only common sampler
 propagation and four native pixel tests. Native10893PASS/101sameSKIP, graphics
