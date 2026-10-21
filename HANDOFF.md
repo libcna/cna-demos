@@ -12,6 +12,18 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**Committed ISSUE-102 checkpoint:** CNA ce88b5f9bf4a6771d4650d182c014944837452a0
+rejects invalid cascade counts atomically in all four receivers; original20
+witnesses nowPASS. Full native10867PASS/101unchangedSKIP; sanitizer27PASS/no
+findings; external20PASS on each of six actual renderers.112 audio/video and66
+stock-effect scenarios have exact prior outcomes, including still-unaccepted
+C video failures. Four GL screenshots have zero differing pixels and two were
+visually inspected (other profile byte-identical). No102 marker existed/changed.
+Matrix155historical/98final/57pending. Demos prior9593e86; Runtime c26614e85.
+Next immediately run prepared repair-pbr-clone-before.mjs, then fix070's omitted
+PBR clone fields with native/external/sanitizer coverage. Preserve inherited011
+and video work/contract questions. No push or merge; no campaign-completion claim.
+
 **Live45102 external shadow gate:** sanitizer89823 completed27/27PASS, actual
 four effect implementations and runtime instrumented with ASan/UBSan/float-cast/
 leaks;30,047ms libraries/6,386ms strict fixture/136ms run/19ms audit, no findings,

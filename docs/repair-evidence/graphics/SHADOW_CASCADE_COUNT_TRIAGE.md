@@ -1,6 +1,65 @@
-# ISSUE-102 — shadow cascade count boundary (preparation only)
+# ISSUE-102 — shadow cascade count boundary
 
 ## Current validation (supersedes preparation notes below)
+
+Resolved by CNA `ce88b5f9bf4a6771d4650d182c014944837452a0`. The commit contains
+only the four guards, six contract headers,20 native witnesses and campaign
+handoff. Inherited content/video work was excluded. No push/merge or assertion
+weakening. No knownIssue marker existed for this issue. All older running and
+preparation states below are historical; the completed evidence supersedes them.
+
+All required gates completed on2026-10-21. External build458,110ms with zero
+diagnostics; strict witness build2,933ms. All20 tests PASS on each actual
+SOFTWARE/OPENGLES3/OPENGL33/SDL_GPU(Vulkan)/HEADLESS/STUB renderer (identity
+recorded and asserted per test).112 original audio/video scenarios have exact
+pre-shadow outcomes, check counts, markers, failing assertions and C labels.
+The same C VideoPlayer failures and pure-C smoke exit2 remain globally
+unaccepted; parity is not conversion of those failures or video closure.
+External peak4,302,151,680 bytes/high1113/max0/OOM0; source hashes unchanged.
+
+Stock66 AFTER exactly matches BEFORE52PASS/12rendererSKIP/2known070FAIL;
+peak193,142,784/events0. Four original visual runs PASS (16cascade+6PBR checks
+per GL profile), each800x480 capture has zero differing pixels against its
+same-renderer baseline. Runs500/450/481/484ms,peak197,160,960/events0. The two
+OPENGLES3 after-images were inspected; corresponding OPENGL33 files are
+byte-identical. No approved visual reference or SOFTWARE shadow-image support
+is claimed. No oracle assertion/marker changed. Product commit follows this
+validation; preserve unrelated011 and video candidates outside that commit.
+
+Sanitizer89823 completed: all20 boundary witnesses plus7 existing shadow
+receiver tests PASS with actual four effect implementations and Sharp Runtime
+instrumented by ASan/UBSan/float-cast/leak detection. No findings/suppressions;
+third-party libraries are not claimed instrumented. Libraries30,047ms, strict
+fixture6,386ms, run136ms, XML audit19ms; frozen hashes unchanged,
+peak851,980,288 bytes/events0. External45102 is now running the existing
+linux-full incremental build, one worker/6GiB/no swap, before six actual-renderer
+fixture runs and112 exact outcome comparisons. The first external wrapper
+refused an ambiguous C++/C compiler-flag replacement before building; its fix
+targets only the C++ command and leaves strict C17 flags unchanged.
+
+Stock66 BEFORE completed: SOFTWARE20PASS/12SKIP/1known070FAIL; OPENGLES3
+32PASS/1known070FAIL. Exact source/artifact hashes unchanged,peak191,201,280
+bytes/events0. First driver stopped before running tests because its absolute
+artifact lookup missed a relative key in the prior audit. Canonicalizing paths
+with duplicate-hash conflict rejection fixes that harness error; actual old
+binary hashes match the prior video and visual audits. No assertion changed.
+Sanitizer27 now running in existing build-asan, one worker/6GiB/no swap.
+
+Native-v2 completed successfully: focused20PASS498ms, graphics2890PASS/73SKIP
+37,458ms, full10867PASS/101sameSKIP1,259,563ms. Exact previous10948 outcomes
+unchanged plus20newPASS; comparison177ms. No frozen source changes;
+peak1,357,451,264 bytes, all memory events0. Stock66 before, sanitizer27,
+external120/112 parity, stock66 after and four exact image comparisons remain
+pending. No final disposition or product commit yet.
+
+15:30 CEST: native-v2 job45760 now passes all20 original boundary witnesses
+(498ms), after incremental build460ms. Full graphics module and full10968 parity
+are running/pending. First native build93255 succeeded364819ms, then the gate
+stopped before tests to review five existing nodiscard warnings in EXPECT_THROW
+calls in unchanged content tests (ModelContentTypeReaderTests2, CnjModelTests1,
+CnjStockEffectTests2). No content source or native warning flags changed. V2
+pins every first-build source hash and explicitly records reused owned artifacts.
+The first log is preserved; this is not a retry or suppression of a failed test.
 
 Safe baseline93365 completed:20 cases,12PASS and8 boundaryFAIL across all four
 effect types. Strict build3873ms, run679ms, audit30ms; frozen hashes unchanged,

@@ -246,7 +246,19 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-102 -- Oversized shadow cascade count overruns fixed draw-parameter arrays
 
-- **Current verification (2026-10-21; CONFIRMED_OPEN):** all four setters still
+- **Resolved (2026-10-21), FIXED_VALIDATED:** CNA
+  `ce88b5f9bf4a6771d4650d182c014944837452a0` rejects counts outside0..4 before
+  mutation in all four receivers, with exact exception and prior-state coverage.
+  Original20 witnesses PASS; native full10867PASS/101unchangedSKIP (20newPASS,
+  every old outcome unchanged); sanitizer27PASS/no findings. External20PASS on
+  each SOFTWARE/OPENGLES3/OPENGL33/SDL_GPU(Vulkan)/HEADLESS/STUB.112 audio/video
+  and66 stock-effect scenarios retain exact prior outcomes; unresolved C video
+  failures are not converted or closed. Four original GL images have zero pixel
+  differences. No approved-reference or SOFTWARE shadow-image claim. No marker
+  existed for this source-diagnosed issue. Historical evidence follows; see
+  [validated triage](repair-evidence/graphics/SHADOW_CASCADE_COUNT_TRIAGE.md).
+
+- **Pre-repair verification (2026-10-21; CONFIRMED_OPEN):** all four setters still
   accept invalid counts and mutate state. Safe native reproduction20 cases:
   8 boundary failures,12 valid-count/self-assignment/draw-parameter controls PASS.
   No invalid count is drawn. No repair or closure yet; see
