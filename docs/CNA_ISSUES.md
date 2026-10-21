@@ -1112,6 +1112,24 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-003 -- `SpriteBatch` does not leave its texture in `GraphicsDevice::Textures[0]`
 
+- **Status: Resolved on validated Linux renderers; native Windows/D3D9 validation pending
+  (2026-10-22).** CNA repair `3b6a2eaf3bc51a7cf44cf645b5cfa66494e0a6bb` retains movable
+  public texture identities, publishes the slot after custom passes, and prevents replay of
+  failed Immediate submissions. WebGPU and D3D9 now honor the existing Immediate hook.
+  The22 focused native regressions pass on SOFTWARE, OPENGLES3, OPENGL33, SDL_GPU,
+  FNA3D and WEBGPU, including their enabled compiled paths; the separate SDL compiled-off
+  refusal control remains intact. Both original demos pass on the four external renderers;
+  the rectangle demo preserves its seven checks and adds two direct binding/refusal checks.
+  Full native/default11027=10917PASS/110unchangedSKIP, focused sanitizer22PASS, external
+  regression/smoke deltas and visual evidence are preserved in the repair handoff. Those
+  runs used the shared worktree with unchanged, separately tracked011/082 candidates;
+  their unrelated failures are not waived or included in this repair commit.
+  D3D9's five relevant Windows translation units compile without diagnostics, but no
+  native Windows runtime pass is claimed. See
+  [final focused evidence](repair-evidence/graphics/SPRITE_BINDING_FINAL_FOCUS.md) and
+  [complete triage/history](repair-evidence/graphics/SPRITE_TEXTURE_BINDING_TRIAGE.md).
+  The historical finding follows unchanged except for its status label.
+
 - **Area:** graphics -- `Microsoft::Xna::Framework::Graphics::SpriteBatch`
   (`modules/graphics/src/Xna/SpriteBatch.cpp`): sprites are submitted through the renderer's own
   sprite path, which never assigns the device's `TextureCollection`.
@@ -1138,7 +1156,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   written against CNA can call `SetData` where XNA would throw, and code that reads
   `Textures[0]` after drawing sprites sees null.
 - **Environment:** CNA 0.1.0, Linux, SOFTWARE and OPENGLES3 renderers.
-- **Status:** open; observed behaviour above; not reported upstream yet.
+- **Historical status:** open; observed behaviour above; not reported upstream yet.
 
 ### CNA-DEMOS-ISSUE-005 -- `Color` is polymorphic, so XNA-style custom vertex structs silently break
 

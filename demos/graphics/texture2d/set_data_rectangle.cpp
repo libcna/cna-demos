@@ -226,6 +226,4 @@ CNA_DEMOS_GAME(SetDataRectangleDemo, {
     .apis = {"Texture2D::SetData", "Texture2D::GetData", "GraphicsDevice::Textures", "TextureCollection::Item"},
     .tags = {"texture", "canvas", "paint", "pixels"},
     .frames = 60,
-    .restrictions = "CNA-DEMOS-ISSUE-003: CNA's SpriteBatch does not set Textures[0], so forgetting to unset it "
-                    "does not throw on CNA as it does on XNA.",
 })
