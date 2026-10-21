@@ -1969,7 +1969,31 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   documentation/content-test changes present. Source observations/hashes are archived separately;
   no atomic build-input snapshot is claimed. Open; no upstream message or genuine-XNA execution.
 
+## Resolved
+
 ### CNA-DEMOS-ISSUE-055 -- ShaderEffect clone loses matrices and accepts a disposed original
+
+- **Resolved (2026-10-21), FIXED_VALIDATED:** CNA
+  `1ba26ed18b520b3469a8250a8a6fe032e664c84e` reuses the inherited disposed-clone
+  guard and retains all three matrices in the independent program. Four native
+  regressions and the existing strict-C EffectSmoke now protect matrix retention
+  and independent mutation. No uniform/texture-binding copy promise was added.
+- **Repair validation:** native focused4 PASS, graphics2902 PASS/73 unchanged SKIP,
+  full10889 PASS/101 unchanged SKIP; exact previous10986 outcomes preserved plus
+  four new passes. Instrumented SOFTWARE5 PASS with ASan/UBSan/float-cast/leak
+  checks, no findings or suppressions. Paired39 shader/C demo runs preserve all
+  unrelated outcomes; the exact three failures become passes on each GL profile.
+  Same strict C binary fails the old clone-World assertion, then passes on
+  SOFTWARE/OPENGLES3/OPENGL33; structural4 pass on six available renderers.
+  Both actual GL image pairs inspected; repaired images are RGBA-identical.
+  Seven unchanged C metadata gates pass. Final marker-only build and catalog
+  comparison pass: original9 checks on each GL profile, SOFTWARE capability skip,
+  three catalog CTests PASS and one honest shader SKIP. No full-campaign or
+  unavailable-renderer validation is implied. See
+  `docs/repair-evidence/graphics/SHADER_CLONE_STATE_TRIAGE.md` and
+  `build/linux-full/reports/repair-shader-clone-*-audit.json`.
+- **Historical report follows unchanged:** its Open statements describe the
+  original reproduction, not the repaired revision above.
 
 - **Area/reproduction:** `graphics.shader_effect.clone_state`, OPENGLES3 under isolated X11/Xvfb,
   at least two frames. An explicitly labeled GLSL pair compiles, receives nonidentity World,
@@ -2007,8 +2031,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   passes 474 enabled CTests and both smokes, retaining every original 459 failure and adding
   exactly these three GL assertions (38 ->41; SOFTWARE37 unchanged). Runtime hashes stay stable;
   stderr adds only separate declared skips and the intentional compiler-diagnostics fixture.
-
-## Resolved
 
 ### CNA-DEMOS-ISSUE-073 -- Refused live-3D pan setter changes the public pan value
 

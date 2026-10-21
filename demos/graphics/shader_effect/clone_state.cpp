@@ -189,5 +189,4 @@ CNA_DEMOS_GAME(ShaderCloneDemo, {
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
     .restrictions = "GLSL only; nine checks require at least two frames. No raw uniform or texture-binding copy contract is inferred.",
-    .knownIssue = "CNA-DEMOS-ISSUE-055",
 })
