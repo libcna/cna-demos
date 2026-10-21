@@ -12,6 +12,25 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+ACTIVE011:57618 TERMINAL0, metadata/ownership39PASS. Libraries rebuild353534ms
+and strict fixture build20631ms have zero diagnostics; runtime747ms. Exact compare
+preserves previous30PASS, improves the two metadata failures, retains other two
+controls and adds five boundaryPASS. Frozen sources/artifacts match;peak2356383744,
+events0. Original four-case metadata fixture/oracle/concurrency probe unchanged
+frome32db28; native metadata copies byte-identical. Public GraphicsResource now
+has opt-in shared Name/Tag without shared disposal/events; content textures enable
+it, independently owned C-boundary wrappers detach a metadata snapshot.
+13324 RUNNING: integrated ASan/UBSan/float-cast-overflow, SOFTWARE, one worker,
+private display,4GiB high/6GiB max/no swap. Only new persistent CNA build-asan;
+existing SDL/shared ccache reused. Configure0/7530ms, one unused FetchContent flag
+warning, nine affected CNA and129 Sharp Runtime implementation compile flags
+verified instrumented; vendor libraries are not.725-step library build running;
+actual61 native ownership/core/metadata tests follow. No runtime sanitizer pass yet.
+Driver build-probe/repair-content-ownership-integrated-asan.mjs; reports same prefix.
+Poll13324; freeze sources/artifacts, no second heavy job. CnaTests/external binaries
+remain stale after class layout change until rebuilt. CNA top handoff authoritative;
+93FINAL/62PENDING,011 open, no marker removal/production commit/push/merge.
+
 ACTIVE011:80015 completed0, full10857=10756PASS/101sameSKIP, all old057 outcomes
 unchanged plus50PASS, frozen hashes intact; peak2008776704/events0. This checkpoint
 predates the subsequent core-helper fix.28128's actual-helper TSan baseline found

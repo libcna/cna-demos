@@ -1,5 +1,44 @@
 # Next content-runtime batch: source audit, not repair closure
 
+## Metadata repaired in focused integration; full sanitizer build active (2026-10-21)
+
+GraphicsResource has opt-in shared Name/Tag storage, separate from its existing
+SharedIdentity disposal/events/device mechanism. Content Texture2D/TextureCube
+recording enables metadata before making the retained representative. Copy/move
+construction and assignment preserve or replace that metadata scope. Ordinary
+unrecorded copies retain independent snapshots. C-boundary detachment first takes
+a private metadata snapshot, then detaches owning disposal, including const handles.
+Public texture-copy documentation now states the intended distinction.
+
+New `ContentTextureMetadataBoundaryTests.cpp` tests cube copy metadata with
+independent explicit disposal, const detached2D snapshot/pixels after unload,
+detached cube metadata/pixels, assignment from an ordinary wrapper, and moving
+between different manager scopes. All five have exact native copies, as do the
+four original metadata regressions. No original assertion/oracle was changed.
+
+57618 completes0: canonical archives AND libcna.so build353534ms/zero diagnostics;
+strict39-case build20631ms/zero diagnostics;39PASS/747ms. Comparator21ms preserves
+the previous30PASS, changes precisely two measured metadata FAIL->PASS, retains
+the other two metadata controls and adds the five boundaryPASS. No missing cases;
+all frozen sources/fixtures/libraries match. Peak2356383744,all memory events0.
+Four-case metadata fixture, genuine oracle and concurrency probe still exactly
+matche32db28. This is a focused OPENGLES3 integration pass, not the full campaign.
+
+13324 is now building the standard persistent CNA `build-asan`, the only new
+variant (no usable existing sanitizer tree was found). Debug/SOFTWARE/SDL3,
+address+undefined+GCC float-cast-overflow, O0/FULL debug, one worker,6GiB/no swap;
+existing SDL prebuilt/shared ccache reused. Configure succeeds7530ms with one
+unused FETCHCONTENT_UPDATES_DISCONNECTED warning; no FetchContent operation was
+needed. Actual compile-command audit confirms instrumentation of nine affected
+CNA implementations and129 enabled Sharp Runtime translation units, using the
+project's standard instrumentation target. Vendor libraries remain uninstrumented.
+The725-step closure build precedes actual61 native ownership/core/metadata tests.
+No sanitizer runtime result claimed yet. Reports
+`repair-content-ownership-integrated-asan-*`; sources/artifacts frozen until terminal.
+Current CnaTests/C API/demos executables need rebuilding after the base-class layout
+change. No issue closure/marker removal;93FINAL/62PENDING. C model/effect policy
+still requires its pending owner decision.
+
 ## Full native checkpoint, confirmed candidate race and remaining metadata (2026-10-21)
 
 80015 completes0 with10857 native cases:10756PASS/101sameSKIP in1239549ms.
