@@ -2,6 +2,14 @@
 
 ## Latest outcome (supersedes running states below)
 
+Owner approved C API alignment for099 and101 on2026-10-21. The latest101 answer
+explicitly supersedes the earlier FNA/IO proposal: genuine-XNA missing-file
+Play uses ArgumentException, mapped to INVALID_ARGUMENT. Correct URI handling
+and document/test the deliberate C contract correction, retaining history.
+This is authorization, not completed validation. The existing-invalid-codec
+platform limit below remains; do not infer a missing-file exception for it.
+Resume this batch after the current070 regression/commit checkpoint.
+
 Native decoder observer19914 was attempted and is **not accepted**: missing-file
 return confirms ArgumentException; existing text/empty/truncated inputs returned
 immediate success under Wine, but the valid silent WMV control aborted at Wine's

@@ -12,6 +12,29 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**070 resolved:** CNA `1c8bbb6b83bab2fc3b15bf2370b426226fd87204`; eight local
+copy assignments/eight native regression cases. Full10875PASS/101sameSKIP,
+sanitizer35PASS, eight witnesses PASS on six actual renderers; stock66 now
+54PASS/12sameSKIP, exactly070 improves. Four shadow images pixel-identical.
+Marker gate44634 completed0: build6,929ms/zero diagnostics, original C070 both
+renderers PASS, four focused/catalog CTests PASS13,767ms, exact catalog delta
+only070 and all other frozen hashes unchanged. Peak3,006,173,184/events0.
+Matrix155historical/99final/56pending. See PBR_CLONE_MATERIAL_STATE_TRIAGE.md.
+Next owner-approved099/100/101 correction/validation, not055; capture current
+inputs first. No global clean/video/CTest/smoke completion claim. Inherited011
+and unaccepted video candidate remain dirty; nothing newly pushed or merged.
+
+**Owner decisions received 2026-10-21:** align C VideoPlayer099 with verified
+XNA/C++ (fresh GetTexture refusal, out-of-range Volume refusal, Video retained
+after Stop), explicitly correcting C documentation/tests and retaining history.
+For101 the latest answer supersedes the earlier IO proposal: use genuine-XNA
+ArgumentException / INVALID_ARGUMENT for missing files at Play, with corrected
+URI handling. No speculative existing-invalid-codec exception is authorized by
+that decision. Finish070 validation/commit, then resume099/100/101 before055.
+External070 finished112 exact prior outcomes/48 renderer checks, errors0 and
+frozen hashes unchanged; stock66 now54PASS/12sameSKIP, exactly070 improves.
+Remaining070 gates: four exact images, product commit, marker/catalog gate.
+
 **LIVE38861 PBR external:** sanitizer12049 completed35/35PASS/no findings;
 14,068ms libraries/9,239ms fixture/172ms run/22ms audit,peak816,594,944/events0,
 frozen hashes unchanged. External now builds existing linux-full with one worker,

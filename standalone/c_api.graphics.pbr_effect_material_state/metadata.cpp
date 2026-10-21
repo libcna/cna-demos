@@ -34,6 +34,5 @@ CNA_DEMOS_STANDALONE({
     .needs = CnaDemos::Need::CApi | CnaDemos::Need::ThreeD,
     .frames = 1,
     .restrictions = "Standalone C game. Apply is state-only: no PBR draw, BRDF result, pixel or visual claim is "
-                    "made. Four clone checks retain CNA-DEMOS-ISSUE-070. Built only with CNA_BUILD_C_API=ON.",
-    .knownIssue = "CNA-DEMOS-ISSUE-070",
+                    "made. Built only with CNA_BUILD_C_API=ON.",
 })

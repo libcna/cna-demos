@@ -876,6 +876,17 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-070 -- PBR clones lose vertex-color and alpha-coverage state
 
+- **Status: Resolved (2026-10-21).** CNA repair
+  `1c8bbb6b83bab2fc3b15bf2370b426226fd87204` copies four omitted fields in each
+  PBR copy constructor, with eight native regression cases. Full native10875PASS/
+  101unchangedSKIP; sanitizer35PASS; original8 cases PASS on each of six available
+  renderers. Both original C reproductions now pass without assertion changes.
+  Stock66:54PASS/12sameSKIP; four shadow regression images pixel-identical.
+  Only this issue's marker/restriction removed, verified by exact catalog diff
+  and four focused/catalog CTests. No claim that unrelated C video failures are
+  resolved. Details: `docs/repair-evidence/graphics/PBR_CLONE_MATERIAL_STATE_TRIAGE.md`.
+  Historical finding follows unchanged.
+
 - **Area/API:** `PbrEffect::Clone`, `SkinnedPbrEffect::Clone`, and their shared C routes in
   `modules/c-api/include/CNA/C/effects.h`.
 - **Runtime reproduction:** create a C `PbrEffect`, enable vertex color and double-sided rendering,
