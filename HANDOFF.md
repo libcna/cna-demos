@@ -12,6 +12,24 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+ACTIVE011:80015 completed0, full10857=10756PASS/101sameSKIP, all old057 outcomes
+unchanged plus50PASS, frozen hashes intact; peak2008776704/events0. This checkpoint
+predates the subsequent core-helper fix.28128's actual-helper TSan baseline found
+a real Attach/Unlink race when distinct wrappers are copied/destroyed concurrently.
+Per-group synchronization fixes it without holding a lock over Dispose callbacks;
+unchanged4000-copy TSan reproduction1170 passes, and actual helper/native13 tests
+pass ASan/UBSan/leak in99336. Original race report retained. Integrated binaries
+are now stale pending rebuild; no current integrated/sanitizer-wide claim.
+New metadata baseline95660: genuine XNA15PASS; strict CNA4=2PASS/2FAIL with12 failed
+assertions. Independent managers/reload and ordinary-copy controls pass; cached
+Name/Tag propagation fails. First fixture compilation94947 used abstract Object;
+concrete MetadataTag corrects only fixture construction, no assertion changes.
+No heavy job live. Next repair managed metadata sharing without coupling ordinary
+explicit disposal or independent C handles, then rebuild and regress. Three new
+permanent fixtures/oracle and detailed evidence are under docs/repair-evidence/content.
+CNA's top handoff is authoritative;93FINAL/62PENDING,011 still open, no marker
+change/production commit/push/merge. Older RUNNING entries below are chronology.
+
 ACTIVE011 resume:80015 RUNNING, superseding42874. Original42874 ended1:
 build0/834467ms; focus1513=1507PASS/5SKIP/1FAIL,72359ms. The sole failure was a
 source guard searching the old shared-model-helper call signature. All three

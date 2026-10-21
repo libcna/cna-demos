@@ -1,5 +1,50 @@
 # Next content-runtime batch: source audit, not repair closure
 
+## Full native checkpoint, confirmed candidate race and remaining metadata (2026-10-21)
+
+80015 completes0 with10857 native cases:10756PASS/101sameSKIP in1239549ms.
+Its earlier wider focus1513 gives1508PASS/5SKIP; incremental build8175ms succeeds.
+Independent XML comparison retains all10807 old057 outcomes and exactly50 added
+PASS, no missing cases. Frozen source/executable/libcna.so hashes match. Private
+network/display, owner UID and all-zero capabilities are verified; peak2008776704,
+all memory events0. This checkpoint predates the following core-helper edit.
+
+`ContentOwnershipConcurrencyProbe.cpp` then compiles the actual helper under TSan,
+without mocked ownership code. Four workers only copy/move/destroy their distinct
+wrappers from one stable source; manager disposal does not race them.28128 gives
+build0/2050ms,run66/56ms and a real data-race report between Attach line86 and
+Unlink line97,peak169361408/events0. The defect is in the uncommitted repair
+candidate, not an extra historical issue or a sanitizer startup failure.
+
+Per-group synchronization now protects membership/state. User Dispose runs outside
+the lock, preserving callbacks that join a worker copying another live wrapper.
+1170 passes the identical4000-copy TSan reproduction in27ms after a strict1676ms
+build,peak169459712/events0. Native tests add the threaded case plus that callback
+control (bounded deadlock failure, no detached thread).99336 strictly builds the
+actual helper/all13 core tests in5189ms;13PASS under ASan/UBSan/leak in24ms,
+peak360095744/events0. This is NOT integrated graphics/audio sanitizer coverage;
+integrated binaries need rebuilding after the source changes.
+
+Original011 also records cached Name/Tag divergence. New
+`ContentMetadataOracle.cs` uses genuine ContentManager, a custom XNB reader and
+an ordinary unbound BlendState: real GraphicsResource metadata without a GPU.
+It passes15/15, including cached object identity, bidirectional mutations, later
+loads, empty/null values, separate managers and new identity after Unload. This
+does not claim genuine Texture2D/GPU execution. `ContentTextureMetadataTests.cpp`
+tests the affected CNA texture path and preserves ordinary independent-copy
+semantics as a control.95660 strictly compiles it with zero diagnostics; four
+cases yield2PASS/2FAIL and12 failed assertions in242ms. Both sharing cases fail;
+separate managers/reload and unrecorded copies pass. Original native artifacts/
+sources were hash-verified unchanged; peak494956544/events0. No metadata fix yet.
+
+Fixture-authoring failure94947 is retained: genuine15PASS, C++ compilation refused
+abstract System::Object tags. A concrete MetadataTag implementing GetTypeName fixes
+construction only.95660 repeats genuine15PASS and records the first valid CNA
+baseline; no expectation was relaxed. Reports repair-content-metadata-before{-v2}-*,
+repair-content-ownership-concurrency-{before,candidate}-*, and
+repair-content-ownership-link-v4-* preserve all outcomes. No closure/marker change;
+93FINAL/62PENDING. Next repair metadata and revalidate the integrated candidate.
+
 ## Wider native source-guard correction and isolated continuation (2026-10-21)
 
 42874 ends1: native build succeeds in834467ms; wider focus1513 has1507PASS,
