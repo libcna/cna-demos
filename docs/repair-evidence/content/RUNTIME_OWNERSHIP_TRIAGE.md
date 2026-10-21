@@ -1,5 +1,21 @@
 # Next content-runtime batch: source audit, not repair closure
 
+## Completed external gate retains two C failures (2026-10-21)
+
+16171 completed0: external rebuild2864576ms, zero diagnostics. The exact same
+independent-C baseline binary passes the candidate on SOFTWARE125ms and
+OPENGLES3 282ms; actual sound/cube lifetime assertions remain intact. Build scope
+peak4301131776/high2903/max/OOM0, hashes unchanged.
+
+60398 completed1: all24 C content scenarios plus three original ownership/cache
+demos on both renderers give54 runs,52PASS/2FAIL. Only C content_manager fails,
+with the same two Effect lifetime assertions on each renderer. Both original011
+ownership/disposal demos now pass on both with unchanged assertion sets/counts;
+all other prior outcomes remain unchanged. Scope peak1311191040/events0 and all
+319 executable/input hashes unchanged. Reports repair-content-ownership-c-focused-*.
+No failing assertion converted into an expected failure. Full renderer/CTest/visual
+acceptance and the C effect/model contract decision remain outstanding.
+
 ## Actual C effect regression retained (2026-10-21)
 
 After external16171 linked libcna_c_api.so,53232 ran the existing pure-C

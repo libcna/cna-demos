@@ -1,5 +1,42 @@
 # ISSUE-058: queue-owned Song replay
 
+## Local repair and sanitizer delta (2026-10-21)
+
+The local MediaPlayer repair retains the old queue in a stack-owned moved
+MediaQueue until both Play overloads finish. LoadSong/PlaySong and caller-owned
+mutation paths are unchanged. The six native tests are byte-identical to the
+baseline fixture. No public API or renderer-specific change is needed.
+
+`repair-media-queue-replay-after-v3-*`: original caller AND queue inputs pass;
+all six unchanged regression cases pass with ASan/leaks/UBSan/float-cast-overflow.
+Only the expected MediaPlayer translation unit/media archive changes; all other
+frozen inputs remain identical. Library rebuild6516ms, original probe build1581ms,
+native fixture2458ms; zero compiler diagnostics, peak654491648/all memory events0.
+Native module/full and external regression are still pending; this is not closure.
+
+The first two attempts stopped at CMake's non-production SDL audit, before any
+runtime test: the new fixture's dummy-driver string needed explicit classification.
+The first attempted classification edit was not applied (shell apply_patch lookup);
+the second attempt therefore hit the same guard. Both logs are preserved.
+The corrected per-file classification uses the existing audio-native-fixture
+category with exactly one reference, matching existing MediaPlayerTests. The
+manifest generator and check pass; no test assertion or scanner rule was weakened.
+
+## Current fully instrumented baseline (2026-10-21)
+
+`repair-media-queue-replay-before-*` confirms the defect against the existing
+CNA build-asan closure (MediaPlayer, MediaQueue and Song instrumented with
+address/undefined/float-cast-overflow sanitizers; leak checking enabled).
+The unchanged historical probe compiles without diagnostics: caller exit0,
+queue exit1 with heap-use-after-free at MediaPlayer::LoadSong following
+MediaQueue::Clear. The new six-case fixture also compiles strictly: both
+caller-owned controls pass; all four queue-alias cases report the same UAF,
+including repeated and mixed collections. Each case runs in a separate process.
+All source/artifact hashes remain unchanged; peak3494117376 bytes, all cgroup
+memory events0. Dummy audio validates execution/state, not physical sound output.
+Driver exit0 means the OPEN defect was reproduced, not that product tests pass.
+The proposal below is now ready for a local repair and unchanged-oracle rerun.
+
 ## Preserved historical reproducer
 
 `MediaQueueReplayProbe.cpp` is byte-identical to the original
@@ -63,3 +100,10 @@ does not need a new public API or unconditional Song cloning. Both overloads can
 then keep their existing LoadSong/PlaySong paths and caller mutation semantics.
 Check exception cleanup and existing event tests; this is a proposed approach,
 not an implemented or validated fix.
+
+`MediaQueueReplayTests.cpp` is a prepared six-case native-style fixture, not yet
+compiled or run. It adds first/non-first queue aliases, repeated and mixed
+collection aliases, and caller-owned controls protecting names, playback state,
+duplication and existing mutation semantics. Keep the original two-process probe
+unchanged; copy the new fixture into CNA's media tests only after reproducing and
+validating it against the current baseline.

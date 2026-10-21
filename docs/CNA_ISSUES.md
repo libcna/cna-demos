@@ -911,6 +911,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-058 -- Replaying the active MediaQueue Song uses it after freeing it
 
+- **Current reproduction (2026-10-21):** fully instrumented CNA build-asan
+  reproduces heap-use-after-free in the unchanged original queue replay probe.
+  Six additional native-style cases preserve two passing caller-owned controls
+  and expose the same UAF in four queue-alias/collection cases. No repair or
+  closure yet; see [current evidence](repair-evidence/media/QUEUE_REPLAY_TRIAGE.md).
+
 - **Area/API:** `MediaPlayer::Play(Song*)`, `MediaPlayer::Queue`, and
   `MediaQueue::ActiveSong`; `modules/media/src/Xna/MediaPlayer.cpp` and `MediaQueue.cpp`.
 - **Reproduction:** a private public-API probe appends a caller-created Song to the process-wide
@@ -1176,7 +1182,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   UBSan/float-cast-overflow validation. Full native10868=10767PASS/101sameSKIP
   preserves every original057 outcome and adds exactly61PASS. A new real-C
   sound/cube lifetime control passes against the original057 library on SOFTWARE
-  and OPENGLES3; the repaired external C API/demos closure is still being rebuilt.
+  and OPENGLES3. The repaired external closure now builds with zero diagnostics;
+  the same independent-C probe passes both renderers. Focused54 runs give52PASS
+  and2FAIL: the original011 ownership/disposal reproductions now pass on both,
+  but C content_manager fails its two existing Effect lifetime assertions on each
+  renderer. Preserve these assertions; the ownership batch is not accepted yet.
   Independent C effect/model lifetime remains under review. This is not full
   renderer/CTest/visual acceptance or issue closure; no knownIssue marker changed.
   See [ownership validation](repair-evidence/content/RUNTIME_OWNERSHIP_TRIAGE.md).

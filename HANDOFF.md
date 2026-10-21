@@ -12,6 +12,37 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+LATEST058:98405 TERMINAL0, sanitizer after-v3 passes the unchanged original
+caller/queue probe and all six unchanged native cases. Incremental media build
+6516ms, original probe1581ms, fixture2458ms, zero diagnostics; peak654491648,
+all memory events0/hashes unchanged. Original two configure-audit failures retained;
+new dummy-driver fixture now has exactly one justified non-production SDL entry.
+90349 RUNNING full native regression in private GPU/network namespace, owner UID
+with all capabilities dropped, serial worker/4GiB high/6GiB max/no swap. Build
+18594ms PASS; media312/312PASS12263ms; wider focus625PASS/4SKIP6143ms. Full must
+preserve every10868 previous outcome and add exactly sixPASS. No overlapping heavy
+job or production/native test edits. Reports repair-media-queue-replay-native-*.
+Next inspect full comparison, then incremental external media/probe/renderers.
+Matrix93FINAL/62pending,058 now CONFIRMED_OPEN with candidate evidence,011 open.
+
+LATEST (2026-10-21):16171 TERMINAL0, external rebuild2864576ms/zero
+diagnostics; same independent-C binary passes SOFTWARE125ms/OPENGLES3 282ms.
+60398 TERMINAL1: focused54=52PASS/2FAIL, only c_api.content.content_manager on
+both renderers (two Effect lifetime assertions each). The original011 ownership
+and unload-disposal demos now PASS on both renderers with all assertions retained.
+All frozen inputs unchanged. External build peak4301131776/high2903/OOM0;
+focused peak1311191040/all events0. No ownership acceptance/closure yet.
+
+6576 TERMINAL0 confirms OPEN058, not a product pass: fully instrumented original
+probe caller0/queue ASan heap-use-after-free; six new regressions have two caller
+controls PASS and four queue-alias ASan UAFs, all at LoadSong after Queue.Clear.
+Strict compilation succeeded, hashes unchanged, peak3494117376/all events0.
+Reports repair-media-queue-replay-before-*. Next retain the old queue through both
+Play overloads, copy the exact six tests into CNA, then sanitizer/native regression.
+No live heavy job. CNA8d73b19c0 ownership changes remain uncommitted; demos9de99c3
+plus these notes/new fixture. C effect/model contract choice awaits owner reply.
+Older RUNNING notes below are historical. No push/merge or knownIssue removal.
+
 ACTIVE011 follow-up:53232 TERMINAL1, early existing pure-C content_manager
 diagnostic against the newly linked candidate C library. SOFTWARE and OPENGLES3
 each fail exactly2/67 checks: Effect use after Unload and after manager Destroy;
@@ -22,10 +53,14 @@ separate512MiB scope while the sole compiler continued16171; it is not a second
 heavy build or full external acceptance. Existing assertions/markers unchanged.
 Owner asked to choose preserving documented independent C effect/model lifetime
 versus explicitly unifying those C contracts with XNA/C++; no answer presumed.
-Continue16171, then actual independent-C candidate gate and prepared50-case
+Continue16171, then actual independent-C candidate gate and prepared54-case
 build-probe/repair-content-ownership-c-focused.mjs. ISSUE-058 baseline driver
 build-probe/repair-media-queue-replay-before.mjs is prepared, NOT run; use the
-existing integrated build-asan after heavy jobs finish. No new production edits.
+existing integrated build-asan after heavy jobs finish. The54 cases include all24
+C content scenarios and the original ownership/cache/unload demos on both renderers.
+MediaQueueReplayTests.cpp adds six prepared, uncompiled alias/control cases; its
+driver runs each separately so sanitizer failures cannot hide later controls.
+No new production edits.
 
 ACTIVE011:26923 TERMINAL0. Full native10868=10767PASS/101sameSKIP;
 all10807 previous057 outcomes unchanged, exactly61 addedPASS. Wider focus
