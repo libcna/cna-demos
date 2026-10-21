@@ -186,6 +186,25 @@ namespace
             spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
             spriteBatch_->Draw(*canvas_, Rectangle(208, 48, 384, 384), Color::White);
             spriteBatch_->End();
+            if (!checkedSpriteBinding_)
+            {
+                Context().Check(getGraphicsDeviceProperty().getTexturesProperty()[0] == canvas_.get(),
+                                "SpriteBatch leaves the drawn canvas in GraphicsDevice::Textures[0]");
+                const Rectangle onePixel(0, 0, 1, 1);
+                const Color replacement = Color::Black;
+                bool refused = false;
+                try
+                {
+                    canvas_->SetData(0, &onePixel, &replacement, 0, 1);
+                }
+                catch (const System::InvalidOperationException&)
+                {
+                    refused = true;
+                }
+                Context().Check(refused,
+                                "SetData after SpriteBatch requires explicitly unsetting the drawn texture");
+                checkedSpriteBinding_ = true;
+            }
             Game::Draw(gameTime);
         }
 
@@ -194,6 +213,7 @@ namespace
         std::unique_ptr<Texture2D> canvas_;
         std::minstd_rand random_;
         int strokes_ = 0;
+        bool checkedSpriteBinding_ = false;
     };
 }
 

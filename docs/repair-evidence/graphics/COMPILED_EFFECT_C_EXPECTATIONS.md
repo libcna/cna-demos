@@ -18,8 +18,8 @@ Raw logs and audit: build/linux-full/reports/repair-compiled-c-expectations-*.
 The original full-smoke observations remain unchanged; this is focused validation,
 not a new full-smoke result. ISSUE-011/082 failures are not waived.
 
-The matching CNA documentation commit is recorded by its message
-`Clarify C Effect source-program and pass-state contracts`; no CNA runtime fix
+The matching CNA documentation commit is `89cd0b202`
+(`Clarify C Effect source-program and pass-state contracts`); no CNA runtime fix
 was necessary for these two expectation corrections.
 
 ## Historical observation (2026-10-22)
