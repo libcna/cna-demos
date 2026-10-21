@@ -34,6 +34,20 @@ Reports `repair-media-reference-{framework,xact}-disassembly.log`.
 
 ## ISSUE-015
 
+Native31828 completed0: full10882=10781PASS/101unchangedSKIP; every10874 previous
+outcome retained, exactly eight newPASS. Full1228182ms, compare124ms, frozen inputs
+unchanged;peak4297228288/high943/max/OOM0. Media311PASS; focused247 cases have no
+failures. External23738 is now RUNNING. The real play_song demo now supplies a
+relative URI and adds one title-file identity check; all five old playback checks
+remain. Full external112 renderer parity and registered CTests are still pending.
+
+Native gate31828 update, 2026-10-21 06:29 UTC: build147276ms PASS, strict
+cold-title probe build1643ms and fresh-process string44ms/typed43ms both PASS.
+Media311PASS11821ms; broader focused gate PASS2064ms. Full native regression is
+still running; no full-suite pass or final memory/hash audit claimed yet.
+The default-title probe is committed in dc12e06. Older preparation/run-state
+notes below are chronological evidence, not the current state.
+
 Focused candidate23666 completed0: existing cna_shared rebuild103408ms, then the
 unchanged eight-case baseline fixture8/8PASS (build2858ms/run43ms/XML22ms), zero
 diagnostics. Frozen sources intact; expected library rebuild deltas recorded;
@@ -82,6 +96,15 @@ finding; the dedicated current native decoy reproduction and actual media refere
 execution remain to be performed. No audio/playback/hardware pass is claimed.
 
 ## ISSUE-028: historical expectation needs correction evidence
+
+Prepared follow-up `WaveBankLazyPathProbe.cpp` (2026-10-21), NOT compiled/run:
+four valid streaming-bank constructions, then first access to an entry through
+the existing native WaveBankTestAccess seam. It separates unchanged cwd, absolute
+path plus cwd change, relative path plus empty cwd, and relative path plus an
+invalid same-name decoy. Every construction and lazy decode is asserted (eight
+checks); no playback. Driver `repair-wave-bank-lazy-path-before.mjs` requires the
+completed015 native gate and records the suspected two failures explicitly.
+This is preparation, not evidence that the lazy-path defect is reproduced yet.
 
 Both genuine Xact WaveBank constructors first call Path.GetFullPath on the supplied
 filename, then the same managed CheckWaveBankHeader. The streaming overload then

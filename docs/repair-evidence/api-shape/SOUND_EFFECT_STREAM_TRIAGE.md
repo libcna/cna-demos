@@ -1,5 +1,33 @@
 # ISSUE-029: stream shape and ownership constraints
 
+## Prepared native parity fixture (2026-10-21)
+
+`SoundEffectWaveChunksOracle.cs` additionally prepares71 managed reference checks
+for PCM8/16 mono/stereo, rate/alignment limits, partial frames, odd unknown chunks,
+RIFF size, malformed trailing chunks, SMPL inclusive endpoints, WSMP priority and
+millisecond-rounded duration. It is NOT compiled/run yet. Its separate driver is
+`build-probe/repair-sound-effect-wave-chunks-reference.mjs`; it pins the actual
+genuine Framework hash/MVID. Existing25-control evidence is not overwritten.
+
+`SoundEffectXnaStreamTests.cpp` prepares nine native cases: three successful
+whole/short-read inputs and six exact failure families, with source closure,
+duration and the eight-frame default loop asserted. It has NOT been compiled or
+run. It deliberately calls the missing System::IO::Stream overload, never an
+adapter/fallback to the existing std::istream extension. Successful controls will
+use the existing dummy-audio test environment, not claim physical output.
+
+The native API should follow the existing Texture2D reference-shaped Stream&
+convention. The genuine null-argument control remains reference evidence; a C++
+reference has no corresponding valid null input. Do not add an unnecessary public
+pointer overload just to manufacture one.
+
+Implementation trap confirmed by source inspection: Sharp Runtime BinaryReader's
+destructor closes its stream by default. A stack reader in the XNA WAV parser must
+use leaveOpen=true, then explicitly close the source only after parsing succeeds;
+otherwise exception unwinding would violate the measured failure ownership.
+Reuse BinaryReader's short-read handling rather than duplicating System.IO in CNA.
+Do not change the lenient pipeline WAV reader or the existing std::istream path.
+
 ## Genuine execution (2026-10-21)
 
 95566 completed0: all25 oracle checks pass against the installed XNA4 Framework

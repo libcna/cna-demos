@@ -12,6 +12,46 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+Preparation during23738 (no second build):038 genuine24-check managed disposal
+oracle plus five native cases and DYNAMIC_DISPOSAL_TRIAGE.md now exist, UNRUN.
+The installed XNA IL also guards GetSampleDuration/GetSampleSizeInBytes, whereas
+existing CNA tests explicitly follow FNA's contrary disposal behavior. Verify
+before fixing; retain cleanup coverage when correcting the old pending-count test.
+029 extended71-control WAV chunk oracle and nine native stream cases remain UNRUN.
+015 CTest driver is prepared, requiring completed23738 parity before it starts.
+No unrelated source edits have been made during the external build.
+
+LATEST 2026-10-21 06:46 UTC:31828 TERMINAL0. Full10882=10781PASS/101sameSKIP;
+all10874 predecessor outcomes unchanged plus exactly eightPASS. Full1228182ms,
+compare124ms, frozen inputs unchanged;peak4297228288/high943/max/OOM0. Both
+cold-title overloads PASS, media311PASS and focused247 cases had no failures.
+23738 RUNNING `cna-repair-song-uri-path-external.scope`: incremental linux-full
+build, unchanged eight-case fixture/cold-title probes against that exact external
+library, then112 audio/media/C runs on SOFTWARE/OPENGLES3. Only play_song changes:
+relative input replaces the manual absolute-path workaround, one file-identity
+check is added, all five playback checks retained. No closure yet; freeze CNA and
+demo source until audit ends. Serial/sharedcache/private GPU/4GiB high/6GiB max/
+no swap. Next registered CTests, isolated015 commit/status, then prepared028 lazy
+path baseline and029 WAV chunk oracle serially. Do not stage pending011 hunks.
+
+Prepared during31828 full regression (no extra compiler/test process): external015
+driver `build-probe/repair-song-uri-path-external.mjs`, selective015-only cached
+patch `repair-song-uri-path-only.patch` (git apply --cached --check PASS, not staged),
+028 lazy-path eight-check probe/driver,029 nine-case native Stream fixture. All new
+probes remain UNRUN; see their triage notes. The attempted sandbox ctest -N discovery
+could not write CNA's generated test list/LastTest.log (read-only filesystem); no
+registered CTest pass claimed. Run actual focused CTest with proper permissions,
+private display and serial memory scope after the current full suite finishes.
+
+RESUME 2026-10-21 06:29 UTC:31828 is still running the FULL native suite;
+do not start another heavy job. Build147276ms PASS; strict cold-title probe
+build1643ms/string44ms/typed43ms PASS, media311PASS11821ms, focused gate2064ms
+PASS. Full comparison and final memory/hash audit remain pending. Cold-title
+source is committed in dc12e06 (the older prepared/not-run statements below are
+historical). CNA remains a9d74c023 with separate011 and015 uncommitted hunks.
+Next: finish full10874-to10882 parity, then external relative-path demo and
+SOFTWARE/OPENGLES3 regression. No015 closure or additional push/merge.
+
 LATEST015:23666 TERMINAL0. Existing native cna_shared rebuild103408ms/zero
 diagnostics; unchanged original eight-case fixture8PASS (build2858/run43/audit22ms).
 Hashes intact,peak1353715712/events0.31828 RUNNING native rebuild plus fresh-process

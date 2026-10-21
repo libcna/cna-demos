@@ -1646,6 +1646,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-038 -- Dynamic audio getters ignore disposal
 
+- **Repair triage (2026-10-21; still open):** the currently installed genuine XNA
+  IL confirms the two historical guards and the same disposal-before-validation
+  rule for GetSampleDuration/GetSampleSizeInBytes. Prepared24-check managed and
+  five-case native witnesses are not yet executed. Existing FNA-based native tests
+  do not override the XNA contract. See [triage](repair-evidence/media/DYNAMIC_DISPOSAL_TRIAGE.md).
+
 - **Area:** `DynamicSoundEffectInstance::getPendingBufferCountProperty` and
   `getIsLoopedProperty`, `modules/audio/src/Xna/DynamicSoundEffectInstance.cpp`.
 - **Demo:** `audio.dynamic_sound_effect_instance.streaming` (marked `knownIssue`).
