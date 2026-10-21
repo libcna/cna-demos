@@ -12,6 +12,28 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**ISSUE-003 candidate IN VALIDATION:** tool78015, scope
+`cna-repair-sprite-binding-candidate`; one external incremental build worker,
+6GiB/no swap/private GPU/shared cache. Driver `build-probe/repair-sprite-binding-candidate.mjs`
+freezes source and recompiles all16 unchanged witnesses against the changed ABI,
+then runs four renderers. No accepted result yet. CNA candidate adds lifetime-safe
+public wrapper identity and stock/custom pass binding seams; native witness copies
+are byte-identical. Preserve mixed011 Texture2D hunks and all082 work. Next poll78015;
+then validate enabled compiled effects, exception/retry timing, lifetime sanitizer,
+native and external regressions. Full CNA candidate file list is in its repair
+handoff. No003 closure/marker change/product commit/push/merge.
+Additional untracked `docs/repair-evidence/graphics/SpriteCompiledBindingLifetimeTests.cpp`
+contains four UNCOMPILED/UNRUN supplemental witnesses, not part of78015's frozen
+inputs. Source analysis flags compiled End exception/retry timing; obtain actual
+enabled compiled-runtime evidence before correction. Reuse existing shared
+FNA3D dependency (`/home/robertvokac/deps/FNA3D`) if enabling a configuration.
+Last host check: scope active/running, current917716992/peak970432512 bytes,
+6GiB hard cap. No second heavy job or OOM. Do not edit frozen production inputs.
+After78015 terminates, first apply `build-probe/repair-sprite-binding-fna3d-name.patch`:
+static review found the new FNA3D binding parameter collides with its existing local
+vertex binding. Prepared identifier-only correction is UNAPPLIED to preserve live
+input hashes. FNA3D is not built by this external configuration; no build claim.
+
 **ISSUE-003 supplemental evidence recovered:** CNA remains `3dcf72f35`, demos
 started at `f42b305`; inherited011/082 changes preserved. Lifetime/stock-pass
 witnesses: sixFAIL/onePASS on each SW/GLES/GL33/SDL_GPU, original six-case source

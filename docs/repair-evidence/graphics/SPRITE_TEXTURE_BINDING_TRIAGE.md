@@ -2,6 +2,38 @@
 
 ## Current evidence boundary (2026-10-21)
 
+### Candidate now in progress (not accepted)
+
+Demos evidence commit `82ee978` preserves the following baselines. A subsequent
+uncommitted CNA candidate adds `SpriteTextureBinding`, a lazy per-Texture2D
+movable/invalidatable public identity, common stock-effect publication and narrow
+binding hooks in SOFTWARE/EasyGL/SDL_GPU/FNA3D/D3D9/WebGPU. Renderer-held runs flush
+before changing public identity; effect paths publish after Apply. Native copies
+of the original6+7+3 witnesses are byte-identical. Inherited011 ownership hunks
+and pending082 event changes are not part of this candidate.
+
+First validation is live as tool78015, scope `cna-repair-sprite-binding-candidate`,
+driver `build-probe/repair-sprite-binding-candidate.mjs`. Its source manifest and
+progress log are `build/linux-full/reports/repair-sprite-binding-candidate-*`.
+It uses the existing external tree, one compiler, shared cache and a private GPU
+display, MemoryHigh4GiB/MemoryMax6GiB/no swap. Texture2D/interface layout changes
+require rebuilding consumers and the probes; do not run the old probe executables
+against the changed ABI. No focused result is claimed before the audit completes.
+
+`SpriteCompiledBindingLifetimeTests.cpp` adds four **UNCOMPILED/UNRUN** witnesses
+outside that frozen input set: deferred failure/retry, distinct copied-wrapper
+runs, destroyed wrappers and moved wrappers. The copy test describes CNA's C++
+extension, not a claim of XNA value-copy textures. Read-only analysis identifies
+a further risk: compiled flush exceptions originating inside renderer End enter
+SpriteBatch's renderer-End recovery branch, whereas genuine XNA End clears its
+Begin pair only after Flush succeeds. Establish actual enabled compiled-runtime
+evidence before deciding the correction; do not weaken the repeated-End assertion.
+An enabled configuration is still required. Existing `cna/cmake-build-multi`
+already references shared `/home/robertvokac/deps/FNA3D`; reuse that dependency if
+enabling SOFTWARE/EasyGL compiled support, never clone another copy. Do not
+reconfigure or launch a second heavy job while78015 is live. Native regression,
+all external deltas, lifetime sanitizers and unbuilt renderer paths remain pending.
+
 Supplementary baseline collected after continuation (CNA `3dcf72f35`, demos
 `f42b305`, inherited011/082 work unchanged):
 
