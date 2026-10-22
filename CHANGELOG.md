@@ -6,6 +6,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Closed findings034/035 against CNA `d650554a8`: stock scalar getters now reject
+  incompatible shapes and Bones exposes coherent72 element views. Genuine XNA41
+  controls justify the raw4x3/M44 demo correction, with two added affine checks.
+  Native regressions, six renderer identities, sanitizers and exact visuals pass;
+  five closure CTests pass. Separate082 failures remain recorded, not suppressed.
 - Closed finding015 against CNA `9639707991`: relative Song URI paths now select
   the title file rather than cwd, including cold initialization. Eight unchanged
   reproductions pass in native/external builds; full native regression retains all

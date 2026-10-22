@@ -12,6 +12,72 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**2026-10-22 ISSUE-034/035 closed against CNA d650554a89b967cebca5af6b40917b9ded8294c8.**
+Native27/four-renderer original33PASS, graphics2977PASS/90sameSKIP, selected
+aggregate1107PASS/21sameSKIP; compiled-on SDL_GPU/FNA3D/WEBGPU each127PASS, ASan/
+UBSan27PASS. External132 exact prior parity retains eight separate082 failures;
+148stock/C runs142PASS/6declaredSKIP,8DDS/C PASS, six zero-difference visuals;
+all ten screenshots inspected. Metadata3898 completed0:719 catalog entries change
+only034/035 restriction/marker, four unmarked33-check runs and five enabled CTests
+PASS/noSKIP; no drift/events, peak1862242304. Genuine XNA41PASS proves the raw4x3
+M44 correction; original component comparisons retained, two affine checks added.
+Both permanent IDs now Resolved, all historical evidence retained. See
+STOCK_PARAMETER_TRIAGE.md. No push/merge; no heavy job live. Commit this evidence,
+then run prepared repair-device-context-before.mjs for086/112 and continue the
+campaign. Inherited CNA011/082 dirt remains untouched; full final gates still due.
+
+**2026-10-22 resumed: external/sanitizer accepted; multi25845 is the sole live job.**
+Full graphics2976PASS/90 unchangedSKIP, selected aggregate effects1106PASS/21
+unchangedSKIP, focused26PASS; exact prior outcomes preserved. Initial native build
+stopped only for six reviewed pre-existing warnings (sources match HEAD), then
+tests reused that successful build. Genuine XNA v5:41PASS, including nonfinite
+float broadcasts. Added27th native/evidence witness; sanitizer36243 reproduced
+unused NaN-to-int conversion (exit1). Narrow fix now passes27 native/33 demo checks
+on all four renderers (99893), no drift/OOM. Native40268 completed27focusPASS,
+graphics2977PASS/90sameSKIP, selected1107PASS/21sameSKIP, exact old parity and
+zero incremental build diagnostics. External13160 retained132 exact prior outcomes
+(eight082 failures remain),142/148stock PASS with six declared skips,8DDS/C PASS,
+six exact visuals PASS/all ten screenshots inspected. Sanitizer84611 all27PASS,
+no findings/drift/OOM. Collect compiled-renderer25845 (116 cases per renderer),
+then commit034/035 and run the prepared exact metadata-closure driver;
+neither issue is closed. The first focus2325 stopped before build on stale archive
+hashes; resumed using the completed sanitizer snapshot, no duplicate build.
+See CNA repair handoff and STOCK_PARAMETER_TRIAGE.md. No push; inherited dirt kept.
+
+**2026-10-22 latest:26 native witnesses/33 demo checks PASS on four renderers.**
+Session86220 terminal0, no drift/OOM, peak4037730304. Genuine XNA v4 confirms38
+checks including scalar broadcasts not touching adjacent bones. The new bounds
+witness first fails on all four renderers; corrected register indexing and per-view
+write bounds now pass. All intermediate failures retained in STOCK_PARAMETER_TRIAGE.md.
+Sole running process1357/scope cna-repair-stock-parameters-native: full native graphics
+and selected aggregate effects with exact outcome comparison. Collect, then run
+prepared sanitizer/external sequentially. No034/035 closure/commit yet; knownIssue
+retained. All candidate changes are uncommitted, separate from inherited011/082 dirt.
+
+**2026-10-22 latest: collect88163 before further heavy work.**
+034/035 candidate scope cna-repair-stock-parameters-after-v2: consumer build and
+four-renderer25-test/33-check validation.69336 ended1 on four disproved raw-M44 demo
+assertions after native SOFTWARE22PASS. Extended genuine XNA refs30250/65073 each
+36PASS establish transpose/row-first numeric-array semantics; native25641 then
+exposes23PASS/1FAIL on every renderer before the candidate mapping correction.
+Demo correction preserves all raw components and adds two complete affine getter
+checks, unchanged tolerance; knownIssue remains until broad validation. Read
+STOCK_PARAMETER_TRIAGE.md and CNA repair handoff. Native/sanitizer/external drivers
+are prepared but unrun. Review matrix-element scalar broadcast before final freeze.
+
+**2026-10-22 ISSUE-034/035 candidate, validation running.**
+CNA3253be833 / demos03f45c834. Genuine XNA36PASS under Wine/private GPU confirms
+scalar guards and coherent72 Bones views,4x3 metadata and rawM44=0 (public
+GetBoneTransforms restores1). New22 native witnesses reproduce16FAIL/6PASS on each
+SOFTWARE/OPENGLES3/OPENGL33/SDL_GPU against unchanged CNA; no drift/OOM. An uncommitted
+candidate uses shared bounded array storage and explicit stock scalar guards.
+Sole live process69336/scope cna-repair-stock-parameters-after: collect before
+another heavy job. Original demo incorrectly expects rawM44=1; preserve its failed
+candidate result and correct with reference evidence, preserving full-transform
+GetBoneTransforms checks. Extended genuine reference-v2 driver is prepared, not run.
+See graphics/STOCK_PARAMETER_TRIAGE.md and CNA campaign handoff for exact next steps.
+No IDs closed;156 total/108 dispositions/48 null. Inherited011/082 dirt untouched.
+
 **2026-10-22 current next-batch checkpoint:034/035 confirmed open.**
 CNA bda0cf902 / demos bdd0c05;054 product b6ab302cc is closed and validated below.
 Unchanged parameter_values baseline80776 completed:31 checks=29PASS/2FAIL on

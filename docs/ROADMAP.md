@@ -1,9 +1,12 @@
 # Roadmap
 
 The completed coverage roadmap below remains historical. The active CNA repair campaign is
-tracked in `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and its all-155-issue matrix. Baseline capture is
+tracked in `../cna/CNA_DEMOS_REPAIR_HANDOFF.md` and its all-156-issue matrix. Baseline capture is
 complete; ISSUE-116 is closed as an evidence-backed demo-oracle correction. Documentation and
 subsystem root-cause repairs continue without changing this project's completed coverage scope.
+The034/035 stock-parameter batch is closed against CNA `d650554a8`;086/112 device-context
+reproductions are next. Generated COVERAGE.md retains the historical full baseline until the
+final full regression refresh; focused repair runs are not substituted for whole-suite coverage.
 
 Coverage work is organised in **phases** of concrete, CNA-named areas. Take one area at a time,
 finish it (demos built, run, validated, coverage regenerated, HANDOFF updated), then move on.

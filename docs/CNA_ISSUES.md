@@ -1791,7 +1791,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Area:** graphics -- `EffectParameter::GetValueSingle` in `EffectParameter.cpp` calls
   `RequireCompiledScalarGetterShape` only for compiled storage. Stock effects use the separate
   float-vector storage path, which returns its first component regardless of the reflected shape.
-- **Demo:** `graphics.effect.parameter_values` (expected failure; also exposes ISSUE-035).
+- **Demo:** `graphics.effect.parameter_values` (historically expected failure; also exposes ISSUE-035).
 - **Reproduction:** take `BasicEffect.Parameters["DiffuseColor"]`, set
   `Vector4(0.2f, 0.4f, 0.6f, 0.8f)`, then call `GetValueSingle()`.
 - **Observed:** returns 0.2 on SOFTWARE and OPENGLES3 instead of rejecting the vector-to-scalar
@@ -1801,9 +1801,18 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `docs/software-easygl-parity-ledger.md` SOFTWARE-270 records the recovered Microsoft IL basis.
   The stock path should expose the same public shape contract. Genuine XNA was not run here.
 - **Environment:** CNA `2b15506a4`, GCC 14.2, Linux, SOFTWARE and OPENGLES3/private Xvfb.
-- **Status:** confirmed compatibility gap, open; not reported upstream. The stock/standalone
+- **Historical status:** confirmed compatibility gap, open; not reported upstream. The stock/standalone
   storage leniency is deliberate for C API compatibility, so an upstream fix needs to distinguish
   reflected stock parameters from freely constructed standalone parameters.
+- **Status:** Resolved by CNA `d650554a89b967cebca5af6b40917b9ded8294c8` (2026-10-22).
+  Stock construction now applies the scalar-shape guard while standalone extension semantics
+  remain unchanged. Genuine XNA under Wine/private GPU confirms30 getter refusals across five
+  stock classes (41 total reference checks); this is not native Windows hardware validation.
+  New native27 cases, full graphics2977PASS/90 unchangedSKIP and selected aggregate
+  effects1107PASS/21 unchangedSKIP preserve previous outcomes. Compiled-on SDL_GPU/FNA3D/WEBGPU
+  each127PASS; ASan/UBSan/float-cast/leaks27PASS. Original demo33PASS on four renderers,
+  five enabled closure CTests PASS, exact metadata removal only. Historical assertions remain.
+  See [stock parameter evidence](repair-evidence/graphics/STOCK_PARAMETER_TRIAGE.md).
 
 ---
 
@@ -1811,7 +1820,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 - **Area:** graphics -- `SkinnedEffect::CacheEffectParameters` constructs `Bones` with
   `AddParam(params, "Bones", MaxBones, 4, Matrix, Single)` and never adds array elements.
-- **Demo:** `graphics.effect.parameter_values` (its primary known-issue marker is ISSUE-034).
+- **Demo:** `graphics.effect.parameter_values` (its historical primary known-issue marker was ISSUE-034).
 - **Reproduction:** construct a SkinnedEffect and inspect its `Bones` parameter's Elements,
   RowCount and ColumnCount; write two matrices and read them with GetValueMatrixArray.
 - **Observed:** zero elements, 72 rows and four columns. The value-array round trip works, but a
@@ -1823,8 +1832,22 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   array cardinality, prints the dimensions, and does not impose an unmeasured genuine-XNA
   row/column convention. Genuine XNA reflection was not executed in this session.
 - **Environment:** CNA `2b15506a4`, GCC 14.2, Linux, SOFTWARE and OPENGLES3/private Xvfb.
-- **Status:** confirmed stock-effect reflection defect, open (value-array access still works);
+- **Historical status:** confirmed stock-effect reflection defect, open (value-array access still works);
   not reported upstream.
+- **Status:** Resolved by CNA `d650554a89b967cebca5af6b40917b9ded8294c8` (2026-10-22).
+  Bones now has72 bounded shared element views, coherent parent/child writes, retained capacity
+  and independent clones. Actual XNA measures4x3 metadata (unlike FNA's3x4 register reflection),
+  raw fourth-column zero and row-first numeric arrays. `GetBoneTransforms` restores affine M44.
+  The incidental demo expectation that raw Bones retains M44=1 was therefore corrected from
+  executed reference evidence; all component comparisons keep the same tolerance and two new
+  complete affine-getter assertions strengthen the demo (31 to33 checks).
+  An added nonfinite-value witness also reproduced an unused NaN-to-int conversion in shared
+  scalar storage; the narrow repair preserves floating NaN/infinity without that conversion.
+  Validation is shared with034 above: external148 stock/C runs142PASS/6 declared shadow-path
+  skips, eight DDS/C controls PASS, six exact visual references and all ten screenshots reviewed.
+  The separate132-case regression preserves eight existing082 failures explicitly; it is not a
+  globally green campaign. Both historical IDs/descriptions remain in this inventory.
+  See [reference, red witnesses and repair evidence](repair-evidence/graphics/STOCK_PARAMETER_TRIAGE.md).
 
 ---
 

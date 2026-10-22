@@ -238,14 +238,22 @@ namespace
             bones->SetValue(transforms);
             const auto values = bones->GetValueMatrixArray(2);
             const auto transposed = bones->GetValueMatrixTransposeArray(2);
+            const auto boneTransforms = skinned.GetBoneTransforms(2);
             ctx.Check(values.size() == 2 && transposed.size() == 2, "both array getters return two matrices");
             if (values.size() == 2 && transposed.size() == 2)
                 for (std::size_t i = 0; i < transforms.size(); ++i)
                 {
-                    ctx.CheckNear(CnaDemos::MaxDifference(values[i], transforms[i]), 0.0, 1e-6,
-                                  "each bone matrix round trips independently");
-                    ctx.CheckNear(CnaDemos::MaxDifference(transposed[i], Matrix::Transpose(transforms[i])),
+                    // Genuine XNA exposes a 4x3 raw matrix: its fourth column is zero.
+                    // GetBoneTransforms, not the parameter getter, restores affine M44.
+                    Matrix rawExpected = transforms[i];
+                    rawExpected.M14 = rawExpected.M24 = rawExpected.M34 = rawExpected.M44 = 0;
+                    ctx.CheckNear(CnaDemos::MaxDifference(values[i], rawExpected), 0.0, 1e-6,
+                                  "each raw bone matrix preserves its 4x3 components");
+                    ctx.CheckNear(CnaDemos::MaxDifference(transposed[i], Matrix::Transpose(rawExpected)),
                                   0.0, 1e-6, "each bone transpose matches");
+                    ctx.Check(boneTransforms.size() == 2 &&
+                                  CnaDemos::MaxDifference(boneTransforms[i], transforms[i]) < 1e-6,
+                              "GetBoneTransforms restores each complete affine transform");
                 }
 
             // Keep incompatible behavior visible: these expectations must not be changed to
@@ -256,8 +264,8 @@ namespace
             ctx.Check(rejected, "a Vector4 parameter rejects a scalar getter (ISSUE-034)");
             ctx.Print("Bones: {} elements, {} rows, {} columns", bones->getElementsProperty().getCountProperty(),
                       bones->getRowCountProperty(), bones->getColumnCountProperty());
-            // Do not infer reflected rows/columns from the HLSL spelling: the stored FNA
-            // fixture reports 3x4 for the shader's float4x3 declaration. The array is unambiguous.
+            // The genuine XNA oracle records 4x3 (FNA's register reflection reports 3x4).
+            // See docs/repair-evidence/graphics/STOCK_PARAMETER_TRIAGE.md.
             ctx.Check(bones->getElementsProperty().getCountProperty() == SkinnedEffect::MaxBones,
                       "Bones reflects 72 individual matrix elements (ISSUE-035)");
         }
@@ -300,6 +308,4 @@ CNA_DEMOS_GAME(ParameterValues, {
     .tags = {"effect", "parameters", "reflection", "matrix"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 1,
-    .restrictions = "CNA-DEMOS-ISSUE-034: stock Vector4 accepts scalar reads; ISSUE-035: Bones has no reflected array elements.",
-    .knownIssue = "CNA-DEMOS-ISSUE-034",
 })
