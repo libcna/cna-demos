@@ -40,6 +40,4 @@ CNA_DEMOS_CONSOLE(RayFrustumIntersection, {
                    "entry parameter or a miss.",
     .apis = {"Ray::Intersects", "BoundingFrustum::BoundingFrustum"},
     .tags = {"ray", "frustum", "picking", "collision"},
-    .restrictions = "CNA-DEMOS-ISSUE-131 records the missing outside-frustum entry calculation.",
-    .knownIssue = "CNA-DEMOS-ISSUE-131",
 })

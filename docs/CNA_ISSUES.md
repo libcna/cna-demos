@@ -84,33 +84,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `/tmp/checkpoint-1104-runtime-public-headers/*`. Open; no CNA source was modified.
 
 
-### CNA-DEMOS-ISSUE-131 -- BoundingFrustum ray intersection omits outside entry and boundary start
-
-- **Area/API:** `Microsoft::Xna::Framework::Ray::Intersects(BoundingFrustum)` and the delegated
-  `BoundingFrustum::Intersects(Ray)` implementation.
-- **Demo/reproduction:** run `math.ray.frustum_intersection` and
-  `math.bounding_frustum.intersections`. Cast +Z rays from `(0,0,-3)`, `(3,0,-3)`, the interior
-  point `(0,0,0.5)` and boundary point `(0,0,0)` through an identity-matrix frustum, covering both
-  Ray-to-frustum and frustum-to-Ray value/output calls.
-- **Observed:** CNA returns no value for the entering ray because it rejects every outside origin
-  without testing where the ray enters. It throws `System::NotImplementedException` for the
-  boundary start because point containment classifies it as Intersects. Interior zero and the
-  distant miss pass. Each workflow retains one grouped expected failure, among three and six
-  controls respectively.
-- **Expected/reference:** genuine Windows XNA 4.0 returns entry parameter3, no value, parameter0
-  for the interior start and parameter0 for the boundary start; the frustum value/output forms
-  agree.
-- **Cause/suggested repair:** the delegated frustum method only classifies the ray origin and its
-  remaining intersection branch is explicitly unimplemented. Clip the ray parameter interval
-  against all six frustum planes, returning the first nonnegative entry when the interval survives.
-- **Evidence/status:** open against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
-  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1068-ray-members/*` and
-  `/tmp/checkpoint-1071-bounding-frustum-members/*`. The clean warning-free three-job focused
-  builds, exact SOFTWARE CTests, metadata through708/0 and self-tests5/5 plus4/4 pass; ten runs per
-  demo and renderer label reproduce only the documented assertions with empty stderr. No CNA
-  source was modified and no upstream message was sent.
-
 ### CNA-DEMOS-ISSUE-114 -- Releasing a nonterminal SoundEffect loop drops its authored tail
 
 - **Area/API:** `Microsoft::Xna::Framework::Audio::SoundEffectInstance::Stop(false)`, authored
@@ -2042,6 +2015,43 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-131 -- BoundingFrustum ray intersection omits outside entry and boundary start
+
+- **Status: Resolved (2026-10-22).** CNA `9a5e5d896150bf5094de57be22e25ad6f35e2242`
+  implements six-plane ray clipping with the verified XNA containment/parallel thresholds and
+  non-unit-direction semantics. The owner explicitly released the former implementation
+  reservation. Genuine XNA passes72/72 checks; native math969PASS/two unchanged fixture skips;
+  strict C17 geometry smoke, both19-demo C math sweeps and12 focused CTests pass.
+  Both95-demo math sweeps now pass on SOFTWARE and OPENGLES3; exactly the two131 failures
+  become passes, with all original checks retained and no unrelated delta. The corresponding
+  knownIssue/restriction markers were removed only after successful reproduction validation.
+  See [the repair checkpoint](repair-evidence/math/FRUSTUM_RAY_CHECKPOINT.md).
+  Historical observations below are retained.
+- **Area/API:** `Microsoft::Xna::Framework::Ray::Intersects(BoundingFrustum)` and the delegated
+  `BoundingFrustum::Intersects(Ray)` implementation.
+- **Demo/reproduction:** run `math.ray.frustum_intersection` and
+  `math.bounding_frustum.intersections`. Cast +Z rays from `(0,0,-3)`, `(3,0,-3)`, the interior
+  point `(0,0,0.5)` and boundary point `(0,0,0)` through an identity-matrix frustum, covering both
+  Ray-to-frustum and frustum-to-Ray value/output calls.
+- **Observed:** CNA returns no value for the entering ray because it rejects every outside origin
+  without testing where the ray enters. It throws `System::NotImplementedException` for the
+  boundary start because point containment classifies it as Intersects. Interior zero and the
+  distant miss pass. Each workflow retains one grouped expected failure, among three and six
+  controls respectively.
+- **Expected/reference:** genuine Windows XNA 4.0 returns entry parameter3, no value, parameter0
+  for the interior start and parameter0 for the boundary start; the frustum value/output forms
+  agree.
+- **Cause/suggested repair:** the delegated frustum method only classifies the ray origin and its
+  remaining intersection branch is explicitly unimplemented. Clip the ray parameter interval
+  against all six frustum planes, returning the first nonnegative entry when the interval survives.
+- **Original evidence/status:** open against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37` on Linux; genuine XNA ran from the installed Windows
+  XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1068-ray-members/*` and
+  `/tmp/checkpoint-1071-bounding-frustum-members/*`. The clean warning-free three-job focused
+  builds, exact SOFTWARE CTests, metadata through708/0 and self-tests5/5 plus4/4 pass; ten runs per
+  demo and renderer label reproduce only the documented assertions with empty stderr. No CNA
+  source was modified and no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-054 -- Cube DDS loading ignores short reads and masks offset truncation
 

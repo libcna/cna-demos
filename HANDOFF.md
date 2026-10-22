@@ -1,5 +1,12 @@
 # HANDOFF
 
+**Latest completed repair: ISSUE-131 (2026-10-22).** CNA `9a5e5d896` fixes
+frustum/ray clipping; both95-demo math sweeps, C API geometry and12 focused CTests
+pass. [Exact checkpoint and next task](docs/repair-evidence/math/FRUSTUM_RAY_CHECKPOINT.md).
+This supersedes the older live-task descriptions below; no job is active and nothing
+was pushed/merged. Preserve inherited ownership/ISSUE113 work. Next: shared C/C++
+runtime duplication through the C API, including installation obligations.
+
 **Read this first in every new session.** It is the single place that says what state the
 project is in and what to do next. Update it after every batch. Last updated: 2026-10-22.
 

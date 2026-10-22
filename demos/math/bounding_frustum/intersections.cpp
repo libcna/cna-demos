@@ -121,6 +121,4 @@ CNA_DEMOS_CONSOLE(BoundingFrustumIntersections, {
                    "value/output paths, including outside entry and boundary-start ray behavior.",
     .apis = {"BoundingFrustum::Intersects"},
     .tags = {"frustum", "intersection", "bounding-volume", "ray"},
-    .restrictions = "CNA-DEMOS-ISSUE-131 records incomplete outside-entry and boundary-start ray intersection.",
-    .knownIssue = "CNA-DEMOS-ISSUE-131",
 })
