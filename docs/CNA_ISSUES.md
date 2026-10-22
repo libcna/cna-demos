@@ -1802,6 +1802,16 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-033 -- a gamer who joins a System Link game in progress sees the session in Lobby
 
+- **Resolved (2026-10-22), FIXED_VALIDATED:** CNA `04fb4978ae6d3304442c3899bf7a3746f3d77d85`
+  (shared root cause with MUSEUM-NET-002), revalidated at `28145a201`.
+  The welcome carries the session state; the joiner applies Playing and raises GameStarted without
+  duplicating an unchanged transition. All 547 native network tests pass, including permanent
+  welcome-state and two-process regressions. The original demo's Playing assertion passes on
+  SOFTWARE and OPENGLES3. Its separate ISSUE-032 refusal assertion still fails, so the demo's
+  knownIssue marker remains unchanged. See [validation evidence](repair-evidence/net/JOIN_IN_PROGRESS.md).
+  Linux isolated System Link coverage only; no external service or other platform claim.
+  Historical evidence follows.
+
 - **Area:** net, System Link (`ENetBackend`). The host's `ServerWelcomeMessage` carries the roster and
   the session properties but not the session state, and the state is broadcast only when it changes
   (StartGame/EndGame). A joiner admitted while the host is Playing (`AllowJoinInProgress == true`)

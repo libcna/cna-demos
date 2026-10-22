@@ -331,7 +331,8 @@ namespace
             if (Clock::now() - joinedAt_ > std::chrono::milliseconds(500))
             {
                 report_.Check(session_->getAllGamersProperty().getCountProperty() == 2, "both gamers are in the game");
-                // (CNA-DEMOS-ISSUE-033: the late joiner's session stays in Lobby.)
+                // Regression for CNA-DEMOS-ISSUE-033, repaired in CNA 04fb4978a:
+                // the welcome must bring a late joiner into the host's Playing state.
                 report_.Log(std::string("the joiner's session: ") +
                             (session_->getSessionStateProperty() == NetworkSessionState::Playing ? "Playing" : "Lobby"));
                 report_.Check(session_->getSessionStateProperty() == NetworkSessionState::Playing,

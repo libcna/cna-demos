@@ -18,7 +18,7 @@ CNA_DEMOS_STANDALONE({
     .restrictions = "Standalone: a process holds one NetworkSession, so the joiner is a second process (this program "
                     "started again with --joiner); the two signal each step through files in a temporary directory. "
                     "Discovery uses UDP on the local network; a firewall that blocks it makes the demo fail. Expected "
-                    "to fail: CNA-DEMOS-ISSUE-032 (the refusal reads SessionNotFound) and CNA-DEMOS-ISSUE-033 (the "
-                    "late joiner's session stays in Lobby).",
+                    "to fail: CNA-DEMOS-ISSUE-032 (the refusal reads SessionNotFound). The retained late-join "
+                    "Playing assertion protects resolved CNA-DEMOS-ISSUE-033.",
     .knownIssue = "CNA-DEMOS-ISSUE-032",
 })
