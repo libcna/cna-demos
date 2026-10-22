@@ -1958,7 +1958,30 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 
 
+
+## Resolved
+
 ### CNA-DEMOS-ISSUE-054 -- Cube DDS loading ignores short reads and masks offset truncation
+
+- **Resolved (2026-10-22), FIXED_VALIDATED:** CNA
+  `b6ab302cc06b028dedfc451838e97cc31bd0599a` uses Runtime BinaryReader to
+  accumulate short reads from the current position, keeps the caller stream open,
+  and passes only actual bytes to the unchanged DDS decoder.
+- **Regression protection:**14 native cases cover complete/prefixed/chunked streams,
+  truthful and early EOF, exceptions and ownership. All14 PASS on SOFTWARE,
+  OPENGLES3, OPENGL33 and SDL_GPU. Original five demo checks are unchanged and now
+  PASS on allfour; only the repaired054 marker/restriction sentence was removed.
+- **Validation:** complete native graphics3040=2950PASS/90SKIP; all154 selected
+  DDS/cube tests PASS; prior3026 graphics outcomes unchanged. Final consumer
+  regression132=123PASS/8existing082FAIL/1SKIP with no deltas; those failures remain
+  open, not suppressed. C API DDS/volume route passes19 child checks per renderer.
+  Six enabled focused/catalog CTests PASS; exact719-entry catalog comparison
+  permits only054 metadata changes. No new full-campaign or sanitizer claim.
+- **Evidence:** [cube-stream repair record](repair-evidence/graphics/CUBE_STREAM_TRIAGE.md)
+  retains baseline failures, fixture corrections, diagnostics, artifact provenance
+  and final reports. No push/merge or unavailable-platform runtime claim.
+
+**Historical finding and reproduction (retained):**
 
 - **Area/API:** `TextureCube::DDSFromStreamEXT`, `modules/graphics/src/Xna/TextureCube.cpp`.
 - **Demo:** `graphics.texture_cube.dds_streams`; five controls, three pass and two fail on both
@@ -2001,8 +2024,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   CNA 2202cb4f1483f7bb54c12c9f9a88c0bf374fe0a6 observed after reproduction, with unrelated
   documentation/content-test changes present. Source observations/hashes are archived separately;
   no atomic build-input snapshot is claimed. Open; no upstream message or genuine-XNA execution.
-
-## Resolved
 
 ### CNA-DEMOS-ISSUE-156 -- SDL_GPU SpriteBatch reverses layer depth in its default projection
 

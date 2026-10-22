@@ -136,7 +136,5 @@ CNA_DEMOS_GAME(DdsStreamsDemo, {
     .needs = CnaDemos::Need::ThreeD,
     .frames = 1,
     .deterministic = true,
-    .restrictions = "Reads all decoded faces and mips through public GetData; no cube sampling or image-comparison claim. "
-                    "Short-read completion and offset-truncation refusal expose CNA-DEMOS-ISSUE-054.",
-    .knownIssue = "CNA-DEMOS-ISSUE-054",
+    .restrictions = "Reads all decoded faces and mips through public GetData; no cube sampling or image-comparison claim.",
 })

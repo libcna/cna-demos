@@ -12,6 +12,24 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**2026-10-22 ISSUE-054 closed; next batch034/035.**
+CNA product b6ab302cc06b028dedfc451838e97cc31bd0599a; demos baseline9d2cdd0,
+with metadata/evidence-only closure recorded alongside this handoff. Native3040
+=2950PASS/90SKIP,154 DDS/cube PASS; exact old3026 outcome parity. Four-renderer
+focused14PASS, originalDDS5PASS and C API19 child checks PASS each. Metadata4477
+accepted:719 catalog entries unchanged except054 marker/restriction, six enabled
+CTests PASS/no skips7176ms. Final consumer external3868 completed2 with
+parityAccepted:true:132=123PASS/8existing082FAIL/1SKIP, no deltas; eight additional
+DDS/C API runs PASS. No drift, peak169512960/events0. Existing082 failures are
+still open; no green full-campaign claim. Build/fixture corrections and memory
+observations retained in CUBE_STREAM_TRIAGE.md; no duplicate rebuild or suppression.
+Matrix156 IDs now108 dispositions (73 FIXED_VALIDATED,2 platform-pending),48 null.
+Last complete native checkpoint remains027:11041 tests; full campaign final gates
+still due. No heavy job live at closure. Exact next task: run unchanged034/035
+parameter_values demo with repair-stock-parameters-before.mjs, then inspect stock
+versus standalone contracts and shared array storage (STOCK_PARAMETER_TRIAGE.md).
+Preserve inherited011/082 work.066 awaits owner choice. No push/merge.
+
 **2026-10-22 ISSUE-027 committed766d62fbd; validation accepted.**
 Focused SW/GLES/GL33:14PASS each, including compiled/MRT paths. Default native
 11041=10923PASS/118SKIP, exact old11027 parity. External47085 terminated2 with
