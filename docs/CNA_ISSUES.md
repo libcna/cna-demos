@@ -1611,15 +1611,19 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-027 -- SOFTWARE does not clamp source values above 1 before blending into an 8-bit target
 
-- **Current repair evidence (2026-10-22; not yet closed):** fourteen focused
-  witnesses reproduce twelve SOFTWARE failures, while GLES/GL33 pass all fourteen.
-  Both generalized and compiled/MRT paths feed unclamped source values into blend
-  factors/equations; final store clamping is too late. A narrow local candidate
-  now passes all fourteen on SOFTWARE/GLES/GL33, preserving exact HDR controls and
-  per-attachment range selection. The original assertions/tolerances remain;
-  corrected fixture setup respects genuine XNA Clear quantization and forbidden
-  float blend formats. Native/full and external regression gates are still required
-  before a repair commit and closure. See
+- **Status: Resolved (2026-10-22).** CNA repair
+  `766d62fbd560b8356f43b169c3ebfdf2ccad3a7e` clamps normalized target source values
+  before blend factors/equations in both generalized and compiled/MRT paths,
+  preserving the range of floating attachments. Twelve reproduced SOFTWARE
+  failures become passes; all fourteen focused regressions pass on SOFTWARE,
+  GLES and GL33. Native11041=10923PASS/118SKIP preserves all prior11027 outcomes;
+  the eight new compiled-off skips are covered by separate enabled runtime tests.
+  External132 outcomes retain exactly123PASS/8existing lifecycleFAIL/1SKIP;
+  four original HDR demos, five enabled focused/catalog CTests and six exact visual
+  references pass. All ten screenshots were inspected. No assertion/tolerance was
+  relaxed; genuine XNA Clear quantization and blend-format rules informed fixture
+  setup corrections. No marker was removed because027 had none. Historical full
+  smoke and unrelated011/082 failures remain explicit, not a green campaign. See
   [range evidence](repair-evidence/graphics/BLEND_STATE_RANGE_TRIAGE.md).
 
 - **Area:** graphics, SOFTWARE renderer -- blending a texel sampled from a floating-point texture
@@ -1638,7 +1642,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Expected (OPENGLES3, and XNA):** red 82 / 163 / 245, blue 20 / 41 / 61: the source clamped to 1
   (alpha 1, so the background is replaced).
 - **Environment:** CNA 0.1.0, Linux, SOFTWARE renderer.
-- **Status:** open (low: only float sources with values above 1 are affected); not reported
+- **Historical status:** open (low: only float sources with values above 1 are affected); not reported
   upstream yet.
 
 ---

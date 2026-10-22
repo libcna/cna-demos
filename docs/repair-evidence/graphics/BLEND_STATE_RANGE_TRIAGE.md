@@ -6,7 +6,8 @@
 
 ISSUE-003 is committed as CNA3b6a2eaf3 with metadata/evidence commits
 CNA30c872915 and demos2031ddd. Its native Windows runtime requirement is explicit.
-The027 range repair is now a separate, uncommitted candidate.066 has no repair yet.
+The027 range repair is committed as `766d62fbd560b8356f43b169c3ebfdf2ccad3a7e`.
+All available affected validation gates below are accepted.066 has no repair yet.
 
 Actual baseline driver `build-probe/repair-blend-range-before.mjs`, final prefix
 `repair-blend-range-before-v7`, session40802 completed0 as an observation:
@@ -53,13 +54,33 @@ build3881ms (reviewed existing shared-helper warnings), SOFTWARE/GLES/GL33 each
 No input drift; peak902090752 bytes, all memory events0. Reports
 `repair-blend-range-after-*`. This is not yet a completed repair or final regression.
 
-Sole native69993 now runs `build-probe/repair-blend-range-native.mjs`: existing
-debug CnaTests/CnaGraphicsTests build, new14, graphics3026 and full11041, requiring
-exact old11027 outcome parity plus6PASS/8compiled-offSKIP. Private GPU/network,
-owner UID/capabilities0, one worker/shared cache/6GiB/no swap. Collect its live
-handle before starting another heavy job. Product and test inputs are frozen.
-Next: native acceptance, original HDR demo/external regression and exact visual
-checks; then commit027 and record permanent status. No027 closure yet.
+Native69993 completed0: existing debug targets built30717ms/no diagnostics,
+focused14 completed509ms (6PASS/8compiled-offSKIP), graphics3026 completed44988ms
+(2936PASS/90SKIP), full11041 completed1157090ms (10923PASS/118SKIP). Comparator100ms
+proves exact prior11027 outcome parity plus those14 new cases. No input drift or
+memory events; peak4056010752 bytes. Private GPU/network, owner UID/capabilities0,
+one worker/shared cache/6GiB/no swap. Scope verified inactive/dead after completion.
+Reports `repair-blend-range-native-*`; the compiled cases were separately executed
+in the enabled focused consumer configuration, not counted as native skip coverage.
+
+External47085 terminated2 with parityAccepted:true: exactly132 previous outcomes
+(123PASS/8existingFAIL/1SKIP), no delta in identities/status/checks/markers/assertion
+labels, including already-validated003 rectangle checks9. The eight082 failures
+remain unaccepted, hence exit2 rather than a green suite. Original HDR demo passes
+four checks on each SW/GLES/GL33/SDL_GPU; six exact reference comparisons pass
+with zero differing pixels and zero tolerance. No frozen-input drift/events;
+peak193499136 bytes. All ten images individually inspected: HDR shows the intended
+distinct accumulated brightness and labels, and font/clear/checkerboard references
+are unchanged. Reports `repair-blend-range-external-*`.
+
+Final CTest57592 completed0, five enabled tests PASS/noSKIP in24422ms: HDR,
+sprite blend states, rectangle SetData, registry validation and catalog parsing.
+No input drift/events; peak148176896 bytes. Reports `repair-blend-range-ctest*`.
+Product commit766d62fbd contains the localized numerical correction and14 native
+regressions, excluding inherited011/082 edits.027 is FIXED_VALIDATED. No new
+sanitizer run is claimed: this change introduces no lifetime/ownership operations.
+No new full719 smoke is claimed; its final all-issue rerun remains required.
+There was no027 knownIssue marker to remove. No push/merge. All listed jobs ended.
 
 For066 the owner was asked asynchronously whether enabling should install
 SourceAlpha/InverseSourceAlpha/Add (existing GLES/demo behavior) or preserve
