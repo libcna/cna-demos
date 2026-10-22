@@ -101,6 +101,7 @@ namespace
     protected:
         void LoadContent() override
         {
+            Context().Check(!device_.IsOpenEXT(), "a default-constructed haptic member starts closed");
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
 
@@ -158,43 +159,41 @@ namespace
 
             const std::vector<HapticInfoEXT> haptics = Haptics::GetHapticsEXT();
             if (!haptics.empty())
-                device_.emplace(Haptics::OpenEXT(haptics.front().id));
-            if (!device_ || !device_->IsOpenEXT())
+                device_ = Haptics::OpenEXT(haptics.front().id);
+            if (!device_.IsOpenEXT())
             {
                 lines_.push_back("No force-feedback device found");
                 return;
             }
-            const HapticCapabilitiesEXT caps = device_->GetCapabilitiesEXT();
-            lines_.push_back("\"" + device_->GetNameEXT() + "\": up to " + std::to_string(caps.maxEffects) +
+            const HapticCapabilitiesEXT caps = device_.GetCapabilitiesEXT();
+            lines_.push_back("\"" + device_.GetNameEXT() + "\": up to " + std::to_string(caps.maxEffects) +
                              " effects stored, " + std::to_string(caps.maxEffectsPlaying) + " playing at once");
             // Effects are uploaded once and then run by id, as often as needed.
             const char* names[] = {"1: sine", "2: constant", "3: ramp"};
             const HapticEffectEXT effects[] = {Sine(), Constant(), Ramp()};
             for (int i = 0; i < 3; ++i)
             {
-                ids_[i] = device_->IsEffectSupportedEXT(effects[i]) ? device_->CreateEffectEXT(effects[i]) : -1;
+                ids_[i] = device_.IsEffectSupportedEXT(effects[i]) ? device_.CreateEffectEXT(effects[i]) : -1;
                 lines_.push_back(std::string(names[i]) + (ids_[i] >= 0 ? " -- ready" : " -- not supported"));
             }
             // Optional device controls, present only when the feature flags say so.
             if ((caps.features & HapticFeatureEXT::Gain) != HapticFeatureEXT::None)
-                device_->SetGainEXT(80);
+                device_.SetGainEXT(80);
             hasStatus_ = (caps.features & HapticFeatureEXT::Status) != HapticFeatureEXT::None;
         }
 
         void UnloadContent() override
         {
-            if (!device_)
-                return;
-            if (device_->IsOpenEXT())
+            if (device_.IsOpenEXT())
             {
-                device_->StopAllEffectsEXT();
+                device_.StopAllEffectsEXT();
                 for (const int id : ids_)
                 {
                     if (id >= 0)
-                        device_->DestroyEffectEXT(id);
+                        device_.DestroyEffectEXT(id);
                 }
             }
-            device_->Dispose();
+            device_.Dispose();
         }
 
         void Update(GameTime& gameTime) override
@@ -204,12 +203,12 @@ namespace
             for (int i = 0; i < 3; ++i)
             {
                 if (ids_[i] >= 0 && keyboard.IsKeyDown(keys[i]) && previous_.IsKeyUp(keys[i]))
-                    device_->RunEffectEXT(ids_[i], 1);
+                    device_.RunEffectEXT(ids_[i], 1);
             }
             previous_ = keyboard;
             playing_ = false;
             for (const int id : ids_)
-                playing_ = playing_ || (hasStatus_ && id >= 0 && device_->GetEffectStatusEXT(id));
+                playing_ = playing_ || (hasStatus_ && id >= 0 && device_.GetEffectStatusEXT(id));
             Game::Update(gameTime);
         }
 
@@ -228,8 +227,7 @@ namespace
         }
 
     private:
-        // Optional rather than a default-constructed closed device: CNA-DEMOS-ISSUE-009.
-        std::optional<HapticDevice> device_;
+        HapticDevice device_;
         int ids_[3] = {-1, -1, -1};
         bool hasStatus_ = false;
         bool playing_ = false;

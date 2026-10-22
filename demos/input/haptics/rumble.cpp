@@ -31,6 +31,7 @@ namespace
     protected:
         void LoadContent() override
         {
+            Context().Check(!device_.IsOpenEXT(), "a default-constructed haptic member starts closed");
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
 
@@ -41,15 +42,15 @@ namespace
                                 "without a force-feedback mouse OpenFromMouseEXT gives a closed device");
             const std::vector<HapticInfoEXT> haptics = Haptics::GetHapticsEXT();
             if (!haptics.empty())
-                device_.emplace(Haptics::OpenEXT(haptics.front().id));
+                device_ = Haptics::OpenEXT(haptics.front().id);
 
-            if (device_ && device_->IsOpenEXT())
+            if (device_.IsOpenEXT())
             {
-                const HapticCapabilitiesEXT caps = device_->GetCapabilitiesEXT();
-                status_ = "Opened \"" + device_->GetNameEXT() + "\", " + std::to_string(caps.axisCount) + " axes, " +
+                const HapticCapabilitiesEXT caps = device_.GetCapabilitiesEXT();
+                status_ = "Opened \"" + device_.GetNameEXT() + "\", " + std::to_string(caps.axisCount) + " axes, " +
                           (caps.rumbleSupported ? "rumble supported" : "no simple rumble");
                 // Simple rumble needs one initialisation, then any number of PlayRumbleEXT calls.
-                rumbleReady_ = caps.rumbleSupported && device_->InitRumbleEXT();
+                rumbleReady_ = caps.rumbleSupported && device_.InitRumbleEXT();
             }
             else
             {
@@ -61,9 +62,8 @@ namespace
         void UnloadContent() override
         {
             if (rumbleReady_)
-                device_->StopRumbleEXT();
-            if (device_)
-                device_->Dispose();
+                device_.StopRumbleEXT();
+            device_.Dispose();
         }
 
         void Update(GameTime& gameTime) override
@@ -71,7 +71,7 @@ namespace
             // Space: a 300 ms rumble at 75 % strength.
             const KeyboardState keyboard = Keyboard::GetState();
             if (rumbleReady_ && keyboard.IsKeyDown(Keys::Space) && previous_.IsKeyUp(Keys::Space))
-                device_->PlayRumbleEXT(0.75f, 300);
+                device_.PlayRumbleEXT(0.75f, 300);
             previous_ = keyboard;
             Game::Update(gameTime);
         }
@@ -88,8 +88,7 @@ namespace
         }
 
     private:
-        // Optional rather than a default-constructed closed device: CNA-DEMOS-ISSUE-009.
-        std::optional<HapticDevice> device_;
+        HapticDevice device_;
         bool rumbleReady_ = false;
         std::string status_;
         KeyboardState previous_;

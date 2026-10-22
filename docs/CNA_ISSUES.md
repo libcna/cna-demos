@@ -1321,7 +1321,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Suggested fix (low risk):** declare `HapticDevice();` in the header and define
   `HapticDevice::HapticDevice() = default;` in `HapticDevice.cpp`.
 - **Environment:** CNA 0.1.0, GCC 14.2, Linux.
-- **Status:** open; not reported upstream yet.
+- **Status:** Resolved in CNA `974c1ac08` (2026-10-22). The default constructor is now
+  defined out of line, retaining its `noexcept` contract. The historical optional-member
+  workaround above is removed from both demos; each now checks a default-constructed member.
+  Fresh public-header reproduction failed before and compiles, links and runs after.
+  Native input tests: 562 PASS (560 unchanged cases plus two new public-header tests).
+  Both demos pass on SOFTWARE and OPENGLES3; rumble checks 1→2, effects 12→13.
+  No physical haptic-device validation is claimed or required for this constructor defect.
 
 ### CNA-DEMOS-ISSUE-010 -- Storage reports errors with C++ standard exceptions, not XNA's types
 
