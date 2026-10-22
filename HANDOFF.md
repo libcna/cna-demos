@@ -12,6 +12,49 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**2026-10-22 ISSUE-086/112 CLOSED; next113 baseline85698 live.**
+CNA product9e4d0279affcb9f05f9d28807403f798fc948906. Metadata93054 completed0:
+build12006ms/no diagnostics; exact719-catalog two-marker delta;12 original demo
+runs PASS17/12/27 checks;7 enabled CTests PASS/noSKIP14326ms. No drift/events,
+peak2029166592. Both permanent IDs Resolved; no assertions removed, volume adds
+two exact framebuffer checks. Native full10972PASS/118 unchangedSKIP, context8PASS
+on six available renderers, SOFTWARE sanitizer8PASS; all12 repair screenshots and
+six exact reference screenshots inspected. Full campaign regression is NOT green:
+eight independent082 failures and two SDL_GPU residuals remain explicit.
+Matrix156 historical IDs:77 FIXED_VALIDATED,2 platform-pending,23 documentation,
+8 already-fixed,1 demo-oracle correction,1 duplicate,44 null. Supplemental DC-R1/
+DC-R2 are tracked separately in additional_validation_findings; both require final
+contract dispositions, not hidden expected failures. See DEVICE_CONTEXT_EXTERNAL_RESIDUALS.md.
+Genuine113 reference33342 proves distinct-query overlap is valid XNA (nested7/2,
+crossed3/6 triangle counts; disposal survivors7/6), disproving the historical
+refusal expectation. Six new native evidence witnesses now test real overlap
+counts/empty intervals/disposal. Sole live scope cna-repair-occlusion-overlap-before/
+session85698 compiles only that fixture and runs it plus the unchanged original
+demo on SOFTWARE/GLES/GL33/SDL_GPU. No113 production patch or demo change yet.
+Collect85698, inspect exact failures, then repair actual query semantics and
+correct the proven incorrect header/demo expectation with retained history.
+Uncommitted113 evidence: OCCLUSION_BEGIN_TRIAGE.md, OcclusionOverlapXnaOracle.cs,
+OcclusionOverlapTests.cpp. Keep separate from086/112 closure commit. Inherited
+011/082 shared work untouched; no push/merge. Final full campaign gates still due.
+
+**2026-10-22 resumed: native/sanitizer/multi accepted; external49730 live.**
+CNA0a94a68aca7b3b482918306ec5426bc0ff74d6e9 / demos20b55b5 unchanged.
+The previous goal-proposal response was not engineering progress; current source,
+HEADs and host processes have now been verified. The old multi scopes are terminal.
+Multi-v2 runtime processes all exited0: SDL_GPU52PASS/13SKIP, FNA3D55PASS/10SKIP,
+WEBGPU52PASS/13SKIP; all8 new context witnesses PASS on each. The wrapper incorrectly
+required every existing test to run. Separate multi-review audit verifies exact XML
+inventory, source hashes and unchanged HEAD skip declarations: ten renderer allow-list
+skips each, plus three explicitly unsupported cube-MRT cases on SDL_GPU/WEBGPU.
+No skips relabelled as passes, no tests edited, original rejected report retained.
+Native-v2 full10972PASS/118SKIP and sanitizer8PASS remain accepted. No source drift.
+Sole campaign heavy job: cna-repair-device-context-external/session49730, sequential
+132 baseline outcomes +8 DDS/C controls +192 device/texture runs +6 exact visuals.
+Collect before product commit/metadata cleanup. Eight independent082 failures must
+remain explicit;086/112 are not closed. Next: inspect external deltas/visuals, commit
+the product/native fixture, run prepared metadata gate, close with actual SHA, then113.
+Inherited011/082 dirt untouched; no push/merge. Final full campaign gates still due.
+
 **2026-10-22 ISSUE-086/112 focused PASS, broad regression in progress.**
 Latest candidate8590:8 native tests and17/12/27 original demo checks PASS on all
 four renderers; all12 screenshots inspected. Readback-before41922 independently
@@ -30,10 +73,12 @@ only the8 added graphics witnesses. No drift/events, peak2465263616. This is the
 latest complete aggregate checkpoint (replacing027's11041). The first v2 launch
 failed255 on an ip-command typo before any build/test; corrected run is complete.
 The034/035 glTF test-only follow-up is committed separately as CNA
-0a94a68aca7b3b482918306ec5426bc0ff74d6e9. Sole live scope
-cna-repair-device-context-sanitizer/session38435 checks common SOFTWARE lifetime
-with actual ASan/UBSan/float-cast/leak instrumentation. Collect before multi, then
-external drivers; all prepared in demos build-probe/repair-device-context-*.mjs.
+0a94a68aca7b3b482918306ec5426bc0ff74d6e9; demos evidence20b55b5. Sanitizer38435
+completed0:8PASS, no ASan/UBSan/float-cast/leak findings or suppression; SOFTWARE
+common lifetime only, no GL instrumentation claim. Peak863215616/events0/no drift.
+Sole live scope cna-repair-device-context-multi/session38383: source-derived context/
+device validation/disposal/render-target tests on SDL_GPU/FNA3D/WebGPU.
+Collect before external driver; all prepared in demos build-probe/repair-device-context-*.mjs.
 Metadata driver is also prepared UNRUN; seven enabled CTests inventoried.
 Product086/112 remains uncommitted pending these gates. Review all failures.
 Next113 source audit is OCCLUSION_BEGIN_TRIAGE.md; no113 product patch.

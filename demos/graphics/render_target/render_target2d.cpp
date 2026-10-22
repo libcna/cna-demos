@@ -274,8 +274,4 @@ CNA_DEMOS_GAME(RenderTarget2DDemo, {
     .frames = 10,
     .deterministic = true,
     .assets = {"textures/arrow.png"},
-    .restrictions = "CNA-DEMOS-ISSUE-112: SetRenderTarget on a secondary EasyGL device binds without acquiring "
-                    "that device's context, so its following Clear reaches no readable target under OPENGLES3.",
-    .knownIssue = "CNA-DEMOS-ISSUE-112",
-    .knownIssueRenderers = {"OPENGLES3"},
 })

@@ -225,7 +225,5 @@ CNA_DEMOS_GAME(CubeTransfersDemo, {
     .frames = 3,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
-    .restrictions = "CNA-DEMOS-ISSUE-086: destroying a secondary EasyGL device leaves the primary device's later frame black. Color transfers and public read-back do not establish direct GPU readback.",
-    .knownIssue = "CNA-DEMOS-ISSUE-086",
-    .knownIssueRenderers = {"OPENGLES3"},
+    .restrictions = "Color transfers and public read-back do not establish direct GPU readback.",
 })

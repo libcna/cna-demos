@@ -174,6 +174,18 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-112 -- Secondary EasyGL SetRenderTarget runs without its device context
 
+- **Repair status: Resolved (2026-10-22).** CNA
+  `9e4d0279affcb9f05f9d28807403f798fc948906` leases the owning context through
+  binding/unbinding and native backbuffer reads, after public validation. Eight native
+  witnesses pass on SOFTWARE/OPENGLES3/OPENGL33/SDL_GPU/FNA3D/WebGPU; the original
+  target demo retains all17 checks and passes on the four external renderers. Full native
+  regression10972PASS/118 unchangedSKIP, SOFTWARE lifetime sanitizers8PASS, six exact
+  visuals and seven enabled focused CTests pass. Metadata gate verifies exactly two
+  obsolete markers removed, no assertion weakening. Separate SDL_GPU DC-R1/DC-R2 and
+  ISSUE-082 failures remain explicitly open; this is not whole-campaign closure.
+  See [device-context evidence](repair-evidence/graphics/DEVICE_CONTEXT_TRIAGE.md).
+  Historical observations below are retained.
+
 - **Area/API:** `GraphicsDevice::SetRenderTarget`/`SetRenderTargets`, EasyGL renderer-context
   leasing and multiple simultaneously live `GraphicsDevice` instances.
 - **Demo/reproduction:** run `graphics.render_target.render_target2d` with OPENGLES3. The game-owned
@@ -743,6 +755,19 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   was modified, no upstream message was sent, and no PBR draw or visual result is claimed.
 
 ### CNA-DEMOS-ISSUE-086 -- Destroying a secondary EasyGL device blacks out the primary device
+
+- **Repair status: Resolved (2026-10-22).** CNA
+  `9e4d0279affcb9f05f9d28807403f798fc948906` destroys renderer resources under their
+  owning context, then restores the other device's frame before retiring the window.
+  Eight native witnesses cover disposal/destruction, target transitions and independent
+  readback on six available renderers. Cube12/target17/volume27 checks pass on SOFTWARE,
+  OPENGLES3, OPENGL33 and SDL_GPU; all12 screenshots inspected. Volume retains its
+  original25 checks and adds two zero-tolerance framebuffer checks. Full native
+  regression10972PASS/118 unchangedSKIP, SOFTWARE sanitizer8PASS and seven focused
+  CTests pass. The cube readback limitation is retained; only obsolete issue markers
+  were removed. Separate DC-R1/DC-R2/ISSUE-082 failures remain open, not hidden.
+  See [device-context evidence](repair-evidence/graphics/DEVICE_CONTEXT_TRIAGE.md).
+  Historical observations below are retained.
 
 - **Area/API:** multiple `GraphicsDevice` lifetimes under OPENGLES3/EasyGL, especially
   `GraphicsDevice::Dispose`, renderer context leasing and EasyGL resource-registry teardown.

@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
+#include "CnaDemos/PixelChecks.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Graphics/DepthFormat.hpp"
 #include "Microsoft/Xna/Framework/Graphics/GraphicsAdapter.hpp"
@@ -171,6 +172,25 @@ namespace
                                          Color::LightGray);
             }
             spriteBatch_->End();
+            if (FramesDrawn() == 0)
+            {
+                const CnaDemos::BackBufferPixels pixels(getGraphicsDeviceProperty());
+                bool gradientsMatch = true, patchesMatch = true;
+                for (int z = 0; z < Depth; ++z)
+                {
+                    // Each authored texel occupies5x5 screen pixels with PointClamp.
+                    gradientsMatch = gradientsMatch && CnaDemos::Near(
+                        pixels.At(47 + z * 190, 127), Color(24, 40, 64 * z + 63), 0);
+                    const Color patch = z == 1 || z == 2
+                        ? Color::White : Color(120, 120, 64 * z + 63);
+                    patchesMatch = patchesMatch && CnaDemos::Near(
+                        pixels.At(107 + z * 190, 177), patch, 0);
+                }
+                Context().Check(gradientsMatch,
+                                "the primary device draws all four slice gradients after secondary teardown");
+                Context().Check(patchesMatch,
+                                "the primary device draws the white box in slices 1 and 2 only");
+            }
             DemoGame::Draw(gameTime);
         }
 
