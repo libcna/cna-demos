@@ -1331,6 +1331,14 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-010 -- Storage reports errors with C++ standard exceptions, not XNA's types
 
+- **Related partial repair (2026-10-22; still open):** CNA `3798787bb` corrects
+  StorageDevice Begin/End validation, one-shot result consumption, owner checks,
+  shared-player selection and the empty container display-name exception. Genuine
+  XNA46, native27 and focused sanitizer9 checks pass; the selector demo adds six
+  assertions on SOFTWARE/OPENGLES3. This does not close the filesystem-path,
+  non-empty-directory or ContentManager portions below. See
+  [async contract evidence](repair-evidence/storage/ASYNC_CONTRACT.md).
+
 - **Area:** storage -- `StorageContainer` and `StorageDevice::DeleteContainer`. Argument errors
   (empty names, paths that leave the container) throw `std::invalid_argument`; a failing
   filesystem operation such as `DeleteDirectory` on a non-empty directory lets

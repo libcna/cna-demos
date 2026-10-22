@@ -9,11 +9,15 @@
 #include <optional>
 #include <stdexcept>
 #include <string>
+#include <typeinfo>
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Storage/StorageDevice.hpp"
 #include "Microsoft/Xna/Framework/Storage/StorageDeviceNotConnectedException.hpp"
 #include "System/IAsyncResult.hpp"
+#include "System/ArgumentNullException.hpp"
+#include "System/ArgumentOutOfRangeException.hpp"
+#include "System/InvalidOperationException.hpp"
 #include "System/Runtime/Serialization/SerializationInfo.hpp"
 #include "System/Runtime/Serialization/StreamingContext.hpp"
 #include "System/Threading/WaitHandle.hpp"
@@ -23,6 +27,15 @@ using Microsoft::Xna::Framework::Storage::StorageDeviceNotConnectedException;
 
 namespace
 {
+    template<class Exception, class Action>
+    bool ThrowsExactly(Action action)
+    {
+        try { action(); }
+        catch (const Exception& error) { return typeid(error) == typeid(Exception); }
+        catch (...) { return false; }
+        return false;
+    }
+
     void ShowSelector(CnaDemos::DemoContext& ctx)
     {
 #if !defined(_WIN32) && !defined(__APPLE__) && !defined(__ANDROID__) && !defined(__EMSCRIPTEN__)
@@ -121,6 +134,43 @@ namespace
         const long long total = device->getTotalSpaceProperty();
         ctx.Print("FreeSpace {} MiB of TotalSpace {} MiB", free / (1024 * 1024), total / (1024 * 1024));
         ctx.Check(free > 0 && free <= total, "FreeSpace is positive and at most TotalSpace");
+
+        // Genuine XNA public-call oracle: docs/repair-evidence/storage/StorageDeviceAsyncOracle.cs.
+        bool invalidCallback = false;
+        ctx.Check(ThrowsExactly<System::ArgumentOutOfRangeException>([&] {
+            (void)StorageDevice::BeginShowSelector(-1, 0,
+                [&](System::IAsyncResult*) { invalidCallback = true; }, nullptr);
+        }) && !invalidCallback, "negative size is refused before invoking the selector callback");
+        ctx.Check(ThrowsExactly<System::ArgumentOutOfRangeException>([] {
+            (void)StorageDevice::BeginShowSelector(static_cast<Microsoft::Xna::Framework::PlayerIndex>(4),
+                nullptr, nullptr);
+        }), "invalid player is refused by the short selector overload");
+        ctx.Check(ThrowsExactly<System::InvalidOperationException>([&] {
+            (void)StorageDevice::EndShowSelector(result.get());
+        }), "a selector result can only be ended once");
+
+        auto freshSelector = StorageDevice::BeginShowSelector(nullptr, nullptr);
+        const bool wrongKind = ThrowsExactly<System::ArgumentNullException>([&] {
+            (void)device->EndOpenContainer(freshSelector.get());
+        });
+        auto otherDevice = StorageDevice::EndShowSelector(freshSelector.get());
+        ctx.Check(wrongKind && otherDevice != nullptr &&
+            ThrowsExactly<System::ArgumentNullException>([] { (void)StorageDevice::EndShowSelector(nullptr); }),
+            "null and wrong-kind results use ArgumentNullException without consuming another operation");
+        auto empty = device->BeginOpenContainer("", nullptr, nullptr);
+        const bool emptyName = ThrowsExactly<System::ArgumentNullException>([&] {
+            (void)device->EndOpenContainer(empty.get());
+        });
+        ctx.Check(emptyName && ThrowsExactly<System::InvalidOperationException>([&] {
+            (void)device->EndOpenContainer(empty.get());
+        }), "empty-name validation occurs in End and a failed End still consumes the result");
+        auto wrongOwner = device->BeginOpenContainer("", nullptr, nullptr);
+        const bool wrongDevice = ThrowsExactly<System::ArgumentException>([&] {
+            (void)otherDevice->EndOpenContainer(wrongOwner.get());
+        });
+        ctx.Check(wrongDevice && ThrowsExactly<System::InvalidOperationException>([&] {
+            (void)device->EndOpenContainer(wrongOwner.get());
+        }), "wrong-owner refusal precedes name validation and consumes the container result");
     }
 }
 
