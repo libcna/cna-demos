@@ -1,7 +1,7 @@
 # HANDOFF
 
 **Read this first in every new session.** It is the single place that says what state the
-project is in and what to do next. Update it after every batch. Last updated: 2026-10-21.
+project is in and what to do next. Update it after every batch. Last updated: 2026-10-22.
 
 ## 1. Purpose (one paragraph)
 
@@ -11,6 +11,47 @@ unattended runs, CTest tests and a coverage report. Long-term goal: every meanin
 capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
+
+**2026-10-22 ISSUE-086/112 focused PASS, broad regression in progress.**
+Latest candidate8590:8 native tests and17/12/27 original demo checks PASS on all
+four renderers; all12 screenshots inspected. Readback-before41922 independently
+reproduced Color/packed overload failures on both GL profiles; native read now
+leases its owner after validation. No source drift/OOM; peak3899883520.
+Native97896 completed1: graphics2985PASS/90 unchangedSKIP; full11090 cases
+=10970PASS/118SKIP/2FAIL in1193421ms, only the two glTF cardinality assertions.
+No drift/events/OOM, peak3684462592. Genuine XNA41PASS proves fixed72 stock entries.
+The test-only follow-up is now APPLIED in GltfDrawParamsOracleEXTTests.cpp: exact
+stock72/custom-PBR authored count, all original matrix comparisons retained plus
+exact identity-tail checks. Its two corrected cases PASS2915ms; context8PASS470ms,
+incremental build6904ms/no diagnostics. Do NOT apply the saved patch again.
+Native-v2/session98260 completed0: full11090=10972PASS/118 unchangedSKIP,
+1249784ms; exact old aggregate/graphics outcome parity, no missing/changed cases,
+only the8 added graphics witnesses. No drift/events, peak2465263616. This is the
+latest complete aggregate checkpoint (replacing027's11041). The first v2 launch
+failed255 on an ip-command typo before any build/test; corrected run is complete.
+The034/035 glTF test-only follow-up is committed separately as CNA
+0a94a68aca7b3b482918306ec5426bc0ff74d6e9. Sole live scope
+cna-repair-device-context-sanitizer/session38435 checks common SOFTWARE lifetime
+with actual ASan/UBSan/float-cast/leak instrumentation. Collect before multi, then
+external drivers; all prepared in demos build-probe/repair-device-context-*.mjs.
+Metadata driver is also prepared UNRUN; seven enabled CTests inventoried.
+Product086/112 remains uncommitted pending these gates. Review all failures.
+Next113 source audit is OCCLUSION_BEGIN_TRIAGE.md; no113 product patch.
+Markers retained,
+both IDs CONFIRMED_OPEN in matrix; no086/112 commit/push/merge yet. SOFTWARE sanitizer
+will cover common object lifetime, not GL handle deletion. Earlier evidence:
+
+CNA1edc8542c/demos c352e47. Original twelve observations reproduced GLES cube/target
+and OPENGL33 target failures; GLES volume was black despite25 nonvisual passes.
+Six minimized native cases reproduced GLES6FAIL/OPENGL33 binding4FAIL. Candidate
+leases target transitions and renderer teardown; SOFTWARE6PASS and17/12/27 demos
+PASS. An after-driver label check failed because successful checks are silent;
+resume verifies exact original source preservation and reuses the successful build.
+Resume42952 gives GLES5PASS/1FAIL: isolated secondary readback returns primary pixels.
+Two new native/evidence witnesses now cover all Color/packed readback overloads.
+Readback-before41922 completed; the missing lease is implemented as recorded above.
+Changes are GraphicsDevice.cpp/native fixture, volume pixel checks and evidence;
+inherited011/082 work preserved. No push/merge. See DEVICE_CONTEXT_TRIAGE.md.
 
 **2026-10-22 ISSUE-034/035 closed against CNA d650554a89b967cebca5af6b40917b9ded8294c8.**
 Native27/four-renderer original33PASS, graphics2977PASS/90sameSKIP, selected

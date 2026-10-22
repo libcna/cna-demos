@@ -1,5 +1,41 @@
 # ISSUE-034/035 stock parameter semantics: next-batch source audit
 
+## Full-aggregate follow-up discovered during086/112 (2026-10-22)
+
+**Validated follow-up:** CNA commit0a94a68aca7b3b482918306ec5426bc0ff74d6e9
+corrects only GltfDrawParamsOracleEXTTests.cpp and updates the campaign handoff;
+no runtime change or assertion suppression. Native-v2/session98260 completed0:
+full11090=10972PASS/118 unchangedSKIP in1249784ms, exact old aggregate/graphics
+outcome parity, no missing/changed cases or source drift, peak2465263616/events0.
+Incremental build6904ms has no diagnostics; corrected glTF2PASS2915ms and context
+8PASS470ms. The original full97896 remains recorded:10970PASS/118SKIP/2FAIL,
+1193421ms, no drift/events, peak3684462592. Both original failures are retained.
+First v2 launch typo stopped255 before any build/test; no duplicated heavy job.
+The rest of this section records the original investigation before correction.
+
+The full native run97896 has reported two failures in GltfConformanceL6:
+SkinnedDrawBindsThePaletteAndFourInfluencesPerVertex and
+AFreshlyLoadedSkinnedModelIsAlreadyPosedInItsBindPose. Both fail their palette
+cardinality assertion for the stock SkinnedEffect on skin-unlit (actual72 versus
+authored1). The preceding034/035 gate ran full graphics and selected aggregate
+effects, not these content tests; no prior claim of a post034/035 full aggregate
+pass is made. The current full run is still live; collect before changing tests.
+
+Reference evidence was rechecked: genuine Microsoft XNA v5 audit has41PASS,
+including GetBoneTransforms(72).Length==72 and identity in untouched bone71 after
+a two-matrix write. Existing SkinnedEffect::FillGpuDrawParams explicitly requests
+GetBoneTransforms(MaxBones) and uploads every returned matrix; that code was not
+changed by034/035. The custom SkinnedPbrEffect still uses variable-sized parameter
+storage and must retain its separate current contract.
+
+Planned test correction: stock captured palette must have exactly72 entries,
+custom PBR exactly the authored count; retain every original authored matrix
+component comparison at the original tolerance, and additionally require each
+untouched stock-tail element to equal identity exactly. Preserve the corpus's
+non-identity bind-pose witness and four-influence assertion. Do not change CNA
+runtime behavior or loosen counts to a lower bound. Correction not yet applied or
+validated; both full-run failures remain recorded and unaccepted.
+
 ## Genuine reference and native witnesses (2026-10-22)
 
 **Closure:** product committed locally as
