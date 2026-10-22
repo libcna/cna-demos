@@ -1782,6 +1782,16 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-032 -- a System Link join refused for a game in progress reads `SessionNotFound`
 
+- **Resolved (2026-10-22), FIXED_VALIDATED:** CNA `f593368783b652164035a96a03f66545f6c9e3fe`
+  sends an explicit pre-welcome refusal and preserves it through `EndJoin` cleanup.
+  All 549 native network tests pass. The unchanged two-process demo now passes on SOFTWARE
+  and OPENGLES3, including the exact refusal, serialization and subsequent late-join assertions;
+  its knownIssue marker is removed. Ten neighboring runs retain their previous PASS outcomes.
+  Ordinary/unknown disconnects retain their previous behavior, and an established session's
+  disconnect is not reclassified as a failed join. See [validation evidence](repair-evidence/net/JOIN_REFUSAL.md).
+  Linux isolated System Link coverage only; no external-service or other-platform runtime claim.
+  Historical evidence follows.
+
 - **Area:** net, System Link (`ENetBackend::HandleClientHello`, `NetworkSession::EndJoin`). A host
   whose session is Playing with `AllowJoinInProgress == false` refuses a joiner by disconnecting the
   peer without a reason; the joiner's `EndJoin` turns every failure into
