@@ -12,6 +12,21 @@ capability has a demo. See docs/PROJECT.md.
 
 ## 2. Current phase
 
+**2026-10-22 ISSUE-027 candidate; sole native69993 running.**
+CNA HEAD30c872915 / demos2031ddd.003 closure is committed, Windows runtime pending.
+Current027 baseline: SOFTWARE12FAIL/2PASS versus GLES/GL3314PASS; eight compiled-off
+SDL skips explicit. Narrow SoftwareRenderer.cpp range helper plus two new native
+regression files fix all14 SOFTWARE cases; focused after15346 passes14 each
+SW/GLES/GL33, SDL6PASS/8SKIP. Existing066 C failures remain unchanged on SW/SDL.
+No source drift or OOM; focused peak902090752 bytes. No027 commit/closure yet.
+Native69993 runs repair-blend-range-native.mjs in existing debug tree, private
+GPU/network/caps0, one worker/sharedcache/6GiB/no swap. Collect before any new heavy
+job; requires exact prior11027 parity plus14 new cases (6PASS/8compiled-offSKIP).
+Then run original HDR/external/visual regression, commit027, update permanent status.
+See demos graphics/BLEND_STATE_RANGE_TRIAGE.md for fixture corrections, exact logs
+and contract evidence.066 awaits an explicit legacy-toggle factor choice; no answer
+presumed and it does not block027. Inherited011/082 work remains separate. No push.
+
 **2026-10-22 ISSUE-003 product and metadata validation complete.**
 CNA repair `3b6a2eaf3bc51a7cf44cf645b5cfa66494e0a6bb` contains only003
 code/tests; inherited011 ownership and082 lifecycle changes remain uncommitted.

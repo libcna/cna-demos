@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: MS-PL
-// ISSUE-027: prepared, uncompiled witnesses for target-dependent blend input ranges.
+// ISSUE-027: witnesses for target-dependent blend input ranges.
 #include <array>
 #include <string>
 #include <gtest/gtest.h>
 #include "CNA/GraphicsCapability.hpp"
-#include "CNA/RendererTestGate.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
 #include "Microsoft/Xna/Framework/Vector4.hpp"
@@ -31,7 +30,6 @@ namespace
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
 using PackedVector::HalfVector4;
-using namespace CNA::Testing::Renderers;
 
 class BlendSourceRangeTest : public testing::Test
 {
@@ -41,8 +39,6 @@ protected:
     void SetUp() override
     {
         RecordProperty("renderer", std::string(device.GetGraphicsRendererName()));
-        if (!CanReadRenderTargetsBack(device))
-            GTEST_SKIP() << "Renderer cannot read render targets back";
         if (!device.SupportsCapability(CNA::GraphicsCapability::HalfFloatRenderTargets))
             GTEST_SKIP() << "Renderer does not expose half-float targets";
     }
@@ -55,7 +51,9 @@ protected:
         const HalfVector4 texel(source.X, source.Y, source.Z, source.W);
         texture.SetData(&texel, 1);
         device.SetRenderTarget(&target);
-        device.Clear(ClearOptions::Target, Vector4(0.25f), 1.0f, 0);
+        // The XNA ClearOptions/Vector4 overload first quantizes through Color.
+        // Use the raw-float extension to isolate blending with exact binary16 inputs.
+        device.Clear(0.25f, 0.25f, 0.25f, 0.25f);
         SpriteBatch batch(device);
         batch.Begin(SpriteSortMode::Deferred, &blend, &SamplerState::PointClamp,
                     nullptr, nullptr);

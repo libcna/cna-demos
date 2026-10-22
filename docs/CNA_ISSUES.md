@@ -1009,6 +1009,15 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-066 -- SOFTWARE ignores GraphicsDevice's direct blend-enable toggle
 
+- **Current verification (2026-10-22; still open):** the unchanged C reproduction
+  also fails on SDL_GPU (accumulated red255 instead of185..195); GLES/GL33 pass.
+  SOFTWARE/DirectX9 have no-op toggles, GLES installs non-premultiplied factors,
+  FNA3D installs premultiplied factors, and SDL_GPU/WebGPU retain existing factors.
+  The public extension contract is underspecified. Owner clarification has been
+  requested; no answer, runtime correction, or new expected-failure marker is assumed.
+  The SDL failure remains unexpected. See
+  [range/toggle triage](repair-evidence/graphics/BLEND_STATE_RANGE_TRIAGE.md).
+
 - **Area/API:** `GraphicsDevice::SetBlendEnabled`,
   `cna_graphics_device_set_blend_enabled` and the SOFTWARE renderer.
 - **Observed:** after applying Opaque state, enabling blending and drawing two identical
@@ -1601,6 +1610,17 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 ---
 
 ### CNA-DEMOS-ISSUE-027 -- SOFTWARE does not clamp source values above 1 before blending into an 8-bit target
+
+- **Current repair evidence (2026-10-22; not yet closed):** fourteen focused
+  witnesses reproduce twelve SOFTWARE failures, while GLES/GL33 pass all fourteen.
+  Both generalized and compiled/MRT paths feed unclamped source values into blend
+  factors/equations; final store clamping is too late. A narrow local candidate
+  now passes all fourteen on SOFTWARE/GLES/GL33, preserving exact HDR controls and
+  per-attachment range selection. The original assertions/tolerances remain;
+  corrected fixture setup respects genuine XNA Clear quantization and forbidden
+  float blend formats. Native/full and external regression gates are still required
+  before a repair commit and closure. See
+  [range evidence](repair-evidence/graphics/BLEND_STATE_RANGE_TRIAGE.md).
 
 - **Area:** graphics, SOFTWARE renderer -- blending a texel sampled from a floating-point texture
   (`HdrBlendable`) into a `Color` target. Direct3D (XNA) and OpenGL clamp the source colour, the
