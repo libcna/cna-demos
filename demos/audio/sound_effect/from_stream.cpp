@@ -13,7 +13,9 @@
 #include "Microsoft/Xna/Framework/Audio/SoundEffect.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundEffectInstance.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundState.hpp"
+#include "Microsoft/Xna/Framework/TitleContainer.hpp"
 #include "Microsoft/Xna/Framework/TitleLocation.hpp"
+#include "System/IO/Stream.hpp"
 #include "System/NotSupportedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
@@ -23,9 +25,19 @@ namespace
 {
     void FromStream(CnaDemos::DemoContext& ctx)
     {
-        // A loose WAV -- user content, a mod's sounds, a file the game downloaded. XNA passes a
-        // Stream (TitleContainer.OpenStream); CNA's FromStream takes a std::istream
-        // (CNA-DEMOS-ISSUE-029), so the file is opened as one, from the title's folder.
+        // A loose WAV -- user content, a mod's sounds, a file the game downloaded -- opened as XNA
+        // does, through TitleContainer; FromStream parses it and closes the stream
+        // (CNA-DEMOS-ISSUE-029).
+        {
+            const std::unique_ptr<System::IO::Stream> stream =
+                TitleContainer::OpenStream("assets/sounds/tone_440.wav");
+            const std::unique_ptr<SoundEffect> titleTone(SoundEffect::FromStream(*stream));
+            ctx.CheckNear(titleTone->getDurationProperty().getTotalSecondsProperty(), 0.5, 0.001,
+                          "the stream TitleContainer opens loads as in XNA");
+        }
+
+        // CNA also takes a std::istream (an extension that decodes whatever the mixer does), so
+        // the same file is opened as one, from the title's folder.
         std::ifstream file(TitleLocation::Path() + "/assets/sounds/tone_440.wav", std::ios::binary);
         ctx.Check(file.is_open(), "the WAV file opens");
         // The caller owns the result.
