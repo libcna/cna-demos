@@ -61,12 +61,17 @@ namespace
             throw std::runtime_error("could not override XDG_DATA_HOME");
         }
 
+        bool identityConfiguredWithoutStorage = false;
         bool unavailableRootReported = false;
         bool unavailableRootSerialized = false;
         std::exception_ptr unexpected;
         try
         {
             StorageDevice::SetAppNameEXT("unavailable-storage-probe");
+            identityConfiguredWithoutStorage = true;
+            // Museum B11: configuration is lazy. Preserve the disconnected exception and
+            // serialization assertions at the first operation that actually needs the root.
+            (void)StorageDevice::GetStorageRootEXT();
         }
         catch (const StorageDeviceNotConnectedException& error)
         {
@@ -94,6 +99,8 @@ namespace
         {
             std::rethrow_exception(unexpected);
         }
+        ctx.Check(identityConfiguredWithoutStorage,
+                  "setting the application identity does not access an unavailable storage root");
         ctx.Check(unavailableRootReported,
                   "an unusable storage root raises StorageDeviceNotConnectedException with its filesystem cause");
         ctx.Check(unavailableRootSerialized,
