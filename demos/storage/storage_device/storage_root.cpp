@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // CNAEXT StorageDevice::SetAppNameEXT/GetStorageRootEXT: where saves live on disk, and the layout
-// below that folder (container, then AllPlayers or PlayerN).
+// below that folder (container, then AllPlayers or PlayerN), and what DeleteContainer removes.
 #include <filesystem>
 #include <memory>
 #include <optional>
@@ -64,8 +64,18 @@ namespace
         ctx.Check(std::filesystem::exists(container / "Player4" / "checkpoint.sav"),
                   "the player-and-space-requirements selector overload retains player four");
 
+        // As in XNA, a device deletes only its own folder of the container (genuine reference:
+        // docs/repair-evidence/storage/StorageResidualPathsOracle.cs).
         shared->DeleteContainer("cna-demos layout");
-        ctx.Check(!std::filesystem::exists(container), "DeleteContainer removes the container with every player's files");
+        ctx.Check(!std::filesystem::exists(container / "AllPlayers") &&
+                      std::filesystem::exists(container / "Player2" / "profile.sav") &&
+                      std::filesystem::exists(container / "Player4" / "checkpoint.sav"),
+                  "DeleteContainer on the shared device removes only the shared saves");
+        playerTwo->DeleteContainer("cna-demos layout");
+        playerFour->DeleteContainer("cna-demos layout");
+        ctx.Check(std::filesystem::is_directory(container) && std::filesystem::is_empty(container),
+                  "each player's device removes its own folder; the container folder itself stays");
+        std::filesystem::remove(container);
     }
 }
 

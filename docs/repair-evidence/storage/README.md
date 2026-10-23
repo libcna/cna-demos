@@ -2,9 +2,10 @@
 
 ## Current checkpoint (2026-10-23)
 
-StorageContainer construction (ISSUE-010) is repaired at the container/root boundary with
-Sharp `530e217f`; see [STORAGE_CONTAINER_CREATION.md](STORAGE_CONTAINER_CREATION.md). Residual
-DeleteContainer and Exists error paths remain before 010 can close.
+ISSUE-010 is closed (CNA `fe2eb8f33`): construction in
+[STORAGE_CONTAINER_CREATION.md](STORAGE_CONTAINER_CREATION.md), DeleteContainer, Exists and
+uninspectable paths plus the complete checkpoint in
+[STORAGE_RESIDUAL_PATHS.md](STORAGE_RESIDUAL_PATHS.md).
 
 FileShare152 is repaired and Linux-validated, with Windows product runtime validation pending.
 See [FILE_SHARE.md](FILE_SHARE.md) for commits, full renderer/CTest results, ABI rebuild

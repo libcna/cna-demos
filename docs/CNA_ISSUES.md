@@ -1198,6 +1198,20 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-010 -- Storage reports errors with C++ standard exceptions, not XNA's types
 
+- **Resolved (2026-10-23):** CNA `162e07b8a` completes the residual paths against genuine XNA
+  (`StorageResidualPathsOracle`): a device's `DeleteContainer` removes only its own player folder,
+  leaves a missing container or a same-named file alone and creates nothing; Exists queries
+  answer false on any failure; operations beneath an unsearchable directory report
+  `UnauthorizedAccessException`; an unresolvable root is a disconnected device. Together with the
+  content guard, deletion, directory and construction repairs below, no storage path reports a
+  C++ standard exception any more. `storage_root` now checks XNA's per-device deletion scope
+  (5 -> 6 checks), and `path_rules`/`directories` require `System::ArgumentException`/
+  `System::IO::IOException` instead of catching `std::exception`. Complete sweeps SOFTWARE
+  653/15/48/3 and OPENGLES3 695/14/7/3 change only rows of committed repairs; serial CTest
+  684 PASS/48 SKIP/0 FAIL/3 disabled. Closure: CNA `fe2eb8f33`. A dangling-symlink containment
+  escape found during the audit is fixed separately (CNA `a24c75b2e`). See
+  [residual paths](repair-evidence/storage/STORAGE_RESIDUAL_PATHS.md).
+
 - **Container construction repaired (2026-10-23; CONFIRMED_OPEN):** genuine XNA
   `StorageContainerCreationOracle` (real `EndOpenContainer`, isolated Wine profile) passes
   20/20 + 3/3: construction creates the whole chain, a file at the name/player/title/SavedGames
@@ -1279,7 +1293,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `content.content_manager.several_managers` control now reproduces this as an exact expected
   failure before any asset read or resource creation.
 - **Environment:** CNA 0.1.0, GCC 14.2, Linux.
-- **Status:** open (low impact); not reported upstream yet.
+- **Status:** resolved (2026-10-23).
 
 ### CNA-DEMOS-ISSUE-011 -- `ContentManager::Unload` does not dispose loaded assets
 

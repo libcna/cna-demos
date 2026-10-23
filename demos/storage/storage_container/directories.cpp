@@ -76,13 +76,13 @@ namespace
             container->DeleteFile("missing-file.bin");
             ctx.Check(!container->FileExists("missing-file.bin"), "DeleteFile accepts a missing file in an existing directory");
 
-            // A directory must be empty before it can be deleted.
+            // A directory must be empty before it can be deleted; XNA reports it as IOException.
             bool refused = false;
             try
             {
                 container->DeleteDirectory("replays");
             }
-            catch (const std::exception& e)
+            catch (const System::IO::IOException& e)
             {
                 refused = true;
                 ctx.Print("DeleteDirectory on a non-empty directory: {}", e.what());

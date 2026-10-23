@@ -6,6 +6,7 @@
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Storage/StorageContainer.hpp"
 #include "Microsoft/Xna/Framework/Storage/StorageDevice.hpp"
+#include "System/ArgumentException.hpp"
 #include "System/IAsyncResult.hpp"
 #include "System/IO/Stream.hpp"
 
@@ -13,8 +14,8 @@ using namespace Microsoft::Xna::Framework::Storage;
 
 namespace
 {
-    // CNA reports these argument errors as std::invalid_argument, not System::ArgumentException
-    // (CNA-DEMOS-ISSUE-010), so the demo catches std::exception, the base of both.
+    // Each refusal is a System::ArgumentException (ArgumentNullException for an empty name), the
+    // type XNA code catches; another exception type counts as a failure (CNA-DEMOS-ISSUE-010).
     template <typename Action>
     bool Refused(CnaDemos::DemoContext& ctx, const std::string& what, Action action)
     {
@@ -22,10 +23,15 @@ namespace
         {
             action();
         }
-        catch (const std::exception& e)
+        catch (const System::ArgumentException& e)
         {
             ctx.Print("{}: refused ({})", what, e.what());
             return true;
+        }
+        catch (const std::exception& e)
+        {
+            ctx.Print("{}: refused with the wrong exception type ({})", what, e.what());
+            return false;
         }
         ctx.Print("{}: accepted", what);
         return false;
