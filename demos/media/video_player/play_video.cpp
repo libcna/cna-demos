@@ -36,8 +36,8 @@ namespace
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
             // A .wmv in the media content project, compiled by the VideoProcessor (an XNA content
             // project did the same): the metadata is read without decoding a frame. That project
-            // is built into assets/media and gets a ContentManager rooted there, because the
-            // stream reference in a compiled video is relative to the root of its content build.
+            // is built into assets/media; a ContentManager rooted there loads it under the names it
+            // was compiled with.
             media_ = std::make_unique<Microsoft::Xna::Framework::Content::ContentManager>(&getServicesProperty(),
                                                                                           "assets/media");
             video_.emplace(media_->Load<Video>("videos/bounce"));
@@ -52,6 +52,11 @@ namespace
                           video_->getFramesPerSecondProperty() == 15.0f &&
                           soundtrack == VideoSoundtrackType::Music,
                       "the metadata describes the 160x120, 15 fps music clip");
+            // The game's own ContentManager, rooted above the media build, finds the stream beside
+            // the compiled video too, as in XNA (CNA-DEMOS-ISSUE-020).
+            const Video relocated = getContentProperty().Load<Video>("media/videos/bounce");
+            ctx.Check(relocated.getWidthProperty() == 160 && relocated.getHeightProperty() == 120,
+                      "a manager rooted above the media build loads the same video");
 
             player_ = std::make_unique<VideoPlayer>();
             player_->Play(&*video_);
