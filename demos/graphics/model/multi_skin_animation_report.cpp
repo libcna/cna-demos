@@ -83,11 +83,13 @@ namespace
                       "no scene-node animation is reported lost when every track belongs to a retained palette");
             ctx.Check(unavailableEntries == 0,
                       "channels retained by a different skin palette are not reported as unavailable loss");
-            ctx.Check(unavailableEntries == 2 && unavailableOccurrences == 2 &&
-                          report.getWarningCountProperty() == 2 &&
-                          report.getDroppedFeatureCountProperty() == 2 &&
-                          report.getApproximationCountProperty() == 0 && report.AnythingLost(),
-                      "the current report exposes one false unavailable-channel warning per palette");
+            // Until CNA-DEMOS-ISSUE-095 was fixed this pinned the defect's exact shape: one
+            // unavailable-channel warning per palette, both counted lost.
+            ctx.Check(unavailableOccurrences == 0 &&
+                          report.getWarningCountProperty() == 0 &&
+                          report.getDroppedFeatureCountProperty() == 0 &&
+                          report.getApproximationCountProperty() == 0 && !report.AnythingLost(),
+                      "the report has no warning, dropped feature or loss when every channel has a palette");
         }
     };
 }
@@ -96,8 +98,8 @@ CNA_DEMOS_GAME(MultiSkinAnimationReportDemo, {
     .id = "graphics.model.multi_skin_animation_report",
     .title = "Aggregate animation reporting across skins",
     .description = "Imports one glTF animation whose two channels belong to different independent skins, "
-                   "plays both retained palette clips, and exposes CNA-DEMOS-ISSUE-095's false per-palette "
-                   "unavailable-target loss in the model-level report.",
+                   "plays both retained palette clips, and checks that the model-level report calls no "
+                   "channel lost that another palette keeps (CNA-DEMOS-ISSUE-095).",
     .apis = {"Model::SkinsEXT", "ModelSkinEXT", "SkinningData::AnimationClips",
              "AnimationPlayer::StartClip", "AnimationPlayer::Update",
              "AnimationPlayer::GetBoneTransforms", "Model::GltfImportReportEXT",
@@ -106,5 +108,4 @@ CNA_DEMOS_GAME(MultiSkinAnimationReportDemo, {
     .needs = CnaDemos::Need::ThreeD,
     .frames = 1,
     .assets = {"models/loose_multi_skin.gltf"},
-    .knownIssue = "CNA-DEMOS-ISSUE-095",
 })

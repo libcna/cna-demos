@@ -409,7 +409,6 @@ CNA_DEMOS_GAME(NodeInstancesDemo, {
     .assets = {"models/loose_node_instances.gltf", "models/loose_scene_fallback_implicit.gltf",
                "models/loose_scene_fallback_nodes.gltf", "models/loose_scene_fallback_meshes.gltf",
                "models/loose_scene_fallback_empty.gltf", "models/loose_scene_fallback_cycle.gltf"},
-    .restrictions = "EXT_mesh_gpu_instancing remains unsupported; CNA-DEMOS-ISSUE-092 records that an explicitly "
-                    "selected empty scene incorrectly revives an unselected mesh at the identity root.",
-    .knownIssue = "CNA-DEMOS-ISSUE-092",
+    .restrictions = "EXT_mesh_gpu_instancing remains unsupported. An explicitly selected empty scene is refused "
+                    "rather than reviving an unselected mesh at the identity root (CNA-DEMOS-ISSUE-092).",
 })

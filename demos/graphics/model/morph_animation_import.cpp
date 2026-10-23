@@ -97,17 +97,16 @@ namespace
                 FindDiagnostic(report, "animation-paths-unsupported");
             ctx.Check(unsupported == nullptr,
                       "a weights channel retained as a playable morph track is not reported as unsupported loss");
+            // Until CNA-DEMOS-ISSUE-094 was fixed this pinned the defect's exact shape: one
+            // animations-empty and one animation-paths-unsupported warning, both counted lost.
             ctx.Check(summary && summary->Count == 2 &&
                           summary->Kind == GltfImportDiagnosticKindEXT::Information &&
-                          empty && empty->Count == 1 &&
-                          empty->Kind == GltfImportDiagnosticKindEXT::DroppedData &&
-                          unsupported && unsupported->Count == 1 &&
-                          unsupported->Kind == GltfImportDiagnosticKindEXT::UnsupportedFeature &&
+                          empty == nullptr && unsupported == nullptr &&
                           report.AnimationCount == 1 && report.ClipCount == 0 &&
-                          report.getWarningCountProperty() == 2 &&
-                          report.getDroppedFeatureCountProperty() == 2 &&
-                          report.getApproximationCountProperty() == 0 && report.AnythingLost(),
-                      "the current loose report double-classifies the retained weight animation as empty and unsupported");
+                          report.getWarningCountProperty() == 0 &&
+                          report.getDroppedFeatureCountProperty() == 0 &&
+                          report.getApproximationCountProperty() == 0 && !report.AnythingLost(),
+                      "the loose report keeps its morph summary and reports the retained weight animation as neither empty nor lost");
         }
     };
 }
@@ -116,8 +115,8 @@ CNA_DEMOS_GAME(MorphAnimationImportDemo, {
     .id = "graphics.model.morph_animation_import",
     .title = "Morph animation import carriers",
     .description = "Compares the same generated morph animation through compiled and loose Model loading, "
-                   "evaluates and uploads identical weight-driven vertex bytes, and exposes "
-                   "CNA-DEMOS-ISSUE-094's false unsupported/lost diagnostics for the retained loose track.",
+                   "evaluates and uploads identical weight-driven vertex bytes, and checks that the "
+                   "retained loose track is not reported lost (CNA-DEMOS-ISSUE-094).",
     .apis = {"MorphTargetDataEXT", "MorphWeightTrackEXT", "EvaluateMorphWeightsEXT",
              "BlendMorphTargetsEXT", "SetMorphWeightsEXT", "VertexBuffer::GetDataRawEXT",
              "ModelMeshPart::Tag", "Model::GltfImportReportEXT", "GltfImportReportEXT::Diagnostics"},
@@ -125,5 +124,4 @@ CNA_DEMOS_GAME(MorphAnimationImportDemo, {
     .needs = CnaDemos::Need::ThreeD,
     .frames = 1,
     .assets = {"models/morph_flag.cnb", "models/loose_morph_flag.gltf"},
-    .knownIssue = "CNA-DEMOS-ISSUE-094",
 })

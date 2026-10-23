@@ -277,10 +277,11 @@ a check that all authored colors remain visible and that a blank texture row can
   prefix composition, the refused partial root prefix and live clip edits; CNA-DEMOS-ISSUE-096
   fixed by CNA `b98629c89`).
 - ✅ `graphics.model.morph_animation_import` (compiled/loose carrier parity, exact vertex upload
-  and false loose-report loss; expected failure, CNA-DEMOS-ISSUE-094).
+  and a loose report with no loss for the retained weight track; CNA-DEMOS-ISSUE-094 fixed by CNA
+  `ab0ab883c`).
 - ✅ `graphics.model.multi_skin_animation_report` (one source animation split across two retained
-  palette clips; expected failure, CNA-DEMOS-ISSUE-095: each palette-local skip is falsely counted
-  as aggregate Model loss even though the other palette retains that channel).
+  palette clips, with no Model-level loss for a channel the other palette keeps;
+  CNA-DEMOS-ISSUE-095 fixed by CNA `ab0ab883c`).
 - ✅ `graphics.model.material_variants` (KHR_materials_variants, run-time import: CNA's content
   pipeline refuses variants, which the compiled model format cannot carry). Its complete-state
   extension selects an unlit24-byte default, a coloured PBR60-byte Ocean layout and a textured
@@ -325,7 +326,9 @@ a check that all authored colors remain visible and that a blank texture row can
   explicit matrix and odd/even composed mirrors; exact hierarchy/report diagnostics, default-scene
   exclusion, unsupported GPU-instancing loss and determinant-aware culling pass on both renderers.
   Its extension also proves explicit nonzero and implicit-first scene selection, transformed
-  no-scenes root traversal and identity-root fallback for files containing only bare meshes.
+  no-scenes root traversal and identity-root fallback for files containing only bare meshes, and
+  that an explicitly selected empty scene is refused (CNA-DEMOS-ISSUE-092, fixed by CNA
+  `5f136988a`).
 - Residual model members are explicitly dispositioned in COVERAGE_AUDIT.md as already represented,
   forwarding/value behavior, malformed-input stress, or renderer/content-format boundaries.
   Runtime XNB custom graph fixups are covered separately in Phase 8; generic ContentReader behavior
