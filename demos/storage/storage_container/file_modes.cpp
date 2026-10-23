@@ -121,5 +121,4 @@ CNA_DEMOS_CONSOLE(FileModes, {
              "FileMode", "FileAccess", "FileShare", "StorageDevice::BeginOpenContainer",
              "StorageDevice::EndOpenContainer"},
     .tags = {"storage", "file", "append", "truncate", "text"},
-    .knownIssue = "CNA-DEMOS-ISSUE-152",
 })

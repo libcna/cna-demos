@@ -15,40 +15,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
-### CNA-DEMOS-ISSUE-152 -- StorageContainer ignores the requested FileShare policy
-
-- **Repair-campaign clarification (2026-10-20):** genuine XNA/.NET execution disproves
-  the historical ReadWrite-default suggestion below. Both shorter StorageContainer
-  OpenFile overloads are exclusive (`FileShare.None`), two-argument Append uses write
-  access, and File.Create is exclusive. Direct three-argument FileStream and File.OpenRead
-  instead use read sharing. The expanded opening/lifetime oracle passes21/21. Actual
-  Windows and modern Unix .NET sharing matrices differ (25 versus81 admitted pairs out
-  of144); the original exclusive-open demo remains valid on both. The platform policy
-  is being resolved separately, with no relaxed demo assertion or152 closure. Evidence:
-  `docs/repair-evidence/storage/README.md` and its genuine oracle sources.
-- **Area/API:** `StorageContainer::OpenFile(file, mode, access, fileShare)` in
-  `modules/storage/src/StorageContainer.cpp`; the C `cna_storage_container_open_file_share` route
-  inherits the same implementation.
-- **Demo/reproduction:** run `storage.storage_container.file_modes`. After the existing file-mode
-  and access checks, it opens `log.txt` for read with `FileShare::None`, then attempts a second
-  read handle before releasing the exclusive one. A positive control releases it and proves that
-  two handles opened with `FileShare::Read` can read concurrently.
-- **Observed:** the exclusive second open succeeds. The demo passes7/8 controls and fails only the
-  exclusivity assertion on both SOFTWARE and OPENGLES3 labels; five repeated runs per label are
-  byte-identical at stdout SHA-256
-  `5a08d9908c6c806f20618bea5e3eaf3bec7892e64e759a85f9a80c205fddc388` with empty stderr.
-- **Expected/reference:** the public header says the argument controls concurrent access. The
-  checked-in genuine-XNA implementation forwards all four arguments to
-  `File.Open(path, fileMode, fileAccess, fileShare)`, where `FileShare::None` refuses another
-  handle until the first closes.
-- **Cause:** CNA comments the parameter name out and constructs Sharp Runtime's three-argument
-  `FileStream`, which has no share-policy constructor. Every FileShare value therefore follows the
-  same path.
-- **Suggested repair/status:** implement and enforce FileShare in Sharp Runtime's FileStream and
-  pass this argument through CNA. Keep the three shorter overloads' documented ReadWrite default.
-  Open against pinned CNA `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA or Sharp Runtime
-  source was modified and no fresh XNA execution or upstream message is claimed. Evidence:
-  `/tmp/checkpoint-1109-storage-public-headers/*`.
 
 ### CNA-DEMOS-ISSUE-150 -- documented `CNA::Runtime` facade has no linkable implementation
 
@@ -2015,6 +1981,56 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-152 -- StorageContainer ignores the requested FileShare policy
+
+- **Status: Resolved, platform validation pending (2026-10-23).** Sharp Runtime
+  `c6984ecef98aa6a04634e76145763545a90c68fe` implements native sharing on the actual
+  stream handle; `f51bf9acf8374088a425024b40ef1c7b697c5ba5` strengthens cross-process
+  regression coverage. CNA `21b4cd64cd122353431dafb5793a19ac568956fd` forwards the policy
+  and corrects exclusive/Append defaults; `169470ee7550471844d01a0789dd5e25770544b6`
+  corrects and tests the C contract. The owner selected native .NET sharing per platform.
+  Linux full Sharp18,218/18,218, CNA storage50/50, focused sanitizers23/23 and both storage
+  sweeps7/7 pass. The original demo's8 assertions are unchanged; only its knownIssue is removed.
+  Full719-ID sweeps introduce no failing assertion against the preceding checkpoint, and6
+  visual references are exact. Full CTest still has6 independent failures (2 unmarked
+  assertion failures and4 stale expected-pass markers); these remain visible and unresolved.
+  Windows C++ runtime validation remains pending; MinGW/Emscripten strict syntax checks pass.
+  FileStream's private ABI changed and all consumers must rebuild. Historical observations
+  below are retained. See [the complete repair evidence](repair-evidence/storage/FILE_SHARE.md).
+
+- **Repair-campaign clarification (2026-10-20):** genuine XNA/.NET execution disproves
+  the historical ReadWrite-default suggestion below. Both shorter StorageContainer
+  OpenFile overloads are exclusive (`FileShare.None`), two-argument Append uses write
+  access, and File.Create is exclusive. Direct three-argument FileStream and File.OpenRead
+  instead use read sharing. The expanded opening/lifetime oracle passes21/21. Actual
+  Windows and modern Unix .NET sharing matrices differ (25 versus81 admitted pairs out
+  of144); the original exclusive-open demo remains valid on both. The platform policy
+  is being resolved separately, with no relaxed demo assertion or152 closure. Evidence:
+  `docs/repair-evidence/storage/README.md` and its genuine oracle sources.
+- **Area/API:** `StorageContainer::OpenFile(file, mode, access, fileShare)` in
+  `modules/storage/src/StorageContainer.cpp`; the C `cna_storage_container_open_file_share` route
+  inherits the same implementation.
+- **Demo/reproduction:** run `storage.storage_container.file_modes`. After the existing file-mode
+  and access checks, it opens `log.txt` for read with `FileShare::None`, then attempts a second
+  read handle before releasing the exclusive one. A positive control releases it and proves that
+  two handles opened with `FileShare::Read` can read concurrently.
+- **Observed:** the exclusive second open succeeds. The demo passes7/8 controls and fails only the
+  exclusivity assertion on both SOFTWARE and OPENGLES3 labels; five repeated runs per label are
+  byte-identical at stdout SHA-256
+  `5a08d9908c6c806f20618bea5e3eaf3bec7892e64e759a85f9a80c205fddc388` with empty stderr.
+- **Expected/reference:** the public header says the argument controls concurrent access. The
+  checked-in genuine-XNA implementation forwards all four arguments to
+  `File.Open(path, fileMode, fileAccess, fileShare)`, where `FileShare::None` refuses another
+  handle until the first closes.
+- **Cause:** CNA comments the parameter name out and constructs Sharp Runtime's three-argument
+  `FileStream`, which has no share-policy constructor. Every FileShare value therefore follows the
+  same path.
+- **Suggested repair/status:** implement and enforce FileShare in Sharp Runtime's FileStream and
+  pass this argument through CNA. Keep the three shorter overloads' documented ReadWrite default.
+  Open against pinned CNA `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA or Sharp Runtime
+  source was modified and no fresh XNA execution or upstream message is claimed. Evidence:
+  `/tmp/checkpoint-1109-storage-public-headers/*`.
 
 ### CNA-DEMOS-ISSUE-131 -- BoundingFrustum ray intersection omits outside entry and boundary start
 
