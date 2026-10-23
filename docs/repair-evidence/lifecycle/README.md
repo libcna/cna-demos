@@ -1,5 +1,9 @@
 # Lifecycle audit and native witnesses (141–144; external validation pending)
 
+The separate completed ISSUE-019 timing repair is recorded in
+[RESET_ELAPSED_TIME.md](RESET_ELAPSED_TIME.md), with genuine XNA references and seven native
+regressions. The historical component/lifecycle investigation below is retained.
+
 The opening audit below records the historical pre-fix state. Subsequent sections
 record the committed repairs and validation; full external regression is pending.
 

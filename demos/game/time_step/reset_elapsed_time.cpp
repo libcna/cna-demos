@@ -77,5 +77,4 @@ CNA_DEMOS_GAME(ResetElapsedTimeDemo, {
     .tags = {"time", "fixed-step", "loading"},
     .frames = 20,
     .restrictions = "Uses the wall clock (a deliberate 200 ms pause).",
-    .knownIssue = "CNA-DEMOS-ISSUE-019",
 })

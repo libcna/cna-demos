@@ -1491,23 +1491,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment:** CNA 0.1.0, Linux.
 - **Status:** open (low impact; same family as ISSUE-010); not reported upstream yet.
 
-### CNA-DEMOS-ISSUE-019 -- `Game::ResetElapsedTime` is ignored with a fixed time step
-
-- **Area:** runtime -- `Game::ResetElapsedTime` (`Game.cpp`) sets its flag only when
-  `IsFixedTimeStep` is false, and only the variable-step path reads it. The rule is FNA's (its
-  `ResetElapsedTime` says the call is "totally ignored" for a fixed time step).
-- **Demos:** `game.time_step.reset_elapsed_time` (expected failure).
-- **Reproduction:** in a default (fixed 60 Hz) game, stall one `Update` for 200 ms and call
-  `ResetElapsedTime()`; count the Updates before the next `Draw`.
-- **Observed:** 12 catch-up Updates run before the next Draw (the stall is made up step by step).
-- **Expected:** XNA documents the method for exactly this case (recovering from a slow frame
-  whose elapsed time is too large to be useful), and Microsoft's XNA GameStateManagement sample
-  calls it from its loading screen -- in a game with the default fixed time step -- so that the
-  timing does not try to catch up after the long loading frame (paraphrased from the sample's
-  comment). The next frame should run one ordinary step.
-- **Environment:** CNA 0.1.0, Linux, SOFTWARE and OPENGLES3.
-- **Status:** open (medium for games with loading screens: the world jumps ahead after a load);
-  not reported upstream yet.
 
 ### CNA-DEMOS-ISSUE-020 -- A compiled Song/Video stream is looked up from the manager's root, not beside the asset
 
@@ -2003,6 +1986,35 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-019 -- `Game::ResetElapsedTime` is ignored with a fixed time step
+
+- **Status: Resolved (2026-10-23).** CNA `f9747ea4964c4aa65cda1d5fa437ec40ab89911a`
+  resets both timestep modes, discards the next clock interval while preserving accumulated
+  steps, and clears slow history without mutating the current Update argument or restoring
+  slow Draw state from retained debt. Genuine XNA4/Framework4/Wine passes17 clock checks
+  and six live control/reset checks. Seven native regressions pass; the complete runtime
+  module has244 passes/four unchanged skips and no failures. Original demo assertions4/4
+  pass on SOFTWARE/OPENGLES3; only its knownIssue marker is removed. Both full719-ID sweeps
+  change only this issue from FAIL to PASS. Six exact visuals pass; full CTest preserves
+  678PASS/48SKIP/6 independent FAIL/3disabled, with every per-test status unchanged.
+  No native Windows/other renderer/sanitizer validation is claimed. Historical findings
+  below are retained. See [complete evidence](repair-evidence/lifecycle/RESET_ELAPSED_TIME.md).
+
+- **Area:** runtime -- `Game::ResetElapsedTime` (`Game.cpp`) sets its flag only when
+  `IsFixedTimeStep` is false, and only the variable-step path reads it. The rule is FNA's (its
+  `ResetElapsedTime` says the call is "totally ignored" for a fixed time step).
+- **Demos:** `game.time_step.reset_elapsed_time` (expected failure).
+- **Reproduction:** in a default (fixed 60 Hz) game, stall one `Update` for 200 ms and call
+  `ResetElapsedTime()`; count the Updates before the next `Draw`.
+- **Observed:** 12 catch-up Updates run before the next Draw (the stall is made up step by step).
+- **Expected:** XNA documents the method for exactly this case (recovering from a slow frame
+  whose elapsed time is too large to be useful), and Microsoft's XNA GameStateManagement sample
+  calls it from its loading screen -- in a game with the default fixed time step -- so that the
+  timing does not try to catch up after the long loading frame (paraphrased from the sample's
+  comment). The next frame should run one ordinary step.
+- **Environment:** CNA 0.1.0, Linux, SOFTWARE and OPENGLES3.
+
 
 ### CNA-DEMOS-ISSUE-152 -- StorageContainer ignores the requested FileShare policy
 
