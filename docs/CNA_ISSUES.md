@@ -16,39 +16,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 ## Open
 
 
-### CNA-DEMOS-ISSUE-150 -- documented `CNA::Runtime` facade has no linkable implementation
-
-- **Area/API:** public `CNA/Misc.hpp`: `RuntimeOptions` and `Runtime::Initialize`, `Shutdown`,
-  `IsGraphicsEnabled`, `IsAudioEnabled` and `IsInputEnabled`.
-- **Reproducer:** `tools/repro_runtime_facade.cpp` constructs the documented options and calls all
-  five methods. Compile and link it against the existing full build:
-
-  ```bash
-  g++ -std=c++20 -Wall -Wextra -Werror \
-    -I /tmp/cna-demos-cna-d23/modules/runtime/include \
-    tools/repro_runtime_facade.cpp -L build/linux-full/CNA \
-    -Wl,-rpath,$PWD/build/linux-full/CNA -lcna -o /tmp/repro_runtime_facade
-  ```
-
-- **Observed:** compilation is clean, then GNU ld reports an undefined reference for each of the
-  five called methods and exits1. `nm -C --defined-only` over
-  `build/linux-full/CNA/modules/runtime/libcna_runtime.a` finds no `CNA::Runtime::` definition, and
-  the runtime module has no source file for the facade.
-- **Expected:** every documented public method links and implements the stated subsystem-lifetime
-  contract, or the nonfunctional facade is removed from the public include tree. `RuntimeOptions`
-  alone has no meaningful consumer because its only documented use is `Initialize`.
-- **Upstream corroboration:** pinned CNA already records the same open defect as
-  `REMED-CORE-011` in `remediation/MASTER_REMEDIATION_PLAN.md`. Its C API
-  `CApi_UnimplementedRuntimeFacade` check deliberately fails if a definition ever appears so the
-  currently not-applicable binding rows must be revisited. This cna-demos issue adds a minimal
-  public-consumer link reproducer; it does not claim a new upstream report.
-- **Demo/status:** no catalog demo or expected-failure marker is possible because referencing the
-  API prevents the executable from linking. The working `ProjectGraphicsProfileEXT` half of the
-  runtime CNA surface remains covered by `game.graphics_device_manager.graphics_profile`.
-- **Evidence/status:** reproduced on Linux against pinned CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`; evidence is under
-  `/tmp/checkpoint-1104-runtime-public-headers/*`. Open; no CNA source was modified.
-
 
 ### CNA-DEMOS-ISSUE-114 -- Releasing a nonterminal SoundEffect loop drops its authored tail
 
@@ -1986,6 +1953,48 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-150 -- documented `CNA::Runtime` facade has no linkable implementation
+
+- **Resolved:** CNA `379bac6d3f76f452ffce7c7760149b2d1df30b95` retires the declaration-only
+  facade, an option explicitly allowed by this finding. No implementation or export existed.
+  `CNA/Misc.hpp` and its unused options are removed; Game and the unrelated Runtime CMake target
+  remain supported. Final disposition: `UNSUPPORTED_CONTRACT_CORRECTED`.
+- **Closure evidence:** [runtime facade retirement](repair-evidence/api-shape/RUNTIME_FACADE_RETIREMENT.md).
+  Native runtime 244 PASS/4 unchanged SKIP; six audit/retirement gates and C runtime smokes on
+  SOFTWARE/OPENGLES3 pass. All 275 external binaries remain byte-identical to the last complete
+  checkpoint. Original link reproducer and all historical observations below are retained.
+
+- **Area/API:** public `CNA/Misc.hpp`: `RuntimeOptions` and `Runtime::Initialize`, `Shutdown`,
+  `IsGraphicsEnabled`, `IsAudioEnabled` and `IsInputEnabled`.
+- **Reproducer:** `tools/repro_runtime_facade.cpp` constructs the documented options and calls all
+  five methods. Compile and link it against the existing full build:
+
+  ```bash
+  g++ -std=c++20 -Wall -Wextra -Werror \
+    -I /tmp/cna-demos-cna-d23/modules/runtime/include \
+    tools/repro_runtime_facade.cpp -L build/linux-full/CNA \
+    -Wl,-rpath,$PWD/build/linux-full/CNA -lcna -o /tmp/repro_runtime_facade
+  ```
+
+- **Observed:** compilation is clean, then GNU ld reports an undefined reference for each of the
+  five called methods and exits1. `nm -C --defined-only` over
+  `build/linux-full/CNA/modules/runtime/libcna_runtime.a` finds no `CNA::Runtime::` definition, and
+  the runtime module has no source file for the facade.
+- **Expected:** every documented public method links and implements the stated subsystem-lifetime
+  contract, or the nonfunctional facade is removed from the public include tree. `RuntimeOptions`
+  alone has no meaningful consumer because its only documented use is `Initialize`.
+- **Upstream corroboration:** pinned CNA already records the same open defect as
+  `REMED-CORE-011` in `remediation/MASTER_REMEDIATION_PLAN.md`. Its C API
+  `CApi_UnimplementedRuntimeFacade` check deliberately fails if a definition ever appears so the
+  currently not-applicable binding rows must be revisited. This cna-demos issue adds a minimal
+  public-consumer link reproducer; it does not claim a new upstream report.
+- **Demo/status:** no catalog demo or expected-failure marker is possible because referencing the
+  API prevents the executable from linking. The working `ProjectGraphicsProfileEXT` half of the
+  runtime CNA surface remains covered by `game.graphics_device_manager.graphics_profile`.
+- **Evidence/status:** reproduced on Linux against pinned CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`; evidence is under
+  `/tmp/checkpoint-1104-runtime-public-headers/*`. At that historical checkpoint the issue was open; no CNA source had been modified.
 
 ### CNA-DEMOS-ISSUE-019 -- `Game::ResetElapsedTime` is ignored with a fixed time step
 

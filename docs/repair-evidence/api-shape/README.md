@@ -1,5 +1,8 @@
 # Passing-demo counterexamples: current API shape and asset roots (009, 020, 029, 150)
 
+ISSUE-150 follow-up: [runtime facade retirement](RUNTIME_FACADE_RETIREMENT.md).
+The observations below describe the earlier baseline and are preserved as history.
+
 A passing associated demo is not evidence that these findings are fixed. The
 haptic demos use optional construction, the sound-effect demo uses std::ifstream,
 and the graphics-profile demo does not invoke the standalone Runtime facade.
