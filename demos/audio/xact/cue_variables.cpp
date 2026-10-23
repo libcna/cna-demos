@@ -7,11 +7,13 @@
 #include "Microsoft/Xna/Framework/Audio/Cue.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundBank.hpp"
 #include "Microsoft/Xna/Framework/Audio/WaveBank.hpp"
+#include "Microsoft/Xna/Framework/TitleLocation.hpp"
 #include "System/ArgumentNullException.hpp"
 #include "System/InvalidOperationException.hpp"
 #include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
+using Microsoft::Xna::Framework::TitleLocation;
 
 namespace
 {
@@ -33,7 +35,7 @@ namespace
     void CueVariables(CnaDemos::DemoContext& ctx)
     {
         AudioEngine engine("assets/xact/demo.xgs");
-        WaveBank waves(&engine, "assets/xact/tones.xwb");
+        WaveBank waves(&engine, TitleLocation::Path() + "/assets/xact/tones.xwb");
         SoundBank sounds(&engine, "assets/xact/tones.xsb");
 
         // demo.xgs declares Intensity as a cue variable (0..100, initially 50): every Cue gets

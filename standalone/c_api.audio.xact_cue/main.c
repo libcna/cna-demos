@@ -20,6 +20,21 @@ static void count_disposal(void* context)
     ++*(int*)context;
 }
 
+static int asset_path(CNA_Handle game, const char* suffix, char* destination, size_t capacity)
+{
+    uint64_t bytes = UINT64_C(0);
+    uint64_t copied = UINT64_C(0);
+    const size_t suffix_bytes = strlen(suffix);
+    if (cna_title_location_get_path_size(game, &bytes) != CNA_RESULT_SUCCESS ||
+        bytes + suffix_bytes + 1U > capacity ||
+        cna_title_location_copy_path(game, destination, bytes, &copied) != CNA_RESULT_SUCCESS ||
+        copied != bytes) {
+        return 0;
+    }
+    memcpy(destination + bytes, suffix, suffix_bytes + 1U);
+    return 1;
+}
+
 static void cue_info_init(CNA_CueInfo* info)
 {
     memset(info, 0, sizeof(*info));
@@ -50,6 +65,8 @@ int main(int argc, char** argv)
     float value = -1.0F;
     float other = -1.0F;
     int disposals = 0;
+    char tones_path[2048];
+    char release_path[2048];
     char name[64];
     char before[64];
 
@@ -72,13 +89,20 @@ int main(int argc, char** argv)
         return cna_demo_skip("no audio playback device");
     }
 
+    if (!cna_demo_check(&demo,
+            asset_path(game, "/assets/xact/tones.xwb", tones_path, sizeof(tones_path)) &&
+            asset_path(game, "/assets/xact/release.xwb", release_path, sizeof(release_path)),
+            "resolve both WaveBank assets independently of the working directory")) {
+        goto cleanup;
+    }
+
     if (!cna_demo_check_result(
             &demo,
             cna_audio_engine_create(game, view("assets/xact/demo.xgs"), &engine),
             "open the generated XACT settings") ||
         !cna_demo_check_result(
             &demo,
-            cna_wave_bank_create(engine, view("assets/xact/tones.xwb"), &tones),
+            cna_wave_bank_create(engine, view(tones_path), &tones),
             "open the generated tone wave bank") ||
         !cna_demo_check_result(
             &demo,
@@ -212,7 +236,7 @@ int main(int argc, char** argv)
 
     if (!cna_demo_check_result(
             &demo,
-            cna_wave_bank_create(engine, view("assets/xact/release.xwb"), &release_waves),
+            cna_wave_bank_create(engine, view(release_path), &release_waves),
             "open the authored-release wave bank") ||
         !cna_demo_check_result(
             &demo,

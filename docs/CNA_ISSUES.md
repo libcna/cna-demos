@@ -1469,6 +1469,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-028 -- A streaming WaveBank opens a relative path from the working directory
 
+- **Status: Resolved (2026-10-23).** CNA `783fe5739bbf968aae71983269115e4b29a3a016` repairs both constructors' cwd-based paths and exact file/header/metadata refusals; `3c67874ba54492d0d10258f0742824c1bb5bcec9` retains the selected streaming file. The historical title-root expectation was incorrect. Genuine XNA preflight supersedes the prior FNA-based C header and empty-bank tests; C refusal leaves an invalid handle.
+- **Validation:** original constructor14/lazy8/retained6 controls allPASS; native integration51PASS (15 prior failures repaired), audio775PASS/4sameSKIP, targeted ASan/UBSan/leaks62PASS across10 instrumented TUs, five C controlsPASS. Both32-scenario renderer sweeps retain30PASS/1known114FAIL/1manualNOTRUN; two incorrect C++ stub expectations are corrected and five C child-log checks added. Final15 registered CTestsPASS26.93s; catalog719 unchanged,275 artifact hashes verify. No028 knownIssue marker existed to remove. No physical-audio/Windows/browser or new streaming-offset/FileShare guarantee is claimed. [Constructor evidence](repair-evidence/content/WAVEBANK_CONSTRUCTORS.md), [lifetime evidence](repair-evidence/content/WAVEBANK_RETAINED_FILE.md).
+- **Historical finding and intermediate triage (retained):**
+
 - **Partial repair (2026-10-23; still open):** CNA `3c67874ba54492d0d10258f0742824c1bb5bcec9` retains the streaming metadata file for lazy reads until disposal. Four new native witnesses fail before/pass after; original lazy8/retained6 checks allPASS. Full audio775PASS/4sameSKIP, targeted ASan/UBSan/leaks42PASS, five C controlsPASS. SOFTWARE32/OPENGLES3 32 each preserve30PASS/1known114FAIL/1manualNOTRUN;15 focused CTestsPASS. Constructor preflight/path behavior still gives5PASS/9FAIL and needs a separate repair. No Windows file-sharing or streaming offset claim. [Lifetime repair evidence](repair-evidence/content/WAVEBANK_RETAINED_FILE.md).
 
 - **Further current reproduction (2026-10-21; still open):** absolute-path banks

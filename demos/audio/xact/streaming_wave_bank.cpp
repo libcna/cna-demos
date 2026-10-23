@@ -32,9 +32,9 @@ namespace
         AudioEngine engine("assets/xact/demo.xgs");
         // Short effects live in an in-memory bank; long music is authored as a streaming bank
         // and opened with the streaming constructor: offset 0 into the file, packets of 16
-        // sectors (the minimum is 2). Only the bank's header is read here. (CNA opens a relative
-        // streaming path from the working directory, unlike the other XACT files: the path is
-        // built from TitleLocation, CNA-DEMOS-ISSUE-028.)
+        // sectors (the minimum is 2). Only the bank's header is read here. XNA resolves either
+        // WaveBank constructor from cwd, so use the absolute demo asset path. ISSUE-028's
+        // historical title-root expectation was incorrect; keep the asset choice explicit.
         WaveBank music(&engine, musicPath, 0, 16);
         SoundBank sounds(&engine, "assets/xact/music.xsb");
 

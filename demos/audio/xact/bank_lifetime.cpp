@@ -7,6 +7,8 @@
 #include "Microsoft/Xna/Framework/Audio/Cue.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundBank.hpp"
 #include "Microsoft/Xna/Framework/Audio/WaveBank.hpp"
+#include "Microsoft/Xna/Framework/TitleLocation.hpp"
+#include "System/ArgumentException.hpp"
 #include "System/ArgumentNullException.hpp"
 #include "System/EventArgs.hpp"
 #include "System/InvalidOperationException.hpp"
@@ -14,6 +16,7 @@
 #include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
+using Microsoft::Xna::Framework::TitleLocation;
 namespace
 {
     void BankLifetime(CnaDemos::DemoContext& ctx)
@@ -39,7 +42,7 @@ namespace
         catch (const System::ArgumentNullException&) { emptyWaveRefused = true; }
         try { SoundBank unexpected(&engine, ""); }
         catch (const System::ArgumentNullException&) { emptySoundRefused = true; }
-        try { WaveBank unexpected(&engine, "assets/xact/missing.xwb"); }
+        try { WaveBank unexpected(&engine, TitleLocation::Path() + "/assets/xact/missing.xwb"); }
         catch (const System::IO::FileNotFoundException&) { missingWaveRefused = true; }
         try { SoundBank unexpected(&engine, "assets/xact/missing.xsb"); }
         catch (const System::IO::FileNotFoundException&) { missingSoundRefused = true; }
@@ -48,25 +51,29 @@ namespace
         ctx.Check(missingWaveRefused && missingSoundRefused,
                   "missing eager wave and sound banks are FileNotFoundException");
 
-        WaveBank corruptWaves(&engine, "assets/xact/demo.xgs");
+        bool corruptWaveRefused = false;
+        try { WaveBank unexpected(&engine, TitleLocation::Path() + "/assets/xact/demo.xgs"); }
+        catch (const System::ArgumentException&) { corruptWaveRefused = true; }
         SoundBank corruptSounds(&engine, "assets/xact/demo.xgs");
         bool corruptSoundLookupRefused = false;
         try { static_cast<void>(corruptSounds.GetCue("MidTone")); }
         catch (const System::InvalidOperationException&) { corruptSoundLookupRefused = true; }
-        ctx.Check(!corruptWaves.getIsDisposedProperty() && !corruptWaves.getIsPreparedProperty(),
-                  "an existing non-XWB file creates an unprepared wave-bank stub");
+        ctx.Check(corruptWaveRefused,
+                  "an existing non-XWB file is refused with ArgumentException before bank creation");
         ctx.Check(!corruptSounds.getIsDisposedProperty() && corruptSoundLookupRefused,
                   "an existing non-XSB file creates a live sound-bank stub with no cues");
 
-        WaveBank missingStream(&engine, "assets/xact/missing-stream.xwb", 0, 16);
-        ctx.Check(!missingStream.getIsDisposedProperty() && !missingStream.getIsPreparedProperty(),
-                  "a missing streaming wave bank remains an unprepared stub without throwing");
+        bool missingStreamRefused = false;
+        try { WaveBank unexpected(&engine, TitleLocation::Path() + "/assets/xact/missing-stream.xwb", 0, 16); }
+        catch (const System::IO::FileNotFoundException&) { missingStreamRefused = true; }
+        ctx.Check(missingStreamRefused,
+                  "a missing streaming wave bank is refused with FileNotFoundException");
         engine.Disposing.Add([&](System::Object* sender, const System::EventArgs&) {
             ++engineEvents;
             engineSender = engineSender && sender == &engine;
         });
         {
-            WaveBank waves(&engine, "assets/xact/tones.xwb");
+            WaveBank waves(&engine, TitleLocation::Path() + "/assets/xact/tones.xwb");
             SoundBank sounds(&engine, "assets/xact/tones.xsb");
             std::unique_ptr<Cue> prepared(sounds.GetCue("MidTone"));
             std::unique_ptr<Cue> active(sounds.GetCue("MidTone"));
@@ -134,7 +141,7 @@ namespace
         int dependentWaveEvents = 0, dependentSoundEvents = 0;
         int dependentPreparedEvents = 0, dependentActiveEvents = 0;
         bool dependentSenders = true;
-        WaveBank waves(&engine, "assets/xact/tones.xwb");
+        WaveBank waves(&engine, TitleLocation::Path() + "/assets/xact/tones.xwb");
         SoundBank sounds(&engine, "assets/xact/tones.xsb");
         std::unique_ptr<Cue> prepared(sounds.GetCue("MidTone"));
         std::unique_ptr<Cue> active(sounds.GetCue("MidTone"));

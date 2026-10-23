@@ -14,18 +14,20 @@
 #include "Microsoft/Xna/Framework/Audio/AudioListener.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundBank.hpp"
 #include "Microsoft/Xna/Framework/Audio/WaveBank.hpp"
+#include "Microsoft/Xna/Framework/TitleLocation.hpp"
 #include "Microsoft/Xna/Framework/MathHelper.hpp"
 #include "Microsoft/Xna/Framework/Vector3.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Audio;
+using Microsoft::Xna::Framework::TitleLocation;
 
 namespace
 {
     void PositionalCue(CnaDemos::DemoContext& ctx)
     {
         AudioEngine engine("assets/xact/demo.xgs");
-        WaveBank waves(&engine, "assets/xact/tones.xwb");
+        WaveBank waves(&engine, TitleLocation::Path() + "/assets/xact/tones.xwb");
         SoundBank sounds(&engine, "assets/xact/tones.xsb");
 
         // A caller-owned cue lets the game update positioning. Its public spatial variables

@@ -80,6 +80,6 @@ Catalog719 is identical to025; all275 final consumer artifact hashes verify afte
 all gates. Freeze released. All heavy builds/tests were serial, using the shared
 ccache, existing trees, one compiler,6GiB cap/no swap and private GPU sessions.
 
-No issue marker has been removed and no final disposition has been set. Source repair: `3c67874ba54492d0d10258f0742824c1bb5bcec9`. Publication is pending the evidence checkpoint.
+No issue marker has been removed and no final disposition has been set. Source repair: `3c67874ba54492d0d10258f0742824c1bb5bcec9`. Published CNA checkpoint: `04099802bbce32098cfd86004e265ab9c7f69ec9`; demos evidence checkpoint: `1aa8afef3c6a97dcce5906614449976306e95e03`. Constructor follow-up: [WAVEBANK_CONSTRUCTORS.md](WAVEBANK_CONSTRUCTORS.md).
 The last full campaign regression remains checkpoint075; this document makes no
 new full-suite, visual, physical-audio, browser or other-platform claim.

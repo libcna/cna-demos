@@ -13,16 +13,18 @@
 #include "Microsoft/Xna/Framework/Audio/Cue.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundBank.hpp"
 #include "Microsoft/Xna/Framework/Audio/WaveBank.hpp"
+#include "Microsoft/Xna/Framework/TitleLocation.hpp"
 #include "System/InvalidOperationException.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
+using Microsoft::Xna::Framework::TitleLocation;
 
 namespace
 {
     void Categories(CnaDemos::DemoContext& ctx)
     {
         AudioEngine engine("assets/xact/demo.xgs");
-        WaveBank waves(&engine, "assets/xact/tones.xwb");
+        WaveBank waves(&engine, TitleLocation::Path() + "/assets/xact/tones.xwb");
         SoundBank sounds(&engine, "assets/xact/tones.xsb");
 
         // The sound designer puts every sound in a category; the game adjusts categories, not sounds.
@@ -81,7 +83,7 @@ namespace
         // A separate authored hierarchy makes Master the parent of SFX. The original
         // independent Music/SFX categories above keep their original fixture and checks.
         AudioEngine hierarchy("assets/xact/hierarchy.xgs");
-        WaveBank hierarchyWaves(&hierarchy, "assets/xact/tones.xwb");
+        WaveBank hierarchyWaves(&hierarchy, TitleLocation::Path() + "/assets/xact/tones.xwb");
         SoundBank hierarchySounds(&hierarchy, "assets/xact/tones.xsb");
         AudioCategory master = hierarchy.GetCategory("Master");
         AudioCategory child = hierarchy.GetCategory("SFX");

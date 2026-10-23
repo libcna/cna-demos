@@ -74,6 +74,8 @@ int main(int argc, char** argv)
     int wave_disposals = 0;
     int sound_disposals = 0;
     char streaming_path[2048];
+    char resident_path[2048];
+    char invalid_bank_path[2048];
     char name[64];
     char before[64];
 
@@ -103,15 +105,43 @@ int main(int argc, char** argv)
         return cna_demo_finish(&demo);
     }
 
+    if (!cna_demo_check(&demo,
+            asset_path(game, "/assets/xact/tones.xwb", resident_path, sizeof(resident_path)) &&
+            asset_path(game, "/assets/xact/demo.xgs", invalid_bank_path, sizeof(invalid_bank_path)),
+            "resolve the resident WaveBank asset independently of the working directory")) {
+        goto cleanup;
+    }
     cna_demo_check(
         &demo,
         cna_wave_bank_create(engine, view("assets/xact/definitely-missing.xwb"), &rejected) ==
                 CNA_RESULT_IO &&
             rejected == CNA_INVALID_HANDLE,
         "a missing resident bank is an atomic I/O failure");
+    rejected = UINT64_C(99);
+    cna_demo_check(
+        &demo,
+        cna_wave_bank_create_streaming(
+            engine, view("assets/xact/definitely-missing.xwb"), 0, 16, &rejected) ==
+                CNA_RESULT_IO && rejected == CNA_INVALID_HANDLE,
+        "a missing streaming bank is an atomic I/O failure");
+    if (rejected != CNA_INVALID_HANDLE) (void)cna_wave_bank_destroy(rejected);
+    rejected = UINT64_C(99);
+    cna_demo_check(
+        &demo,
+        cna_wave_bank_create(engine, view(invalid_bank_path), &rejected) ==
+                CNA_RESULT_INVALID_ARGUMENT && rejected == CNA_INVALID_HANDLE,
+        "a non-XWB resident file is refused before publishing a handle");
+    if (rejected != CNA_INVALID_HANDLE) (void)cna_wave_bank_destroy(rejected);
+    rejected = UINT64_C(99);
+    cna_demo_check(
+        &demo,
+        cna_wave_bank_create_streaming(engine, view(invalid_bank_path), 0, 16, &rejected) ==
+                CNA_RESULT_INVALID_ARGUMENT && rejected == CNA_INVALID_HANDLE,
+        "a non-XWB streaming file is refused before publishing a handle");
+    if (rejected != CNA_INVALID_HANDLE) (void)cna_wave_bank_destroy(rejected);
     if (!cna_demo_check_result(
             &demo,
-            cna_wave_bank_create(engine, view("assets/xact/tones.xwb"), &resident),
+            cna_wave_bank_create(engine, view(resident_path), &resident),
             "open the generated resident tone bank")) {
         goto cleanup;
     }

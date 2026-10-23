@@ -11,10 +11,12 @@
 #include "Microsoft/Xna/Framework/Audio/Cue.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundBank.hpp"
 #include "Microsoft/Xna/Framework/Audio/WaveBank.hpp"
+#include "Microsoft/Xna/Framework/TitleLocation.hpp"
 #include "System/EventArgs.hpp"
 #include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
+using Microsoft::Xna::Framework::TitleLocation;
 
 namespace
 {
@@ -28,7 +30,7 @@ namespace
     void CueStates(CnaDemos::DemoContext& ctx)
     {
         AudioEngine engine("assets/xact/demo.xgs");
-        WaveBank waves(&engine, "assets/xact/tones.xwb");
+        WaveBank waves(&engine, TitleLocation::Path() + "/assets/xact/tones.xwb");
         SoundBank sounds(&engine, "assets/xact/tones.xsb");
 
         // GetCue returns a caller-owned object: Dispose releases playback, unique_ptr deletes it.
@@ -108,7 +110,7 @@ namespace
 
         // release.xsb has a complex single-sound cue with a 500 ms fade-out, backed by
         // a three-second original tone. The fade is authored in the bank, not by this loop.
-        WaveBank releaseWaves(&engine, "assets/xact/release.xwb");
+        WaveBank releaseWaves(&engine, TitleLocation::Path() + "/assets/xact/release.xwb");
         SoundBank releaseSounds(&engine, "assets/xact/release.xsb");
         std::unique_ptr<Cue> release(releaseSounds.GetCue("ReleaseTone"));
         release->Play();
@@ -144,7 +146,7 @@ namespace
         // This simple cue has no fadeOut field, so its Stopping tail comes only from the RPC's
         // final 150 ms input point rather than the authored cue fade exercised above.
         AudioEngine rpcEngine("assets/xact/release_rpc.xgs");
-        WaveBank rpcWaves(&rpcEngine, "assets/xact/release.xwb");
+        WaveBank rpcWaves(&rpcEngine, TitleLocation::Path() + "/assets/xact/release.xwb");
         SoundBank rpcSounds(&rpcEngine, "assets/xact/release_rpc.xsb");
         std::unique_ptr<Cue> rpcRelease(rpcSounds.GetCue("ReleaseTimeCue"));
         rpcRelease->Play();

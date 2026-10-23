@@ -7,8 +7,10 @@
 #include "Microsoft/Xna/Framework/Audio/Cue.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundBank.hpp"
 #include "Microsoft/Xna/Framework/Audio/WaveBank.hpp"
+#include "Microsoft/Xna/Framework/TitleLocation.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
+using Microsoft::Xna::Framework::TitleLocation;
 
 namespace
 {
@@ -17,7 +19,7 @@ namespace
         // tools/xact_files.py authors Music with limit 1 / Fail and SFX with
         // limit 1 / ReplaceOldest, both with zero fade time. The banks are unchanged.
         AudioEngine engine("assets/xact/limits.xgs");
-        WaveBank waves(&engine, "assets/xact/tones.xwb");
+        WaveBank waves(&engine, TitleLocation::Path() + "/assets/xact/tones.xwb");
         SoundBank sounds(&engine, "assets/xact/tones.xsb");
 
         std::unique_ptr<Cue> music(sounds.GetCue("LowTone"));
@@ -56,7 +58,7 @@ namespace
         // A cue definition can impose its own limit, independently of category capacity.
         // demo.xgs leaves categories unlimited; cue_limits.xsb limits LowTone to one / Fail.
         AudioEngine cueEngine("assets/xact/demo.xgs");
-        WaveBank cueWaves(&cueEngine, "assets/xact/tones.xwb");
+        WaveBank cueWaves(&cueEngine, TitleLocation::Path() + "/assets/xact/tones.xwb");
         SoundBank cueSounds(&cueEngine, "assets/xact/cue_limits.xsb");
         std::unique_ptr<Cue> first(cueSounds.GetCue("LowTone"));
         first->Play();
@@ -93,7 +95,7 @@ namespace
         // FACT counts a cue-level limit by definition, but ReplaceOldest searches the whole
         // SoundBank for its victim. cue_replace.xsb gives MidTone a one/ReplaceOldest limit.
         AudioEngine replaceEngine("assets/xact/demo.xgs");
-        WaveBank replaceWaves(&replaceEngine, "assets/xact/tones.xwb");
+        WaveBank replaceWaves(&replaceEngine, TitleLocation::Path() + "/assets/xact/tones.xwb");
         SoundBank replaceSounds(&replaceEngine, "assets/xact/cue_replace.xsb");
         std::unique_ptr<Cue> bankOldest(replaceSounds.GetCue("LowTone"));
         std::unique_ptr<Cue> triggerA(replaceSounds.GetCue("MidTone"));
@@ -116,7 +118,7 @@ namespace
         // priority.xgs gives SFX capacity two / ReplaceLowestPriority. The sound bank authors
         // High=200, Low=10 and New=100, while playback order puts High before Low.
         AudioEngine priorityEngine("assets/xact/priority.xgs");
-        WaveBank priorityWaves(&priorityEngine, "assets/xact/tones.xwb");
+        WaveBank priorityWaves(&priorityEngine, TitleLocation::Path() + "/assets/xact/tones.xwb");
         SoundBank prioritySounds(&priorityEngine, "assets/xact/priority.xsb");
         std::unique_ptr<Cue> high(prioritySounds.GetCue("PriorityHigh"));
         std::unique_ptr<Cue> low(prioritySounds.GetCue("PriorityLow"));

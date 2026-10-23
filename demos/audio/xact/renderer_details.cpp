@@ -11,12 +11,14 @@
 #include "Microsoft/Xna/Framework/Audio/RendererDetail.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundBank.hpp"
 #include "Microsoft/Xna/Framework/Audio/WaveBank.hpp"
+#include "Microsoft/Xna/Framework/TitleLocation.hpp"
 #include "System/ArgumentNullException.hpp"
 #include "System/InvalidOperationException.hpp"
 #include "System/IO/FileNotFoundException.hpp"
 #include "System/TimeSpan.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
+using Microsoft::Xna::Framework::TitleLocation;
 
 namespace
 {
@@ -69,7 +71,7 @@ namespace
 
         // The engine for the game, created for the chosen renderer (look-ahead 250 ms).
         AudioEngine engine("assets/xact/demo.xgs", System::TimeSpan::FromMilliseconds(250), chosen);
-        WaveBank waves(&engine, "assets/xact/tones.xwb");
+        WaveBank waves(&engine, TitleLocation::Path() + "/assets/xact/tones.xwb");
         SoundBank sounds(&engine, "assets/xact/tones.xsb");
         sounds.PlayCue("Beep");
         engine.Update();
