@@ -40,7 +40,7 @@ earned-online flag. Inspect the store and service records before selecting a rep
 The synthetic C achievement demo also expects earned_online=true; changing factory defaults
 requires contract review rather than blindly changing the original assertion.
 
-Before repair, all728 native GamerServices tests ran:710 existing PASS and exactly18 new FAIL
+Before repair, all728 native GamerServices tests ran:709 existing PASS, exactly18 new FAIL and1 unchanged SKIP
 in93.759s. The witness build reported30 pre-existing nodiscard warnings in unchanged tests.
 Original C demo:29/30 on each SOFTWARE/OPENGLES3, one readonly-property failure, before any
 implementation or expectation changes. Reports: repair-achievements-before-*.
@@ -62,7 +62,7 @@ preservation after all refusals, and empty-key refusal/output clearing. No toler
 exception suppression or unexpected-to-expected failure conversion is involved. Marker077 stays
 until the repaired implementation passes. Online flag017 remains outside this batch.
 
-After native repair:728/728 PASS in75.355s. All18 red witnesses pass, eight old mutation tests
+After native repair:727 PASS/1 unchanged SKIP (728 registered) in75.355s. All18 red witnesses pass, eight old mutation tests
 have explicit refusal-based names, and other702 names/outcomes remain unchanged. Build passes;
 17 existing nodiscard warnings come from unchanged GamerServicesGamerTests.cpp. No new diagnostics.
 The first six-test C run was not green: GeneratedRoutesSmoke and BoundaryDetail passed,
@@ -76,7 +76,7 @@ without yielding evidence; source inspection identified this directly. The three
 executables are being built before rerunning all six. Generated routes remain current3197/57.
 The corrected C run now passes all six controls in0.19s. The complete consumer rebuild is running
 with one worker after verifying all275 hashes of the preceding018 consumer. Native/runtime
-collection logic did not change after the728-pass native run; the follow-up changed only test/docs
+collection logic did not change after the727-PASS/1-unchanged-SKIP native run; the follow-up changed only test/docs
 for scalar output semantics. No memory ownership implementation changed, so no sanitizer claim.
 
 Next017 investigation: the available genuine Windows XNA Achievement property getters throw the
@@ -118,9 +118,16 @@ Final077/078 validation checkpoint:
 - Catalog719 remains valid, with metadata changed only for the repaired C collection.
   Five registered achievement/catalog CTests PASS in11.48s; the award CTest still uses its
   original known017 expected-failure policy. Generated3197 routes/57 files remain current.
-- Full native728PASS, six native C controlsPASS, complete consumer buildPASS. This is not a new
+- Full native727PASS/1unchangedSKIP, six native C controlsPASS, complete consumer buildPASS. This is not a new
   full719 smoke/native aggregate/sanitizer/visual/browser/online-service/platform checkpoint.
   The last complete cross-subsystem checkpoint remains075 with its six unchanged CTest residuals.
   All builds use existing trees/shared ccache/one worker/6GiB memory ceiling; GPU runs isolated.
 
 Validated native repair commit: `4a756413f779f5f74d5d3e48e92bcb53ecc00b0e` (077/078). Permanent historical descriptions retained; both dispositions are FIXED_VALIDATED.017 remains open.
+
+Reporting correction: the first summary treated tests-without-failures as PASS and missed the
+existing GTest <skipped> element. Exact077/078 totals are709PASS/18FAIL/1SKIP before and
+727PASS/1SKIP after. AvatarRendererTest.AFailedGpuUploadFailsEveryDrawCleanlyRatherThanHalfBuilding
+skips on OPENGLES3 because it specifically requires a renderer without3D. The same skip is in
+both original logs/XML; no runtime regression or new suppression occurred. Corrected matrix,
+inventory and handoff retain this limitation explicitly. Subsequent comparisons check skips too.
