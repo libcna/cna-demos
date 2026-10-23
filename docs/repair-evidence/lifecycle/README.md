@@ -1,5 +1,9 @@
 # Lifecycle audit and native witnesses (141–144; external validation pending)
 
+The ISSUE-051 C completion/diagnostic repair is tracked in
+[HOST_FAILURE_COMPLETION.md](HOST_FAILURE_COMPLETION.md), including native adversarial cleanup
+cases, both full renderer sweeps and the complete CTest comparison.
+
 The separate ISSUE-050 C owner-thread dispatch repair is tracked in
 [OWNER_THREAD_DISPATCH.md](OWNER_THREAD_DISPATCH.md), including both complete renderer sweeps
 and the full CTest comparison.

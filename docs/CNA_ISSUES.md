@@ -1821,7 +1821,20 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ---
 
+## Resolved
+
 ### CNA-DEMOS-ISSUE-051 -- Host-frame failure contract promises suppressed C exit hooks
+
+- **Resolved (2026-10-23):** CNA `9b0f481f554c2961d6bbe15d1d445b045b49a745` delivers
+  the promised C Exiting/EndRun completion hooks after failure and retains the first callback
+  diagnostic across cleanup, terminal calls and destruction. Native Game and ABI are unchanged.
+  A new native adversarial regression has5FAIL/1PASS before repair and all six cases pass after;
+  six lifecycle/dispatch CTests pass on SOFTWARE/OPENGLES3. The unchanged external demo preserves
+  all73 assertion names/order and passes on both renderers; only its marker and stale restriction
+  sentence were removed. Complete719-ID sweeps change only051 and remove exactly its eight
+  failed assertions per renderer. Full serial CTest retains678PASS/48SKIP/6pre-existingFAIL/
+  3disabled, with exact per-test status DELTAS[] and all275 artifact hashes unchanged.
+  Historical evidence follows. [Repair and validation](repair-evidence/lifecycle/HOST_FAILURE_COMPLETION.md).
 
 - **Area:** public `CNA/C/runtime.h` host-frame contract and the C lifecycle adapter in
   `CnaCApiRuntime.cpp`. This concerns C callback tables, not whether native Game::EndRun executes.
@@ -1891,7 +1904,7 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 
 
-## Resolved
+
 
 ### CNA-DEMOS-ISSUE-050 -- Owner-only C game operations enter the foreign-thread queue
 

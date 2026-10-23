@@ -14,7 +14,5 @@ CNA_DEMOS_STANDALONE({
     .needs = CnaDemos::Need::CApi,
     .deterministic = true,
     .restrictions = "Sequential C games share one process and renderer; no rendered scene or browser scheduling "
-                    "validation. ISSUE-051: the public completion comment promises C exit hooks that the adapter "
-                    "suppresses after startup/frame/exiting failure.",
-    .knownIssue = "CNA-DEMOS-ISSUE-051",
+                    "validation.",
 })
