@@ -45,7 +45,5 @@ CNA_DEMOS_STANDALONE({
     .deterministic = true,
     .restrictions = "Standalone C program (one C game per process); built only when CNA has its C API "
                     "(CNA_BUILD_C_API=ON). Host availability is reported, while deterministic supported paths use "
-                    "CNA's documented synthetic/test backends; no physical measurement is claimed. ISSUE-062: "
-                    "accelerometer and gyroscope CurrentValue remain readable after disposal.",
-    .knownIssue = "CNA-DEMOS-ISSUE-062",
+                    "CNA's documented synthetic/test backends; no physical measurement is claimed.",
 })
