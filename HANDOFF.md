@@ -1,18 +1,29 @@
-# Current owner-requested review — 2026-10-23
+# Current owner-requested handoff — 2026-10-23
 
-ISSUE-113 is resolved by CNA `c303d3ad9821ca7ad5cf04490d6f1a0555b2af8c`.
-See [review evidence](docs/repair-evidence/graphics/OCCLUSION_REPAIR_REVIEW.md):
-full graphics, seven renderer combinations, sanitizer, external132 parity, six
-exact visuals, and unmarked query/catalog gates accepted. Inventory: 156 historical
-IDs, 131 final dispositions, 25 still pending; this is not campaign completion.
-Owner requested finishing review of inherited changes, then an English handoff for
-Opus 5.5 xhigh, coherent commits and pushes. Remaining current work: ISSUE-011
-content ownership/C contract and ISSUE-082 event/SpriteBatch behavior. Approved C
-contracts match XNA/C++; post-Dispose SpriteBatch must also align with XNA where
-safe. Real XNA's native crash cases are recorded, never reproduced as CNA UAFs.
-No goal was created or changed. Earlier "live", "no push", and "preserve foreign"
-statements below are historical records, superseded by this review and owner scope.
-CNA `CNA_INHERITED_REVIEW.md` records the active review; final handoff is pending.
+The inherited review is complete. CNA `39ef8ea2f` repairs ISSUE-011 content/
+resource ownership and GraphicsResource callback ordering; `65e69cc5e` repairs
+the corrected XNA SpriteBatch sequencing for ISSUE-082. Both are now
+`RESOLVED/FIXED_VALIDATED`. ISSUE-113 remains resolved by `c303d3ad9` and closure
+`68471a7a3`. This repository's closure commit is
+`fb6c6530493289f08a6487b52445adc47e435310`.
+
+Inventory: 156 historical IDs, 133 final dispositions, 23 pending; this is not
+campaign completion. Original assertions remain. Four obsolete knownIssue markers
+were removed only after the same scenarios passed; ISSUE-010 remains open for its
+independent StorageContainer/filesystem residual even though its ContentManager
+guard now passes. Latest gates: native Core/Content/Graphics/Media/Audio modules,
+52 selected cases on each of six renderer/driver paths, 62 ownership and 106
+Sprite/event sanitizer cases, strict-C probes, an external 191 PASS / one unchanged
+SKIP checkpoint, and six exact visuals. The final metadata refresh, serial rebuild,
+and eight focused CTests also passed. See
+`docs/repair-evidence/content/RUNTIME_OWNERSHIP_REVIEW.md`
+and `docs/repair-evidence/graphics/SPRITE_BATCH_DISPOSAL_REVIEW.md`.
+
+The fresh agent should read CNA root `handoff.md` first. Its exact next task is
+ISSUE-010's StorageContainer constructor/root error contract, followed by the
+remaining storage paths. No goal was created or changed. No validation process or
+dirty worktree should remain after the final push. All older "live", "no push",
+"pending handoff" and "preserve foreign" notes below are historical only.
 
 ---
 
