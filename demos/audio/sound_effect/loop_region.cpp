@@ -118,6 +118,5 @@ CNA_DEMOS_CONSOLE(LoopRegion, {
              "ArgumentException", "SoundEffect::CreateInstance"},
     .tags = {"audio", "sound", "loop", "engine"},
     .needs = CnaDemos::Need::Audio,
-    .restrictions = "CNA-DEMOS-ISSUE-114: Stop(false) ends at an authored nonterminal loop boundary instead of continuing through the tail; no audible-quality claim.",
-    .knownIssue = "CNA-DEMOS-ISSUE-114",
+    .restrictions = "Stop(false) continues from an authored nonterminal loop boundary through the tail (CNA-DEMOS-ISSUE-114); no audible-quality claim.",
 })

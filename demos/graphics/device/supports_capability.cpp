@@ -186,7 +186,5 @@ CNA_DEMOS_GAME(SupportsCapabilityDemo, {
              "Texture3D::Texture3D", "Texture3D::SetData", "Texture3D::GetData"},
     .tags = {"capability", "renderer", "features", "fallback", "policy", "cnaext"},
     .frames = 1,
-    .restrictions = "CNA-DEMOS-ISSUE-104: STUB advertises no 3D support but does not implement the WarnAndStub Texture3D null-object path.",
-    .knownIssue = "CNA-DEMOS-ISSUE-104",
-    .knownIssueRenderers = {"STUB"},
+    .restrictions = "STUB advertises no 3D support and implements the WarnAndStub Texture3D null-object path (CNA-DEMOS-ISSUE-104).",
 })

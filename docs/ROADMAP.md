@@ -569,7 +569,8 @@ a check that all authored colors remain visible and that a blank texture row can
 ## Phase 9 -- audio and media ✅ (audio: 23 demos incl. 10 XACT, media: 17 incl. video)
 - ✅ `audio.sound_effect.*`: Play, Play(volume, pitch, pan), MasterVolume, PCM buffer
   constructor, GetSampleDuration/GetSampleSizeInBytes, ✅ `audio.sound_effect.loop_region` (loop
-  points and nonterminal `Stop(false)` release; ISSUE-114 drops the authored tail),
+  points and nonterminal `Stop(false)` release through the authored tail; ISSUE-114 fixed by CNA
+  `6102058bb`),
   ✅ `audio.sound_effect.from_stream` (loose WAV; ISSUE-029).
 - ✅ `audio.sound_effect_instance.*`: playback state, looping, volume/pitch/pan, Apply3D
   and dynamic integer/float buffer format transitions, including both live-playing refusals

@@ -25,8 +25,8 @@ CNA_DEMOS_STANDALONE({
     .needs = CnaDemos::Need::CApi | CnaDemos::Need::ThreeD,
     .frames = 1,
     .deterministic = true,
-    .restrictions = "CNA-DEMOS-ISSUE-081: a part effect attached before mesh construction is "
-                    "absent from Effects until the public setter changes it. Uses a synthetic "
+    .restrictions = "A part effect attached before mesh construction is in Effects from the start "
+                    "(CNA-DEMOS-ISSUE-081). Uses a synthetic "
                     "triangle and one-pixel probes; no ContentManager, asset, top-level Model or "
                     "visual-quality claim is involved.",
 })

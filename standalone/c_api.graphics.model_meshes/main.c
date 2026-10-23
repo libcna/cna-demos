@@ -269,8 +269,11 @@ static CNA_Result load_content(
         cna_model_mesh_get_effects(original_mesh, &state->effects) == CNA_RESULT_SUCCESS &&
             cna_model_effect_collection_get_count(state->effects, &count) ==
                 CNA_RESULT_SUCCESS &&
-            count == UINT64_C(0),
-        "CNA-DEMOS-ISSUE-081: construction omits the part's pre-attached effect from Effects");
+            count == UINT64_C(1) &&
+            cna_model_effect_collection_get_at(
+                state->effects, UINT64_C(0), &returned_effect) == CNA_RESULT_SUCCESS &&
+            returned_effect == state->effect,
+        "construction puts the part's pre-attached effect in Effects (CNA-DEMOS-ISSUE-081)");
     cna_demo_check(
         state->demo,
         cna_model_mesh_part_set_effect(state->part_view, CNA_INVALID_HANDLE) ==
