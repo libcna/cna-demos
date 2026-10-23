@@ -105,7 +105,5 @@ CNA_DEMOS_CONSOLE(Properties, {
              "Song::ToString"},
     .tags = {"media", "music", "song", "metadata"},
     .assets = {"music/rising.wav", "sounds/tone_440.wav"},
-    .restrictions = "Uses caller-created local-file songs; library grouping and playback are separate demos. "
-                    "CNA-DEMOS-ISSUE-098: disposed Song operations remain usable instead of throwing ObjectDisposedException.",
-    .knownIssue = "CNA-DEMOS-ISSUE-098",
+    .restrictions = "Uses caller-created local-file songs; library grouping and playback are separate demos.",
 })

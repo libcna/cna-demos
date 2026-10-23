@@ -31,7 +31,5 @@ CNA_DEMOS_STANDALONE({
     .assets = {"media/library_music/track_a.flac", "media/library_music/track_b.flac", "media/library_music/track_c.flac"},
     .restrictions = "Standalone process selects private XDG roots before first CNA/SDL use. Linux/XDG resolution is required; "
                     "otherwise skipped before accessing a library. All collection entries are library-owned; disposal is observed before destruction. "
-                    "CNA-DEMOS-ISSUE-098: disposed entity, collection and MediaLibrary operations do not throw ObjectDisposedException. "
                     "Positive duration checks require CNA_FFMPEG_AVAILABLE; other builds retain the relationship checks. No playback or album-art validation.",
-    .knownIssue = "CNA-DEMOS-ISSUE-098",
 })

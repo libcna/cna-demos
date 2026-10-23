@@ -608,11 +608,11 @@ a check that all authored colors remain visible and that a blank texture row can
   two-level ordinary album tree with exact parent, membership and stream checks. An already-small
   128x64 PNG remains byte-identical through two independently owned thumbnail streams; after
   external corruption, thumbnail decoding falls back to the exact current file bytes.
-  A valid stream delivering 13-byte chunks exposes ISSUE-041: SavePicture reads once and writes
-  a zero-padded image. ISSUE-040 records stale thumbnail comments separately. Other platforms and
+  A valid stream delivering 13-byte chunks checks that SavePicture reads the whole stream
+  (ISSUE-041, fixed). ISSUE-040 records stale thumbnail comments separately. Other platforms and
   premature/unknown-length streams remain source-dispositioned. Disposed Picture and PictureAlbum
-  operations expose ISSUE-098: CNA keeps all tested properties, streams and value operations live
-  instead of throwing ObjectDisposedException. Same-name
+  operations, and the disposed picture collections, refuse with ObjectDisposedException (ISSUE-098,
+  fixed by CNA 2026-10-23). Same-name
   saves replace one file while the live library retains distinct equal snapshot views; a fresh
   library observes only the latest dimensions and bytes.
 - ✅ `media.media_library.album_art`: private tagged folders establish folder-art/no-art behavior,

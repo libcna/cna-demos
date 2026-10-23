@@ -25,7 +25,6 @@ CNA_DEMOS_STANDALONE({
     .restrictions = "Standalone program initializes private XDG paths before CNA/SDL first use. Linux/XDG resolution is required; "
                     "otherwise skipped before accessing a library. "
                     "Private generated files only; nested-album, same-name replacement and disposal behavior is observed before library destruction. "
-                    "Short reads expose CNA-DEMOS-ISSUE-041 on the pinned CNA; disposed Picture/PictureAlbum and picture-collection operations expose CNA-DEMOS-ISSUE-098. Other platforms are untested. "
+                    "Short reads (CNA-DEMOS-ISSUE-041) and disposed Picture/PictureAlbum and picture-collection operations (CNA-DEMOS-ISSUE-098) are checked. Other platforms are untested. "
                     "GetThumbnail's no-resize comment is stale (CNA-DEMOS-ISSUE-040); the normal thumbnail checks pass.",
-    .knownIssue = "CNA-DEMOS-ISSUE-098",
 })
