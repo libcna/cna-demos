@@ -1270,6 +1270,17 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-010 -- Storage reports errors with C++ standard exceptions, not XNA's types
 
+- **Partial deletion repair (2026-10-23; CONFIRMED_OPEN):** CNA
+  `4d384865ca0b586a4ed52929907589ea32a1656b` delegates DeleteFile to Sharp Runtime
+  `d051307b3316903a692846acf78200d74339bbef`, preserving directories and translating
+  directory/missing-parent failures to the genuine XNA exception types. The C boundary
+  now reports UnauthorizedAccessException as IO. Native storage52/52, C boundary/smoke,
+  both focused renderer suites and six exact visuals pass. Full719-ID renderer sweeps
+  preserve prior outcomes; serial CTest678PASS/48SKIP/6 unchanged FAIL/3disabled.
+  The demo keeps its seven assertions and adds four passing deletion controls.
+  CreateDirectory, enumeration and content portions remain open; no marker is removed.
+  See [deletion evidence and reference oracles](repair-evidence/storage/FILE_DELETION.md).
+
 - **Related partial repair (2026-10-22; still open):** CNA `3798787bb` corrects
   StorageDevice Begin/End validation, one-shot result consumption, owner checks,
   shared-player selection and the empty container display-name exception. Genuine

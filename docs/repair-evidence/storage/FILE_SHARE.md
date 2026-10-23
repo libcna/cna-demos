@@ -47,8 +47,8 @@ the same unchanged source with proper Windows paths.
 - First candidate740/741 exposed stale read-ahead after resize; that assertion was
   retained and the implementation fixed. Supporting archive code is not entirely
   instrumented, but the actual FileStream.cpp and23 focused tests pass ASan/UBSan/LSan.
-- MinGW/Emscripten final-source strict syntax checks pass. Windows C++ runtime and
-  browser runtime are not claimed. Browser VFS flock is a successful no-op in this
+- MinGW/Emscripten final-source strict syntax checks pass. Native Windows and browser
+  runtime are not claimed. Browser VFS flock is a successful no-op in this
   Emscripten implementation; this repair does not invent mandatory locking there.
 - CNA native storage before46/50, after50/50. Four new tests cover the facade's
   forwarding matrix, defaults, pre-truncation refusal and Append access.
@@ -67,6 +67,15 @@ the same unchanged source with proper Windows paths.
 and copy/move/nothrow-destructor pins are native tests. All consumers must be rebuilt,
 including derived IsolatedStorageFileStream. See Sharp's migration note. No existing
 public signature, vtable or exception specification changed.
+
+Follow-up Windows-targeted product execution (2026-10-23): the actual unchanged FileStream
+implementation and existing sharing tests, together with the File.Delete repair/tests, compile
+with strict MinGW C++23/-O1 and pass16/16 under Win64 Wine. The Windows sharing test measures
+119refused/25allowed across144 pairs; preservation, rename/resize, buffered transitions, append
+and deletion controls pass. The initial -O0 probe had a libstdc++ type_info duplicate-symbol
+link failure; its log remains. See Sharp docs/WindowsFileIoValidation.md, published in
+`4c7c69bd731b53bbb2fd87cb0f8da233278eb67d`, for reproduction. This is emulated product execution,
+not native Windows or Windows CNA facade/demo validation; the final disposition remains pending.
 
 ## Completed wider regression (2026-10-23)
 
@@ -101,7 +110,7 @@ PASS-to-FAIL regression, already present before this batch; it remains actionabl
 No FileShare test is suppressed or relaxed to obtain the improvement.
 
 **Disposition: FIXED_PLATFORM_VALIDATION_PENDING.** Linux implementation, CNA facade and
-both available renderer-labelled reproductions are validated. Windows product runtime remains
+both available renderer-labelled reproductions are validated. Native Windows validation remains
 pending despite strict MinGW compilation and genuine Windows reference runs. Browser VFS
 advisory locking is explicitly best-effort, not a claim of native exclusion. This disposition
 does not certify the entire CNA corpus or close the campaign.

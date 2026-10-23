@@ -1,6 +1,14 @@
 # Storage/runtime repair evidence (056, 145, 151, 152)
 
-## Current checkpoint (2026-10-20)
+## Current checkpoint (2026-10-23)
+
+FileShare152 is repaired and Linux-validated, with Windows product runtime validation pending.
+See [FILE_SHARE.md](FILE_SHARE.md) for commits, full renderer/CTest results, ABI rebuild
+requirements and the explicitly retained unrelated failures. Demos evidence is published as
+`0086bc424e50a023c79698a3107c2e1d7dd0aa41`. The next partial ISSUE-010 repair is tracked in
+[FILE_DELETION.md](FILE_DELETION.md); it does not close the issue's other storage/content cases.
+
+## Previous checkpoint (2026-10-20)
 
 056/145/151 are FIXED_VALIDATED; see [CHECKPOINT.md](CHECKPOINT.md). CNA repairs5865ae938
 (disposed storage) and cbb77e3c8 (title paths/C adapter), Sharp repairs1c0fc9b5

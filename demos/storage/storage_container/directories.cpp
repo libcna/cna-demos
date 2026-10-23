@@ -10,7 +10,9 @@
 #include "Microsoft/Xna/Framework/Storage/StorageDevice.hpp"
 #include "System/IAsyncResult.hpp"
 #include "System/IO/IOException.hpp"
+#include "System/IO/DirectoryNotFoundException.hpp"
 #include "System/IO/Stream.hpp"
+#include "System/UnauthorizedAccessException.hpp"
 
 using namespace Microsoft::Xna::Framework::Storage;
 
@@ -51,8 +53,20 @@ namespace
             ctx.Check(Join(container->GetDirectoryNames("s*")) == "screenshots", "directory names can be filtered too");
             ctx.Check(container->FileExists("replays/race1.rpl"), "files in subdirectories are addressed by path");
 
-            // A directory must be empty before it can be deleted. (CNA lets std::filesystem's
-            // error escape instead of System::IO::IOException: CNA-DEMOS-ISSUE-010.)
+            // DeleteFile must never substitute a directory deletion (ISSUE-010).
+            bool directoryRefused = false;
+            try { container->DeleteFile("screenshots"); }
+            catch (const System::UnauthorizedAccessException&) { directoryRefused = true; }
+            ctx.Check(directoryRefused, "DeleteFile refuses a directory with UnauthorizedAccessException");
+            ctx.Check(container->DirectoryExists("screenshots"), "DeleteFile preserves an empty directory");
+            bool parentRefused = false;
+            try { container->DeleteFile("missing-parent/save.bin"); }
+            catch (const System::IO::DirectoryNotFoundException&) { parentRefused = true; }
+            ctx.Check(parentRefused, "DeleteFile distinguishes a missing parent from a missing file");
+            container->DeleteFile("missing-file.bin");
+            ctx.Check(!container->FileExists("missing-file.bin"), "DeleteFile accepts a missing file in an existing directory");
+
+            // A directory must be empty before it can be deleted.
             bool refused = false;
             try
             {
