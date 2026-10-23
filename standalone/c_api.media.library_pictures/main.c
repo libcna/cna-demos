@@ -705,6 +705,9 @@ int main(int argc, char** argv)
     printf("  indexed: 640x320 and 64x64; thumbnail: %ux%u; saved: 2\n",
            (unsigned)thumbnail_width, (unsigned)thumbnail_height);
 
+    /* XNA's Picture and PictureAlbum refuse every member but IsDisposed once disposed
+       (CNA-DEMOS-ISSUE-098); the C routes answer CNA_RESULT_INVALID_STATE. */
+    uint64_t disposed_bytes = 0;
     cna_demo_check(
         &demo,
         cna_picture_get_is_disposed(picture[0], &disposed) == CNA_RESULT_SUCCESS &&
@@ -712,8 +715,8 @@ int main(int argc, char** argv)
             cna_picture_dispose(portrait_alias) == CNA_RESULT_SUCCESS &&
             cna_picture_get_is_disposed(picture[0], &disposed) == CNA_RESULT_SUCCESS &&
             disposed == CNA_TRUE &&
-            name_is(picture[0], cna_picture_get_name_size, cna_picture_copy_name, "portrait"),
-        "picture disposal is idempotent, shared by aliases and leaves value access intact");
+            cna_picture_get_name_size(picture[0], &disposed_bytes) == CNA_RESULT_INVALID_STATE,
+        "picture disposal is idempotent, shared by aliases and refuses value access");
     cna_demo_check(
         &demo,
         cna_picture_album_get_is_disposed(family_album, &disposed) == CNA_RESULT_SUCCESS &&
@@ -721,9 +724,9 @@ int main(int argc, char** argv)
             cna_picture_album_dispose(portrait_album) == CNA_RESULT_SUCCESS &&
             cna_picture_album_get_is_disposed(family_album, &disposed) == CNA_RESULT_SUCCESS &&
             disposed == CNA_TRUE &&
-            name_is(family_album, cna_picture_album_get_name_size,
-                    cna_picture_album_copy_name, "Family"),
-        "picture-album disposal is idempotent, shared by aliases and leaves values intact");
+            cna_picture_album_get_name_size(family_album, &disposed_bytes) ==
+                CNA_RESULT_INVALID_STATE,
+        "picture-album disposal is idempotent, shared by aliases and refuses value access");
     cna_demo_check(
         &demo,
         cna_picture_collection_get_is_disposed(saved_pictures, &disposed) == CNA_RESULT_SUCCESS &&
@@ -733,9 +736,8 @@ int main(int argc, char** argv)
             cna_picture_collection_get_is_disposed(saved_pictures, &disposed) ==
                 CNA_RESULT_SUCCESS &&
             disposed == CNA_TRUE &&
-            cna_picture_collection_get_count(saved_pictures, &count) == CNA_RESULT_SUCCESS &&
-            count == 0,
-        "picture-collection disposal is idempotent and empties that collection view");
+            cna_picture_collection_get_count(saved_pictures, &count) == CNA_RESULT_INVALID_STATE,
+        "picture-collection disposal is idempotent and refuses that collection view's count");
     cna_demo_check(
         &demo,
         cna_picture_album_collection_get_is_disposed(root_children, &disposed) ==
@@ -747,9 +749,8 @@ int main(int argc, char** argv)
                 CNA_RESULT_SUCCESS &&
             disposed == CNA_TRUE &&
             cna_picture_album_collection_get_count(root_children, &count) ==
-                CNA_RESULT_SUCCESS &&
-            count == 0,
-        "picture-album collection disposal is idempotent and empties that collection view");
+                CNA_RESULT_INVALID_STATE,
+        "picture-album collection disposal is idempotent and refuses that collection view's count");
     cna_demo_check_result(
         &demo, cna_media_library_destroy(library),
         "release the library while picture and album handles retain it");

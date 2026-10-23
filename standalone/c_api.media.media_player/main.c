@@ -571,11 +571,11 @@ int main(int argc, char** argv)
                           "collection_get_at returns a shared retained Song handle");
     cna_demo_check(&demo,
                    cna_song_collection_dispose(state.songs) == CNA_RESULT_SUCCESS &&
-                       cna_song_collection_get_count(state.songs, &collection_count) == CNA_RESULT_SUCCESS &&
-                       collection_count == 0 &&
+                       cna_song_collection_get_count(state.songs, &collection_count) ==
+                           CNA_RESULT_INVALID_STATE &&
                        cna_song_collection_get_is_disposed(state.songs, &collection_disposed) == CNA_RESULT_SUCCESS &&
                        collection_disposed == CNA_TRUE && song_has_name(collection_song, "Rising"),
-                   "disposing the collection empties it but keeps the shared Song alive");
+                   "disposing the collection refuses its count but keeps the shared Song alive");
     cna_demo_check_result(&demo, cna_song_collection_dispose(state.songs),
                           "disposing the SongCollection twice is a successful no-op");
     cna_demo_check_result(&demo, cna_media_queue_get_at(state.queue, 0, &queue_first),
@@ -805,9 +805,9 @@ int main(int argc, char** argv)
                            cna_song_dispose(duration_song) == CNA_RESULT_SUCCESS &&
                            cna_song_get_is_disposed(duration_song, &song_disposed) == CNA_RESULT_SUCCESS &&
                            song_disposed == CNA_TRUE &&
-                           cna_song_get_duration(duration_song, &duration_ticks) == CNA_RESULT_SUCCESS &&
-                           duration_ticks == 0,
-                       "Song Dispose is idempotent and leaves Duration readable");
+                           cna_song_get_duration(duration_song, &duration_ticks) ==
+                               CNA_RESULT_INVALID_STATE,
+                       "Song Dispose is idempotent and refuses Duration, as XNA's Song does");
         cna_demo_check_result(&demo, cna_song_destroy(duration_song),
                               "destroy the explicit-duration Song handle");
         duration_song = CNA_INVALID_HANDLE;

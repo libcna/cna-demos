@@ -210,9 +210,8 @@ int main(int argc, char** argv)
             cna_album_collection_dispose(albums) == CNA_RESULT_SUCCESS &&
             cna_album_collection_get_is_disposed(albums, &disposed) == CNA_RESULT_SUCCESS &&
             disposed == CNA_TRUE &&
-            cna_album_collection_get_count(albums, &album_count) == CNA_RESULT_SUCCESS &&
-            album_count == 0,
-        "disposing the album collection twice empties it and records disposal");
+            cna_album_collection_get_count(albums, &album_count) == CNA_RESULT_INVALID_STATE,
+        "disposing the album collection twice refuses its count and records disposal");
     disposed = CNA_FALSE;
     cna_demo_check(
         &demo,
@@ -222,9 +221,8 @@ int main(int argc, char** argv)
             cna_artist_collection_dispose(artists) == CNA_RESULT_SUCCESS &&
             cna_artist_collection_get_is_disposed(artists, &disposed) == CNA_RESULT_SUCCESS &&
             disposed == CNA_TRUE &&
-            cna_artist_collection_get_count(artists, &artist_count) == CNA_RESULT_SUCCESS &&
-            artist_count == 0,
-        "disposing the artist collection twice empties it and records disposal");
+            cna_artist_collection_get_count(artists, &artist_count) == CNA_RESULT_INVALID_STATE,
+        "disposing the artist collection twice refuses its count and records disposal");
     disposed = CNA_FALSE;
     cna_demo_check(
         &demo,
@@ -234,9 +232,8 @@ int main(int argc, char** argv)
             cna_genre_collection_dispose(genres) == CNA_RESULT_SUCCESS &&
             cna_genre_collection_get_is_disposed(genres, &disposed) == CNA_RESULT_SUCCESS &&
             disposed == CNA_TRUE &&
-            cna_genre_collection_get_count(genres, &genre_count) == CNA_RESULT_SUCCESS &&
-            genre_count == 0,
-        "disposing the genre collection twice empties it and records disposal");
+            cna_genre_collection_get_count(genres, &genre_count) == CNA_RESULT_INVALID_STATE,
+        "disposing the genre collection twice refuses its count and records disposal");
     disposed = CNA_FALSE;
     cna_demo_check(
         &demo,
@@ -246,9 +243,8 @@ int main(int argc, char** argv)
             cna_playlist_collection_dispose(playlists) == CNA_RESULT_SUCCESS &&
             cna_playlist_collection_get_is_disposed(playlists, &disposed) == CNA_RESULT_SUCCESS &&
             disposed == CNA_TRUE &&
-            cna_playlist_collection_get_count(playlists, &playlist_count) == CNA_RESULT_SUCCESS &&
-            playlist_count == 0,
-        "disposing the playlist collection twice empties it and records disposal");
+            cna_playlist_collection_get_count(playlists, &playlist_count) == CNA_RESULT_INVALID_STATE,
+        "disposing the playlist collection twice refuses its count and records disposal");
     disposed = CNA_FALSE;
     cna_demo_check(
         &demo,
@@ -258,9 +254,8 @@ int main(int argc, char** argv)
             cna_song_collection_dispose(songs) == CNA_RESULT_SUCCESS &&
             cna_song_collection_get_is_disposed(songs, &disposed) == CNA_RESULT_SUCCESS &&
             disposed == CNA_TRUE &&
-            cna_song_collection_get_count(songs, &song_count) == CNA_RESULT_SUCCESS &&
-            song_count == 0,
-        "disposing the library-owned song collection also empties it idempotently");
+            cna_song_collection_get_count(songs, &song_count) == CNA_RESULT_INVALID_STATE,
+        "disposing the library-owned song collection also refuses its count idempotently");
 
 cleanup:
     if (songs != CNA_INVALID_HANDLE) {
