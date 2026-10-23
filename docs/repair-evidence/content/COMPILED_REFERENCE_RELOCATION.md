@@ -53,4 +53,8 @@ reference of schema 1 and 2 models.
   `c_api` (177) categories on SOFTWARE and OPENGLES3 match the ISSUE-010 closure sweep per ID
   except the intended check-count increases (`repair-batch3-focused-parts/`); the two media demos
   pass with 4 and 5 checks.
-
+- Complete checkpoint with the demos tree rebuilt from the tree committed as CNA `8842b9a50`:
+  719-ID sweeps SOFTWARE 654/14/48/3 and OPENGLES3 696/13/7/3 against the ISSUE-010 closure change
+  only `sensor_lifecycle` FAIL-to-PASS and the intended check counts (`compiled_song` 3 -> 4,
+  `play_video` 4 -> 5, `from_stream` 8 -> 9); serial CTest 684 PASS/48 SKIP/0 FAIL/3 disabled
+  (`repair-batch3-closure-{full,ctest}*`). Closed with CNA `da7388fa9`.

@@ -930,6 +930,14 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-062 -- Disposed accelerometer and gyroscope retain readable CurrentValue
 
+- **Resolved (2026-10-23):** CNA `8842b9a50` records disposal in the C sensor resource and makes
+  every canonical accelerometer/gyroscope route except destroy and the test hooks refuse a
+  disposed sensor (`CNA_RESULT_INVALID_STATE`), as XNA's `SensorBase` does. The new
+  `SensorDeviceSmoke` post-dispose checks fail against the old routes and pass after;
+  `c_api.devices.sensor_lifecycle` passes with its `knownIssue` marker removed. Complete sweeps SOFTWARE 654/14/48/3 and OPENGLES3 696/13/7/3 change only the intended rows; serial
+  CTest 684 PASS/48 SKIP/0 FAIL/3 disabled.
+  Closure: CNA `da7388fa9`.
+
 - **Area/API:** `cna_accelerometer_get_current_value`, `cna_gyroscope_get_current_value`, their
   disposal contracts in `modules/c-api/include/CNA/C/sensors.h`, and
   `Microsoft::Devices::Sensors::SensorBase<T>::getCurrentValueProperty()`.
@@ -1430,6 +1438,15 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-020 -- A compiled Song/Video stream is looked up from the manager's root, not beside the asset
 
+- **Resolved (2026-10-23):** CNA `3da9ea645` resolves a compiled reference the way XNA's
+  `ContentReader.GetPathToReference` does: when the name an asset is loaded by ends in its CMET
+  `contentName`, the preceding prefix -- where the build sits below the manager's root -- is put
+  in front of each Song/Video stream and model texture/effect reference. Loads that already worked
+  are unchanged. `compiled_song` and `play_video` keep their narrow-root checks and add a
+  relocated-root check each. Complete sweeps SOFTWARE 654/14/48/3 and OPENGLES3 696/13/7/3 change only the intended rows; serial
+  CTest 684 PASS/48 SKIP/0 FAIL/3 disabled. Closure: CNA `da7388fa9`. See
+  [compiled reference relocation](repair-evidence/content/COMPILED_REFERENCE_RELOCATION.md).
+
 - **Area:** content -- `ResolveMediaStreamPathEXT` (`ContentManager.cpp`) resolves a compiled
   `.cnb` Song's or Video's stream reference with `BuildAssetPath(reference)`, i.e. relative to
   the ContentManager's RootDirectory. The reference itself is written relative to the root of
@@ -1596,6 +1613,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 ---
 
 ### CNA-DEMOS-ISSUE-029 -- `SoundEffect::FromStream` takes a `std::istream`, not a `System::IO::Stream`
+
+- **Resolved (2026-10-23):** CNA `5d66bb795` adds `SoundEffect::FromStream(System::IO::Stream&)`,
+  a port of XNA's `WavFile` that meets the 25/25 and 71/71 genuine contracts below; the
+  `std::istream` overload remains as a marked CNA extension. `from_stream` adds a
+  `TitleContainer::OpenStream` check (8 -> 9). Complete sweeps SOFTWARE 654/14/48/3 and OPENGLES3 696/13/7/3 change only the intended rows; serial
+  CTest 684 PASS/48 SKIP/0 FAIL/3 disabled. Closure: CNA `da7388fa9`. See
+  [the repair](repair-evidence/api-shape/SOUND_EFFECT_STREAM_REPAIR.md).
 
 - **Reference contract (2026-10-21; still open):**25 genuine managed XNA controls
   pass for short reads, success-only stream closure, exact invalid-input exceptions

@@ -1,28 +1,22 @@
-# Current owner-requested handoff — 2026-10-23
+# Current handoff — 2026-10-23 (late evening)
 
-The inherited review is complete. CNA `39ef8ea2f` repairs ISSUE-011 content/
-resource ownership and GraphicsResource callback ordering; `65e69cc5e` repairs
-the corrected XNA SpriteBatch sequencing for ISSUE-082. Both are now
-`RESOLVED/FIXED_VALIDATED`. ISSUE-113 remains resolved by `c303d3ad9` and closure
-`68471a7a3`. This repository's closure commit is
-`fb6c6530493289f08a6487b52445adc47e435310`.
+CNA root `handoff.md` is the current continuation point; read it first. This file's top only
+summarises the demos side.
 
-Inventory: 156 historical IDs, 133 final dispositions, 23 pending; this is not
-campaign completion. Original assertions remain. Four obsolete knownIssue markers
-were removed only after the same scenarios passed; ISSUE-010 remains open for its
-independent StorageContainer/filesystem residual even though its ContentManager
-guard now passes. Latest gates: native Core/Content/Graphics/Media/Audio modules,
-52 selected cases on each of six renderer/driver paths, 62 ownership and 106
-Sprite/event sanitizer cases, strict-C probes, an external 191 PASS / one unchanged
-SKIP checkpoint, and six exact visuals. The final metadata refresh, serial rebuild,
-and eight focused CTests also passed. See
-`docs/repair-evidence/content/RUNTIME_OWNERSHIP_REVIEW.md`
-and `docs/repair-evidence/graphics/SPRITE_BATCH_DISPOSAL_REVIEW.md`.
+Inventory: 156 historical IDs, 137 final dispositions, 19 pending; this is not campaign
+completion. Since the published `92ee315` this repository has local, unpushed commits that close
+ISSUE-010 (storage residual paths and container construction, CNA `fe2eb8f33`) and ISSUE-020,
+ISSUE-029 and ISSUE-062 (CNA `da7388fa9`). Each closure only added checks or removed a marker after
+the same scenario passed; no original assertion was weakened, and the corrected `storage_root`
+oracle rests on genuine XNA evidence. The latest complete checkpoint (demos tree rebuilt from CNA
+`8842b9a50`): 719-ID sweeps SOFTWARE 654/14/48/3 and OPENGLES3 696/13/7/3, serial CTest 684 PASS/
+48 SKIP/0 FAIL/3 disabled; reports `build/linux-full/reports/repair-batch3-closure-*`. Push only
+on the owner's word, Sharp Runtime before CNA before this repository.
 
-The fresh agent should read CNA root `handoff.md` first. Its exact next task is
-ISSUE-010's StorageContainer constructor/root error contract, followed by the
-remaining storage paths. No goal was created or changed. No validation process or
-dirty worktree should remain after the final push. All older "live", "no push",
+The earlier inherited review (CNA `39ef8ea2f` for ISSUE-011, `65e69cc5e` for ISSUE-082, ISSUE-113
+by `c303d3ad9`/`68471a7a3`; this repository's closure `fb6c653`) is recorded in
+`docs/repair-evidence/content/RUNTIME_OWNERSHIP_REVIEW.md` and
+`docs/repair-evidence/graphics/SPRITE_BATCH_DISPOSAL_REVIEW.md`. All older "live", "no push",
 "pending handoff" and "preserve foreign" notes below are historical only.
 
 ---
