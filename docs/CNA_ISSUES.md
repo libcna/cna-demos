@@ -1198,6 +1198,19 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-010 -- Storage reports errors with C++ standard exceptions, not XNA's types
 
+- **Container construction repaired (2026-10-23; CONFIRMED_OPEN):** genuine XNA
+  `StorageContainerCreationOracle` (real `EndOpenContainer`, isolated Wine profile) passes
+  20/20 + 3/3: construction creates the whole chain, a file at the name/player/title/SavedGames
+  level is an exact `IOException`, an unwritable parent is `UnauthorizedAccessException`, the
+  result is consumed and the file kept. CNA used to create the root first and report
+  `StorageDeviceNotConnectedException`, leaked `std::filesystem::filesystem_error` from the
+  constructor, and opened a container over a file at the player folder. CNA `c30925496` now only
+  resolves the root in End and creates the chain through Sharp `Directory` (Sharp `530e217f` maps
+  denial and overlong paths); extension root routes keep the disconnected-device report. Native
+  storage 56/61 -> 62/62 (ASan/UBSan/leaks 62/62), Sharp 18,230/18,230, storage 7/7 and C
+  storage 2/2 on SOFTWARE/OPENGLES3 unchanged. DeleteContainer and FileExists/DirectoryExists remain.
+  See [construction evidence](repair-evidence/storage/STORAGE_CONTAINER_CREATION.md).
+
 - **Content guard repaired (2026-10-23; CONFIRMED_OPEN):** CNA `39ef8ea2f`
   changes `ContentManager::Load<T>` after Dispose from `std::runtime_error` to
   XNA's `ObjectDisposedException`. The unchanged `several_managers` assertion
