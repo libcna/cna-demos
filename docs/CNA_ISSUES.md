@@ -1821,67 +1821,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ---
 
-### CNA-DEMOS-ISSUE-050 -- Owner-only C game operations enter the foreign-thread queue
-
-- **Area:** C ABI game-thread affinity; generated `Runtime.inc`, `CnaCApiRuntime.cpp` and
-  `CnaCApiDetail.hpp/.cpp` in `modules/c-api/src`.
-- **Contract:** public `CNA/C/runtime.h` says driving or destroying the game still refuses a
-  foreign caller when foreign-thread dispatch is enabled. Ordinary resource/property calls may
-  be queued; this exception protects the owner-driven game lifecycle.
-- **Observed:** with dispatch enabled and the owner never pumping, a worker's
-  `cna_game_run_frame_ext` or `cna_game_destroy` blocks. Disabling dispatch releases it with
-  `CNA_RESULT_INVALID_STATE` and category STATE, rather than its required direct THREAD refusal.
-  Both operations reproduce in separate fresh processes under SOFTWARE and OPENGLES3 selections.
-  No Game loop, rendering or queued destruction is executed by this probe.
-- **Why this proves queuing:** a readiness flag or a delayed thread alone would be inconclusive.
-  Here cancellation returns the queue's INVALID_STATE result. Each probe additionally verifies
-  that the owner's target step is still 166667 and owner-thread game destruction succeeds.
-  A thread that has not entered its call before dispatch is disabled returns a distinct
-  inconclusive exit, not this defect result.
-- **Reproducer:** `tools/repro_c_api_owner_thread.c` uses only public C APIs and bounded C11
-  waits. It never pumps the forbidden call, cancels before joining and terminates the isolated
-  process if cancellation cannot release the worker. Exit 0 means direct THREAD refusal;
-  exit 1 confirms this defect; exit 2 requires investigation. Build in the existing tree:
-
-  ```bash
-  CCACHE_DIR=/rv/cnaccache CCACHE_BASEDIR=/rv ccache gcc-14 -std=c11 -Wall -Wextra -Werror -pthread \
-    -I ../cna/modules/c-api/include tools/repro_c_api_owner_thread.c \
-    -L build/linux-full/CNA/modules/c-api -Wl,-rpath,'$ORIGIN/../CNA/modules/c-api' \
-    -lcna_c_api -o build/linux-full/bin/cna-repro-c-api-owner-thread
-  export CNA_GRAPHICS_RENDERER=SOFTWARE SDL_AUDIO_DRIVER=dummy SDL_VIDEO_DRIVER=x11
-  env -u WAYLAND_DISPLAY xvfb-run -a build/linux-full/bin/cna-repro-c-api-owner-thread
-  env -u WAYLAND_DISPLAY xvfb-run -a build/linux-full/bin/cna-repro-c-api-owner-thread destroy
-  ```
-
-- **Evidence:** both initial and final-source probes exit 1 for both operations on both renderer
-  selections. Native renderer initialization/selection INFO diagnostics on stderr are preserved. Every final line reports `cancelled=1, result=3, diagnostic=0,
-  category=3, disable=0, owner_read=0, ticks=166667, cleanup=0`. Original logs/exits, the initial
-  source, selected source/binary hashes and clean-state observations are archived under
-  `reports/cna-issue-050-*`. The seven-target incremental rebuild completed without diagnostics.
-- **Source analysis:** these generated routes use `CallWithExceptionBarrier`. Their handle
-  lookup records a foreign-thread refusal, so that barrier queues the body when dispatch is on.
-  `GetCallableGame` adds a callback-reentrancy guard but does not prevent this retry. The same
-  generated shape appears on other driving routes; only RunFrameEXT and Destroy were exercised.
-  Executing a forbidden queued body through a pump was deliberately not tested.
-- **Suggested correction:** encode owner-only routing in the generator/specification and use
-  exception translation without foreign-thread retry for these routes. Preserve normal queued
-  calls and their error forwarding; do not weaken the declared owner-thread contract.
-- **Environment/status:** confirmed on Linux/GCC 14.2. CNA was clean at
-  `4ee1e0b553667b6e999248fcefdea729654ee497` before rebuild and after reproduction. This records
-  the observed clean source and selected artifacts, not an atomic full dependency snapshot.
-  Open; no CNA files changed or upstream message sent.
-- **Catalog integration:** `c_api.game.foreign_thread_dispatch` now carries ISSUE-050 and checks
-  both owner-only operations without pumping. Focused SOFTWARE/OPENGLES3 runs retain all eighteen
-  original passing assertions and produce exactly 28 passes/two labeled failures out of 30.
-  Both cancellation results are INVALID_STATE/STATE; the owner remains usable and destroys the
-  game. Delayed pre-call scheduling is separately inconclusive. Both stderr streams are empty.
-  All 31 focused C/CLI CTests pass, including this expected-failure test (7.31 s). Source/logs:
-  reports/checkpoint-446-owner-focused-*. Complete 446-owner at 9e7a27b passes all 459 enabled
-  CTests and both full smoke runs. Exact ORIGINAL 446-reentry comparisons add only these two
-  failures (32/33 -> 34/35), retain all prior failures and preserve every other demo status/check
-  count and C/custom-content child list. Selected hashes and normalized stderr are unchanged.
-  Original evidence and strict reviews: reports/checkpoint-446-owner-*.
-
 ### CNA-DEMOS-ISSUE-051 -- Host-frame failure contract promises suppressed C exit hooks
 
 - **Area:** public `CNA/C/runtime.h` host-frame contract and the C lifecycle adapter in
@@ -1953,6 +1892,80 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-050 -- Owner-only C game operations enter the foreign-thread queue
+
+- **Resolved (2026-10-23):** CNA `12837955407ec964ebce9752b1fae0b3e47b6b14` encodes
+  owner-only dispatch policy in the route specification/generator and uses local exception
+  translation for seven lifecycle/dispatch-control routes. Ordinary queued calls are unchanged.
+  Native regression fails7/7 with dispatch enabled before repair and passes all14 on/off cases
+  afterwards. Six native CTests pass on SOFTWARE/OPENGLES3; five generator tests pass.
+  The original demo retains all46 current child assertions and now passes on both renderers;
+  only its knownIssue marker was removed. Complete719-ID sweeps change only050 and remove
+  exactly its two failures per renderer. Full serial CTest has the same678PASS/48SKIP/6FAIL
+  and3disabled as the prior checkpoint; all275 frozen artifacts retain their hashes.
+  Historical evidence follows. [Repair and validation](repair-evidence/lifecycle/OWNER_THREAD_DISPATCH.md).
+
+- **Area:** C ABI game-thread affinity; generated `Runtime.inc`, `CnaCApiRuntime.cpp` and
+  `CnaCApiDetail.hpp/.cpp` in `modules/c-api/src`.
+- **Contract:** public `CNA/C/runtime.h` says driving or destroying the game still refuses a
+  foreign caller when foreign-thread dispatch is enabled. Ordinary resource/property calls may
+  be queued; this exception protects the owner-driven game lifecycle.
+- **Observed:** with dispatch enabled and the owner never pumping, a worker's
+  `cna_game_run_frame_ext` or `cna_game_destroy` blocks. Disabling dispatch releases it with
+  `CNA_RESULT_INVALID_STATE` and category STATE, rather than its required direct THREAD refusal.
+  Both operations reproduce in separate fresh processes under SOFTWARE and OPENGLES3 selections.
+  No Game loop, rendering or queued destruction is executed by this probe.
+- **Why this proves queuing:** a readiness flag or a delayed thread alone would be inconclusive.
+  Here cancellation returns the queue's INVALID_STATE result. Each probe additionally verifies
+  that the owner's target step is still 166667 and owner-thread game destruction succeeds.
+  A thread that has not entered its call before dispatch is disabled returns a distinct
+  inconclusive exit, not this defect result.
+- **Reproducer:** `tools/repro_c_api_owner_thread.c` uses only public C APIs and bounded C11
+  waits. It never pumps the forbidden call, cancels before joining and terminates the isolated
+  process if cancellation cannot release the worker. Exit 0 means direct THREAD refusal;
+  exit 1 confirms this defect; exit 2 requires investigation. Build in the existing tree:
+
+  ```bash
+  CCACHE_DIR=/rv/cnaccache CCACHE_BASEDIR=/rv ccache gcc-14 -std=c11 -Wall -Wextra -Werror -pthread \
+    -I ../cna/modules/c-api/include tools/repro_c_api_owner_thread.c \
+    -L build/linux-full/CNA/modules/c-api -Wl,-rpath,'$ORIGIN/../CNA/modules/c-api' \
+    -lcna_c_api -o build/linux-full/bin/cna-repro-c-api-owner-thread
+  export CNA_GRAPHICS_RENDERER=SOFTWARE SDL_AUDIO_DRIVER=dummy SDL_VIDEO_DRIVER=x11
+  env -u WAYLAND_DISPLAY xvfb-run -a build/linux-full/bin/cna-repro-c-api-owner-thread
+  env -u WAYLAND_DISPLAY xvfb-run -a build/linux-full/bin/cna-repro-c-api-owner-thread destroy
+  ```
+
+- **Evidence:** both initial and final-source probes exit 1 for both operations on both renderer
+  selections. Native renderer initialization/selection INFO diagnostics on stderr are preserved. Every final line reports `cancelled=1, result=3, diagnostic=0,
+  category=3, disable=0, owner_read=0, ticks=166667, cleanup=0`. Original logs/exits, the initial
+  source, selected source/binary hashes and clean-state observations are archived under
+  `reports/cna-issue-050-*`. The seven-target incremental rebuild completed without diagnostics.
+- **Source analysis:** these generated routes use `CallWithExceptionBarrier`. Their handle
+  lookup records a foreign-thread refusal, so that barrier queues the body when dispatch is on.
+  `GetCallableGame` adds a callback-reentrancy guard but does not prevent this retry. The same
+  generated shape appears on other driving routes; only RunFrameEXT and Destroy were exercised.
+  Executing a forbidden queued body through a pump was deliberately not tested.
+- **Suggested correction:** encode owner-only routing in the generator/specification and use
+  exception translation without foreign-thread retry for these routes. Preserve normal queued
+  calls and their error forwarding; do not weaken the declared owner-thread contract.
+- **Environment/status:** confirmed on Linux/GCC 14.2. CNA was clean at
+  `4ee1e0b553667b6e999248fcefdea729654ee497` before rebuild and after reproduction. This records
+  the observed clean source and selected artifacts, not an atomic full dependency snapshot.
+  Open; no CNA files changed or upstream message sent.
+- **Catalog integration:** `c_api.game.foreign_thread_dispatch` now carries ISSUE-050 and checks
+  both owner-only operations without pumping. Focused SOFTWARE/OPENGLES3 runs retain all eighteen
+  original passing assertions and produce exactly 28 passes/two labeled failures out of 30.
+  Both cancellation results are INVALID_STATE/STATE; the owner remains usable and destroys the
+  game. Delayed pre-call scheduling is separately inconclusive. Both stderr streams are empty.
+  All 31 focused C/CLI CTests pass, including this expected-failure test (7.31 s). Source/logs:
+  reports/checkpoint-446-owner-focused-*. Complete 446-owner at 9e7a27b passes all 459 enabled
+  CTests and both full smoke runs. Exact ORIGINAL 446-reentry comparisons add only these two
+  failures (32/33 -> 34/35), retain all prior failures and preserve every other demo status/check
+  count and C/custom-content child list. Selected hashes and normalized stderr are unchanged.
+  Original evidence and strict reviews: reports/checkpoint-446-owner-*.
+
+
 
 ### CNA-DEMOS-ISSUE-150 -- documented `CNA::Runtime` facade has no linkable implementation
 

@@ -22,5 +22,4 @@ CNA_DEMOS_STANDALONE({
                     "A permitted property write is cancelled before execution; re-enabled dispatch serves a fresh worker. "
                     "Final owner destruction cancels a waiting property call before bounded joining. "
                     "No game loop, rendering or automatic callback pumping is demonstrated.",
-    .knownIssue = "CNA-DEMOS-ISSUE-050",
 })

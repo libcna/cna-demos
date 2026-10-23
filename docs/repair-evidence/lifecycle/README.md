@@ -1,5 +1,9 @@
 # Lifecycle audit and native witnesses (141–144; external validation pending)
 
+The separate ISSUE-050 C owner-thread dispatch repair is tracked in
+[OWNER_THREAD_DISPATCH.md](OWNER_THREAD_DISPATCH.md), including both complete renderer sweeps
+and the full CTest comparison.
+
 The separate completed ISSUE-019 timing repair is recorded in
 [RESET_ELAPSED_TIME.md](RESET_ELAPSED_TIME.md), with genuine XNA references and seven native
 regressions. The historical component/lifecycle investigation below is retained.
