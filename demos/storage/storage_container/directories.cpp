@@ -53,6 +53,16 @@ namespace
             ctx.Check(Join(container->GetDirectoryNames("s*")) == "screenshots", "directory names can be filtered too");
             ctx.Check(container->FileExists("replays/race1.rpl"), "files in subdirectories are addressed by path");
 
+            bool existingFileRefused = false;
+            try { container->CreateDirectory("settings.cfg"); }
+            catch (const System::IO::IOException&) { existingFileRefused = true; }
+            ctx.Check(existingFileRefused, "CreateDirectory refuses an existing file with IOException");
+            ctx.Check(container->FileExists("settings.cfg"), "CreateDirectory preserves the existing file");
+            bool fileParentRefused = false;
+            try { container->CreateDirectory("settings.cfg/child"); }
+            catch (const System::IO::IOException&) { fileParentRefused = true; }
+            ctx.Check(fileParentRefused, "CreateDirectory refuses a file used as a parent with IOException");
+
             // DeleteFile must never substitute a directory deletion (ISSUE-010).
             bool directoryRefused = false;
             try { container->DeleteFile("screenshots"); }
@@ -83,6 +93,25 @@ namespace
             ctx.Check(!container->DirectoryExists("replays"), "after DeleteFile the directory can be deleted");
         }
         device->DeleteContainer("cna-demos directories");
+        {
+            auto opening = device->BeginOpenContainer("cna-demos vanished directories", nullptr, nullptr);
+            auto container = device->EndOpenContainer(opening.get());
+            device->DeleteContainer("cna-demos vanished directories");
+            const auto missingRoot = [&](const auto& action, const char* message) {
+                bool refused = false;
+                try { action(); }
+                catch (const System::IO::DirectoryNotFoundException&) { refused = true; }
+                ctx.Check(refused, message);
+            };
+            missingRoot([&] { (void)container->GetFileNames(); },
+                        "GetFileNames reports a vanished root with DirectoryNotFoundException");
+            missingRoot([&] { (void)container->GetFileNames("*"); },
+                        "filtered GetFileNames reports a vanished root with DirectoryNotFoundException");
+            missingRoot([&] { (void)container->GetDirectoryNames(); },
+                        "GetDirectoryNames reports a vanished root with DirectoryNotFoundException");
+            missingRoot([&] { (void)container->GetDirectoryNames("*"); },
+                        "filtered GetDirectoryNames reports a vanished root with DirectoryNotFoundException");
+        }
     }
 }
 

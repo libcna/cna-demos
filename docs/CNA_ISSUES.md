@@ -1270,6 +1270,17 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-010 -- Storage reports errors with C++ standard exceptions, not XNA's types
 
+- **Partial directory repair (2026-10-23; CONFIRMED_OPEN):** CNA
+  `9c068f6324bf06cd43f3de4d035de54bce4fecfa`, with Sharp Runtime
+  `2f644cf4761123275426247b4d582e3392b4a181`, fixes CreateDirectory accepting a file
+  and enumeration leaking standard filesystem exceptions. Sharp also rejects NUL-prefix
+  side effects and preserves UTF-8 paths. Native storage55/55, Sharp18,228/18,228,
+  Windows-targeted Wine5/5 and strict C smoke pass. Both full719-ID renderer sweeps,
+  six exact visuals and serial CTest678PASS/48SKIP/6 unchanged FAIL/3disabled retain
+  prior outcomes; directory checks11->18 all pass. Content guard and remaining filesystem
+  error paths still require final audit; no issue closure or marker removal.
+  See [directory evidence](repair-evidence/storage/DIRECTORY_OPERATIONS.md).
+
 - **Partial deletion repair (2026-10-23; CONFIRMED_OPEN):** CNA
   `4d384865ca0b586a4ed52929907589ea32a1656b` delegates DeleteFile to Sharp Runtime
   `d051307b3316903a692846acf78200d74339bbef`, preserving directories and translating
