@@ -43,5 +43,4 @@ CNA_DEMOS_GAME(UnloadDisposesDemo, {
     .tags = {"content", "unload", "dispose", "memory"},
     .frames = 1,
     .assets = {"textures/checker.png"},
-    .knownIssue = "CNA-DEMOS-ISSUE-011",
 })

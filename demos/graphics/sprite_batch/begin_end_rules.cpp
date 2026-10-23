@@ -74,31 +74,30 @@ namespace
                    [&] { other.Begin(SpriteSortMode::Immediate, BlendState::AlphaBlend); });
             batch.End();
 
-            // A SpriteBatch is a GraphicsResource too. Dispose abandons an open queue, raises the
-            // event once and makes every batching entry point refuse further use.
+            // XNA disposal publishes its state before the event and retains the open pair.
             SpriteBatch disposable(device);
             int disposingCount = 0;
             bool disposingSenderMatches = false;
-            bool eventPrecedesDisposedFlag = false;
+            bool eventSeesDisposedFlag = false;
             disposable.Disposing += [&](System::Object* sender, const System::EventArgs&) {
                 ++disposingCount;
                 disposingSenderMatches = sender == &disposable;
-                eventPrecedesDisposedFlag = !disposable.getIsDisposedProperty();
+                eventSeesDisposedFlag = disposable.getIsDisposedProperty();
             };
             disposable.Begin();
             disposable.Dispose();
-            Context().Check(disposingCount == 1 && disposingSenderMatches && eventPrecedesDisposedFlag &&
+            Context().Check(disposingCount == 1 && disposingSenderMatches && eventSeesDisposedFlag &&
                                 disposable.getIsDisposedProperty(),
-                            "Dispose raises Disposing before publishing the disposed state");
-            ExpectDisposed("Begin after Dispose", [&] { disposable.Begin(); });
+                            "Dispose raises Disposing after publishing the disposed state");
+            Expect("Begin on an open batch after Dispose", [&] { disposable.Begin(); });
             ExpectDisposed("End after Dispose", [&] { disposable.End(); });
-            ExpectDisposed("Draw after Dispose", [&] { disposable.Draw(texture, Vector2::Zero, Color::White); });
+            disposable.Draw(texture, Vector2::Zero, Color::White);
+            Context().Check(true, "an open deferred batch accepts Draw after Dispose");
             disposable.Dispose();
             Context().Check(disposingCount == 1, "a second Dispose raises no event");
 
-            // Disposing an open deferred batch must also retire the device-level active-batch
-            // accounting; otherwise an unrelated Immediate batch is poisoned for this device.
-            immediateRecovered_ = true;
+            // Genuine XNA retains this accounting. Disposal does not stand in for End.
+            immediateRefused_ = false;
             try
             {
                 other.Begin(SpriteSortMode::Immediate, BlendState::AlphaBlend);
@@ -106,7 +105,7 @@ namespace
             }
             catch (const System::InvalidOperationException& e)
             {
-                immediateRecovered_ = false;
+                immediateRefused_ = true;
                 Context().Print("Immediate after disposing an open batch -> InvalidOperationException: {}", e.what());
             }
         }
@@ -136,8 +135,8 @@ namespace
             Context().Check(pixels[static_cast<std::size_t>(140) * width + 160] == Color::Orange &&
                                 pixels[static_cast<std::size_t>(40) * width + 40] == Color::Black,
                             "a queued texture survives its caller wrapper until deferred End");
-            Context().Check(immediateRecovered_,
-                            "disposing an open batch releases the device's active-batch accounting");
+            Context().Check(immediateRefused_,
+                            "disposing an open deferred batch preserves XNA active-batch accounting");
 
             Game::Draw(gameTime);
         }
@@ -171,7 +170,7 @@ namespace
             }
         }
 
-        bool immediateRecovered_ = false;
+        bool immediateRefused_ = false;
     };
 }
 
@@ -186,6 +185,4 @@ CNA_DEMOS_GAME(BeginEndRulesDemo, {
     .tags = {"sprite", "errors", "rules", "dispose", "lifetime"},
     .frames = 1,
     .deterministic = true,
-    .restrictions = "CNA-DEMOS-ISSUE-082: disposing an open batch leaves the device's active-batch counter set; cross-device texture rejection is audited separately.",
-    .knownIssue = "CNA-DEMOS-ISSUE-082",
 })

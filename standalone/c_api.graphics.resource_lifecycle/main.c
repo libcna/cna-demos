@@ -27,7 +27,7 @@ typedef struct ResourceLifecycleState {
     int resource_destroyed_payloads;
     int resource_destroyed_saw_tracking;
     int disposing_calls;
-    int callback_saw_live_resource;
+    int callback_saw_disposed_resource;
     int loads;
 } ResourceLifecycleState;
 
@@ -50,12 +50,12 @@ static int all_bytes_are(const void* data, size_t count, unsigned char value)
 static void disposing(CNA_Handle resource, void* context)
 {
     ResourceLifecycleState* state = (ResourceLifecycleState*)context;
-    CNA_Bool is_disposed = CNA_TRUE;
+    CNA_Bool is_disposed = CNA_FALSE;
     ++state->disposing_calls;
     if (resource == state->expected_resource &&
         cna_graphics_resource_get_is_disposed(resource, &is_disposed) == CNA_RESULT_SUCCESS &&
-        is_disposed == CNA_FALSE) {
-        ++state->callback_saw_live_resource;
+        is_disposed == CNA_TRUE) {
+        ++state->callback_saw_disposed_resource;
     }
 }
 
@@ -297,8 +297,8 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
     cna_demo_check(
         state->demo,
         dispose_result == CNA_RESULT_SUCCESS && state->disposing_calls == 1 &&
-            state->callback_saw_live_resource == 1,
-        "explicit disposal synchronously raises one callback before the disposed state changes");
+            state->callback_saw_disposed_resource == 1,
+        "explicit disposal synchronously raises one callback after the disposed state changes");
     tracked = UINT64_MAX;
     cna_demo_check(
         state->demo,

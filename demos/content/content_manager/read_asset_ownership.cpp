@@ -344,6 +344,5 @@ CNA_DEMOS_CONSOLE(ReadAssetOwnership, {
     .tags = {"content", "xnb", "pack-file", "lifetime", "dispose", "callback"},
     .assets = {"ownership/level.xnb", "ownership/truncated_tiles.xnb", "ownership/oversized_rows.xnb",
                "ownership/oversized_tiles.xnb"},
-    .restrictions = "Supplied and absent callbacks with typed shared_ptr IDisposable children; collection/blob limits and exact truncation; default tracking reproduces ISSUE-011. Raw/untyped and shared-resource disposal discovery remain separate contracts.",
-    .knownIssue = "CNA-DEMOS-ISSUE-011",
+    .restrictions = "Supplied and absent callbacks with typed shared_ptr IDisposable children; collection/blob limits and exact truncation. Raw/untyped and shared-resource disposal discovery remain separate contracts.",
 })

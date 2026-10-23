@@ -4,7 +4,8 @@
  * compiled SpriteFont. A loaded font comes back as two owned handles -- the font and the atlas
  * texture it draws from -- and the font has to be destroyed before its atlas.
  * Root changes are refused while assets are cached, matching XNA; unload before changing roots.
- * Independently owned resources remain usable after unloading and destroying the content manager.
+ * Transferred textures/fonts remain usable after unloading and destroying the content manager.
+ * Loaded Effects follow XNA/C++ disposal; their C handles still require cleanup (ISSUE-011).
  *
  * Arguments: [--automated] [--frames N] [--screenshot PATH]. Exit code 0 passed, 1 failed.
  */
@@ -234,12 +235,13 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
         }
     }
 
-    /* Unlike cached C++ objects, these independently owned C handles survive the manager.
-       Check actual pixels and font measurement after each lifetime boundary, then draw them. */
+    /* Transferred textures/fonts survive the manager. Loaded Effects follow XNA/C++ disposal.
+       Preserve authored metadata and inspect disposal as well as the exact Apply refusal. */
     for (int stage = 0; stage < 2; ++stage) {
         CNA_Texture2DTransfer transfer;
         CNA_Color pixels[9];
         CNA_Vector2 measured;
+        CNA_Bool effect_disposed = CNA_FALSE;
         uint64_t required = 0U;
         result = stage == 0 ? cna_content_manager_unload(state->content)
                             : cna_content_manager_destroy(state->content);
@@ -308,10 +310,21 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
         cna_demo_check(
             state->demo,
             state->effect != CNA_INVALID_HANDLE && effect_has_authored_state(state->effect) &&
-                cna_effect_apply(state->effect) == CNA_RESULT_SUCCESS,
+                cna_graphics_resource_get_is_disposed(state->effect, &effect_disposed) == CNA_RESULT_SUCCESS &&
+                effect_disposed == CNA_TRUE &&
+                cna_effect_apply(state->effect) == CNA_RESULT_INVALID_STATE,
             stage == 0
-                ? "the loaded Effect remains authored and usable after ContentManager.Unload"
-                : "the loaded Effect remains authored and usable after ContentManager destruction");
+                ? "the loaded Effect retains metadata but is disposed after ContentManager.Unload"
+                : "the loaded Effect stays disposed after ContentManager destruction");
+        {
+            char exception_type[128] = {0};
+            uint64_t copied = 0U;
+            cna_demo_check(state->demo,
+                cna_error_copy_last_exception_type_ext(exception_type, sizeof(exception_type) - 1U, &copied) ==
+                    CNA_RESULT_SUCCESS && copied < sizeof(exception_type) &&
+                    strcmp(exception_type, "System.ObjectDisposedException") == 0,
+                "applying the unloaded Effect preserves the exact ObjectDisposedException");
+        }
     }
     return cna_sprite_batch_create(graphics_device, &state->sprite_batch);
 }

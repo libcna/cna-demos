@@ -109,6 +109,4 @@ CNA_DEMOS_GAME(SeveralManagersDemo, {
     .tags = {"content", "level", "unload", "memory", "loading"},
     .automation = CnaDemos::Automation::Automated,
     .assets = {"fonts/pixel_font.cnb", "xnb/textures/colour_wheel.xnb"},
-    .restrictions = "CNA-DEMOS-ISSUE-010: Load<T> after Dispose throws std::runtime_error instead of ObjectDisposedException.",
-    .knownIssue = "CNA-DEMOS-ISSUE-010",
 })

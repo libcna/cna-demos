@@ -754,6 +754,21 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-082 -- Disposing an open SpriteBatch leaves its device batch active
 
+- **Resolved (2026-10-23):** the historical accounting expectation was a demo
+  error: genuine XNA retains an open SpriteBatch interval across Dispose. CNA
+  `65e69cc5e` now preserves the pair, queue and counters, permits the measured
+  post-Dispose sequencing, and refuses only at a safe native-resource boundary
+  where genuine XNA crashes. The same investigation found a real related defect:
+  `GraphicsResource::IsDisposed` must be true during Disposing callbacks. CNA
+  `39ef8ea2f` publishes that state first, makes reentry/throwing callbacks
+  one-shot, retires device registration even when a callback throws, and aligns
+  the C documentation/test contract with XNA/C++ as explicitly selected by the
+  owner. Native modules, six renderer/driver focus sets, 106 sanitizer cases,
+  strict-C execution, an exact prior-outcome comparison and the final external
+  191 PASS / one unchanged capability SKIP checkpoint pass; six visuals match.
+  The demo keeps its behavioral assertions and loses only the disproved marker.
+  Details: [review](repair-evidence/graphics/SPRITE_BATCH_DISPOSAL_REVIEW.md).
+
 - **Repair-campaign clarification (2026-10-21), still open:** genuine XNA retains
   the open-batch accounting, so the historical expectation below is incorrect.
   Separate positive controls exposed a real native defect: IsDisposed must be
@@ -1183,6 +1198,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-010 -- Storage reports errors with C++ standard exceptions, not XNA's types
 
+- **Content guard repaired (2026-10-23; CONFIRMED_OPEN):** CNA `39ef8ea2f`
+  changes `ContentManager::Load<T>` after Dispose from `std::runtime_error` to
+  XNA's `ObjectDisposedException`. The unchanged `several_managers` assertion
+  passes on SOFTWARE, OPENGLES3, OPENGL33 and SDL_GPU, so its obsolete marker is
+  removed. ISSUE-010 remains open for the independent StorageContainer constructor
+  and residual filesystem error audit described below.
+
 - **Partial directory repair (2026-10-23; CONFIRMED_OPEN):** CNA
   `9c068f6324bf06cd43f3de4d035de54bce4fecfa`, with Sharp Runtime
   `2f644cf4761123275426247b4d582e3392b4a181`, fixes CreateDirectory accepting a file
@@ -1247,6 +1269,22 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Status:** open (low impact); not reported upstream yet.
 
 ### CNA-DEMOS-ISSUE-011 -- `ContentManager::Unload` does not dispose loaded assets
+
+- **Resolved (2026-10-23):** CNA `39ef8ea2f` records every materialized
+  disposable, nested/model child and successfully created child of a later
+  failed read; Unload disposes in read order and clears records/cache even when
+  disposal throws. Internal ownership groups preserve value-wrapper copy/move
+  behavior without hiding explicit disposal. Content-owned textures share XNA's
+  Name/Tag metadata while ordinary copies stay independent. Loaded C Effect and
+  Model handles now follow the owner-selected XNA/C++ lifetime and become disposed
+  after manager Unload/Destroy; transferred texture/font/sound handles retain
+  their documented independent ownership. Core119, Content2057PASS/4 unchanged
+  SKIP, Graphics3051PASS/115 unchanged SKIP, Media355 and Audio775PASS/4SKIP;
+  62 integrated sanitizer ownership cases; strict-C Effect/Model plus independent
+  cube/sound probes; final external 191PASS/one unchanged capability SKIP and six
+  visual references all pass. The original demo assertions are unchanged and
+  their knownIssue markers are removed. Details:
+  [review](repair-evidence/content/RUNTIME_OWNERSHIP_REVIEW.md).
 
 - **Candidate validation (2026-10-21; still open):** the uncommitted CNA ownership
   repair passes all61 new native regression cases, including integrated ASan/leak/
