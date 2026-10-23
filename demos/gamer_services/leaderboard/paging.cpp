@@ -164,11 +164,6 @@ namespace
                 columns.SetValue("Recorded", System::DateTime(2026, 10, 14));
                 columns.SetValue("Note", std::string("round ") + std::to_string(i + 1));
 
-                std::any round;
-                writerColumnsExact = writerColumnsExact && columns.getCountProperty() == 8 &&
-                    columns.ContainsKey("Recorded") && !columns.ContainsKey("Missing") &&
-                    columns.TryGetValue("Round", round) && std::any_cast<int>(round) == i + 1;
-
                 try
                 {
                     System::IO::Stream* replay = columns.GetValueStream("Replay");
@@ -187,6 +182,12 @@ namespace
                 {
                     writerStreamsExact = false;
                 }
+                // A repeated run restores Replay before these scalar writes. Check the
+                // same complete shape after stream creation on both first and later runs.
+                std::any round;
+                writerColumnsExact = writerColumnsExact && columns.getCountProperty() == 9 &&
+                    columns.ContainsKey("Recorded") && columns.ContainsKey("Replay") && !columns.ContainsKey("Missing") &&
+                    columns.TryGetValue("Round", round) && std::any_cast<int>(round) == i + 1;
                 entry->setRatingProperty(Rounds[i].score);
                 ++i;
             }
@@ -296,13 +297,15 @@ namespace
             PropertyDictionary scratch = firstColumns;
             const std::vector<std::string> keys = scratch.Keys();
             const std::vector<std::any> values = scratch.Values();
-            ctx.Check(keys.size() == 8 && values.size() == 8 && keys.front() == "Accuracy" && keys.back() == "Time" &&
+            ctx.Check(keys.size() == 9 && values.size() == 9 && keys.front() == "Accuracy" && keys.back() == "Time" &&
+                          keys[4] == "Replay" && std::any_cast<System::IO::Stream*>(values[4]) ==
+                              firstColumns.GetValueStream("Replay") &&
                           std::any_cast<float>(values.front()) == 0.75f &&
                           std::any_cast<System::TimeSpan>(values.back()) == System::TimeSpan::FromSeconds(112),
-                      "Keys and Values are matching sorted snapshots of the eight persisted columns");
+                      "Keys and Values are matching sorted snapshots of all nine persisted columns, including Replay");
 
             const std::pair<std::string, std::any> sentinel{"sentinel", std::any(-1)};
-            std::vector<std::pair<std::string, std::any>> shortCopy(8, sentinel);
+            std::vector<std::pair<std::string, std::any>> shortCopy(9, sentinel);
             bool shortCopyRefused = false;
             try
             {
@@ -318,11 +321,12 @@ namespace
                 shortCopyUntouched = shortCopyUntouched && pair.first == "sentinel" &&
                     std::any_cast<int>(pair.second) == -1;
             }
-            std::vector<std::pair<std::string, std::any>> copied(10, sentinel);
+            std::vector<std::pair<std::string, std::any>> copied(11, sentinel);
             scratch.CopyTo(copied, 1);
             ctx.Check(shortCopyRefused && shortCopyUntouched && copied.front().first == "sentinel" &&
                           copied.back().first == "sentinel" && copied[1].first == "Accuracy" &&
-                          copied[8].first == "Time",
+                          copied[5].first == "Replay" && std::any_cast<System::IO::Stream*>(copied[5].second) ==
+                              firstColumns.GetValueStream("Replay") && copied[9].first == "Time",
                       "CopyTo refuses a short offset atomically and preserves outer sentinels on success");
 
             using PropertyPair = System::Collections::Generic::KeyValuePair<std::string, std::any>;
@@ -416,8 +420,8 @@ CNA_DEMOS_GAME(PagingDemo, {
     .id = "gamer_services.leaderboard.paging",
     .title = "Leaderboard pages and columns",
     .description = "Four local players write typed and stream columns to a board, exercise dictionary lookup and "
-                   "range behavior, and read it two rows at a time through the offline Begin/End contracts; the "
-                   "stream round trip exposes CNA-DEMOS-ISSUE-085.",
+                   "range behavior, and read it two rows at a time through the offline Begin/End contracts, "
+                   "including persisted stream contents.",
     .apis = {"LeaderboardReader::PageDown", "LeaderboardReader::PageUp", "LeaderboardReader::BeginPageDown",
              "LeaderboardReader::EndPageDown", "LeaderboardReader::BeginPageUp", "LeaderboardReader::EndPageUp",
              "LeaderboardReader::BeginRead", "LeaderboardReader::EndRead", "LeaderboardReader::CanPageDown",
@@ -442,7 +446,5 @@ CNA_DEMOS_GAME(PagingDemo, {
     .tags = {"gamer-services", "leaderboard", "high-score", "paging", "offline"},
     .frames = 30,
     .assets = {"fonts/pixel_font.cnb"},
-    .restrictions = "CNA-DEMOS-ISSUE-085: an offline leaderboard writer cannot create a stream column.",
-    .knownIssue = "CNA-DEMOS-ISSUE-085",
     .ownProcess = true,
 })

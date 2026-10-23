@@ -712,6 +712,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-085 -- Offline leaderboard writers cannot create or persist stream columns
 
+- **Status: Resolved (2026-10-23).** CNA repair `420a4572a721f750978e496c3cc0b3b34e2e26a2` enables offline writer streams and persists their bounded byte contents, restoring dictionary-owned read-only reader snapshots and writable streams for reopened writers. All five new native controls pass, including empty/closed streams, copied-entry lifetime, expansion after reload, invalid encodings and atomic refusal above CNA's256-byte bound. This bound is not claimed as an Xbox measurement.
+- **Validation:** full GamerServices737 registered=736PASS/1unchanged declaredSKIP; all732 prior outcomes retained. Six native C controlsPASS. Targeted ASan/UBSan/leak validation41PASS, with eight affected translation units instrumented and other dependencies uninstrumented. Original demo21 controlsPASS SOFTWARE/OPENGLES3. Three exact dictionary-shape expectations now include the ninth Replay column; original stream assertion preserved. Both35-scenario gamer sweeps=34PASS/1manualNOTRUN, only085 changes versus017. All275 consumer artifact hashes verify; catalog719 and generated3197 routes remain valid. Seven registered focused CTestsPASS16.65s; no new full-suite or live-service coverage claim.025 remains open. See [stream evidence](repair-evidence/gamer/LEADERBOARD_STREAMS.md).
+- **Historical finding (retained):**
+
 - **Area/API:** `PropertyDictionary::GetValueStream`, `LeaderboardWriter::GetLeaderboard` and the
   offline leaderboard store in `modules/gamer-services`.
 - **Reproduction:** run `gamer_services.leaderboard.paging` with its four isolated local profiles.
