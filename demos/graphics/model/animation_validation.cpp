@@ -99,7 +99,7 @@ CNA_DEMOS_GAME(AnimationValidationDemo, {
     .title = "glTF animation validation",
     .description = "Loads original malformed loose glTF animation samplers through ContentManager: "
                    "decreasing input and a short output are refused without poisoning later loads, while an "
-                   "unknown interpolation mode exposes CNA-DEMOS-ISSUE-093's silent LINEAR fallback.",
+                   "unknown interpolation mode is refused too (CNA-DEMOS-ISSUE-093).",
     .apis = {"ContentManager::Load", "ContentLoadException", "ModelAnimationsEXT",
              "ApplyClipToBonesEXT", "Model::GltfImportReportEXT", "Model::Bones"},
     .tags = {"model", "gltf", "animation", "validation", "errors", "cnaext"},
@@ -108,5 +108,4 @@ CNA_DEMOS_GAME(AnimationValidationDemo, {
     .assets = {"models/turntable.cnb", "models/loose_animation_bad_input_order.gltf",
                "models/loose_animation_bad_output_count.gltf",
                "models/loose_animation_bad_interpolation.gltf"},
-    .knownIssue = "CNA-DEMOS-ISSUE-093",
 })

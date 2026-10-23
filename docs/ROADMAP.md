@@ -271,11 +271,11 @@ a check that all authored colors remain visible and that a blank texture row can
 - ✅ `graphics.model.gltf_lights` (KHR_lights_punctual -> the PbrEffect's directional lights; GL
   only), ✅ `graphics.model.clip_interpolation` (STEP/LINEAR/CUBICSPLINE samplers; expected failure,
   CNA-DEMOS-ISSUE-031: all play as LINEAR).
-- ✅ `graphics.model.animation_validation` (decreasing-time and output-count refusal, manager
-  recovery, and unknown interpolation fallback; expected failure, CNA-DEMOS-ISSUE-093).
+- ✅ `graphics.model.animation_validation` (decreasing-time, output-count and unknown-interpolation
+  refusal and manager recovery; CNA-DEMOS-ISSUE-093 fixed by CNA `eb9653bf2`).
 - ✅ `graphics.model.animation_player_validation` (construction and borrowed-data revalidation,
-  prefix composition and live clip edits; expected failure, CNA-DEMOS-ISSUE-096: a nonempty
-  partial root-prefix array is silently treated as all identity).
+  prefix composition, the refused partial root prefix and live clip edits; CNA-DEMOS-ISSUE-096
+  fixed by CNA `b98629c89`).
 - ✅ `graphics.model.morph_animation_import` (compiled/loose carrier parity, exact vertex upload
   and false loose-report loss; expected failure, CNA-DEMOS-ISSUE-094).
 - ✅ `graphics.model.multi_skin_animation_report` (one source animation split across two retained

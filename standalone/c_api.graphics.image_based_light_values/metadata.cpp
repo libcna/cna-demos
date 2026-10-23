@@ -14,6 +14,5 @@ CNA_DEMOS_STANDALONE({
     .frames = 1,
     .restrictions = "Standalone C game. Validity and handle kinds are checked with real resources; no PBR effect, "
                     "draw, environment-lighting result, screenshot or visual inspection is claimed. The wrong-kind "
-                    "handle check exposes CNA-DEMOS-ISSUE-091. Built only with CNA_BUILD_C_API=ON.",
-    .knownIssue = "CNA-DEMOS-ISSUE-091",
+                    "handle check covers CNA-DEMOS-ISSUE-091. Built only with CNA_BUILD_C_API=ON.",
 })

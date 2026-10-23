@@ -145,7 +145,7 @@ CNA_DEMOS_CONSOLE(AnimationPlayerValidation, {
     .title = "Validate borrowed animation data",
     .description = "Exercises AnimationPlayer construction and per-update validation, identity and "
                    "complete root prefixes, recovery after borrowed skeleton repair, live borrowed "
-                   "clip edits, and CNA-DEMOS-ISSUE-096's silent partial-prefix fallback.",
+                   "clip edits, and the refused partial prefix (CNA-DEMOS-ISSUE-096).",
     .apis = {"Microsoft::Xna::Framework::Graphics::AnimationPlayer",
              "Microsoft::Xna::Framework::Graphics::AnimationPlayer::StartClip",
              "Microsoft::Xna::Framework::Graphics::AnimationPlayer::Update",
@@ -155,5 +155,4 @@ CNA_DEMOS_CONSOLE(AnimationPlayerValidation, {
              "Microsoft::Xna::Framework::Graphics::SkinningData::SkeletonHierarchy",
              "Microsoft::Xna::Framework::Graphics::SkinningData::InverseBindPose"},
     .tags = {"model", "skinning", "animation", "validation", "hierarchy", "cnaext"},
-    .knownIssue = "CNA-DEMOS-ISSUE-096",
 })
