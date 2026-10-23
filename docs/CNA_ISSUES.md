@@ -1408,6 +1408,10 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-025 -- Offline, leaderboard columns written after the rating are lost
 
+- **Status: Resolved (2026-10-23).** CNA repair `8a5e5d8aa50c56599ddc8649b738cb2ca4caab15` compares offline columns with their last loaded/successfully persisted contents and flushes changed rows at LocalWithLeaderboards EndGame, before GameEnded. It catches retained stream/reference writes and leaves unchanged cached rows alone. Immediate Rating fixture persistence remains; failed final writes retain the prior store and allow an explicit corrected retry. No online transaction rules changed.
+- **Validation:**3FAIL/3PASS native witnesses before repair; finalNet565PASS (558 prior outcomes retained,7newPASS), GamerServices736PASS/1same declaredSKIP, seven native C controlsPASS. Targeted ASan/UBSan/leaks48PASS with11 relevant translation units instrumented, other dependencies uninstrumented. The demo now writes Rating before columns after clearing its fixture row; all21 assertions remain, including085 stream/shape controls. Both59-scenario gamer/net renderer sweeps=58PASS/1manualNOTRUN, exact prior outcome parity. 11 (26.40s) focused/catalog CTestsPASS; catalog719 unchanged; all275 artifact hashes verified. No025 knownIssue marker existed to remove. See [commit-boundary evidence](repair-evidence/gamer/LEADERBOARD_COMMIT.md).
+- **Historical finding (retained):**
+
 - **Area:** gamer services -- `LeaderboardWriter::GetLeaderboard` (offline: no CNA service) saves
   an entry to the local store only from the hook `LeaderboardEntry::setRatingProperty` runs
   (`SetOnRatingChangedHookEXT`); writing `LeaderboardEntry::Columns` saves nothing. In XNA the

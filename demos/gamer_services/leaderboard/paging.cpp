@@ -149,12 +149,13 @@ namespace
             bool writerStreamsExact = true;
             for (LocalNetworkGamer* local : session->getLocalGamersProperty())
             {
-                // Besides the rating, a row carries typed columns: the round's outcome and time.
-                // (Columns before the rating: offline, CNA saves a row when its rating is set and
-                // drops columns written after that, CNA-DEMOS-ISSUE-025.)
                 LeaderboardEntry* entry =
                     local->getSignedInGamerProperty()->getLeaderboardWriterProperty().GetLeaderboard(board);
                 PropertyDictionary& columns = entry->getColumnsProperty();
+                // Commit an empty row first so a previous run cannot supply the expected
+                // columns. EndGame must persist values written after Rating (CNA-DEMOS-ISSUE-025).
+                columns.Clear();
+                entry->setRatingProperty(Rounds[i].score);
                 columns.SetValue("Result", Rounds[i].result);
                 columns.SetValue("Time", System::TimeSpan::FromSeconds(Rounds[i].seconds));
                 columns.SetValue("Round", i + 1);
@@ -182,13 +183,11 @@ namespace
                 {
                     writerStreamsExact = false;
                 }
-                // A repeated run restores Replay before these scalar writes. Check the
-                // same complete shape after stream creation on both first and later runs.
+                // Check the complete row, including its stream column.
                 std::any round;
                 writerColumnsExact = writerColumnsExact && columns.getCountProperty() == 9 &&
                     columns.ContainsKey("Recorded") && columns.ContainsKey("Replay") && !columns.ContainsKey("Missing") &&
                     columns.TryGetValue("Round", round) && std::any_cast<int>(round) == i + 1;
-                entry->setRatingProperty(Rounds[i].score);
                 ++i;
             }
             ctx.Check(i == 4, "four local gamers play the round");
