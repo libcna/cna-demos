@@ -13,6 +13,11 @@
 #include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Model.hpp"
 #include "Microsoft/Xna/Framework/Graphics/ModelBone.hpp"
+#include "Microsoft/Xna/Framework/Graphics/ModelMesh.hpp"
+#include "Microsoft/Xna/Framework/Graphics/ModelMeshCollection.hpp"
+#include "Microsoft/Xna/Framework/Graphics/ModelMeshPart.hpp"
+#include "Microsoft/Xna/Framework/Graphics/ModelMeshPartCollection.hpp"
+#include "Microsoft/Xna/Framework/Graphics/MorphTargetEXT.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SkinnedModelEXT.hpp"
 #include "Microsoft/Xna/Framework/MathHelper.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
@@ -200,6 +205,16 @@ namespace
                 FindDiagnostic(diagnosticReport, "animation-targets-unavailable");
             const auto* unsupported =
                 FindDiagnostic(diagnosticReport, "animation-paths-unsupported");
+            // Mixed's weights channel drives AnimatedShape's one morph target. It is retained as
+            // the part's morph track, so it is not an unsupported, lost channel
+            // (CNA-DEMOS-ISSUE-094); this check used to require that false loss.
+            const MorphTargetDataEXT* morph = nullptr;
+            for (ModelMesh* mesh : diagnostic.getMeshesProperty())
+                for (ModelMeshPart* part : mesh->getMeshPartsProperty())
+                    if (auto* data = dynamic_cast<MorphTargetDataEXT*>(part->getTagProperty()))
+                        morph = data;
+            ctx.Check(morph != nullptr && !morph->WeightTrack.Keys.empty(),
+                      "the weights channel is retained as the morph part's weight track");
             const auto* resampled =
                 FindDiagnostic(diagnosticReport, "animation-tracks-resampled");
             const auto* duplicated =
@@ -207,20 +222,18 @@ namespace
             ctx.Check(empty && empty->Kind == GltfImportDiagnosticKindEXT::DroppedData &&
                           empty->Count == 1 && unavailable &&
                           unavailable->Kind == GltfImportDiagnosticKindEXT::DroppedData &&
-                          unavailable->Count == 1 && unsupported &&
-                          unsupported->Kind == GltfImportDiagnosticKindEXT::UnsupportedFeature &&
-                          unsupported->Count == 1 && resampled &&
+                          unavailable->Count == 1 && unsupported == nullptr && resampled &&
                           resampled->Kind == GltfImportDiagnosticKindEXT::Approximation &&
                           resampled->Count == 1 && duplicated &&
                           duplicated->Kind == GltfImportDiagnosticKindEXT::Approximation &&
                           duplicated->Count == 1,
-                      "the report identifies empty, unavailable, unsupported, resampled and duplicate-time outcomes");
-            ctx.Check(diagnosticReport.Diagnostics.size() == 6 &&
-                          diagnosticReport.getWarningCountProperty() == 5 &&
-                          diagnosticReport.getDroppedFeatureCountProperty() == 3 &&
+                      "the report identifies empty, unavailable, resampled and duplicate-time outcomes and no unsupported path");
+            ctx.Check(diagnosticReport.Diagnostics.size() == 5 &&
+                          diagnosticReport.getWarningCountProperty() == 4 &&
+                          diagnosticReport.getDroppedFeatureCountProperty() == 2 &&
                           diagnosticReport.getApproximationCountProperty() == 2 &&
                           diagnosticReport.AnythingLost(),
-                      "five animation warnings aggregate three dropped and two approximated occurrences");
+                      "four animation warnings aggregate two dropped and two approximated occurrences");
 
             view_ = Matrix::CreateLookAt(Vector3(0.0f, 3.5f, 6.0f), Vector3(0.0f, 0.8f, 0.0f), Vector3::Up);
             projection_ = Matrix::CreatePerspectiveFieldOfView(MathHelper::PiOver4,
