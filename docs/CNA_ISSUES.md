@@ -52,6 +52,18 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-113 -- A second OcclusionQuery Begin ignores the active-query contract
 
+- **Repair status: Resolved (2026-10-23).** CNA `c303d3ad9821ca7ad5cf04490d6f1a0555b2af8c`
+  implements independent overlapping intervals, native-handle retirement, and defined
+  DWORD count wrapping in the coordinator and SOFTWARE/WebGPU paths. Genuine XNA
+  disproves the original distinct-query refusal expectation; same-object reentry
+  remains refused. The demo now checks independent counts instead of that invalid
+  expectation. Native graphics: 3,048 PASS / 115 unchanged SKIP; the 17-case counter/
+  coordinator sanitizer probe passes. C++18/C24 controls pass on SOFTWARE/GLES/GL33;
+  unsupported SDL_GPU remains an explicit capability skip. External132 regression
+  preserves all prior outcomes (including eight separate ISSUE-082 failures), and
+  six exact visual references pass. See [review and validation details](repair-evidence/graphics/OCCLUSION_REPAIR_REVIEW.md).
+  The original finding below is retained as historical evidence.
+
 - **Area/API:** `Microsoft::Xna::Framework::Graphics::OcclusionQuery::Begin`, its shared public
   lifecycle state and the Software/EasyGL native query implementations.
 - **Demo/reproduction:** run `graphics.occlusion_query.visible_pixels`. Create two queries on the

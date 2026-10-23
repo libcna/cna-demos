@@ -23,6 +23,7 @@ typedef struct OcclusionState {
     int started;
     int finished;
     int query_destroyed;
+    int missing_queries;
 } OcclusionState;
 
 static CNA_UserPrimitives full_screen_quad(CNA_VertexPositionColor* vertices)
@@ -64,6 +65,7 @@ static CNA_Result load_content(
     CNA_Handle device = CNA_INVALID_HANDLE;
     CNA_Bool has_renderer = UINT32_C(7);
     CNA_Bool complete = UINT32_C(7);
+    CNA_Bool supports_queries = UINT32_C(7);
     CNA_Matrix identity;
     CNA_RasterizerState rasterizer;
     CNA_BlendState blend;
@@ -78,6 +80,24 @@ static CNA_Result load_content(
     if (!cna_demo_check_result(
             state->demo, cna_game_get_graphics_device(game, &device),
             "borrow the live graphics device")) {
+        return CNA_RESULT_SUCCESS;
+    }
+    if (!cna_demo_check(
+            state->demo,
+            cna_graphics_device_supports_capability(
+                device, CNA_GRAPHICS_CAPABILITY_OCCLUSION_QUERY, &supports_queries) ==
+                    CNA_RESULT_SUCCESS &&
+                (supports_queries == CNA_FALSE || supports_queries == CNA_TRUE),
+            "read the declared occlusion-query capability")) {
+        return CNA_RESULT_INVALID_STATE;
+    }
+    if (supports_queries == CNA_FALSE) {
+        cna_demo_check(
+            state->demo,
+            cna_occlusion_query_create(device, &state->query) == CNA_RESULT_NOT_SUPPORTED &&
+                state->query == CNA_INVALID_HANDLE,
+            "an unsupported renderer refuses construction without publishing a handle");
+        state->missing_queries = 1;
         return CNA_RESULT_SUCCESS;
     }
     if (!cna_demo_check_result(
@@ -139,7 +159,7 @@ static CNA_Result update(
     OcclusionState* state = (OcclusionState*)context;
     (void)game_time;
     (void)out_error;
-    if (state->finished) {
+    if (state->finished || state->missing_queries) {
         return cna_game_request_exit(game);
     }
     if (state->demo->frames > 0 && state->draws >= state->demo->frames) {
@@ -168,8 +188,12 @@ static CNA_Result draw(
     CNA_Result repeated_end;
     CNA_Result premature_reuse;
     CNA_Result count_result;
+    CNA_Result precision_result;
     (void)game_time;
     (void)out_error;
+    if (state->missing_queries) {
+        return CNA_RESULT_SUCCESS;
+    }
     ++state->draws;
     if (cna_game_get_graphics_device(game, &device) != CNA_RESULT_SUCCESS) {
         return CNA_RESULT_INVALID_STATE;
@@ -222,14 +246,18 @@ static CNA_Result draw(
             state->demo, 1,
             "the visible query completes within the bounded frame budget");
         count_result = cna_occlusion_query_get_pixel_count(state->query, &count);
-        if (count_result == CNA_RESULT_SUCCESS) {
+        /* The native target may be selected on the first Begin. Ask about this result,
+           not the conservative pre-Begin precision observed during construction. */
+        precision_result = cna_occlusion_query_get_is_pixel_count_precise_ext(
+            state->query, &state->precise);
+        if (count_result == CNA_RESULT_SUCCESS && precision_result == CNA_RESULT_SUCCESS) {
             printf(
                 "  query result: precise=%s, visible samples=%d\n",
                 state->precise == CNA_TRUE ? "true" : "false", count);
         }
         cna_demo_check(
             state->demo,
-            count_result == CNA_RESULT_SUCCESS &&
+            count_result == CNA_RESULT_SUCCESS && precision_result == CNA_RESULT_SUCCESS &&
                 ((state->precise == CNA_TRUE && count > 4000) ||
                  (state->precise == CNA_FALSE && count == 1)),
             "the result is a real visible-sample tally or the documented one-bit flag");
@@ -299,9 +327,11 @@ int main(int argc, char** argv)
         cna_demo_check_result(
             &demo, cna_game_run(game),
             "run the bounded asynchronous query workflow");
-        cna_demo_check(
-            &demo, state.loads == 1 && state.draws >= 1 && state.finished,
-            "the query audit used one load and at least one draw callback");
+        if (!state.missing_queries) {
+            cna_demo_check(
+                &demo, state.loads == 1 && state.draws >= 1 && state.finished,
+                "the query audit used one load and at least one draw callback");
+        }
     }
 
     if (!state.query_destroyed && state.query != CNA_INVALID_HANDLE) {
@@ -319,5 +349,8 @@ int main(int argc, char** argv)
             "destroy the graphics device manager");
     }
     cna_demo_check_result(&demo, cna_game_destroy(game), "destroy the owner game");
+    if (state.missing_queries && demo.failures == 0) {
+        return cna_demo_skip("the active renderer explicitly lacks occlusion queries");
+    }
     return cna_demo_finish(&demo);
 }

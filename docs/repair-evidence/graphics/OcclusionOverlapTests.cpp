@@ -129,4 +129,33 @@ TEST_F(OcclusionOverlapTest, InnerReceivesSamplesAfterEmptyOuterEnds)
     EXPECT_EQ(Result(owner), 0);
     EXPECT_EQ(Result(contender), Expected(1));
 }
+
+TEST_F(OcclusionOverlapTest, ManyUnstartedQueriesLeaveNativeCapacityForActiveIntervals)
+{
+    std::array<std::unique_ptr<OcclusionQuery>, 40> queries;
+    for (auto& query : queries) query = std::make_unique<OcclusionQuery>(*device);
+    queries.front()->Begin(); Draw(1); queries.back()->Begin(); Draw(2);
+    queries.back()->End(); Draw(4); queries.front()->End();
+    EXPECT_EQ(Result(*queries.front()), Expected(7));
+    EXPECT_EQ(Result(*queries.back()), Expected(2));
+}
+
+TEST_F(OcclusionOverlapTest, ManyNestedQueriesPreserveEveryIndependentResult)
+{
+    std::array<std::unique_ptr<OcclusionQuery>, 40> queries;
+    for (auto& query : queries)
+    {
+        query = std::make_unique<OcclusionQuery>(*device);
+        query->Begin(); Draw(1);
+    }
+    for (auto i = queries.rbegin(); i != queries.rend(); ++i)
+    {
+        Draw(1); (*i)->End();
+    }
+    for (std::size_t i = 0; i < queries.size(); ++i)
+    {
+        SCOPED_TRACE(i);
+        EXPECT_EQ(Result(*queries[i]), Expected(static_cast<int>(2 * (queries.size() - i))));
+    }
+}
 }

@@ -115,16 +115,16 @@ namespace
             OcclusionQuery owner(device);
             OcclusionQuery contender(device);
             owner.Begin();
-            bool distinctBeginRefused = false;
-            try { contender.Begin(); }
-            catch (const System::InvalidOperationException&) { distinctBeginRefused = true; }
-            // If the invalid Begin was accepted, disposing its native object must not end the
-            // owner's query. If it was correctly refused, this is ordinary unused cleanup.
+            bool distinctBeginAccepted = false;
+            try { contender.Begin(); distinctBeginAccepted = true; }
+            catch (const System::InvalidOperationException&) {}
+            // Genuine XNA permits distinct overlapping intervals. Disposing the contender must
+            // leave the owner's interval valid; the original refusal expectation was incorrect.
             contender.Dispose();
             owner.End();
             owner.Dispose();
-            Context().Check(distinctBeginRefused,
-                            "Begin refuses a second query while another query is active");
+            Context().Check(distinctBeginAccepted,
+                            "Begin accepts an independent query while another query is active");
 
             spriteBatch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
@@ -136,6 +136,9 @@ namespace
             hidden_ = std::make_unique<OcclusionQuery>(device);
             open_ = std::make_unique<OcclusionQuery>(device);
             moving_ = std::make_unique<OcclusionQuery>(device);
+            overlapControl_ = std::make_unique<OcclusionQuery>(device);
+            overlapOwner_ = std::make_unique<OcclusionQuery>(device);
+            overlapInner_ = std::make_unique<OcclusionQuery>(device);
         }
 
         void Update(GameTime& gameTime) override
@@ -150,6 +153,22 @@ namespace
             device.Clear(Color(20, 24, 40));
             device.setRasterizerStateProperty(RasterizerState::CullNone);
             device.setDepthStencilStateProperty(DepthStencilState::Default);
+
+            if (FramesDrawn() == 0)
+            {
+                // Every identical square must pass depth, so precise counts are exact multiples
+                // of the separately measured control. Clear these probe draws before the scene.
+                device.setDepthStencilStateProperty(DepthStencilState::None);
+                const auto square = Square(Vector3(0.0f, 0.0f, -1.0f), 0.4f, Color::Yellow);
+                Measure(*overlapControl_, square);
+                overlapOwner_->Begin(); DrawSquare(square);
+                overlapInner_->Begin(); DrawSquare(square); DrawSquare(square);
+                overlapInner_->End();
+                for (int i = 0; i < 4; ++i) DrawSquare(square);
+                overlapOwner_->End();
+                device.Clear(Color(20, 24, 40));
+                device.setDepthStencilStateProperty(DepthStencilState::Default);
+            }
 
             // The wall goes first, so it is in the depth buffer when the lights are drawn.
             DrawSquare(Square(Vector3(-1.2f, 0.0f, 0.5f), 1.4f, Color::SlateGray));
@@ -199,6 +218,23 @@ namespace
                 }
             }
 
+            if (!overlapChecked_ && overlapControl_->getIsCompleteProperty() &&
+                overlapOwner_->getIsCompleteProperty() && overlapInner_->getIsCompleteProperty())
+            {
+                overlapChecked_ = true;
+                const int control = overlapControl_->getPixelCountProperty();
+                const int owner = overlapOwner_->getPixelCountProperty();
+                const int inner = overlapInner_->getPixelCountProperty();
+                const bool precise = overlapControl_->isPixelCountPreciseEXT();
+                Context().Print("overlap control: {}, outer: {}, inner: {} (precise: {})",
+                                control, owner, inner, precise);
+                Context().Check(control > 0, "the overlap control square has visible samples");
+                Context().Check(owner == (precise ? 7LL * control : 1LL),
+                                "the outer query independently counts all seven squares");
+                Context().Check(inner == (precise ? 2LL * control : 1LL),
+                                "the inner query independently counts only its two squares");
+            }
+
             spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
             spriteBatch_->DrawString(*font_,
                                      std::string("Moving light, visible pixels: ") + std::to_string(visible_) +
@@ -213,6 +249,7 @@ namespace
             if (Context().Automated())
             {
                 Context().Check(checked_, "both queries completed during the run");
+                Context().Check(overlapChecked_, "the overlapping queries completed during the run");
             }
             DemoGame::EndRun();
         }
@@ -238,6 +275,7 @@ namespace
         int visible_ = 0;
         bool movingStarted_ = false;
         bool checked_ = false;
+        bool overlapChecked_ = false;
         bool precise_ = true;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         // Keep the secondary device alive through the primary device's measured frames. Tearing
@@ -248,6 +286,9 @@ namespace
         std::unique_ptr<OcclusionQuery> hidden_;
         std::unique_ptr<OcclusionQuery> open_;
         std::unique_ptr<OcclusionQuery> moving_;
+        std::unique_ptr<OcclusionQuery> overlapControl_;
+        std::unique_ptr<OcclusionQuery> overlapOwner_;
+        std::unique_ptr<OcclusionQuery> overlapInner_;
     };
 }
 
@@ -258,7 +299,8 @@ CNA_DEMOS_GAME(OcclusionDemo, {
                    "for one hidden completely, many for one in the open, and a live count for one passing behind "
                    "the wall, read when IsComplete says the answer has arrived; isPixelCountPreciseEXT tells a real "
                    "tally from the 0/1 flag OpenGL ES 3.0 can only give. Scratch queries demonstrate ordering, "
-                   "ordinary disposal, active disposal, Reach-profile refusal and the distinct-query active Begin contract.",
+                   "ordinary disposal, active disposal and Reach-profile refusal; overlapping queries retain "
+                   "independent sample counts.",
     .apis = {"OcclusionQuery::OcclusionQuery", "OcclusionQuery::Begin", "OcclusionQuery::End",
              "OcclusionQuery::IsComplete", "OcclusionQuery::PixelCount", "OcclusionQuery::isPixelCountPreciseEXT",
              "OcclusionQuery::Dispose", "GraphicsResource::Dispose", "GraphicsResource::IsDisposed",
@@ -267,7 +309,4 @@ CNA_DEMOS_GAME(OcclusionDemo, {
     .needs = CnaDemos::Need::ThreeD | CnaDemos::Need::OcclusionQuery,
     .frames = 30,
     .assets = {"fonts/pixel_font.cnb"},
-    .restrictions = "CNA-DEMOS-ISSUE-113: Begin accepts a distinct query while another query is active instead "
-                    "of throwing the documented InvalidOperationException.",
-    .knownIssue = "CNA-DEMOS-ISSUE-113",
 })
