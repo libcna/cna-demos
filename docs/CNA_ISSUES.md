@@ -1347,25 +1347,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Status:** Resolved in CNA `9639707991b589914d8db8224b6d79f3867d60d0`;
   Linux runtime validation above. Other platforms are not claimed tested.
 
-### CNA-DEMOS-ISSUE-017 -- `Achievement::EarnedOnline` is always true
-
-- **Area:** gamer services -- `Achievement` (`Achievement.cpp` sets `earnedOnline_(true)` in its
-  only constructor; nothing changes it).
-- **Demos:** `gamer_services.achievement.award` (expected failure).
-- **Reproduction:** sign in a local offline profile (no CNA service), award an achievement from
-  the title's offline catalog, read it back with `GetAchievements`:
-  ```cpp
-  player->AwardAchievement("first_steps");
-  // Find(player->GetAchievements(), "first_steps")->getEarnedOnlineProperty() == true
-  ```
-  Unearned achievements report `true` as well.
-- **Expected:** XNA documents `EarnedOnline` as whether the achievement was earned while signed
-  in to the online service; an achievement earned by a local offline profile was not (and an
-  unearned one was not earned at all). The offline store already records how it was earned
-  (`SaveEarnedAchievementEXT`), so the value is available.
-- **Environment:** CNA 0.1.0, Linux, offline gamer services.
-- **Status:** open (low impact); not reported upstream yet.
-
 ### CNA-DEMOS-ISSUE-020 -- A compiled Song/Video stream is looked up from the manager's root, not beside the asset
 
 - **Area:** content -- `ResolveMediaStreamPathEXT` (`ContentManager.cpp`) resolves a compiled
@@ -1703,6 +1684,30 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 ---
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-017 -- `Achievement::EarnedOnline` is always true
+
+- **Resolved (2026-10-23):** CNA `2ac45d2f06b8f3fe7e8a38d8419919ad9bf0ff16` defaults synthetic/offline values to EarnedOnline=false and marks only actually earned service records online. No ABI or storage-format change.
+- **Contract/evidence correction:** EarnedOnline means earned while online. The available genuine Windows XNA getter is a ProFeatureNotSupported stub, so no runtime online/offline XNA-value comparison is claimed. Offline storage records key/ticks only; the historical sentence below claiming an online flag was incorrect (SaveEarnedAchievementEXT's bool is onlyIfUnearned). Synthetic factories have no online provenance; that default is now explicit in native/C documentation and two old factory assumptions are corrected.
+- **Validation:** four new native failures become passes; full GamerServices731PASS/1 unchanged rendererSKIP (732 registered), six C gamer/boundary testsPASS. Original award14/14 assertions PASS on SOFTWARE and OPENGLES3, then017 marker removed. Both35-scenario regressions=33PASS/1 unchanged085FAIL/1 manualNOTRUN; only017 improves and one extra C provenance control is added. Other33 outcomes/assertions unchanged. Five registered achievement/catalog CTestsPASS, catalog719 valid,275 artifact hashes verified. No live service, other-platform, visual, sanitizer or new full-suite claim.
+- **Evidence:** [award provenance repair](repair-evidence/gamer/EARNED_ONLINE.md). Historical reproduction and description follow unchanged.
+
+- **Area:** gamer services -- `Achievement` (`Achievement.cpp` sets `earnedOnline_(true)` in its
+  only constructor; nothing changes it).
+- **Demos:** `gamer_services.achievement.award` (expected failure).
+- **Reproduction:** sign in a local offline profile (no CNA service), award an achievement from
+  the title's offline catalog, read it back with `GetAchievements`:
+  ```cpp
+  player->AwardAchievement("first_steps");
+  // Find(player->GetAchievements(), "first_steps")->getEarnedOnlineProperty() == true
+  ```
+  Unearned achievements report `true` as well.
+- **Expected:** XNA documents `EarnedOnline` as whether the achievement was earned while signed
+  in to the online service; an achievement earned by a local offline profile was not (and an
+  unearned one was not earned at all). The offline store already records how it was earned
+  (`SaveEarnedAchievementEXT`), so the value is available.
+- **Environment:** CNA 0.1.0, Linux, offline gamer services.
+- **Status:** open (low impact); not reported upstream yet.
 
 ### CNA-DEMOS-ISSUE-077 -- Mutable C achievement collection reports read-only
 

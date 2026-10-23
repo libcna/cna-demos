@@ -83,7 +83,7 @@ int main(int argc, char** argv)
         cna_achievement_get_info(first, &info) == CNA_RESULT_SUCCESS &&
             info.struct_size == sizeof(info) && info.struct_version == UINT32_C(1) &&
             info.gamer_score == 0 && info.display_before_earned == CNA_TRUE &&
-            info.earned_online == CNA_TRUE && info.is_earned == CNA_TRUE &&
+            info.earned_online == CNA_FALSE && info.is_earned == CNA_TRUE &&
             info.reserved == 0U &&
             info.earned_date_time_ticks == INT64_C(637000000000000000),
         "the versioned snapshot preserves score, visibility, earned state and timestamp");

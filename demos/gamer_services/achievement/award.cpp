@@ -287,6 +287,5 @@ CNA_DEMOS_GAME(AwardDemo, {
     .tags = {"gamer-services", "achievements", "profile", "offline", "catalog"},
     .frames = 60,
     .assets = {"fonts/pixel_font.cnb"},
-    .knownIssue = "CNA-DEMOS-ISSUE-017",
     .ownProcess = true,
 })

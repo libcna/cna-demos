@@ -154,6 +154,10 @@ int main(int argc, char** argv)
     after_first = achievement_info(first);
     cna_demo_check(
         &demo,
+        before_first.earned_online == CNA_FALSE && after_first.earned_online == CNA_FALSE,
+        "offline catalog and persisted awards never claim online provenance");
+    cna_demo_check(
+        &demo,
         after_first.struct_version == UINT32_C(1) && after_first.is_earned == CNA_TRUE &&
             after_first.earned_date_time_ticks > INT64_C(0) &&
             (!before_first.is_earned ||
