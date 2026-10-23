@@ -80,8 +80,7 @@ namespace
                 }
                 catch (const NetworkNotAvailableException& unavailable)
                 {
-                    // XNA's report of "no network here" -- this demo's declared Need::Network. CNA
-                    // currently reports socket failures differently (CNA-DEMOS-ISSUE-018).
+                    // XNA's unavailable-network exception matches this demo's declared Need::Network.
                     throw CnaDemos::SkipDemo(std::string("no network: ") + unavailable.what());
                 }
             }

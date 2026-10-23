@@ -1410,29 +1410,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Environment:** CNA 0.1.0, Linux, offline gamer services.
 - **Status:** open (low impact); not reported upstream yet.
 
-### CNA-DEMOS-ISSUE-018 -- System Link socket failures are `std::runtime_error`, not `NetworkNotAvailableException`
-
-- **Area:** net -- `NetworkSession::Create` / `BeginCreate` of a `SystemLink` session
-  (`ENetDiscoveryService.cpp`, `ENetHostHandle.cpp` throw `std::runtime_error`; nothing in
-  `NetworkSession.cpp` throws `NetworkNotAvailableException`).
-- **Demos:** `net.packet.send_and_receive` catches `NetworkNotAvailableException` to report SKIPPED
-  (its declared `Need::Network`); with CNA's current exception it reports FAILED instead.
-- **Reproduction:** occupy UDP port 61190 (CNA's discovery port) with a socket bound without
-  `SO_REUSEADDR`, then create a System Link session:
-  ```python
-  s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM); s.bind(("0.0.0.0", 61190))
-  ```
-  ```cpp
-  NetworkSession::Create(NetworkSessionType::SystemLink, 2, 4);
-  // throws std::runtime_error: "Failed to bind discovery UDP socket."
-  ```
-- **Expected:** XNA reports a missing or unusable network with
-  `NetworkNotAvailableException` (and other transport failures with `NetworkException`), which games
-  catch to show "network not available"; a `std::runtime_error` escapes such handlers.
-- **Environment:** CNA 0.1.0, Linux.
-- **Status:** open (low impact; same family as ISSUE-010); not reported upstream yet.
-
-
 ### CNA-DEMOS-ISSUE-020 -- A compiled Song/Video stream is looked up from the manager's root, not beside the asset
 
 - **Area:** content -- `ResolveMediaStreamPathEXT` (`ContentManager.cpp`) resolves a compiled
@@ -1770,6 +1747,42 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 ---
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-018 -- System Link socket failures are `std::runtime_error`, not `NetworkNotAvailableException`
+
+- **Resolved (2026-10-23):** CNA `494e24d09de742b639d46cc5982a363e338c610d` reports required transport
+  initialization/socket acquisition failures as NetworkNotAvailableException and refuses a search
+  whose private reply socket cannot be acquired. Existing diagnostics and Begin/End timing remain.
+  Seven new native process regressions fail before repair and pass afterwards, with recovery and
+  exactly-once Begin callback controls. The original exclusive61190 bind reproducer also passes.
+  Full native networking558/558 and three C boundary controls pass; all551 prior outcomes persist.
+  The unchanged original demo now follows its declared unavailable-network SKIPPED/exit77 policy
+  on both renderers, while all24 ordinary network scenarios per renderer still PASS. No oracle,
+  expected-failure marker or tolerance changed. Catalog719 is identical;275 hashes match.
+  [Contract, reproduction and validation](repair-evidence/net/NETWORK_FAILURE_TYPES.md).
+
+**Historical finding (retained):**
+
+- **Area:** net -- `NetworkSession::Create` / `BeginCreate` of a `SystemLink` session
+  (`ENetDiscoveryService.cpp`, `ENetHostHandle.cpp` throw `std::runtime_error`; nothing in
+  `NetworkSession.cpp` throws `NetworkNotAvailableException`).
+- **Demos:** `net.packet.send_and_receive` catches `NetworkNotAvailableException` to report SKIPPED
+  (its declared `Need::Network`); with CNA's current exception it reports FAILED instead.
+- **Reproduction:** occupy UDP port 61190 (CNA's discovery port) with a socket bound without
+  `SO_REUSEADDR`, then create a System Link session:
+  ```python
+  s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM); s.bind(("0.0.0.0", 61190))
+  ```
+  ```cpp
+  NetworkSession::Create(NetworkSessionType::SystemLink, 2, 4);
+  // throws std::runtime_error: "Failed to bind discovery UDP socket."
+  ```
+- **Expected:** XNA reports a missing or unusable network with
+  `NetworkNotAvailableException` (and other transport failures with `NetworkException`), which games
+  catch to show "network not available"; a `std::runtime_error` escapes such handlers.
+- **Environment:** CNA 0.1.0, Linux.
+- **Status:** open (low impact; same family as ISSUE-010); not reported upstream yet.
+
 
 ### CNA-DEMOS-ISSUE-026 -- On Linux, a process that searched before a host started does not find it
 
