@@ -19,6 +19,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-114 -- Releasing a nonterminal SoundEffect loop drops its authored tail
 
+- **Resolved (2026-10-24):** CNA `6102058bb` lets Stop(false) leave a bounded loop and play the
+  authored tail (CNA's mixer clears the max frame; SDL_mixer resumes from the loop end in its
+  stopped callback); `loop_region` passes its 7 checks. Complete sweeps SOFTWARE 664/4/48/3 and
+  OPENGLES3 706/3/7/3 change only the intended rows; serial CTest 684 PASS/48 SKIP/0 FAIL/3
+  disabled. Closure: CNA `30df537d5`.
+
 - **Area/API:** `Microsoft::Xna::Framework::Audio::SoundEffectInstance::Stop(false)`, authored
   SoundEffect loop regions and the CNA mixer track end/loop state.
 - **Demo/reproduction:** run `audio.sound_effect.loop_region` with dummy audio. Its generated mono
@@ -139,6 +145,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 
 ### CNA-DEMOS-ISSUE-104 -- STUB does not provide the promised WarnAndStub Texture3D null object
+
+- **Resolved (2026-10-24):** CNA `718e428fe` gives STUB and HEADLESS the WarnAndStub Texture3D null
+  object with a warn-once message; `supports_capability` passes 7/7 on STUB. Complete sweeps
+  SOFTWARE 664/4/48/3 and OPENGLES3 706/3/7/3 change only the intended rows; serial CTest 684
+  PASS/48 SKIP/0 FAIL/3 disabled. Closure: CNA `30df537d5`.
 
 - **Area/API:** `CNA::Unsupported3DGraphicsCallBehavior`,
   `GraphicsDevice::{Set,Get}Unsupported3DGraphicsCallBehavior`, and `Texture3D` on the STUB
@@ -435,6 +446,15 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-098 -- Disposed media library types do not enforce their access guards
 
+- **Resolved (2026-10-24):** CNA `45f704c04` makes every disposed Song, Album, Artist, Genre,
+  Playlist, Picture, PictureAlbum, media collection and MediaLibrary refuse its ordinary members
+  with ObjectDisposedException, as XNA's do (decompiled Windows assembly); equality is
+  reference-first and a disposed argument equals only itself. The three demos pass with every
+  refusal group complete; the C media demos that asserted the old live-after-dispose contract were
+  corrected. See [media library disposal](repair-evidence/media/MEDIA_LIBRARY_DISPOSAL.md).
+  Complete sweeps SOFTWARE 664/4/48/3 and OPENGLES3 706/3/7/3 change only the intended rows; serial
+  CTest 684 PASS/48 SKIP/0 FAIL/3 disabled. Closure: CNA `30df537d5`.
+
 - **Area/API:** `Picture`, `PictureAlbum`, `Song`, `Album`, `Artist`, `Genre`, `Playlist`, all seven
   media collection types and `MediaLibrary`; their ordinary post-disposal operations.
 - **Demos:** `media.media_library.save_picture`, `media.media_library.music_index` and
@@ -502,6 +522,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-096 -- Partial SkinningData root-prefix arrays are silently ignored
 
+- **Resolved (2026-10-24):** CNA `b98629c89` refuses a nonempty SkeletonRootPrefix whose length is
+  not BoneCount, at construction and at every recomputation; `animation_player_validation` passes
+  its 10 checks. Complete sweeps SOFTWARE 664/4/48/3 and OPENGLES3 706/3/7/3 change only the
+  intended rows; serial CTest 684 PASS/48 SKIP/0 FAIL/3 disabled. Closure: CNA `30df537d5`.
+
 - **Area/API:** `SkinningData::SkeletonRootPrefix` and `AnimationPlayer` construction/update.
 - **Reproduction:** `graphics.model.animation_player_validation` constructs a two-bone skeleton
   whose complete two-entry prefix places its root at X=4 and whose allowed empty prefix places it
@@ -529,6 +554,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   No CNA source was modified and no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-095 -- Multi-skin glTF channels retained by another palette are reported lost
+
+- **Resolved (2026-10-24):** CNA `ab0ab883c` reconciles the Model's animation report once every
+  carrier is known: a channel another palette keeps is not unavailable, and a channel no carrier
+  keeps is reported once. `multi_skin_animation_report` passes; its defect-shape check now pins the
+  repaired report. Complete sweeps SOFTWARE 664/4/48/3 and OPENGLES3 706/3/7/3 change only the
+  intended rows; serial CTest 684 PASS/48 SKIP/0 FAIL/3 disabled. Closure: CNA `30df537d5`.
 
 - **Area/API:** loose glTF `ContentManager::Load<Model>`, multiple `ModelSkinEXT` palettes,
   `SkinningData::AnimationClips` and aggregate `GltfImportReportEXT` animation diagnostics.
@@ -561,6 +592,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-094 -- Retained glTF morph animation is reported as unsupported and lost
 
+- **Resolved (2026-10-24):** CNA `ab0ab883c` stops counting a weights channel kept as the part's
+  morph track as an unsupported path or empty animation, in the runtime loader and gltf_to_cnj.
+  `morph_animation_import` passes; `node_animation`, which required the same false loss, was
+  corrected with a check that the weight track exists. Complete sweeps SOFTWARE 664/4/48/3 and
+  OPENGLES3 706/3/7/3 change only the intended rows; serial CTest 684 PASS/48 SKIP/0 FAIL/3
+  disabled. Closure: CNA `30df537d5`.
+
 - **Area/API:** loose glTF `ContentManager::Load<Model>`, `MorphTargetDataEXT::WeightTrack` and
   `GltfImportReportEXT` animation diagnostics.
 - **Reproduction:** `graphics.model.morph_animation_import` loads the same original two-target
@@ -591,6 +629,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-093 -- Unknown glTF animation interpolation silently becomes LINEAR
 
+- **Resolved (2026-10-24):** CNA `eb9653bf2` refuses a sampler interpolation other than LINEAR,
+  STEP or CUBICSPLINE (ContentLoadException) by re-reading the token cgltf drops;
+  `animation_validation` passes its 5 checks. Complete sweeps SOFTWARE 664/4/48/3 and OPENGLES3
+  706/3/7/3 change only the intended rows; serial CTest 684 PASS/48 SKIP/0 FAIL/3 disabled.
+  Closure: CNA `30df537d5`.
+
 - **Area/API:** loose glTF `ContentManager::Load<Model>`, animation sampler validation,
   `ModelAnimationsEXT` and `GltfImportReportEXT`.
 - **Reproduction:** `graphics.model.animation_validation` loads an original otherwise valid glTF
@@ -618,6 +662,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   source was modified and no upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-092 -- An empty selected glTF scene resurrects an unselected mesh
+
+- **Resolved (2026-10-24):** CNA `5f136988a` imports only what the selected scene reaches; the
+  all-meshes fallback is for scene-less files. `node_instances` passes its 24 checks. Complete
+  sweeps SOFTWARE 664/4/48/3 and OPENGLES3 706/3/7/3 change only the intended rows; serial CTest
+  684 PASS/48 SKIP/0 FAIL/3 disabled. Closure: CNA `30df537d5`.
 
 - **Area/API:** loose glTF `ContentManager::Load<Model>`, default-scene selection and
   `GltfImportReportEXT`.
@@ -648,6 +697,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   sent.
 
 ### CNA-DEMOS-ISSUE-091 -- C ImageBasedLight validity accepts live non-texture handles
+
+- **Resolved (2026-10-24):** CNA `78d6433c7` requires a live TextureCube (or RenderTargetCube) for
+  both maps and a live Texture2D (or RenderTarget2D) for the lookup; `image_based_light_values`
+  passes its 25 checks. Complete sweeps SOFTWARE 664/4/48/3 and OPENGLES3 706/3/7/3 change only the
+  intended rows; serial CTest 684 PASS/48 SKIP/0 FAIL/3 disabled. Closure: CNA `30df537d5`.
 
 - **Area/API:** `CNA_ImageBasedLightEXT` and `cna_image_based_light_ext_is_valid` in
   `graphics_ext.h`.
@@ -819,6 +873,11 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   Current evidence: `/tmp/checkpoint-730-disposed-texture-*`.
 
 ### CNA-DEMOS-ISSUE-081 -- ModelMesh construction omits pre-attached part effects
+
+- **Resolved (2026-10-24):** CNA `da6c5c120` seeds a new ModelMesh's Effects (and the C retained
+  list) from its parts' existing effects; `c_api.graphics.model_meshes`, which asserted the defect,
+  now requires the effect. Complete sweeps SOFTWARE 664/4/48/3 and OPENGLES3 706/3/7/3 change only
+  the intended rows; serial CTest 684 PASS/48 SKIP/0 FAIL/3 disabled. Closure: CNA `30df537d5`.
 
 - **Area/API:** `ModelMesh` constructors and `ModelMeshPart::setEffectProperty` in
   `modules/graphics/src/Xna`, plus `cna_model_mesh_create[_named]`,

@@ -1,17 +1,19 @@
-# Current handoff — 2026-10-23 (late evening)
+# Current handoff — 2026-10-24
 
 CNA root `handoff.md` is the current continuation point; read it first. This file's top only
 summarises the demos side.
 
-Inventory: 156 historical IDs, 137 final dispositions, 19 pending; this is not campaign
-completion. Since the published `92ee315` this repository has local, unpushed commits that close
-ISSUE-010 (storage residual paths and container construction, CNA `fe2eb8f33`) and ISSUE-020,
-ISSUE-029 and ISSUE-062 (CNA `da7388fa9`). Each closure only added checks or removed a marker after
-the same scenario passed; no original assertion was weakened, and the corrected `storage_root`
-oracle rests on genuine XNA evidence. The latest complete checkpoint (demos tree rebuilt from CNA
-`8842b9a50`): 719-ID sweeps SOFTWARE 654/14/48/3 and OPENGLES3 696/13/7/3, serial CTest 684 PASS/
-48 SKIP/0 FAIL/3 disabled; reports `build/linux-full/reports/repair-batch3-closure-*`. Push only
-on the owner's word, Sharp Runtime before CNA before this repository.
+Inventory: 156 historical IDs, 147 final dispositions, 9 pending (005, 006, 007, 008, 022, 023,
+031, 066, 067); this is not campaign completion. Since the published `92ee315` this repository has
+local, unpushed commits that close ISSUE-010 (CNA `fe2eb8f33`), ISSUE-020/029/062 (CNA
+`da7388fa9`) and batch 8 -- 081, 091-096, 098, 104 and 114 (CNA `30df537d5`). Each closure only
+added checks, removed a marker after the same scenario passed, or corrected a check that asserted
+the defect itself to the repaired shape (the C media demos, `node_animation`,
+`c_api.graphics.model_meshes`, the two animation-report defect-shape checks); no original
+assertion was weakened. The latest complete checkpoint (demos tree rebuilt from CNA
+`da6c5c120`): 719-ID sweeps SOFTWARE 664/4/48/3 and OPENGLES3 706/3/7/3, serial CTest 684 PASS/
+48 SKIP/0 FAIL/3 disabled; reports `build/linux-full/reports/repair-batch8-closure-*`. Push only
+on the owner's word, CNA before this repository (Sharp Runtime is already published).
 
 The earlier inherited review (CNA `39ef8ea2f` for ISSUE-011, `65e69cc5e` for ISSUE-082, ISSUE-113
 by `c303d3ad9`/`68471a7a3`; this repository's closure `fb6c653`) is recorded in
