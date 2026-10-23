@@ -5,7 +5,7 @@ CNA_DEMOS_STANDALONE({
     .id = "c_api.gamer.achievement_collection",
     .title = "Achievement values and collections in C",
     .description = "A renderer-free C program reads exact achievement value fields and text, compares values, "
-                   "then indexes, copies and mutates an owned achievement collection.",
+                   "then indexes and copies an owned read-only achievement collection and verifies mutation refusal.",
     .apis = {"cna_achievement_create_ext", "cna_achievement_destroy",
              "cna_achievement_get_info", "cna_achievement_get_key_size",
              "cna_achievement_copy_key", "cna_achievement_get_name_size",
@@ -26,8 +26,6 @@ CNA_DEMOS_STANDALONE({
     .frames = 1,
     .deterministic = true,
     .restrictions = "Synthetic achievement fixtures only; opens no game, renderer or gamer service. Factory "
-                    "values have no configured picture or how-to-earn catalog text. The mutable collection's "
-                    "contradictory read-only flag retains CNA-DEMOS-ISSUE-077; unknown-key error translation "
-                    "is recorded as CNA-DEMOS-ISSUE-078.",
-    .knownIssue = "CNA-DEMOS-ISSUE-077",
+                    "values have no configured picture or how-to-earn catalog text. Collections follow XNA's "
+                    "read-only contract; unknown keys return INVALID_ARGUMENT without publishing a handle.",
 })

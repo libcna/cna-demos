@@ -811,50 +811,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   in its check and `restrictions`; no CNA source was modified or upstream message sent. Evidence:
   `checkpoint-623-c-model-meshes-focused-*-direct.*`.
 
-### CNA-DEMOS-ISSUE-078 -- Missing C achievement key escapes as an internal failure
-
-- **Area/API:** `cna_achievement_collection_get_by_key` in
-  `modules/c-api/include/CNA/C/gamer_services.h`, its adapter in
-  `modules/c-api/src/CnaCApiAchievements.cpp`, and the exception barrier in
-  `modules/c-api/src/CnaCApiDetail.hpp`.
-- **Reproduction:** create one synthetic achievement, copy it into an achievement collection,
-  initialize `out_achievement` to a nonzero sentinel, then request an absent key.
-- **Observed:** the route clears the output to `CNA_INVALID_HANDLE` but returns
-  `CNA_RESULT_INTERNAL`. The canonical string indexer throws `System::IndexOutOfRangeException`;
-  that type reaches the barrier's generic `std::exception` arm instead of one of its argument/range
-  translations.
-- **Expected:** the route-specific public contract explicitly promises
-  `CNA_RESULT_INVALID_ARGUMENT` when no achievement has the key. Preserve the deterministic cleared
-  output and translate this canonical exception to that result.
-- **Scope/status:** passing result-contract mismatch; the demo asserts the current deterministic
-  result and names this issue, so it needs no additional runtime knownIssue marker. Both focused
-  renderer-labelled direct runs otherwise have identical output and empty stderr. No CNA source was
-  modified or upstream message sent. Evidence:
-  `checkpoint-589-c-achievement-collection-focused-*-direct.*`; runtime uses the last completed CNA
-  libraries while current source contains the same exception path.
-
-### CNA-DEMOS-ISSUE-077 -- Mutable C achievement collection reports read-only
-
-- **Area/API:** `cna_achievement_collection_get_is_read_only` and the Add/Insert/Remove/RemoveAt/
-  Clear routes in `modules/c-api/include/CNA/C/gamer_services.h`; canonical implementation in
-  `modules/gamer-services/src/Xna/AchievementCollection.cpp`.
-- **Reproduction:** create a two-value collection, query `get_is_read_only`, then add and insert
-  copied values, remove them by value and index, and clear the collection.
-- **Observed:** `get_is_read_only` succeeds and returns `CNA_TRUE`; every public mutator also
-  succeeds and changes the collection exactly as requested. The native property is hard-coded true
-  while its methods modify the backing vector.
-- **Expected:** the C header defines this property as whether the collection refuses modification.
-  A collection whose public mutators succeed must report `CNA_FALSE`, or the mutators must
-  consistently refuse and the C surface/documentation must describe a read-only collection.
-- **Positive controls:** count, indexed/key lookup, equality membership, bounds, atomic shifted
-  copying, all mutations and independent ownership behave consistently. Both focused renderer-
-  labelled runs have identical output and empty stderr, with29/30 controls passing.
-- **Scope/status:** open renderer-independent CNA implementation/contract defect. The focused C demo
-  retains the one expected failed assertion and is marked `CNA-DEMOS-ISSUE-077`. No CNA source was
-  modified or upstream message sent. Evidence:
-  `checkpoint-589-c-achievement-collection-focused-*-direct.*`; runtime uses the last completed CNA
-  libraries while current source contains the same hard-coded property.
-
 ### CNA-DEMOS-ISSUE-070 -- PBR clones lose vertex-color and alpha-coverage state
 
 - **Status: Resolved (2026-10-21).** CNA repair
@@ -1747,6 +1703,60 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 ---
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-077 -- Mutable C achievement collection reports read-only
+
+- **Resolved (2026-10-23):** CNA `4a756413f779f5f74d5d3e48e92bcb53ecc00b0e`. Genuine XNA confirms a read-only collection: all five mutators refuse with NotSupportedException before argument validation. C reports NOT_SUPPORTED and preserves scalar outputs on refusal. The property remains true.
+- **Validation:** genuine24 reference checks;18 new native failures become passes; full GamerServices728PASS, six C gamer/boundary testsPASS, C demo33/33 on SOFTWARE and OPENGLES3. Native and demo FNA-based expectations explicitly corrected from this evidence; controls are preserved. C++ award still completes14 controls with separate017 failure.
+- **Regression checkpoint:** latest35 gamer scenarios per renderer retain34 outcomes; only C collection changes FAILED to PASSED and removes077. Both renderer selections retain2 unrelated failures and1 manual NOT RUN. Catalog719 valid; five final achievement/catalog CTestsPASS;275 artifact hashes verified. This includes a documented affected-demo rerun after its stale oracle was corrected; first-run failures remain recorded. No new full-suite, visual, sanitizer or online-service claim.
+- **Evidence:** [achievement contract evidence](repair-evidence/gamer/ACHIEVEMENTS_PREFLIGHT.md), including genuine oracle, original reproduction, corrected expectation rationale and first-run failures. The following description is historical evidence.
+
+- **Area/API:** `cna_achievement_collection_get_is_read_only` and the Add/Insert/Remove/RemoveAt/
+  Clear routes in `modules/c-api/include/CNA/C/gamer_services.h`; canonical implementation in
+  `modules/gamer-services/src/Xna/AchievementCollection.cpp`.
+- **Reproduction:** create a two-value collection, query `get_is_read_only`, then add and insert
+  copied values, remove them by value and index, and clear the collection.
+- **Observed:** `get_is_read_only` succeeds and returns `CNA_TRUE`; every public mutator also
+  succeeds and changes the collection exactly as requested. The native property is hard-coded true
+  while its methods modify the backing vector.
+- **Expected:** the C header defines this property as whether the collection refuses modification.
+  A collection whose public mutators succeed must report `CNA_FALSE`, or the mutators must
+  consistently refuse and the C surface/documentation must describe a read-only collection.
+- **Positive controls:** count, indexed/key lookup, equality membership, bounds, atomic shifted
+  copying, all mutations and independent ownership behave consistently. Both focused renderer-
+  labelled runs have identical output and empty stderr, with29/30 controls passing.
+- **Scope/status:** open renderer-independent CNA implementation/contract defect. The focused C demo
+  retains the one expected failed assertion and is marked `CNA-DEMOS-ISSUE-077`. No CNA source was
+  modified or upstream message sent. Evidence:
+  `checkpoint-589-c-achievement-collection-focused-*-direct.*`; runtime uses the last completed CNA
+  libraries while current source contains the same hard-coded property.
+
+### CNA-DEMOS-ISSUE-078 -- Missing C achievement key escapes as an internal failure
+
+- **Resolved (2026-10-23):** CNA `4a756413f779f5f74d5d3e48e92bcb53ecc00b0e`. Native absent-key lookup now throws XNA KeyNotFoundException. Only the C key route translates it to the documented INVALID_ARGUMENT, retaining the invalid output handle; no broad exception-barrier change.
+- **Validation:** genuine24 reference checks;18 new native failures become passes; full GamerServices728PASS, six C gamer/boundary testsPASS, C demo33/33 on SOFTWARE and OPENGLES3. Native and demo FNA-based expectations explicitly corrected from this evidence; controls are preserved. C++ award still completes14 controls with separate017 failure.
+- **Regression checkpoint:** latest35 gamer scenarios per renderer retain34 outcomes; only C collection changes FAILED to PASSED and removes077. Both renderer selections retain2 unrelated failures and1 manual NOT RUN. Catalog719 valid; five final achievement/catalog CTestsPASS;275 artifact hashes verified. This includes a documented affected-demo rerun after its stale oracle was corrected; first-run failures remain recorded. No new full-suite, visual, sanitizer or online-service claim.
+- **Evidence:** [achievement contract evidence](repair-evidence/gamer/ACHIEVEMENTS_PREFLIGHT.md), including genuine oracle, original reproduction, corrected expectation rationale and first-run failures. The following description is historical evidence.
+
+- **Area/API:** `cna_achievement_collection_get_by_key` in
+  `modules/c-api/include/CNA/C/gamer_services.h`, its adapter in
+  `modules/c-api/src/CnaCApiAchievements.cpp`, and the exception barrier in
+  `modules/c-api/src/CnaCApiDetail.hpp`.
+- **Reproduction:** create one synthetic achievement, copy it into an achievement collection,
+  initialize `out_achievement` to a nonzero sentinel, then request an absent key.
+- **Observed:** the route clears the output to `CNA_INVALID_HANDLE` but returns
+  `CNA_RESULT_INTERNAL`. The canonical string indexer throws `System::IndexOutOfRangeException`;
+  that type reaches the barrier's generic `std::exception` arm instead of one of its argument/range
+  translations.
+- **Expected:** the route-specific public contract explicitly promises
+  `CNA_RESULT_INVALID_ARGUMENT` when no achievement has the key. Preserve the deterministic cleared
+  output and translate this canonical exception to that result.
+- **Scope/status:** passing result-contract mismatch; the demo asserts the current deterministic
+  result and names this issue, so it needs no additional runtime knownIssue marker. Both focused
+  renderer-labelled direct runs otherwise have identical output and empty stderr. No CNA source was
+  modified or upstream message sent. Evidence:
+  `checkpoint-589-c-achievement-collection-focused-*-direct.*`; runtime uses the last completed CNA
+  libraries while current source contains the same exception path.
 
 ### CNA-DEMOS-ISSUE-018 -- System Link socket failures are `std::runtime_error`, not `NetworkNotAvailableException`
 

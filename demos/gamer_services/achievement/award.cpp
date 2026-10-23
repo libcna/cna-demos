@@ -25,7 +25,8 @@
 #include "System/ArgumentException.hpp"
 #include "System/ArgumentOutOfRangeException.hpp"
 #include "System/IAsyncResult.hpp"
-#include "System/IndexOutOfRangeException.hpp"
+#include "System/Collections/Generic/KeyNotFoundException.hpp"
+#include "System/NotSupportedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::GamerServices;
@@ -166,7 +167,7 @@ namespace
             {
                 (void)after["missing"];
             }
-            catch (const System::IndexOutOfRangeException&)
+            catch (const System::Collections::Generic::KeyNotFoundException&)
             {
                 keyBoundsRefused = true;
             }
@@ -203,18 +204,22 @@ namespace
                       "CopyTo is atomic when short and exact at an offset; Contains and IndexOf use values");
 
             AchievementCollection scratch = after;
-            scratch.Insert(1, hiddenCopy);
-            const bool inserted = scratch.getCountProperty() == 4 &&
-                scratch[1].getKeyProperty() == "hidden_door" && scratch[2].getKeyProperty() == "explorer";
-            scratch.RemoveAt(1);
-            scratch.Add(first);
-            const bool appended = scratch.getCountProperty() == 4 && scratch[3].getKeyProperty() == "first_steps";
-            const bool removed = scratch.Remove(first) && scratch.getCountProperty() == 3 &&
-                scratch[2].getKeyProperty() == "first_steps";
-            scratch.Clear();
-            ctx.Check(scratch.getIsReadOnlyProperty() && inserted && appended && removed &&
-                          scratch.getCountProperty() == 0 && !scratch.getIsDisposedProperty(),
-                      "the read-only flag coexists with exact Insert, RemoveAt, Add, Remove and Clear behavior");
+            // Genuine XNA refuses every ICollection/IList mutation; FNA differs here.
+            const auto refusesModification = [](auto action) {
+                try { action(); }
+                catch (const System::NotSupportedException&) { return true; }
+                return false;
+            };
+            const bool insertRefused = refusesModification([&] { scratch.Insert(1, hiddenCopy); });
+            const bool removeAtRefused = refusesModification([&] { scratch.RemoveAt(1); });
+            const bool addRefused = refusesModification([&] { scratch.Add(first); });
+            const bool removeRefused = refusesModification([&] { (void)scratch.Remove(first); });
+            const bool clearRefused = refusesModification([&] { scratch.Clear(); });
+            ctx.Check(scratch.getIsReadOnlyProperty() && insertRefused && removeAtRefused && addRefused &&
+                          removeRefused && clearRefused && !scratch.getIsDisposedProperty() &&
+                          std::vector<Achievement>(scratch.begin(), scratch.end()) ==
+                              std::vector<Achievement>(after.begin(), after.end()),
+                      "the read-only collection refuses Insert, RemoveAt, Add, Remove and Clear without changing values");
 
             for (const Achievement& achievement : after)
             {

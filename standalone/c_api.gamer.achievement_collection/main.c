@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
-/* Achievement values and mutable AchievementCollection behavior through the C ABI. */
+/* Achievement values and read-only AchievementCollection behavior through the C ABI. */
 #include <CNA/C/cna.h>
 
 #include <stdint.h>
@@ -33,6 +33,7 @@ int main(int argc, char** argv)
     CNA_AchievementHandle before[4];
     CNA_AchievementHandle inputs[2];
     CNA_AchievementCollectionHandle collection = CNA_INVALID_HANDLE;
+    CNA_AchievementCollectionHandle empty = CNA_INVALID_HANDLE;
     CNA_AchievementInfo info;
     CNA_AchievementInfo malformed;
     CNA_Bool flag = CNA_TRUE;
@@ -181,8 +182,8 @@ int main(int argc, char** argv)
         &demo,
         cna_achievement_collection_get_is_read_only(collection, &flag) ==
                 CNA_RESULT_SUCCESS &&
-            flag == CNA_FALSE,
-        "a collection with public successful mutators reports that it is mutable");
+            flag == CNA_TRUE,
+        "XNA achievement collections report read-only");
 
     cna_demo_check_result(
         &demo, cna_achievement_destroy(first),
@@ -229,9 +230,9 @@ int main(int argc, char** argv)
         &demo,
         cna_achievement_collection_get_by_key(
             collection, text_view("missing", sizeof("missing") - 1U), &copied[0]) ==
-                CNA_RESULT_INTERNAL &&
+                CNA_RESULT_INVALID_ARGUMENT &&
             copied[0] == CNA_INVALID_HANDLE,
-        "an unknown key currently maps to Internal but publishes no value (ISSUE-078)");
+        "an unknown key returns INVALID_ARGUMENT without publishing a value");
 
     memset(copied, 0xA5, sizeof(copied));
     memcpy(before, copied, sizeof(before));
@@ -256,41 +257,62 @@ int main(int argc, char** argv)
     copied[1] = CNA_INVALID_HANDLE;
     copied[2] = CNA_INVALID_HANDLE;
 
+    /* Genuine XNA refuses ICollection/IList mutation, even with invalid indices. */
     cna_demo_check(
         &demo,
-        cna_achievement_collection_add(collection, same) == CNA_RESULT_SUCCESS &&
-            cna_achievement_collection_insert(collection, 1, other) == CNA_RESULT_SUCCESS &&
-            cna_achievement_collection_get_count(collection, &count) == CNA_RESULT_SUCCESS &&
-            count == 4,
-        "Add and Insert copy values into deterministic positions");
-    cna_demo_check(
-        &demo,
-        cna_achievement_collection_insert(collection, -1, other) ==
-                CNA_RESULT_INVALID_ARGUMENT &&
-            cna_achievement_collection_remove_at(collection, 4) ==
-                CNA_RESULT_INVALID_ARGUMENT &&
-            cna_achievement_collection_get_count(collection, &count) == CNA_RESULT_SUCCESS &&
-            count == 4,
-        "invalid insertion and removal indices preserve collection contents");
-    cna_demo_check(
-        &demo,
-        cna_achievement_collection_remove(collection, same, &flag) == CNA_RESULT_SUCCESS &&
-            flag == CNA_TRUE &&
-            cna_achievement_collection_remove_at(collection, 2) == CNA_RESULT_SUCCESS &&
+        cna_achievement_collection_add(collection, same) == CNA_RESULT_NOT_SUPPORTED &&
+            cna_achievement_collection_insert(collection, 1, other) == CNA_RESULT_NOT_SUPPORTED &&
             cna_achievement_collection_get_count(collection, &count) == CNA_RESULT_SUCCESS &&
             count == 2,
-        "value removal reports success and indexed removal drops the selected entry");
+        "Add and Insert refuse modification and preserve the collection count");
     cna_demo_check(
         &demo,
-        cna_achievement_collection_remove(collection, same, &flag) == CNA_RESULT_SUCCESS &&
-            flag == CNA_FALSE,
-        "removing an absent value is a successful reported no-op");
-    cna_demo_check(
-        &demo,
-        cna_achievement_collection_clear(collection) == CNA_RESULT_SUCCESS &&
+        cna_achievement_collection_insert(collection, -1, other) == CNA_RESULT_NOT_SUPPORTED &&
+            cna_achievement_collection_remove_at(collection, 4) == CNA_RESULT_NOT_SUPPORTED &&
             cna_achievement_collection_get_count(collection, &count) == CNA_RESULT_SUCCESS &&
-            count == 0,
-        "Clear empties the mutable collection");
+            count == 2,
+        "modification refusal precedes insertion and removal index validation");
+    flag = CNA_TRUE;
+    cna_demo_check(
+        &demo,
+        cna_achievement_collection_remove(collection, same, &flag) == CNA_RESULT_NOT_SUPPORTED &&
+            flag == CNA_TRUE &&
+            cna_achievement_collection_remove_at(collection, 1) == CNA_RESULT_NOT_SUPPORTED &&
+            cna_achievement_collection_get_count(collection, &count) == CNA_RESULT_SUCCESS &&
+            count == 2,
+        "value and indexed removal refuse without publishing a removal result");
+    cna_demo_check_result(
+        &demo, cna_achievement_collection_create_ext(NULL, 0, &empty),
+        "create an empty collection for absent-value and empty-clear refusal");
+    flag = CNA_TRUE;
+    cna_demo_check(
+        &demo,
+        cna_achievement_collection_remove(empty, same, &flag) == CNA_RESULT_NOT_SUPPORTED &&
+            flag == CNA_TRUE && cna_achievement_collection_clear(empty) == CNA_RESULT_NOT_SUPPORTED &&
+            cna_achievement_collection_get_count(empty, &count) == CNA_RESULT_SUCCESS && count == 0,
+        "removing an absent value and clearing an empty collection still refuse modification");
+    cna_demo_check(
+        &demo,
+        cna_achievement_collection_clear(collection) == CNA_RESULT_NOT_SUPPORTED &&
+            cna_achievement_collection_get_count(collection, &count) == CNA_RESULT_SUCCESS && count == 2,
+        "Clear refuses without changing the collection count");
+    cna_demo_check(
+        &demo,
+        cna_achievement_collection_copy_to(collection, copied, 4, 1, &copied_count) == CNA_RESULT_SUCCESS &&
+            copied_count == 2 &&
+            cna_achievement_equals(copied[1], same, &flag) == CNA_RESULT_SUCCESS && flag == CNA_TRUE &&
+            cna_achievement_equals(copied[2], other, &flag) == CNA_RESULT_SUCCESS && flag == CNA_TRUE,
+        "every refused mutation preserves both complete values and their order");
+    (void)cna_achievement_destroy(copied[1]);
+    (void)cna_achievement_destroy(copied[2]);
+    copied[1] = CNA_INVALID_HANDLE;
+    copied[2] = CNA_INVALID_HANDLE;
+    copied[0] = UINT64_C(99);
+    cna_demo_check(
+        &demo,
+        cna_achievement_collection_get_by_key(collection, text_view("", 0), &copied[0]) ==
+            CNA_RESULT_INVALID_ARGUMENT && copied[0] == CNA_INVALID_HANDLE,
+        "an empty absent key returns INVALID_ARGUMENT and clears the output");
 
     cna_demo_check_result(
         &demo, cna_achievement_collection_destroy(collection),
@@ -302,6 +324,9 @@ int main(int argc, char** argv)
     collection = CNA_INVALID_HANDLE;
 
 cleanup:
+    if (empty != CNA_INVALID_HANDLE) {
+        (void)cna_achievement_collection_destroy(empty);
+    }
     if (collection != CNA_INVALID_HANDLE) {
         (void)cna_achievement_collection_destroy(collection);
     }
