@@ -1469,6 +1469,8 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-028 -- A streaming WaveBank opens a relative path from the working directory
 
+- **Partial repair (2026-10-23; still open):** CNA `3c67874ba54492d0d10258f0742824c1bb5bcec9` retains the streaming metadata file for lazy reads until disposal. Four new native witnesses fail before/pass after; original lazy8/retained6 checks allPASS. Full audio775PASS/4sameSKIP, targeted ASan/UBSan/leaks42PASS, five C controlsPASS. SOFTWARE32/OPENGLES3 32 each preserve30PASS/1known114FAIL/1manualNOTRUN;15 focused CTestsPASS. Constructor preflight/path behavior still gives5PASS/9FAIL and needs a separate repair. No Windows file-sharing or streaming offset claim. [Lifetime repair evidence](repair-evidence/content/WAVEBANK_RETAINED_FILE.md).
+
 - **Further current reproduction (2026-10-21; still open):** absolute-path banks
   also lose the originally opened file after rename/replacement (4 control checks
   PASS,2 lazy-read FAIL). Fourteen constructor controls derived from genuine XNA
