@@ -855,32 +855,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `checkpoint-589-c-achievement-collection-focused-*-direct.*`; runtime uses the last completed CNA
   libraries while current source contains the same hard-coded property.
 
-### CNA-DEMOS-ISSUE-075 -- C offset packet receive overwrites bytes outside the requested range
-
-- **Area/API:** `cna_local_network_gamer_receive_data_at` in
-  `modules/c-api/include/CNA/C/net_sessions.h` and its adapter in
-  `modules/c-api/src/CnaCApiNetSessions.cpp`.
-- **Reproduction:** create a socket-free Local session, inject a four-byte packet into its local
-  gamer, fill a twelve-byte destination with `0xA5`, then receive the packet at offset two. The
-  route succeeds, reports four bytes and places the exact payload at indices two through five.
-- **Observed:** the adapter also changes every byte outside that range to zero. It allocates a new
-  zero-initialized vector whose size is the caller's complete capacity, asks the canonical overload
-  to write at the offset, then copies the entire vector over the caller's destination. Both the
-  two-byte prefix and six-byte suffix are therefore overwritten.
-- **Expected:** the API describes the offset as the position within the destination where writing
-  begins. A successful four-byte receive at offset two should change only indices two through five,
-  as the canonical array overload does; unrelated caller bytes should remain intact.
-- **Positive controls:** an undersized offset request is refused without consuming the queued
-  packet; the accepted call returns the exact payload and sender; plain-buffer and PacketReader
-  receives are exact; all ownership cleanup succeeds. Both renderer-labelled direct runs have
-  identical output and empty stderr, with27/28 checks passing.
-- **Suggested repair/status:** copy only the returned payload range from the temporary vector into
-  `destination + offset`, or preserve the caller buffer before invoking the canonical overload.
-  Open CNA implementation defect; `c_api.net.local_gamer_packets` retains the single expected
-  failure and is marked `CNA-DEMOS-ISSUE-075`. No CNA source was modified or upstream message sent.
-  Evidence:`checkpoint-583-c-local-packets-focused-*-direct.*`; runtime uses the last completed CNA
-  libraries while unrelated renderer-retirement work remains in flight.
-
 ### CNA-DEMOS-ISSUE-070 -- PBR clones lose vertex-color and alpha-coverage state
 
 - **Status: Resolved (2026-10-21).** CNA repair
@@ -1822,6 +1796,42 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 ---
 
 ## Resolved
+
+### CNA-DEMOS-ISSUE-075 -- C offset packet receive overwrites bytes outside the requested range
+
+- **Resolved (2026-10-23):** CNA `40f286237cdbf7bdc05eb0a2ee9c9ee584eb677f` copies
+  only the packet span into the C caller's destination. A native sentinel regression fails
+  before repair and then protects offsets0/2/4, rejected-buffer preservation and empty queues.
+  Full native networking549/549 and both C route controls pass. All28 original external
+  assertions pass on SOFTWARE/OPENGLES3 before removal of the knownIssue and stale restriction.
+  Complete719-ID sweeps change only075 and remove its one failure per renderer. Serial CTest
+  retains678PASS/48SKIP/6pre-existingFAIL/3disabled (659.97s), with exact per-test DELTAS[] and
+  all275 artifact hashes unchanged. Historical evidence follows.
+  [Repair and validation](repair-evidence/net/PACKET_RECEIVE_RANGE.md).
+
+- **Area/API:** `cna_local_network_gamer_receive_data_at` in
+  `modules/c-api/include/CNA/C/net_sessions.h` and its adapter in
+  `modules/c-api/src/CnaCApiNetSessions.cpp`.
+- **Reproduction:** create a socket-free Local session, inject a four-byte packet into its local
+  gamer, fill a twelve-byte destination with `0xA5`, then receive the packet at offset two. The
+  route succeeds, reports four bytes and places the exact payload at indices two through five.
+- **Observed:** the adapter also changes every byte outside that range to zero. It allocates a new
+  zero-initialized vector whose size is the caller's complete capacity, asks the canonical overload
+  to write at the offset, then copies the entire vector over the caller's destination. Both the
+  two-byte prefix and six-byte suffix are therefore overwritten.
+- **Expected:** the API describes the offset as the position within the destination where writing
+  begins. A successful four-byte receive at offset two should change only indices two through five,
+  as the canonical array overload does; unrelated caller bytes should remain intact.
+- **Positive controls:** an undersized offset request is refused without consuming the queued
+  packet; the accepted call returns the exact payload and sender; plain-buffer and PacketReader
+  receives are exact; all ownership cleanup succeeds. Both renderer-labelled direct runs have
+  identical output and empty stderr, with27/28 checks passing.
+- **Suggested repair/status:** copy only the returned payload range from the temporary vector into
+  `destination + offset`, or preserve the caller buffer before invoking the canonical overload.
+  Open CNA implementation defect; `c_api.net.local_gamer_packets` retains the single expected
+  failure and is marked `CNA-DEMOS-ISSUE-075`. No CNA source was modified or upstream message sent.
+  Evidence:`checkpoint-583-c-local-packets-focused-*-direct.*`; runtime uses the last completed CNA
+  libraries while unrelated renderer-retirement work remains in flight.
 
 ### CNA-DEMOS-ISSUE-051 -- Host-frame failure contract promises suppressed C exit hooks
 

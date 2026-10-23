@@ -33,7 +33,5 @@ CNA_DEMOS_STANDALONE({
     .frames = 1,
     .deterministic = true,
     .restrictions = "Single-process Local session and explicit in-memory packet injection; opens no socket or "
-                    "renderer and does not claim wire delivery, voice audio or party-service invitations. One "
-                    "offset destination-preservation check retains CNA-DEMOS-ISSUE-075.",
-    .knownIssue = "CNA-DEMOS-ISSUE-075",
+                    "renderer and does not claim wire delivery, voice audio or party-service invitations.",
 })
