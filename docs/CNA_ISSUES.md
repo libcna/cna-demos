@@ -938,6 +938,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-067 -- C display-color-space routes expose unnamed integer ordinals
 
+- **Resolved (2026-10-24):** CNA `f1f1edae9` names the colour spaces
+  (`CNA_DISPLAY_COLOR_SPACE_SRGB/SCRGB/HDR10`); `c_api.graphics.device_capabilities` uses them and
+  passes 24 checks. Complete sweeps SOFTWARE 669/2/45/3 and OPENGLES3 707/2/7/3 change only the
+  intended rows (the two failures, pinned component identities, were corrected in dcc3811); serial
+  CTest 687 PASS/45 SKIP/0 FAIL/3 disabled. Closure: CNA `6c8b042c4`.
+
 - **Area/API:** `cna_graphics_device_get_display_color_space_ext`,
   `cna_graphics_device_set_display_color_space_ext` and
   `cna_graphics_device_supports_display_color_space_ext` in
@@ -959,6 +965,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `checkpoint-504-c-device-capabilities-focused-*`. Open.
 
 ### CNA-DEMOS-ISSUE-066 -- SOFTWARE ignores GraphicsDevice's direct blend-enable toggle
+
+- **Resolved (2026-10-24):** CNA `34be9272b` (the owner chose non-premultiplied blending) makes
+  SetBlendEnabled install BlendState.NonPremultiplied's equation on every renderer, Opaque's when
+  disabled; `c_api.graphics.draw_routes` passes on SOFTWARE with its marker removed. Complete
+  sweeps SOFTWARE 669/2/45/3 and OPENGLES3 707/2/7/3 change only the intended rows (the two
+  failures, pinned component identities, were corrected in dcc3811); serial CTest 687 PASS/45
+  SKIP/0 FAIL/3 disabled. Closure: CNA `6c8b042c4`.
 
 - **Current verification (2026-10-22; still open):** the unchanged C reproduction
   also fails on SDL_GPU (accumulated red255 instead of185..195); GLES/GL33 pass.
@@ -1128,6 +1141,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-005 -- `Color` is polymorphic, so XNA-style custom vertex structs silently break
 
+- **Resolved (2026-10-24):** CNA `2df868a13` refuses, at compile time, a vertex type that is not
+  trivially copyable in the VertexDeclaration-driven user draws, so an XNA-style vertex holding
+  CNA's 16-byte Color is a build error instead of garbage; `custom_vertex` pins the refusal and
+  keeps its packed colour. Complete sweeps SOFTWARE 669/2/45/3 and OPENGLES3 707/2/7/3 change only
+  the intended rows (the two failures, pinned component identities, were corrected in dcc3811);
+  serial CTest 687 PASS/45 SKIP/0 FAIL/3 disabled. Closure: CNA `6c8b042c4`.
+
 - **Area:** math/graphics -- `Microsoft::Xna::Framework::Color` derives from
   `PackedVector::IPackedVectorT<UInt32>`, whose `getPackedValueProperty`/`setPackedValueProperty`
   are virtual, so a `Color` object is 16 bytes (vtable pointer + packed value) instead of XNA's
@@ -1161,6 +1181,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-006 -- No way to ask whether the renderer applies `MipMapLevelOfDetailBias`
 
+- **Resolved (2026-10-24):** CNA `c6dec91fb` adds RendererFeature::SamplerLevelOfDetailBias,
+  PbrEffectShading and SkinnedPbrEffectShading, each checked against every renderer's pixels; the
+  mip-bias and PBR demos ask them instead of renderer names. Complete sweeps SOFTWARE 669/2/45/3
+  and OPENGLES3 707/2/7/3 change only the intended rows (the two failures, pinned component
+  identities, were corrected in dcc3811); serial CTest 687 PASS/45 SKIP/0 FAIL/3 disabled. Closure:
+  CNA `6c8b042c4`.
+
 - **Area:** graphics -- `SamplerState::MipMapLevelOfDetailBias` on the OpenGL ES renderers
   (`OPENGLES3`, `WEBGL2`), and the capability API (`CNA::RendererFeature`,
   `GraphicsDevice::SupportsCapability`).
@@ -1185,6 +1212,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-007 -- `ColorMatrixEffect` is silently ignored by GPU renderers
 
+- **Resolved (2026-10-24):** CNA `8f08a82cc` makes `SpriteBatch::Begin` refuse a ColorMatrixEffect
+  with NotSupportedException where the renderer does not apply it; `sepia_and_invert` now asks
+  Begin instead of testing the renderer name. Complete sweeps SOFTWARE 669/2/45/3 and OPENGLES3
+  707/2/7/3 change only the intended rows (the two failures, pinned component identities, were
+  corrected in dcc3811); serial CTest 687 PASS/45 SKIP/0 FAIL/3 disabled. Closure: CNA `6c8b042c4`.
+
 - **Area:** graphics -- `ColorMatrixEffect` (CNAEXT) passed to `SpriteBatch::Begin` on a GPU
   renderer; EasyGL's `EasyGLSpriteBatchRenderer::SetCustomEffect` stores it and the sprite flush
   draws with the stock sprite shader.
@@ -1207,6 +1240,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Status:** open; not reported upstream yet.
 
 ### CNA-DEMOS-ISSUE-008 -- Public headers leak unprefixed macros (`YES`, `NO`, `nothing`, ...)
+
+- **Resolved (2026-10-24):** CNA `ec2d8b692` keeps SharpRuntime/Prop.hpp out of CNA's public
+  headers; header-hygiene tests use YES, NO and nothing as identifiers. Complete sweeps SOFTWARE
+  669/2/45/3 and OPENGLES3 707/2/7/3 change only the intended rows (the two failures, pinned
+  component identities, were corrected in dcc3811); serial CTest 687 PASS/45 SKIP/0 FAIL/3
+  disabled. Closure: CNA `6c8b042c4`.
 
 - **Area:** sharp-runtime (CNA's C#-runtime dependency) -- `SharpRuntime/Prop.hpp` defines
   object-like macros with ordinary names at global scope: `YES`, `NO`, `nothing`, `static0`,
@@ -1527,6 +1566,13 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ### CNA-DEMOS-ISSUE-022 -- A compiled glTF with an embedded texture refers to a file the build never writes
 
+- **Resolved (2026-10-24):** CNA `cd1f5ef0a` (the owner chose XNA's behaviour) always builds a
+  glTF's extracted textures as Texture2D children of the compiled Model, for CNB and XNB output;
+  `textured_gltf` requires the compiled model's 64x64 texture and its marker is removed. Complete
+  sweeps SOFTWARE 669/2/45/3 and OPENGLES3 707/2/7/3 change only the intended rows (the two
+  failures, pinned component identities, were corrected in dcc3811); serial CTest 687 PASS/45
+  SKIP/0 FAIL/3 disabled. Closure: CNA `6c8b042c4`.
+
 - **Area:** content pipeline -- `CNA.GltfImporter` + `CNA.ModelProcessor` (CNB). A glTF whose
   base-colour image is embedded (a PNG in a `bufferView`) compiles into a model that refers to
   `<name>_tex0.png`; the asset's manifest entry lists it under `runtimeReferences`
@@ -1544,6 +1590,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Status:** open (high for textured glTF models through the pipeline); not reported upstream yet.
 
 ### CNA-DEMOS-ISSUE-023 -- A compiled glTF model loses its cameras
+
+- **Resolved (2026-10-24):** CNA `1beef880d` carries the scene's cameras through the Model CNJ and
+  an optional MCAM CNB chunk; `gltf_cameras` requires the compiled cameras to equal the run-time
+  import's and its marker is removed. Complete sweeps SOFTWARE 669/2/45/3 and OPENGLES3 707/2/7/3
+  change only the intended rows (the two failures, pinned component identities, were corrected in
+  dcc3811); serial CTest 687 PASS/45 SKIP/0 FAIL/3 disabled. Closure: CNA `6c8b042c4`.
 
 - **Area:** content pipeline -- CNB model encoding. `Model::getCamerasEXTProperty()` is filled by
   the run-time glTF import (three cameras for the demo's scene) but is empty for the same scene
@@ -1704,6 +1756,12 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 ---
 
 ### CNA-DEMOS-ISSUE-031 -- glTF STEP and CUBICSPLINE animation samplers play as LINEAR
+
+- **Resolved (2026-10-24):** CNA `a9d378c06` keeps STEP (hold keys) and CUBICSPLINE (samples every
+  1/60 s) through linear clip playback; `clip_interpolation` passes through both carriers and its
+  marker is removed. Complete sweeps SOFTWARE 669/2/45/3 and OPENGLES3 707/2/7/3 change only the
+  intended rows (the two failures, pinned component identities, were corrected in dcc3811); serial
+  CTest 687 PASS/45 SKIP/0 FAIL/3 disabled. Closure: CNA `6c8b042c4`.
 
 - **Area:** content, glTF import -- `GltfImportCore`'s `ExtractClips` evaluates each channel
   (STEP, LINEAR or CUBICSPLINE correctly, `EvaluateVec3Channel`/`EvaluateQuatChannel`) but only at

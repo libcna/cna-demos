@@ -1,19 +1,19 @@
-# Current handoff — 2026-10-24
+# Current handoff — 2026-10-24 (batch 9)
 
 CNA root `handoff.md` is the current continuation point; read it first. This file's top only
 summarises the demos side.
 
-Inventory: 156 historical IDs, 147 final dispositions, 9 pending (005, 006, 007, 008, 022, 023,
-031, 066, 067); this is not campaign completion. Since the published `92ee315` this repository has
-local, unpushed commits that close ISSUE-010 (CNA `fe2eb8f33`), ISSUE-020/029/062 (CNA
-`da7388fa9`) and batch 8 -- 081, 091-096, 098, 104 and 114 (CNA `30df537d5`). Each closure only
-added checks, removed a marker after the same scenario passed, or corrected a check that asserted
-the defect itself to the repaired shape (the C media demos, `node_animation`,
-`c_api.graphics.model_meshes`, the two animation-report defect-shape checks); no original
-assertion was weakened. The latest complete checkpoint (demos tree rebuilt from CNA
-`da6c5c120`): 719-ID sweeps SOFTWARE 664/4/48/3 and OPENGLES3 706/3/7/3, serial CTest 684 PASS/
-48 SKIP/0 FAIL/3 disabled; reports `build/linux-full/reports/repair-batch8-closure-*`. Push only
-on the owner's word, CNA before this repository (Sharp Runtime is already published).
+Inventory: all 156 historical IDs have a final disposition (119 FIXED_VALIDATED; three, 003, 101
+and 152, await native Windows validation). DC-R1 and DC-R2 (SDL_GPU) remain open outside the count.
+No demo carries a `knownIssue` marker any more. Since the published `92ee315` this repository has
+local, unpushed commits for batches 3-9; the batch 9 closure is CNA `6c8b042c4`. Each closure only
+added checks, removed a marker after the same scenario passed, or corrected a check that pinned a
+defect or an old identity to the repaired one; no original assertion was weakened. The PBR demos
+now ask RendererFeature::PbrEffectShading instead of skipping SOFTWARE, and pass there. The latest
+complete checkpoint (demos tree rebuilt from CNA `30afa280b`): 719-ID sweeps SOFTWARE 669/2/45/3
+and OPENGLES3 707/2/7/3, the two failures being identity pins corrected in `dcc3811`; serial CTest
+687 PASS/45 SKIP/0 FAIL/3 disabled; reports `build/linux-full/reports/repair-batch9-closure-*`.
+Push only on the owner's word, CNA before this repository.
 
 The earlier inherited review (CNA `39ef8ea2f` for ISSUE-011, `65e69cc5e` for ISSUE-082, ISSUE-113
 by `c303d3ad9`/`68471a7a3`; this repository's closure `fb6c653`) is recorded in
