@@ -240,9 +240,11 @@ Design decisions already taken to keep this cheap:
 workflow (HANDOFF.md "Dependencies"):
 
 1. checks out CNA and its siblings next to cna-demos (the same layout as a developer machine);
-2. configures the `windowless` preset (SOFTWARE/HEADLESS/STUB -- no GPU, no display, no GL siblings);
+2. configures the `windowless` preset (SOFTWARE/HEADLESS/STUB -- no GPU or GL siblings) and installs
+   Xvfb for platform integrations such as `Guide::IsScreenSaverEnabled`;
 3. builds, runs `cna-demos --validate`, runs `ctest` (CLI tests + every demo on SOFTWARE with the
-   dummy audio driver), and uploads the results report and catalog as artifacts.
+   dummy audio driver and private X11 display), and uploads the results report and catalog as
+   artifacts.
 
 Display-based renderers (`OPENGLES3` under Xvfb) and hardware/platform validation are not part of
 the default job; they are listed in HANDOFF.md with their last manual result. CI time stays

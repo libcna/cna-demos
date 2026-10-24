@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Run the windowless CI test and smoke suites under private Xvfb so the SOFTWARE renderer remains
+  GPU-independent while platform screen-saver integration has the display service it requires.
 - Updated CI's CNA/sharp-runtime pins to the published final-audit pair (`ba707082e`/`f990d074`),
   so the windowless build sees the renderer-feature API and XmlSerializer support used by HEAD.
 - Completed the final handoff audit against CNA `ba707082e`: normalized ISSUE-152's structured

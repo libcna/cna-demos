@@ -1,6 +1,7 @@
 # Builds cna-demos against the pinned CNA revision with the windowless renderers
 # (SOFTWARE/HEADLESS/STUB) and runs the CLI tests and every demo on SOFTWARE.
-# No GPU and no display server are needed. See docs/AUTOMATION.md section 6.
+# A private Xvfb supplies platform display services; no GPU is needed.
+# See docs/AUTOMATION.md section 6.
 name: ci
 
 on:
@@ -45,7 +46,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build pkg-config ccache g++-14 \
+          sudo apt-get install -y ninja-build pkg-config ccache g++-14 xvfb xauth \
             libavcodec-dev libavformat-dev libavutil-dev libswresample-dev \
             libcurl4-openssl-dev nlohmann-json3-dev libzstd-dev \
             libx11-dev libxext-dev libxrandr-dev libxi-dev libxcursor-dev libxfixes-dev \
@@ -70,7 +71,8 @@ jobs:
           XDG_RUNTIME_DIR: /tmp/xdg-runtime
         run: |
           mkdir -p -m 700 "$XDG_RUNTIME_DIR"
-          ctest --preset windowless
+          SDL_VIDEO_DRIVER=x11 env -u WAYLAND_DISPLAY \
+            xvfb-run -a -s '-screen 0 1280x1024x24' ctest --preset windowless
 
       - name: Smoke run report and catalog
         if: always()
@@ -79,7 +81,10 @@ jobs:
           XDG_RUNTIME_DIR: /tmp/xdg-runtime
           SDL_AUDIO_DRIVER: dummy
         run: |
-          build/windowless/bin/cna-demos --smoke --quiet --renderer SOFTWARE --report results-software.json || true
+          SDL_VIDEO_DRIVER=x11 env -u WAYLAND_DISPLAY \
+            xvfb-run -a -s '-screen 0 1280x1024x24' \
+            build/windowless/bin/cna-demos --smoke --quiet --renderer SOFTWARE \
+              --report results-software.json || true
           build/windowless/bin/cna-demos --catalog-json > catalog.json
 
       - name: Upload results
