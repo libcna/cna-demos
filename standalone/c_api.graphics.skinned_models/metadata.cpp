@@ -5,7 +5,7 @@ CNA_DEMOS_STANDALONE({
     .id = "c_api.graphics.skinned_models",
     .title = "SkinnedModel skeleton, clips, moves and part ownership in C",
     .description = "A C workflow copies a skeleton and clip, evaluates skin transforms, moves "
-                   "models and replaces an owned render part with real graphics resources.",
+                   "models and replaces a tinted owned render part with real graphics resources.",
     .apis = {"cna_skinned_model_ext_create_default", "cna_skinned_model_ext_create",
              "cna_skinned_model_ext_destroy", "cna_skinned_model_ext_create_move",
              "cna_skinned_model_ext_move_assign", "cna_skinned_model_ext_set_skeleton",
@@ -23,6 +23,8 @@ CNA_DEMOS_STANDALONE({
              "cna_skinned_model_ext_remove_part", "cna_skinned_model_ext_get_part_count",
              "cna_skinned_model_ext_get_part_name_byte_count_at",
              "cna_skinned_model_ext_copy_part_name_at", "cna_skinned_model_ext_get_part_at",
+             "cna_skinned_model_ext_get_part_diffuse_color_at",
+             "cna_skinned_model_ext_set_part_diffuse_color_at",
              "cna_skinned_model_ext_get_owned_resource_counts"},
     .tags = {"c", "binding", "graphics", "model", "skinning", "animation", "ownership"},
     .needs = CnaDemos::Need::CApi | CnaDemos::Need::ThreeD,

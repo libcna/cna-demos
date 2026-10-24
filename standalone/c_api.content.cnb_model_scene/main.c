@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
-/* CNB model mesh, skeleton, animation, light and document codec through C. */
+/* CNB model mesh, skeleton, animation, light, camera and document codec through C. */
 #include <CNA/C/cna.h>
 
 #include <stdint.h>
@@ -63,6 +63,7 @@ static int inspect_scene(CNA_CnbModelDataHandle model)
     CNA_CnbMeshInfo mesh;
     CNA_CnbSkeletonInfo skeleton;
     CNA_CnbModelLight light;
+    CNA_CnbModelCamera camera;
     CNA_ClipTargetSpaceEXT target_space = CNA_CLIP_TARGET_SPACE_JOINT_PALETTE_EXT;
     CNA_KeyframeEXT keys[2];
     int32_t hierarchy[2] = {INT32_C(9), INT32_C(9)};
@@ -136,9 +137,37 @@ static int inspect_scene(CNA_CnbModelDataHandle model)
         return 0;
     }
     memset(&light, 0, sizeof(light));
-    return cna_cnb_model_get_light(model, UINT64_C(0), &light) == CNA_RESULT_SUCCESS &&
-           light.direction[1] == -1.0F && light.diffuse_color[0] == 1.0F &&
-           light.diffuse_color[1] == 0.5F && light.diffuse_color[2] == 0.25F;
+    if (cna_cnb_model_get_light(model, UINT64_C(0), &light) != CNA_RESULT_SUCCESS ||
+        light.direction[1] != -1.0F || light.diffuse_color[0] != 1.0F ||
+        light.diffuse_color[1] != 0.5F || light.diffuse_color[2] != 0.25F) {
+        return 0;
+    }
+    memset(&camera, 0xA5, sizeof(camera));
+    camera.struct_size = (uint32_t)sizeof(camera);
+    camera.struct_version = CNA_CNB_MODEL_CAMERA_STRUCT_VERSION;
+    memset(name, 0xA5, sizeof(name));
+    return cna_cnb_model_get_camera_count(model, &count) == CNA_RESULT_SUCCESS &&
+           count == UINT64_C(1) &&
+           cna_cnb_model_get_camera(model, UINT64_C(0), &camera) == CNA_RESULT_SUCCESS &&
+           camera.scene_node_index == INT32_C(1) && camera.perspective == CNA_TRUE &&
+           bytes_are(camera.reserved, sizeof(camera.reserved), 0U) &&
+           camera.yfov == 0.7F && camera.aspect_ratio == 1.25F &&
+           camera.znear == 0.1F && camera.zfar == 50.0F &&
+           camera.world_transform[0] == 1.0F && camera.world_transform[5] == 1.0F &&
+           camera.world_transform[10] == 1.0F && camera.world_transform[13] == 1.8F &&
+           camera.world_transform[15] == 1.0F &&
+           cna_cnb_model_get_camera_name_size(model, UINT64_C(0), &count) ==
+               CNA_RESULT_SUCCESS &&
+           count == UINT64_C(5) &&
+           cna_cnb_model_copy_camera_name(
+               model, UINT64_C(0), name, UINT64_C(4), &count) ==
+               CNA_RESULT_BUFFER_TOO_SMALL &&
+           count == UINT64_C(5) && bytes_are((const uint8_t*)name, sizeof(name), 0xA5U) &&
+           cna_cnb_model_copy_camera_name(
+               model, UINT64_C(0), name, sizeof(name), &count) == CNA_RESULT_SUCCESS &&
+           count == UINT64_C(5) && memcmp(name, "Front", 5U) == 0 &&
+           cna_cnb_model_get_camera(model, UINT64_C(1), &camera) ==
+               CNA_RESULT_INVALID_ARGUMENT;
 }
 
 int main(int argc, char** argv)
@@ -152,6 +181,7 @@ int main(int argc, char** argv)
     CNA_CnbSkeletonInfo skeleton;
     CNA_CnbModelInfo model_info;
     CNA_CnbModelLight light;
+    CNA_CnbModelCamera camera;
     CNA_KeyframeEXT keys[2];
     CNA_BoneTrackEXTDescriptor track;
     CNA_AnimationClipEXTDescriptor clip;
@@ -407,9 +437,27 @@ int main(int argc, char** argv)
             light.direction[1] == -1.0F && light.diffuse_color[0] == 1.0F &&
             light.diffuse_color[1] == 0.5F && light.diffuse_color[2] == 0.25F,
         "the model returns the exact copied light direction and colour");
+    memset(&camera, 0, sizeof(camera));
+    camera.struct_size = (uint32_t)sizeof(camera);
+    camera.struct_version = CNA_CNB_MODEL_CAMERA_STRUCT_VERSION;
+    camera.scene_node_index = INT32_C(1);
+    camera.perspective = CNA_TRUE;
+    camera.yfov = 0.7F;
+    camera.aspect_ratio = 1.25F;
+    camera.znear = 0.1F;
+    camera.zfar = 50.0F;
+    identity(camera.world_transform, 1.0F);
+    camera.world_transform[13] = 1.8F;
+    cna_demo_check(
+        &demo,
+        cna_cnb_model_add_camera(model, text_view("Front"), &camera, &index) ==
+                CNA_RESULT_SUCCESS &&
+            index == UINT64_C(0),
+        "append a named perspective camera attached to the child scene node");
+    memset(&camera, 0, sizeof(camera));
     cna_demo_check(
         &demo, inspect_scene(model),
-        "the authored graph is internally coherent before serialization");
+        "the authored graph, including its owned camera, is coherent before serialization");
 
     if (!cna_demo_check(
             &demo,
@@ -446,7 +494,7 @@ int main(int argc, char** argv)
         &demo,
         cna_cnb_decode_model(document, &decoded) == CNA_RESULT_SUCCESS &&
             inspect_scene(decoded),
-        "the decoder restores every mesh, skeleton, clip and light relationship exactly");
+        "the decoder restores every mesh, skeleton, clip, light and camera relationship exactly");
     cna_demo_check(
         &demo,
         cna_cnb_model_clear_skeleton(decoded) == CNA_RESULT_SUCCESS,

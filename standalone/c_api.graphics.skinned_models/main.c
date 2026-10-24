@@ -278,6 +278,9 @@ static int audit_part_resources(CnaDemo* demo, CNA_Handle device)
     CNA_IndexBufferHandle replacement_index = CNA_INVALID_HANDLE;
     CNA_Handle texture = CNA_INVALID_HANDLE;
     CNA_Handle returned_texture = UINT64_MAX;
+    CNA_Vector4 part_color = {0.0F, 0.0F, 0.0F, 0.0F};
+    const CNA_Vector4 tint = {0.25F, 0.5F, 0.75F, 1.0F};
+    const CNA_Vector4 replacement_tint = {0.8F, 0.6F, 0.4F, 0.2F};
     CNA_Bool has_texture = CNA_FALSE;
     uint64_t vertex_count = UINT64_MAX;
     uint64_t index_count = UINT64_MAX;
@@ -324,6 +327,23 @@ static int audit_part_resources(CnaDemo* demo, CNA_Handle device)
         "the retained part list preserves exact order and copied names");
     cna_demo_check(
         demo,
+        cna_skinned_model_ext_get_part_diffuse_color_at(
+            model, UINT64_C(0), &part_color) == CNA_RESULT_SUCCESS &&
+            nearly_equal(part_color.x, 1.0F) && nearly_equal(part_color.y, 1.0F) &&
+            nearly_equal(part_color.z, 1.0F) && nearly_equal(part_color.w, 1.0F) &&
+            cna_skinned_model_ext_get_part_diffuse_color_at(
+                model, UINT64_C(1), &part_color) == CNA_RESULT_INVALID_ARGUMENT &&
+            cna_skinned_model_ext_set_part_diffuse_color_at(
+                model, UINT64_C(1), tint) == CNA_RESULT_INVALID_ARGUMENT &&
+            cna_skinned_model_ext_set_part_diffuse_color_at(
+                model, UINT64_C(0), tint) == CNA_RESULT_SUCCESS &&
+            cna_skinned_model_ext_get_part_diffuse_color_at(
+                model, UINT64_C(0), &part_color) == CNA_RESULT_SUCCESS &&
+            nearly_equal(part_color.x, tint.x) && nearly_equal(part_color.y, tint.y) &&
+            nearly_equal(part_color.z, tint.z) && nearly_equal(part_color.w, tint.w),
+        "part diffuse colour starts white, refuses an out-of-range index and round-trips a tint");
+    cna_demo_check(
+        demo,
         cna_skinned_model_ext_get_owned_resource_counts(
             model, &vertex_count, &index_count, &part_count, &texture_count) ==
                 CNA_RESULT_SUCCESS &&
@@ -349,11 +369,22 @@ static int audit_part_resources(CnaDemo* demo, CNA_Handle device)
                 donor, text_view("Body"), replacement_vertex, replacement_index,
                 replacement_part, CNA_INVALID_HANDLE) == CNA_RESULT_SUCCESS &&
             cna_model_mesh_part_destroy(replacement_part) == CNA_RESULT_SUCCESS &&
+            cna_skinned_model_ext_set_part_diffuse_color_at(
+                donor, UINT64_C(0), replacement_tint) == CNA_RESULT_SUCCESS &&
             cna_skinned_model_ext_attach_parts(model, donor) == CNA_RESULT_SUCCESS &&
             cna_skinned_model_ext_get_part_count(donor, &part_count) == CNA_RESULT_SUCCESS &&
             part_count == UINT64_C(0),
         "attach moves donor parts and replaces an existing exact-name entry");
     replacement_part = CNA_INVALID_HANDLE;
+    cna_demo_check(
+        demo,
+        cna_skinned_model_ext_get_part_diffuse_color_at(
+            model, UINT64_C(0), &part_color) == CNA_RESULT_SUCCESS &&
+            nearly_equal(part_color.x, replacement_tint.x) &&
+            nearly_equal(part_color.y, replacement_tint.y) &&
+            nearly_equal(part_color.z, replacement_tint.z) &&
+            nearly_equal(part_color.w, replacement_tint.w),
+        "same-name replacement carries the donor part's independent diffuse colour");
     cna_demo_check(
         demo,
         cna_vertex_buffer_destroy(vertex) == CNA_RESULT_SUCCESS &&

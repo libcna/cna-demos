@@ -1,4 +1,4 @@
-# Current handoff — 2026-10-24 (batch 9)
+# Current handoff — 2026-10-24 (final audit)
 
 CNA root `handoff.md` is the current continuation point; read it first. This file's top only
 summarises the demos side.
@@ -9,7 +9,26 @@ resolved on the owner's decisions (CNA `51fb39d5a` and `c7f6c68e5`):
 `c_api.graphics.render_target_bindings` and `graphics.render_target.multisampling` pass on SDL_GPU.
 DC-R3, found in that SDL_GPU sweep, is fixed too: `c_api.graphics.shader_effect_state` supplies a
 SPIR-V pair for SDL_GPU (`77444d7`), which CNA `9ef292993` now accepts.
-No demo carries a `knownIssue` marker any more. The 2026-10-24 consumer intake (CNA root
+No demo carries a `knownIssue` marker any more. The final handoff audit normalized ISSUE-152's
+platform-pending matrix row in CNA `ba707082e`, so all three Windows-only obligations now have the
+same machine-readable status and requirement. A fresh private-X11 `tools/validate.sh` run against
+that CNA tree passed: 719/0 catalog validation; 732 enabled CTests (687 PASS, 45 declared SKIP,
+zero FAIL; three manual tests disabled); SOFTWARE 671/0/45/3 and OPENGLES3 709/0/7/3. It refreshed
+`docs/COVERAGE.md` from the repaired zero-failure reports. Standard reports
+are in `build/linux-full/reports/{build,ctest,smoke-SOFTWARE,smoke-OPENGLES3}*` and
+`results-{SOFTWARE,OPENGLES3}.json`.
+
+The post-checkpoint C ABI reconciliation then found seven routes added by the final CNA camera and
+skinned-part work. Existing demos now exercise all of them without adding IDs:
+`c_api.content.cnb_model_scene` covers the five CNB camera routes through owned values, atomic name
+copy and encode/decode (29 checks), while `c_api.graphics.skinned_models` covers the two per-part
+diffuse-colour routes, bounds and same-name replacement (30 checks). Both pass on SOFTWARE and
+OPENGLES3, their two focused SOFTWARE CTests pass, and catalog validation remains 719/0. Generated
+coverage is now 3089/3212 C routes; the remaining 21 XNA types and 123 C routes already have Phase
+15 dispositions and are not an undispositioned backlog. The complete sweeps above predate only
+these focused, renderer-independent C assertions; they are not restated as a new full checkpoint.
+
+The 2026-10-24 consumer intake (CNA root
 `handoff.md`, museum findings) corrected demos that pinned FNA behaviour XNA does not have: the
 MouseState/GamePadState text (`f2fb348`), the first PipelineComponentScanner.Update answer
 (`34b6dbf`) and PresentationParameters' 800x480 windowed default (`8855ae3`, now XNA's 0x0 full

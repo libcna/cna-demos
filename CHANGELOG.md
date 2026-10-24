@@ -6,6 +6,12 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Completed the final handoff audit against CNA `ba707082e`: normalized ISSUE-152's structured
+  native-Windows validation status, passed all 732 enabled CTests, and reproduced the complete
+  719-ID zero-failure sweeps (SOFTWARE 671/0/45/3, OPENGLES3 709/0/7/3). Refreshed generated
+  coverage from those repaired results; the three manual demos remain deliberately disabled.
+  Existing CNB scene and skinned-model demos now also cover all seven C ABI routes added by the
+  final camera/diffuse-colour work; both pass their expanded 29/30 checks on both renderers.
 - Closed findings034/035 against CNA `d650554a8`: stock scalar getters now reject
   incompatible shapes and Bones exposes coherent72 element views. Genuine XNA41
   controls justify the raw4x3/M44 demo correction, with two added affine checks.
