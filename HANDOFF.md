@@ -20,9 +20,14 @@ local, unpushed commits for batches 3-9; the batch 9 closure is CNA `6c8b042c4`.
 added checks, removed a marker after the same scenario passed, or corrected a check that pinned a
 defect or an old identity to the repaired one; no original assertion was weakened. The PBR demos
 now ask RendererFeature::PbrEffectShading instead of skipping SOFTWARE, and pass there. The latest
-complete checkpoint (demos tree rebuilt from CNA `30afa280b`): 719-ID sweeps SOFTWARE 669/2/45/3
-and OPENGLES3 707/2/7/3, the two failures being identity pins corrected in `dcc3811`; serial CTest
-687 PASS/45 SKIP/0 FAIL/3 disabled; reports `build/linux-full/reports/repair-batch9-closure-*`.
+complete checkpoint (2026-10-24, demos tree rebuilt from CNA `96577db26`, which adds the museum
+nested-name and XmlSerializer items and the SDL_GPU/WebGPU texture-upload ordering fixes): 719-ID
+sweeps SOFTWARE 671/0/45/3 and OPENGLES3 709/0/7/3, the only change from the consumer intake
+checkpoint `game.graphics_device_manager.preparing_device_settings` FAIL-to-PASS; serial CTest 732
+enabled, 687 PASS/45 SKIP/0 FAIL/3 disabled (791.75 s); reports
+`build/linux-full/reports/repair-final-checkpoint-*`. Before it, batch 9 (CNA `30afa280b`): sweeps
+SOFTWARE 669/2/45/3 and OPENGLES3 707/2/7/3, the two failures identity pins corrected in
+`dcc3811`; reports `build/linux-full/reports/repair-batch9-closure-*`.
 Push only on the owner's word, CNA before this repository.
 
 The earlier inherited review (CNA `39ef8ea2f` for ISSUE-011, `65e69cc5e` for ISSUE-082, ISSUE-113
