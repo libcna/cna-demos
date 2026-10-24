@@ -201,16 +201,29 @@ namespace
             const auto writer = xnbRegistry.ResolveWriter(
                 item.inputType, {}, Pipeline::ContentOutputFormat::Xnb);
             const auto schemas = writer->OutputSchemaIdentities();
+            // The Model writer also declares the Texture2D children a glTF's extracted images
+            // become (CNA-DEMOS-ISSUE-022), ordered by asset type id ahead of its Model schema.
+            const bool model = item.inputType == Pipeline::ProcessedModelType;
+            const std::size_t own = model ? 1u : 0u;
             exactInventory = exactInventory && writer->InputType() == item.inputType &&
                 writer->Identity() == Pipeline::ContentComponentIdentity{
                     item.writerName, "1+w5run"} &&
                 writer->OutputFormat() == Pipeline::ContentOutputFormat::Xnb &&
-                schemas.size() == 1u &&
-                schemas[0].assetTypeId == static_cast<std::uint32_t>(item.assetId) &&
-                schemas[0].assetSchemaVersion == 5u &&
-                schemas[0].assetTypeName == item.assetTypeName &&
-                schemas[0].codec == Pipeline::ContentComponentIdentity{
+                schemas.size() == own + 1u &&
+                schemas[own].assetTypeId == static_cast<std::uint32_t>(item.assetId) &&
+                schemas[own].assetSchemaVersion == 5u &&
+                schemas[own].assetTypeName == item.assetTypeName &&
+                schemas[own].codec == Pipeline::ContentComponentIdentity{
                     "CNA.XnbSerializer", "1+w5run"};
+            if (model)
+            {
+                exactInventory = exactInventory &&
+                    schemas[0].assetTypeId == static_cast<std::uint32_t>(Asset::Texture2D) &&
+                    schemas[0].assetSchemaVersion == 5u &&
+                    schemas[0].assetTypeName == "Microsoft.Xna.Framework.Graphics.Texture2D" &&
+                    schemas[0].codec == Pipeline::ContentComponentIdentity{
+                        "CNA.XnbSerializer", "1+w5run"};
+            }
         }
         ctx.Check(exactInventory,
                   "registration exposes all ten built-in asset writers with exact option-bound identities and schemas");

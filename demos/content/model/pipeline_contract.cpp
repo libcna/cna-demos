@@ -280,17 +280,17 @@ namespace
                       Pipeline::ModelGenerateChildAssetsParameter ==
                           std::string("generateChildAssets") &&
                       importer.Identity() ==
-                          Pipeline::ContentComponentIdentity{"CNA.GltfImporter", "2"} &&
+                          Pipeline::ContentComponentIdentity{"CNA.GltfImporter", "3"} &&
                       importer.SourceExtensions() ==
                           std::vector<std::string>{".gltf", ".glb"} &&
                       importer.OutputTypes() ==
                           std::vector<std::string>{Pipeline::ImportedModelDocumentType} &&
                       processor.Identity() ==
-                          Pipeline::ContentComponentIdentity{"CNA.ModelProcessor", "3"} &&
+                          Pipeline::ContentComponentIdentity{"CNA.ModelProcessor", "4"} &&
                       processor.InputType() == Pipeline::ImportedModelDocumentType &&
                       processor.OutputType() == Pipeline::ProcessedModelType &&
                       writer.Identity() ==
-                          Pipeline::ContentComponentIdentity{"CNA.ModelContentWriter", "3"} &&
+                          Pipeline::ContentComponentIdentity{"CNA.ModelContentWriter", "4"} &&
                       writer.InputType() == Pipeline::ProcessedModelType,
                   "the Model route exposes exact type, parameter, component, extension and version identities");
 
