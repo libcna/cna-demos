@@ -430,9 +430,10 @@ int main()
                   scanner.getErrorsProperty().front().find("Missing.RouteCatalog") != std::string::npos,
               "the dependency overload accepts a known dependency catalog and reports one missing scanned catalog");
         Xna::PipelineComponentScanner detachedScanner;
-        check(!detachedScanner.Update({}) && detachedScanner.getImporterNamesProperty().empty() &&
-                  detachedScanner.getProcessorNamesProperty().empty() && detachedScanner.getErrorsProperty().empty(),
-              "a default-constructed scanner stays empty and reports no registry change");
+        check(detachedScanner.Update({}) && detachedScanner.getImporterNamesProperty().empty() &&
+                  detachedScanner.getProcessorNamesProperty().empty() && detachedScanner.getErrorsProperty().empty() &&
+                  !detachedScanner.Update({}),
+              "a default-constructed scanner stays empty; like XNA's, its first update answers true and a repeat false");
 
         const Pipeline::ContentPipeline pipeline(registry);
         Pipeline::ContentBuildRequest request;
