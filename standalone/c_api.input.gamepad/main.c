@@ -231,7 +231,8 @@ static void analog_values(CnaDemo* demo)
 
 static void state_values(CnaDemo* demo)
 {
-    static const char ExpectedText[] = "Microsoft.Xna.Framework.Input.GamePadState";
+    static const char ExpectedText[] = "{IsConnected:True}";
+    static const char RestText[] = "{IsConnected:False}";
     static const CNA_GamePadButtonFlags held[2] = {CNA_GAMEPAD_BUTTON_A, CNA_GAMEPAD_BUTTON_DPAD_UP};
     const CNA_Vector2 left = {1.0f, 0.0f};
     const CNA_Vector2 right = {0.0f, -1.0f};
@@ -336,16 +337,20 @@ static void state_values(CnaDemo* demo)
                 CNA_RESULT_SUCCESS &&
             memcmp(text, ExpectedText, sizeof(ExpectedText) - 1U) == 0 &&
             (unsigned char)text[sizeof(ExpectedText) - 1U] == 0xA5U,
-        "gamepad state text is the exact fixed canonical type name without a terminator");
+        "a connected state's text is XNA's exact {IsConnected:True} without a terminator");
     memset(text, 0xA5, sizeof(text));
     memcpy(before, text, sizeof(text));
     cna_demo_check(
         demo,
         cna_gamepad_state_copy_string(&rest, text, UINT64_C(2), &text_bytes) ==
                 CNA_RESULT_BUFFER_TOO_SMALL &&
-            text_bytes == sizeof(ExpectedText) - 1U && memcmp(text, before, sizeof(text)) == 0 &&
+            text_bytes == sizeof(RestText) - 1U && memcmp(text, before, sizeof(text)) == 0 &&
+            cna_gamepad_state_copy_string(&rest, text, (uint64_t)sizeof(text), &text_bytes) ==
+                CNA_RESULT_SUCCESS &&
+            text_bytes == sizeof(RestText) - 1U &&
+            memcmp(text, RestText, sizeof(RestText) - 1U) == 0 &&
             cna_gamepad_state_get_string_size(0, &text_bytes) == CNA_RESULT_INVALID_ARGUMENT,
-        "the fixed state text is value-independent and short or invalid requests are atomic");
+        "a disconnected state's text is {IsConnected:False}; short or invalid requests are atomic");
 }
 
 static void dead_zones(CnaDemo* demo)

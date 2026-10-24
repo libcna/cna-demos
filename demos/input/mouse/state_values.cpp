@@ -58,8 +58,8 @@ namespace
         ctx.Check(moved != authored && !moved.Equals(authored),
                   "changing an XNA coordinate makes two MouseState values unequal");
         ctx.Check(authored.ToString() ==
-                      "[MouseState X=12, Y=-34, Buttons=Left Right XButton1, Wheel=240]" &&
-                      resting.ToString() == "[MouseState X=0, Y=0, Buttons=None, Wheel=0]",
+                      "{X:12 Y:-34 Buttons:Left Right XButton1 Wheel:240}" &&
+                      resting.ToString() == "{X:0 Y:0 Buttons:None Wheel:0}",
                   "ToString reports coordinates, pressed buttons in stable order and the vertical wheel");
     }
 }

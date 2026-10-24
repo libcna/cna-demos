@@ -187,7 +187,7 @@ static void demonstrate_keyboard_platform(CnaDemo* demo, CNA_Handle game)
 
 static void demonstrate_mouse_values(CnaDemo* demo)
 {
-    static const char expected_text[] = "[MouseState X=12, Y=34, Buttons=Left Right, Wheel=120]";
+    static const char expected_text[] = "{X:12 Y:34 Buttons:Left Right Wheel:120}";
     CNA_MouseState empty;
     CNA_MouseState ordinary;
     CNA_MouseState extended;

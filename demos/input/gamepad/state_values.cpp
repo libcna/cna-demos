@@ -127,8 +127,9 @@ namespace
                       !state.Equals(std::any(state.getButtonsProperty())) &&
                       state.GetHashCode() == same.GetHashCode(),
                   "typed and boxed state equality agree, reject another value type and share a hash");
-        ctx.Check(state.ToString() == "Microsoft.Xna.Framework.Input.GamePadState",
-                  "GamePadState uses XNA's type-name diagnostic string");
+        ctx.Check(state.ToString() == "{IsConnected:True}" &&
+                      GamePadState().ToString() == "{IsConnected:False}",
+                  "GamePadState's diagnostic string is XNA's {IsConnected:...}");
 
         const GamePadButtons buttonsCopy = state.getButtonsProperty();
         const GamePadDPad dPadCopy = state.getDPadProperty();
