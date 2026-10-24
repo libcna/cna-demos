@@ -8,6 +8,7 @@
 #include <optional>
 #include <string_view>
 
+#include "CNA/RendererCapabilityProfile.hpp"
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/Geometry.hpp"
 #include "CnaDemos/PixelChecks.hpp"
@@ -42,11 +43,10 @@ namespace
         void LoadContent() override
         {
             GraphicsDevice& device = getGraphicsDeviceProperty();
-            // CNA documents PbrEffect as an unlit fallback on these renderers, with no capability
-            // query for it (CNA-DEMOS-ISSUE-006).
-            const std::string_view renderer = device.GetGraphicsRendererName();
-            if (renderer == "SOFTWARE" || renderer == "HEADLESS")
-                Context().Skip(std::string(renderer) + " draws PbrEffect as an unlit fallback");
+            // A renderer without PBR shading draws an unlit fallback, and says so
+            // (CNA-DEMOS-ISSUE-006).
+            if (!device.SupportsRendererFeatureEXT(CNA::RendererFeature::PbrEffectShading))
+                Context().Skip(std::string(device.GetGraphicsRendererName()) + " draws PbrEffect as an unlit fallback");
 
             spriteBatch_ = std::make_unique<SpriteBatch>(device);
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
@@ -147,5 +147,5 @@ CNA_DEMOS_GAME(MetallicRoughnessDemo, {
     .frames = 3,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
-    .restrictions = "Skipped on SOFTWARE and HEADLESS, where CNA draws PbrEffect as an unlit fallback.",
+    .restrictions = "Skipped where the renderer reports no RendererFeature::PbrEffectShading (HEADLESS, STUB).",
 })

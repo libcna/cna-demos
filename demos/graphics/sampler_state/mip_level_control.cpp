@@ -152,10 +152,10 @@ namespace
     protected:
         void LoadContent() override
         {
-            // OpenGL ES samplers have no LOD bias (as in FNA3D; CNA docs/sampler-state-support.md),
-            // and CNA offers no capability query for it (CNA-DEMOS-ISSUE-006), so ask for the dialect.
-            if (getGraphicsDeviceProperty().SupportsRendererFeatureEXT(CNA::RendererFeature::ShaderDialectGlslEs))
-                Context().Skip("OpenGL ES renderers cannot apply a sampler LOD bias");
+            // A renderer without a sampler LOD bias (OpenGL ES has none) accepts the state with no
+            // effect, and says so (CNA-DEMOS-ISSUE-006).
+            if (!getGraphicsDeviceProperty().SupportsRendererFeatureEXT(CNA::RendererFeature::SamplerLevelOfDetailBias))
+                Context().Skip("this renderer does not apply a sampler LOD bias");
             MipLevelDemo::LoadContent();
         }
     };
@@ -183,5 +183,6 @@ CNA_DEMOS_GAME(LodBiasDemo, {
     .frames = 3,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
-    .restrictions = "Skipped on OpenGL ES renderers (OPENGLES3, WEBGL2): GL ES sampler state has no LOD bias.",
+    .restrictions = "Skipped where the renderer reports no RendererFeature::SamplerLevelOfDetailBias (the OpenGL ES "
+                    "renderers: GL ES sampler state has no LOD bias).",
 })

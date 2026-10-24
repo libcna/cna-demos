@@ -20,7 +20,6 @@ CNA_DEMOS_STANDALONE({
     .frames = 1,
     .restrictions = "Standalone C program. Draw results are checked through one-pixel RGBA8 readback under an "
                     "explicit HiDef Color/Depth24Stencil8 back buffer; no screenshot or visual inspection is claimed. "
-                    "ISSUE-066: SOFTWARE ignores the direct blend-enable toggle. Built only with CNA_BUILD_C_API=ON.",
-    .knownIssue = "CNA-DEMOS-ISSUE-066",
-    .knownIssueRenderers = {"SOFTWARE"},
+                    "The blend-enable toggle installs non-premultiplied alpha blending on every renderer "
+                    "(CNA-DEMOS-ISSUE-066). Built only with CNA_BUILD_C_API=ON.",
 })

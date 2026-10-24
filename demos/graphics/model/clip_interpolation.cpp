@@ -47,7 +47,8 @@ namespace
             const float linear = X("LinearBox");
             const float cubic = X("CubicBox");
             ctx.Print("x at 0.25 s: STEP {:.4f}, LINEAR {:.4f}, CUBICSPLINE {:.4f}", step, linear, cubic);
-            // (CNA-DEMOS-ISSUE-031: CNA keeps only the keys and plays every sampler as LINEAR.)
+            // CNA's clip keys carry no interpolation mode and play linearly; STEP and CUBICSPLINE
+            // survive as extra keys the importer samples from the source (CNA-DEMOS-ISSUE-031).
             ctx.Check(std::abs(step + 2.0f) < 1e-3f, "STEP holds the first key's value until the next key");
             ctx.Check(std::abs(linear + 1.5f) < 1e-3f, "LINEAR is a quarter of the way: -1.5");
             ctx.Check(std::abs(cubic + 1.6875f) < 0.01f, "CUBICSPLINE with flat tangents eases in: -1.6875");
@@ -59,7 +60,7 @@ namespace
                       "at 1 s, the second key, all three are at x = 0");
 
             // Load the exact same generated source at run time. This distinguishes a lossy compiled
-            // carrier from the shared extraction/player behavior recorded by ISSUE-031.
+            // carrier from the shared extraction/player behavior.
             Model loose = getContentProperty().Load<Model>("models/loose_slide_rig");
             const auto* looseAnimations =
                 dynamic_cast<const ModelAnimationsEXT*>(loose.getTagProperty());
@@ -141,12 +142,11 @@ CNA_DEMOS_GAME(ClipInterpolationDemo, {
     .title = "Animation interpolation (glTF)",
     .description = "Three boxes keyed alike with STEP, LINEAR and CUBICSPLINE glTF samplers, loaded from the "
                    "same generated source through compiled and loose Model carriers: sampling at 0.25 s should "
-                   "produce -2 (held), -1.5 (linear) and -1.6875 (eased).",
+                   "produce -2 (held), -1.5 (linear) and -1.6875 (eased) through both.",
     .apis = {"ApplyClipToBonesEXT", "ModelAnimationsEXT", "AnimationClipEXT", "Model::Tag", "ModelBone::Transform",
              "Model::Bones", "Model::GltfImportReportEXT"},
     .tags = {"model", "gltf", "animation", "interpolation", "cnaext"},
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,
     .assets = {"models/slide_rig.cnb", "models/loose_slide_rig.gltf"},
-    .knownIssue = "CNA-DEMOS-ISSUE-031",
 })

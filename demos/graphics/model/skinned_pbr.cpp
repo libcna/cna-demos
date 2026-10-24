@@ -7,6 +7,7 @@
 #include <string>
 #include <string_view>
 
+#include "CNA/RendererCapabilityProfile.hpp"
 #include "CnaDemos/Demo.hpp"
 #include "CnaDemos/PixelChecks.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
@@ -39,11 +40,11 @@ namespace
         void LoadContent() override
         {
             auto& ctx = Context();
-            // CNA documents PbrEffect and SkinnedPbrEffect as an unlit fallback on these renderers,
-            // with no capability query for it (CNA-DEMOS-ISSUE-006).
-            const std::string_view renderer = getGraphicsDeviceProperty().GetGraphicsRendererName();
-            if (renderer == "SOFTWARE" || renderer == "HEADLESS")
-                ctx.Skip(std::string(renderer) + " draws SkinnedPbrEffect as an unlit fallback");
+            // A renderer without skinned PBR shading draws an unlit fallback, and says so
+            // (CNA-DEMOS-ISSUE-006).
+            GraphicsDevice& device = getGraphicsDeviceProperty();
+            if (!device.SupportsRendererFeatureEXT(CNA::RendererFeature::SkinnedPbrEffectShading))
+                ctx.Skip(std::string(device.GetGraphicsRendererName()) + " draws SkinnedPbrEffect as an unlit fallback");
 
             // content/models/painted_column.gltf: the bending strip's rig and clip on a square column
             // with an orange metallic-roughness material (tools/gltf_models.py).
@@ -194,6 +195,6 @@ CNA_DEMOS_GAME(SkinnedPbrDemo, {
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,
     .assets = {"models/painted_column.cnb"},
-    .restrictions = "Skipped on SOFTWARE and HEADLESS, where CNA draws SkinnedPbrEffect as an unlit "
-                    "fallback.",
+    .restrictions = "Skipped where the renderer reports no RendererFeature::SkinnedPbrEffectShading (HEADLESS, "
+                    "STUB).",
 })

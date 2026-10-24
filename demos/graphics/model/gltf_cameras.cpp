@@ -27,14 +27,24 @@ namespace
         void LoadContent() override
         {
             auto& ctx = Context();
-            // Through the content pipeline the cameras do not survive (CNA-DEMOS-ISSUE-023)...
+            // The same scene through the content pipeline and imported at run time from the .gltf.
             const Model compiled = getContentProperty().Load<Model>("models/camera_rig");
-            ctx.Check(compiled.getCamerasEXTProperty().size() == 3,
-                      "the compiled model keeps the scene's three cameras (CNA-DEMOS-ISSUE-023)");
-            // ...so the rest of the demo uses the same scene imported at run time from the .gltf.
             rig_.emplace(getContentProperty().Load<Model>("models/loose_camera_rig"));
             const std::vector<ModelCameraEXT>& cameras = rig_->getCamerasEXTProperty();
             ctx.Check(cameras.size() == 3, "the run-time import has the scene's three glTF cameras");
+            const std::vector<ModelCameraEXT>& compiledCameras = compiled.getCamerasEXTProperty();
+            bool sameCameras = compiledCameras.size() == cameras.size();
+            for (std::size_t i = 0; sameCameras && i < cameras.size(); ++i)
+            {
+                const ModelCameraEXT& a = compiledCameras[i];
+                const ModelCameraEXT& b = cameras[i];
+                sameCameras = a.Name == b.Name && a.SceneNodeIndex == b.SceneNodeIndex &&
+                              a.IsPerspective == b.IsPerspective && a.Projection == b.Projection &&
+                              a.WorldTransform == b.WorldTransform &&
+                              a.HasAuthoredAspectRatio == b.HasAuthoredAspectRatio &&
+                              a.HasInfiniteFarPlane == b.HasInfiniteFarPlane;
+            }
+            ctx.Check(sameCameras, "the compiled model keeps the same three cameras");
             if (cameras.size() != 3)
             {
                 return;
@@ -157,8 +167,8 @@ CNA_DEMOS_GAME(GltfCamerasDemo, {
     .title = "Cameras from a glTF scene (CNAEXT)",
     .description = "Loads finite, orthographic and infinite glTF cameras, reconstructs the infinite projection, "
                    "then samples a camera-node animation and shows that live placement comes from its Model bone "
-                   "while WorldTransform remains the import snapshot; the finite and top views share the screen "
-                   "(run-time import: compiled models lose cameras, CNA-DEMOS-ISSUE-023).",
+                   "while WorldTransform remains the import snapshot; the finite and top views share the screen. The "
+                   "compiled model carries the same cameras as the run-time import.",
     .apis = {"ModelCameraEXT", "Model::getCamerasEXTProperty", "Model::CopyAbsoluteBoneTransformsTo",
              "CreateInfinitePerspectiveFieldOfViewEXT", "ModelAnimationsEXT", "ApplyClipToBonesEXT",
              "Matrix::Invert", "GraphicsDevice::Viewport", "Model::Draw"},
@@ -167,5 +177,4 @@ CNA_DEMOS_GAME(GltfCamerasDemo, {
     .frames = 3,
     .deterministic = true,
     .assets = {"models/camera_rig.cnb", "models/loose_camera_rig.gltf"},
-    .knownIssue = "CNA-DEMOS-ISSUE-023",
 })
