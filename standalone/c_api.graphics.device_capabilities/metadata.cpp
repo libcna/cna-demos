@@ -29,7 +29,7 @@ CNA_DEMOS_STANDALONE({
     .needs = CnaDemos::Need::CApi,
     .frames = 1,
     .restrictions = "Standalone C program; capability values are renderer and host specific. Display color-space "
-                    "probes restore the original state. ISSUE-067: the public C header exposes only raw ordinals "
-                    "for those spaces. The English report is diagnostic text rather than a machine protocol. No "
+                    "probes restore the original state and use the public CNA_DisplayColorSpace names (ISSUE-067). "
+                    "The English report is diagnostic text rather than a machine protocol. No "
                     "rendering or visual result is claimed. Built only with CNA_BUILD_C_API=ON.",
 })

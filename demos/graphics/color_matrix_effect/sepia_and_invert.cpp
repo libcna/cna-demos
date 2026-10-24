@@ -16,6 +16,7 @@
 #include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
 #include "Microsoft/Xna/Framework/Vector4.hpp"
+#include "System/NotSupportedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
@@ -47,10 +48,19 @@ namespace
             negative_->SetColorMatrix(Negate);
             negative_->SetColorOffset(Vector4(1.0f, 1.0f, 1.0f, 0.0f));  // 1 - colour
 
-            // A fixed CPU transform of the SOFTWARE renderer. CNA documents it as unsupported on GPU
-            // renderers -- which, today, ignore it without an error (CNA-DEMOS-ISSUE-007).
-            if (device.GetGraphicsRendererName() != "SOFTWARE")
-                Context().Skip("ColorMatrixEffect is applied by the SOFTWARE renderer only");
+            // A fixed CPU transform that only some renderers apply; the others refuse it in Begin
+            // rather than drawing the sprites untransformed. A renderer that accepts it is held to
+            // the pixel checks below.
+            try
+            {
+                spriteBatch_->Begin(SpriteSortMode::Deferred, &BlendState::Opaque, &SamplerState::LinearClamp, nullptr,
+                                    nullptr, sepia_.get());
+                spriteBatch_->End();
+            }
+            catch (const System::NotSupportedException&)
+            {
+                Context().Skip("this renderer refuses ColorMatrixEffect (SOFTWARE applies it)");
+            }
         }
 
         void Draw(const GameTime& gameTime) override
@@ -101,6 +111,6 @@ CNA_DEMOS_GAME(SepiaAndInvertDemo, {
     .frames = 3,
     .deterministic = true,
     .assets = {"textures/gradient.png"},
-    .restrictions = "SOFTWARE renderer only (skipped elsewhere); GPU renderers ignore ColorMatrixEffect silently, "
-                    "CNA-DEMOS-ISSUE-007.",
+    .restrictions = "Skipped where the renderer refuses ColorMatrixEffect (NotSupportedException from Begin); today "
+                    "SOFTWARE applies it.",
 })

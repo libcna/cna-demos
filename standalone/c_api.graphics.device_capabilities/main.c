@@ -22,11 +22,8 @@ typedef struct DeviceCapabilityState {
     int loads;
 } DeviceCapabilityState;
 
-/* ISSUE-067: the public C routes accept these native ordinals but define no C identity names. */
-#define DISPLAY_COLOR_SPACE_SRGB UINT32_C(0)
-#define DISPLAY_COLOR_SPACE_SCRGB UINT32_C(1)
-#define DISPLAY_COLOR_SPACE_HDR10 UINT32_C(2)
-#define DISPLAY_COLOR_SPACE_MAXIMUM DISPLAY_COLOR_SPACE_HDR10
+/* The public header names the colour spaces (ISSUE-067); HDR10 is the last defined one. */
+#define DISPLAY_COLOR_SPACE_MAXIMUM CNA_DISPLAY_COLOR_SPACE_HDR10
 
 static int all_bytes_are(const void* data, size_t count, unsigned char value)
 {
@@ -308,7 +305,7 @@ static void audit_execution_and_color_space(
         support_coherent = 0;
         set_coherent = 0;
     }
-    for (space = DISPLAY_COLOR_SPACE_SRGB;
+    for (space = CNA_DISPLAY_COLOR_SPACE_SRGB;
          space <= DISPLAY_COLOR_SPACE_MAXIMUM; ++space) {
         uint32_t after = UINT32_MAX;
         supported[space] = UINT32_C(7);
@@ -328,7 +325,7 @@ static void audit_execution_and_color_space(
         state->demo, support_coherent,
         "all three display-color-space probes are bounded and preserve the active space");
 
-    for (space = DISPLAY_COLOR_SPACE_SRGB;
+    for (space = CNA_DISPLAY_COLOR_SPACE_SRGB;
          space <= DISPLAY_COLOR_SPACE_MAXIMUM; ++space) {
         CNA_Bool changed = UINT32_C(7);
         uint32_t after = UINT32_MAX;
@@ -372,9 +369,9 @@ static void audit_execution_and_color_space(
         "color-space changes follow support, restore the original and atomically refuse identity three");
     printf(
         "  display color space %u; support sRGB/scRGB/HDR10: %u/%u/%u\n",
-        (unsigned)original, (unsigned)supported[DISPLAY_COLOR_SPACE_SRGB],
-        (unsigned)supported[DISPLAY_COLOR_SPACE_SCRGB],
-        (unsigned)supported[DISPLAY_COLOR_SPACE_HDR10]);
+        (unsigned)original, (unsigned)supported[CNA_DISPLAY_COLOR_SPACE_SRGB],
+        (unsigned)supported[CNA_DISPLAY_COLOR_SPACE_SCRGB],
+        (unsigned)supported[CNA_DISPLAY_COLOR_SPACE_HDR10]);
 }
 
 static void audit_report(DeviceCapabilityState* state, CNA_Handle device, const char* renderer_name)

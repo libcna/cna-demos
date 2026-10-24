@@ -20,6 +20,7 @@
 #include "Microsoft/Xna/Framework/Graphics/DynamicVertexBuffer.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectPass.hpp"
 #include "Microsoft/Xna/Framework/Graphics/EffectTechnique.hpp"
+#include "Microsoft/Xna/Framework/Graphics/GraphicsDevice.hpp"
 #include "Microsoft/Xna/Framework/Graphics/IVertexType.hpp"
 #include "Microsoft/Xna/Framework/Graphics/PrimitiveType.hpp"
 #include "Microsoft/Xna/Framework/Graphics/RasterizerState.hpp"
@@ -51,6 +52,21 @@ namespace
     };
     static_assert(std::is_trivially_copyable_v<GlowVertex> && sizeof(GlowVertex) == 20,
                   "a plain 20-byte vertex: 12 + 4 + 4 bytes, no padding");
+
+    // The XNA spelling, with a Color field, is not that stream; the declaration-driven user draws
+    // refuse it at compile time instead of drawing garbage.
+    struct XnaStyleGlowVertex
+    {
+        Vector3 Position;
+        float Glow;
+        Color Tint;
+    };
+    template <typename T>
+    concept DrawableWithDeclaration = requires(GraphicsDevice& device, const T* vertices, const VertexDeclaration& d) {
+        device.DrawUserPrimitives(PrimitiveType::TriangleList, vertices, 0, 1, d);
+    };
+    static_assert(DrawableWithDeclaration<GlowVertex> && !DrawableWithDeclaration<XnaStyleGlowVertex>,
+                  "a vertex holding a CNA Color is refused by DrawUserPrimitives");
 
     struct FormatInventoryVertex
     {
@@ -332,5 +348,6 @@ CNA_DEMOS_GAME(CustomVertexDemo, {
     .needs = CnaDemos::Need::ThreeD,
     .frames = 3,
     .deterministic = true,
-    .restrictions = "CNA-DEMOS-ISSUE-005: CNA's Color is not a 4-byte struct, so the vertex stores its packed value.",
+    .restrictions = "CNA's Color is not a 4-byte struct, so the vertex stores its packed value; a vertex holding a "
+                    "Color is refused at compile time (CNA-DEMOS-ISSUE-005).",
 })
