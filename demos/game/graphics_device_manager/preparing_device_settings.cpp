@@ -116,7 +116,7 @@ namespace
                 differsBy([](PresentationParameters& p) { p.setPresentationIntervalProperty(PresentInterval::Immediate); }) &&
                 differsBy([](PresentationParameters& p) { p.setRenderTargetUsageProperty(RenderTargetUsage::PreserveContents); }) &&
                 differsBy([](PresentationParameters& p) { p.setDeviceWindowHandleProperty(1); }) &&
-                differsBy([](PresentationParameters& p) { p.setIsFullScreenProperty(true); });
+                differsBy([](PresentationParameters& p) { p.setIsFullScreenProperty(!p.getIsFullScreenProperty()); });
             Context().Check(everyPresentationFieldCompared,
                             "all ten XNA presentation fields participate in device-information equality");
 

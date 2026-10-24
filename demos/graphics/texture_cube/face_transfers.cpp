@@ -151,6 +151,7 @@ namespace
             PresentationParameters parameters;
             parameters.setBackBufferWidthProperty(32);
             parameters.setBackBufferHeightProperty(32);
+            parameters.setIsFullScreenProperty(false);
             parameters.setDepthStencilFormatProperty(DepthFormat::None);
             parameters.setPresentationIntervalProperty(PresentInterval::Immediate);
             GraphicsDevice secondary(GraphicsAdapter::getDefaultAdapterProperty(),

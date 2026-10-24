@@ -124,6 +124,7 @@ int main(int argc, char** argv)
         "initialize complete presentation parameters for a device outside any Game");
     initial.back_buffer_width = 320;
     initial.back_buffer_height = 240;
+    initial.is_full_screen = CNA_FALSE;
     initial.depth_stencil_format = CNA_DEPTH_FORMAT_DEPTH24_STENCIL8;
     initial.presentation_interval = CNA_PRESENT_INTERVAL_IMMEDIATE;
 

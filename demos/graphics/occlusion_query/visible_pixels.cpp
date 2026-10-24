@@ -70,6 +70,7 @@ namespace
             PresentationParameters reachParameters;
             reachParameters.setBackBufferWidthProperty(32);
             reachParameters.setBackBufferHeightProperty(32);
+            reachParameters.setIsFullScreenProperty(false);
             reachParameters.setDepthStencilFormatProperty(DepthFormat::None);
             reachParameters.setPresentationIntervalProperty(PresentInterval::Immediate);
             reachDevice_ = std::make_unique<GraphicsDevice>(

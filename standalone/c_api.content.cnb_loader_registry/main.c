@@ -190,6 +190,7 @@ int main(int argc, char** argv)
     }
     presentation.back_buffer_width = INT32_C(64);
     presentation.back_buffer_height = INT32_C(64);
+    presentation.is_full_screen = CNA_FALSE;
     presentation.presentation_interval = CNA_PRESENT_INTERVAL_IMMEDIATE;
     if (!cna_demo_check_result(
             &demo,

@@ -33,11 +33,13 @@ namespace
             const Rectangle bounds = pp.getBoundsProperty();
 
             PresentationParameters defaults;
-            Context().Check(defaults.getBackBufferWidthProperty() == 800 &&
-                                defaults.getBackBufferHeightProperty() == 480 &&
+            Context().Check(defaults.getBackBufferWidthProperty() == 0 &&
+                                defaults.getBackBufferHeightProperty() == 0 &&
+                                defaults.getIsFullScreenProperty() &&
                                 defaults.getBackBufferFormatProperty() == SurfaceFormat::Color &&
                                 defaults.getDeviceWindowHandleProperty() == 0,
-                            "direct construction uses the 800x480 Color defaults with no window handle");
+                            "direct construction uses XNA's defaults: a 0x0 full-screen Color back buffer with no "
+                            "window handle");
 
             Context().Print("BackBufferWidth      {}", pp.getBackBufferWidthProperty());
             Context().Print("BackBufferHeight     {}", pp.getBackBufferHeightProperty());

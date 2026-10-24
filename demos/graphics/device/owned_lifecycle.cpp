@@ -48,6 +48,7 @@ namespace
             PresentationParameters initial;
             initial.setBackBufferWidthProperty(256);
             initial.setBackBufferHeightProperty(144);
+            initial.setIsFullScreenProperty(false);
             initial.setDepthStencilFormatProperty(DepthFormat::None);
             initial.setPresentationIntervalProperty(PresentInterval::Immediate);
 

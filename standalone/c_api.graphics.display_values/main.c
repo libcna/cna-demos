@@ -71,13 +71,13 @@ int main(int argc, char** argv)
             defaults.struct_size == sizeof(defaults) &&
             defaults.struct_version == UINT32_C(1) &&
             defaults.back_buffer_format == CNA_SURFACE_FORMAT_COLOR &&
-            defaults.back_buffer_width == 800 && defaults.back_buffer_height == 480 &&
+            defaults.back_buffer_width == 0 && defaults.back_buffer_height == 0 &&
             defaults.depth_stencil_format == CNA_DEPTH_FORMAT_NONE &&
             defaults.multi_sample_count == 0 &&
             defaults.presentation_interval == CNA_PRESENT_INTERVAL_DEFAULT &&
             defaults.display_orientation == CNA_DISPLAY_ORIENTATION_DEFAULT &&
             defaults.render_target_usage == CNA_RENDER_TARGET_USAGE_DISCARD_CONTENTS &&
-            defaults.is_full_screen == CNA_FALSE && defaults.headless_ext == CNA_FALSE &&
+            defaults.is_full_screen == CNA_TRUE && defaults.headless_ext == CNA_FALSE &&
             defaults.reserved[0] == 0U && defaults.reserved[1] == 0U,
         "PresentationParameters initializes the complete XNA-compatible default value");
 
