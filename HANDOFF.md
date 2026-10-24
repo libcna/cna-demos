@@ -9,7 +9,13 @@ resolved on the owner's decisions (CNA `51fb39d5a` and `c7f6c68e5`):
 `c_api.graphics.render_target_bindings` and `graphics.render_target.multisampling` pass on SDL_GPU.
 DC-R3, found in that SDL_GPU sweep, is fixed too: `c_api.graphics.shader_effect_state` supplies a
 SPIR-V pair for SDL_GPU (`77444d7`), which CNA `9ef292993` now accepts.
-No demo carries a `knownIssue` marker any more. Since the published `92ee315` this repository has
+No demo carries a `knownIssue` marker any more. The 2026-10-24 consumer intake (CNA root
+`handoff.md`, museum findings) corrected demos that pinned FNA behaviour XNA does not have: the
+MouseState/GamePadState text (`f2fb348`), the first PipelineComponentScanner.Update answer
+(`34b6dbf`) and PresentationParameters' 800x480 windowed default (`8855ae3`, now XNA's 0x0 full
+screen). Its checkpoint: sweeps SOFTWARE 670/1/45/3 and OPENGLES3 708/1/7/3 (the one failure the
+corrected equality check, then passing), serial CTest 687/45/0/3; reports
+`build/linux-full/reports/repair-museum-closure-*`. Since the published `92ee315` this repository has
 local, unpushed commits for batches 3-9; the batch 9 closure is CNA `6c8b042c4`. Each closure only
 added checks, removed a marker after the same scenario passed, or corrected a check that pinned a
 defect or an old identity to the repaired one; no original assertion was weakened. The PBR demos
