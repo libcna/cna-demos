@@ -4,7 +4,11 @@ CNA root `handoff.md` is the current continuation point; read it first. This fil
 summarises the demos side.
 
 Inventory: all 156 historical IDs have a final disposition (119 FIXED_VALIDATED; three, 003, 101
-and 152, await native Windows validation). DC-R1 and DC-R2 (SDL_GPU) remain open outside the count.
+and 152, await native Windows validation). DC-R1 and DC-R2 (SDL_GPU), outside the count, are
+resolved on the owner's decisions (CNA `51fb39d5a` and `c7f6c68e5`):
+`c_api.graphics.render_target_bindings` and `graphics.render_target.multisampling` pass on SDL_GPU.
+DC-R3, found in that SDL_GPU sweep, is fixed too: `c_api.graphics.shader_effect_state` supplies a
+SPIR-V pair for SDL_GPU (`77444d7`), which CNA `9ef292993` now accepts.
 No demo carries a `knownIssue` marker any more. Since the published `92ee315` this repository has
 local, unpushed commits for batches 3-9; the batch 9 closure is CNA `6c8b042c4`. Each closure only
 added checks, removed a marker after the same scenario passed, or corrected a check that pinned a

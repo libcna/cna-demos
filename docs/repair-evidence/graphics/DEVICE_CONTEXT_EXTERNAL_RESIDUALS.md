@@ -1,5 +1,17 @@
 # Additional renderer findings from the ISSUE-086/112 regression
 
+**Resolved 2026-10-24 on the owner's decisions.** DC-R1: CNA `51fb39d5a` binds RenderTargetCube
+faces in any slot of an SDL_GPU target set; `c_api.graphics.render_target_bindings` passes its 25
+checks on SDL_GPU, and CNA's `cube_mrt_binding` conformance passes M1-M4 there. DC-R2: CNA
+`c7f6c68e5` makes SDL_GPU apply a mask keeping every sample or none exactly (a no-sample draw is
+dropped, which writes nothing) and refuse every other mask, and `RendererFeature::MultiSampleMask`
+reports Restricted there; `graphics.render_target.multisampling` passes on SDL_GPU. Arbitrary
+masks remain impossible on SDL 3.5 and are refused, not emulated. DC-R3, found in that SDL_GPU
+sweep: `c_api.graphics.shader_effect_state` created its effect from a GLSL placeholder under
+SDL_GPU's SPIR-V dialect; this repository's `77444d7` supplies a compiled SPIR-V pair, and CNA
+`9ef292993` stops `cna_shader_effect_create` refusing SPIR-V modules as non-UTF-8 text. The text
+below is the original DC-R1/DC-R2 triage, kept as written.
+
 These findings remain **open for contract/coverage triage**. They are not passes,
 new expected failures, or changes to the historical156-ID inventory. They must be
 disposed of before final campaign closure. No demo assertions/metadata changed.
