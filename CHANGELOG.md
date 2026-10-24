@@ -6,6 +6,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 ## [Unreleased]
 
 ### Validation
+- Updated CI's CNA/sharp-runtime pins to the published final-audit pair (`ba707082e`/`f990d074`),
+  so the windowless build sees the renderer-feature API and XmlSerializer support used by HEAD.
 - Completed the final handoff audit against CNA `ba707082e`: normalized ISSUE-152's structured
   native-Windows validation status, passed all 732 enabled CTests, and reproduced the complete
   719-ID zero-failure sweeps (SOFTWARE 671/0/45/3, OPENGLES3 709/0/7/3). Refreshed generated

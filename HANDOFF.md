@@ -3172,9 +3172,9 @@ changes, remove known-issue markers when upstream defects are fixed, and expand 
 manual or visual-reference evidence only when the environment can observe it honestly.
 `cna-examples` remains deliberately outside this completed campaign.
 
-Since 2026-10-17 cna-demos is validated against CNA `6ee757c2a` (CNA `next`, C ABI 0.49.0, renamed
-renderer classifications with no old-name aliases) and sharp-runtime `f2aecfef`; CI pins exactly
-these (section 11). It no longer builds against `d23e139de` or CNA 0.1.0. Section 7 has the result.
+Since 2026-10-24 cna-demos is validated against CNA `ba707082e` (CNA `next`, C ABI 0.50.0) and
+sharp-runtime `f990d074`; CI pins exactly these (section 11). This pair includes the renderer
+feature queries used by the final demos and the XmlSerializer property-member support CNA needs.
 
 ## 3. Architecture in 10 lines
 
@@ -6650,8 +6650,8 @@ cna-demos needs a newer CNA than cna-template's 0.1.0 lock.
 
 | Repo | Version | Commit |
 |---|---|---|
-| cna | next (C ABI 0.49.0) | 6ee757c2a16c1bbd873df717c94b3257ae6b50ed |
-| sharp-runtime | next | f2aecfefeac171b331787e5cdc4849507363ef0e |
+| cna | next (C ABI 0.50.0) | ba707082eb935809c0fd9479c0e0c9c2d42cfcce |
+| sharp-runtime | next | f990d0741534664dc7d879fcf6c43bc5db83acc5 |
 | easy-gl | 0.1.1 | f4d6afaf16cdc7e7e73130950bc45e6d865b41bd |
 | meta-gl | 0.4.1 | dd3b30055d55fdc42240de7af248259338256992 |
 

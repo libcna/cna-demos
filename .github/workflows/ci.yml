@@ -11,9 +11,9 @@ on:
 env:
   # The exact CNA and sharp-runtime commits cna-demos is built and tested against
   # (HANDOFF.md "Dependencies"). cna-demos needs CNA newer than 0.1.0: IPlatform::Supports and
-  # the renderer classification names of C ABI 0.49.0.
-  CNA_REF: 6ee757c2a16c1bbd873df717c94b3257ae6b50ed             # CNA next
-  SHARP_RUNTIME_REF: f2aecfefeac171b331787e5cdc4849507363ef0e   # sharp-runtime next
+  # the renderer capability features of C ABI 0.50.0.
+  CNA_REF: ba707082eb935809c0fd9479c0e0c9c2d42cfcce             # CNA next
+  SHARP_RUNTIME_REF: f990d0741534664dc7d879fcf6c43bc5db83acc5   # sharp-runtime next
 
 jobs:
   windowless:
