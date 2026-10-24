@@ -15,8 +15,9 @@ MouseState/GamePadState text (`f2fb348`), the first PipelineComponentScanner.Upd
 (`34b6dbf`) and PresentationParameters' 800x480 windowed default (`8855ae3`, now XNA's 0x0 full
 screen). Its checkpoint: sweeps SOFTWARE 670/1/45/3 and OPENGLES3 708/1/7/3 (the one failure the
 corrected equality check, then passing), serial CTest 687/45/0/3; reports
-`build/linux-full/reports/repair-museum-closure-*`. Since the published `92ee315` this repository has
-local, unpushed commits for batches 3-9; the batch 9 closure is CNA `6c8b042c4`. Each closure only
+`build/linux-full/reports/repair-museum-closure-*`. The commits of batches 3-9 and the
+consumer intake, unpushed after `92ee315`, were published on 2026-10-24 through `dd0f284` (CNA
+first); the batch 9 closure is CNA `6c8b042c4`. Each closure only
 added checks, removed a marker after the same scenario passed, or corrected a check that pinned a
 defect or an old identity to the repaired one; no original assertion was weakened. The PBR demos
 now ask RendererFeature::PbrEffectShading instead of skipping SOFTWARE, and pass there. The latest
