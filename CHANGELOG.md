@@ -23,6 +23,11 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   against the current cna-demos catalog.
 
 ### Validation
+- Established the 730-demo migration checkpoint against CNA `9d49828f4`: the warning-free build
+  validates 730/0 metadata and the live 248/248 ledger, all 735 enabled CTests pass with eleven
+  manual tests disabled, and complete sweeps are SOFTWARE 674/0/45/11 and OPENGLES3 712/0/7/11.
+  All six exact visual references have zero differing pixels. Comparison with the 719-demo
+  baseline preserves every existing status and failed-assertion message/multiplicity.
 - Run the windowless CI test and smoke suites under private Xvfb so the SOFTWARE renderer remains
   GPU-independent while platform screen-saver integration has the display service it requires.
 - Updated CI's CNA/sharp-runtime pins to the published final-audit pair (`ba707082e`/`f990d074`),

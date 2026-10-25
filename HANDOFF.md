@@ -15,7 +15,16 @@ key and clean up camera/sensor subscriptions, tray state, mouse capture and devi
 pre-change baseline against CNA `9d49828f4` is archived under
 `build/linux-full/reports/migration-baseline/`: catalog 719/0, all 732 enabled CTests passed,
 SOFTWARE 671/0/45/3, OPENGLES3 709/0/7/3 and six exact visual references had zero differing
-pixels. A final complete 730-ID validation is the remaining checkpoint for this handoff section.
+pixels.
+
+Final checkpoint at `2f5adb6` against CNA `9d49828f4`: warning-free build, catalog 730/0, live
+legacy audit 248/248, and all 735 enabled CTests pass in 359.43 seconds; eleven manual tests are
+disabled. Complete sweeps are SOFTWARE 674/0/45/11 and OPENGLES3 712/0/7/11. Six exact visual
+references have zero differing pixels. Baseline comparison preserves every pre-existing status
+and failed-assertion message/multiplicity; only the eleven new IDs and reviewed added checks differ.
+Evidence is archived under `build/linux-full/reports/migration-final/`. Hardware/manual workflows
+were not claimed as exercised without their devices and human interaction; this checkpoint covers
+Linux SOFTWARE and OPENGLES3, not Windows/macOS/Android, OPENGL33 or SDL_GPU.
 
 # Current handoff — 2026-10-24 (final audit)
 

@@ -49,3 +49,17 @@ Unaccounted screens: **0**.
 Run `tools/cna_examples_migration_audit.py --legacy-root ../cna-examples --exe build/linux-full/bin/cna-demos` to re-enumerate the live legacy checkout, verify all source hashes and validate every destination ID. Full build, CTest, renderer-sweep and exact-visual results are recorded in `HANDOFF.md` after the final run.
 
 No legacy application architecture, source file or asset was copied from cna-examples. The ledger derives titles/descriptions and source facts from that MIT-licensed checkout. New demos are fresh Ms-PL implementations. One real external MonoGame LZX fixture was imported from CNA's Ms-PL test corpus with exact provenance and SHA-256 in `assets/xnb/monogame/PROVENANCE.json`.
+
+## Final validation
+
+The warning-free Linux build validates 730/0 catalog entries. All 735 enabled CTests pass; the
+eleven manual tests are disabled. Complete renderer sweeps are SOFTWARE 674 passed / 0 failed / 45
+skipped / 11 not run and OPENGLES3 712 / 0 / 7 / 11. All six approved visual references match
+with zero differing pixels. Comparison with the 719-demo pre-migration baseline confirms every
+existing status and failed-assertion message/multiplicity is unchanged; only the eleven new IDs
+and reviewed additional checks appear.
+
+Real cameras, sensors, controllers and desktop host effects were not claimed as hardware-validated
+without those devices and human interaction. Windows, macOS, Android, OPENGL33 and SDL_GPU were not
+part of this Linux SOFTWARE/OPENGLES3 checkpoint. The manual demos retain explicit activation,
+unsupported-platform handling and cleanup for those environments.
