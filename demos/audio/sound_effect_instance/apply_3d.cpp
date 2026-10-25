@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // Positional sound: AudioListener and AudioEmitter with SoundEffectInstance::Apply3D.
+#include <array>
 #include <chrono>
 #include <limits>
 #include <thread>
@@ -156,6 +157,28 @@ namespace
         }
         voice.Stop();
 
+        // Position controls attenuation and pan; velocity controls Doppler pitch. Play three
+        // short phases from the same position so a person can compare approaching, stationary
+        // and receding motion. The derived pitch lives in the mixer -- Pitch remains the
+        // authored property -- so this is honestly classified as an acoustic/manual check.
+        emitter.setPositionProperty(Vector3(0.0f, 0.0f, -15.0f));
+        const std::array velocities = {
+            Vector3(0.0f, 0.0f, 45.0f), Vector3::Zero, Vector3(0.0f, 0.0f, -45.0f)};
+        const std::array phaseNames = {"approaching", "stationary", "receding"};
+        for (std::size_t phase = 0; phase < velocities.size(); ++phase)
+        {
+            emitter.setVelocityProperty(velocities[phase]);
+            voice.Apply3D(listener, emitter);
+            voice.Play();
+            ctx.Print("Doppler phase: {} (emitter velocity {})", phaseNames[phase],
+                      emitter.getVelocityProperty().ToString());
+            std::this_thread::sleep_for(std::chrono::milliseconds(300));
+            voice.Stop();
+        }
+        ctx.Check(emitter.getVelocityProperty() == velocities.back(),
+                  "AudioEmitter retains the authored receding velocity used by the final Doppler phase");
+        emitter.setVelocityProperty(Vector3::Zero);
+
         // How world units map to audio: DistanceScale for attenuation, DopplerScale and SpeedOfSound
         // for the pitch shift of moving emitters.
         ctx.Print("DistanceScale {}, DopplerScale {}, SpeedOfSound {}", SoundEffect::getDistanceScaleProperty(),
@@ -213,15 +236,17 @@ CNA_DEMOS_CONSOLE(Apply3DDemo, {
     .id = "audio.sound_effect_instance.apply_3d",
     .title = "Positional (3D) sound",
     .description = "Moves an AudioEmitter across listeners, checks Apply3D overload/refusal and paused Pan/3D mode "
-                   "behavior, then exercises spatial-scale ranges while restoring every process-global value.",
+                   "behavior, plays approaching/stationary/receding velocity phases for an audible Doppler "
+                   "comparison, then restores every process-global spatial value.",
     .apis = {"SoundEffectInstance::Apply3D", "AudioListener::AudioListener", "AudioListener::Position",
              "AudioListener::Forward", "AudioListener::Up", "AudioListener::Velocity", "AudioEmitter::AudioEmitter",
-             "AudioEmitter::Position", "AudioEmitter::Up", "SoundEffect::DistanceScale",
+             "AudioEmitter::Position", "AudioEmitter::Velocity", "AudioEmitter::Up", "SoundEffect::DistanceScale",
              "SoundEffect::DopplerScale", "SoundEffect::SpeedOfSound",
              "SoundEffect::CreateInstance", "SoundEffectInstance::Play", "SoundEffectInstance::Pan",
              "SoundEffectInstance::Pause", "SoundEffectInstance::Stop", "SoundEffectInstance::State"},
-    .tags = {"audio", "3d", "positional", "pan"},
+    .tags = {"audio", "3d", "positional", "pan", "doppler", "velocity"},
     .automation = CnaDemos::Automation::SmokeOnly,
     .needs = CnaDemos::Need::Audio,
     .assets = {"sounds/tone_440.wav"},
+    .restrictions = "Automation checks state and ranges; comparing the three Doppler phases requires audible output.",
 })

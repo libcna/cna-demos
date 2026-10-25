@@ -15,6 +15,7 @@
 #include "Microsoft/Xna/Framework/Graphics/RenderTarget2D.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
+#include "Microsoft/Xna/Framework/Graphics/Viewport.hpp"
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
 #include "System/InvalidOperationException.hpp"
 
@@ -35,6 +36,7 @@ namespace
             CheckMoveIdentity(device);
             CheckBoundDestruction(device);
             CheckCrossDeviceMove(device);
+            CheckViewportAndScissorReset(device);
 
             // A 128x128 off-screen colour buffer. RenderTarget2D derives from Texture2D, so once
             // rendered it can be drawn like any texture.
@@ -250,6 +252,28 @@ namespace
                             "the cross-device moved target remains writable after unbinding");
         }
 
+        void CheckViewportAndScissorReset(GraphicsDevice& device)
+        {
+            const auto& parameters = device.getPresentationParametersProperty();
+            const Rectangle backBufferBounds(0, 0, parameters.getBackBufferWidthProperty(),
+                                             parameters.getBackBufferHeightProperty());
+            RenderTarget2D small(device, 31, 17);
+
+            device.setViewportProperty(Viewport(3, 4, 11, 9));
+            device.setScissorRectangleProperty(Rectangle(5, 6, 7, 8));
+            device.SetRenderTarget(&small);
+            Context().Check(device.getViewportProperty().getBoundsProperty() == Rectangle(0, 0, 31, 17) &&
+                                device.getScissorRectangleProperty() == Rectangle(0, 0, 31, 17),
+                            "binding a render target resets viewport and scissor to its complete bounds");
+
+            device.setViewportProperty(Viewport(2, 3, 13, 10));
+            device.setScissorRectangleProperty(Rectangle(4, 5, 9, 6));
+            device.SetRenderTarget(static_cast<RenderTarget2D*>(nullptr));
+            Context().Check(device.getViewportProperty().getBoundsProperty() == backBufferBounds &&
+                                device.getScissorRectangleProperty() == backBufferBounds,
+                            "returning to the back buffer resets viewport and scissor to the back-buffer bounds");
+        }
+
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::unique_ptr<RenderTarget2D> target_;
         Texture2D arrow_;
@@ -264,12 +288,11 @@ namespace
 CNA_DEMOS_GAME(RenderTarget2DDemo, {
     .id = "graphics.render_target.render_target2d",
     .title = "Render to a texture",
-    .description = "Checks bound-target move, cross-device ownership and destruction identity, draws a sprite "
-                   "into a RenderTarget2D, then draws the target as an ordinary texture at several sizes and "
-                   "with a tint.",
+    .description = "Checks bound-target move, cross-device ownership, destruction identity and the viewport/scissor "
+                   "reset on target switches, then draws into a RenderTarget2D and samples it as an ordinary texture.",
     .apis = {"RenderTarget2D::RenderTarget2D", "RenderTarget2D::ContentLost", "RenderTarget2D::IsContentLost",
              "GraphicsDevice::SetRenderTarget", "GraphicsDevice::GetRenderTargets", "GraphicsDevice::Present",
-             "GraphicsResource::Dispose",
+             "GraphicsDevice::Viewport", "GraphicsDevice::ScissorRectangle", "GraphicsResource::Dispose",
              "GraphicsResource::IsDisposed"},
     .tags = {"offscreen", "render-to-texture"},
     .frames = 10,

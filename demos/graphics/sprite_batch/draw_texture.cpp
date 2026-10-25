@@ -39,7 +39,11 @@ namespace
             getGraphicsDeviceProperty().Clear(Color::CornflowerBlue);
 
             spriteBatch_->Begin();
+            // The XNA overload takes a Vector2 position.
             spriteBatch_->Draw(*texture_, Vector2(100.0f, 80.0f), Color::White);
+            // CNA also provides the convenient NOXNA float x/y form; it produces the same
+            // placement semantics without constructing a Vector2 at the call site.
+            spriteBatch_->Draw(*texture_, 100.0f, 80.0f);
             spriteBatch_->End();
 
             Game::Draw(gameTime);
@@ -54,9 +58,11 @@ namespace
 CNA_DEMOS_GAME(DrawTextureDemo, {
     .id = "graphics.sprite_batch.draw_texture",
     .title = "Draw a texture",
-    .description = "Draws a Texture2D at a pixel position between SpriteBatch::Begin and SpriteBatch::End.",
-    .apis = {"SpriteBatch::SpriteBatch", "SpriteBatch::Begin", "SpriteBatch::Draw", "SpriteBatch::End"},
-    .tags = {"sprite", "2d"},
+    .description = "Draws a Texture2D at the same pixel position with both the XNA Vector2 overload and CNA's float "
+                   "x/y overload between SpriteBatch::Begin and SpriteBatch::End.",
+    .apis = {"SpriteBatch::SpriteBatch", "SpriteBatch::Begin", "SpriteBatch::Draw",
+             "SpriteBatch::Draw(float,float)", "SpriteBatch::End"},
+    .tags = {"sprite", "2d", "position", "overload"},
     .frames = 10,
     .deterministic = true,
 })

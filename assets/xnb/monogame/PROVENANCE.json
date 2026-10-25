@@ -1,0 +1,21 @@
+{
+  "file": "Explosion.xnb",
+  "sha256": "713d5a0136b685d928933f945edc687a4c677f293ebdf2d4302b3a3bfeb77a1c",
+  "producer": "MonoGame content pipeline (mgcb)",
+  "upstream": "https://github.com/MonoGame/MonoGame",
+  "upstreamPath": "Tests/Interactive/MacOS/SoundTest/Content/Explosion.xnb",
+  "sourceCheckout": "../cna/tests/assets/xnb/monogame/windows/lzx/Explosion.xnb",
+  "sourceCommit": "7e944f025139918a3188559b91fab59c7cbbe1ea",
+  "license": "Microsoft Public License (Ms-PL)",
+  "purpose": "Real externally produced LZX-compressed XNB interoperability fixture",
+  "expected": {
+    "platform": "Windows",
+    "version": 5,
+    "compression": "LZX",
+    "rootReader": "Microsoft.Xna.Framework.Content.Texture2DReader",
+    "width": 64,
+    "height": 64,
+    "surfaceFormat": "Color",
+    "mipLevels": 1
+  }
+}
