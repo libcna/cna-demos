@@ -13006,3 +13006,13 @@ This restores a complete current-source checkpoint. The stale-summary audit foun
 caller-facing gap; all remaining limits retain their explicit platform, renderer, hardware,
 service, manual, stress/fuzz, generated/CLR, forwarding/reflection, test-only or implementation-
 plumbing dispositions.
+
+## cna-examples retirement migration
+
+The legacy catalog is now source-enumerated and fully dispositioned: 13 areas, 79 categories and
+248/248 registered screens, with zero unaccounted. The migration added eleven stable IDs (three
+automated recipes and eight opt-in manual host/device workflows), extended eleven existing IDs,
+and deliberately did not import the legacy browser architecture. The JSON ledger records each
+screen's source hash, public APIs, interaction/lifecycle facts, semantic destination evidence,
+decision and limitations; `tools/cna_examples_migration_audit.py` validates it against both live
+repositories. See `CNA_EXAMPLES_MIGRATION.md` for the concise result.

@@ -41,6 +41,13 @@ fi
 echo "== validate"
 "$bin" --validate | tail -1
 
+echo "== cna-examples migration ledger"
+migration_args=(--exe "$bin")
+if [[ -d "$root/../cna-examples/src" ]]; then
+    migration_args+=(--legacy-root "$root/../cna-examples")
+fi
+python3 "$root/tools/cna_examples_migration_audit.py" "${migration_args[@]}"
+
 echo "== ctest"
 if ! ctest --test-dir "$build" -j"$jobs" --output-on-failure > "$reports/ctest.log" 2>&1; then
     cat "$reports/ctest.log"

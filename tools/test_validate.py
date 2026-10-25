@@ -69,6 +69,10 @@ if stage == "smoke":
                 path.chmod(0o755)
             (root / "tools/coverage_report.py").write_text(
                 'import os\nwith open(os.environ["TRACE"], "a") as f: f.write("coverage\\n")\n')
+            (root / "tools/cna_examples_migration_audit.py").write_text(
+                'import os, sys\n'
+                'with open(os.environ["TRACE"], "a") as f: f.write("audit\\n")\n'
+                'sys.exit(9 if os.environ["FAILURE"] == "audit" else 0)\n')
             (root / "tools/test_visual_regression.py").write_text(
                 'import os, sys\n'
                 'with open(os.environ["TRACE"], "a") as f: f.write("visual-unit\\n")\n'
@@ -105,12 +109,12 @@ if stage == "smoke":
     def test_success_reaches_coverage(self):
         result, stages = self.run_validation()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertEqual(stages, ["cmake", "validate", "ctest", "smoke", "coverage"])
+        self.assertEqual(stages, ["cmake", "validate", "audit", "ctest", "smoke", "coverage"])
 
     def test_xvfb_overrides_an_inherited_wayland_driver(self):
         result, stages = self.run_validation(with_gl=True)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertEqual(stages, ["cmake", "validate", "ctest", "smoke", "renderers",
+        self.assertEqual(stages, ["cmake", "validate", "audit", "ctest", "smoke", "renderers",
                                   "xvfb-run", "smoke", "coverage"])
 
     def test_smoke_preserves_separate_streams(self):
@@ -121,7 +125,7 @@ if stage == "smoke":
     def test_visual_regression_stage_uses_private_x11(self):
         result, stages = self.run_validation(with_gl=True, with_visual=True)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertEqual(stages, ["cmake", "validate", "ctest", "smoke", "renderers",
+        self.assertEqual(stages, ["cmake", "validate", "audit", "ctest", "smoke", "renderers",
                                   "xvfb-run", "smoke", "coverage", "visual-unit",
                                   "xvfb-run", "visual"])
 
@@ -131,7 +135,7 @@ if stage == "smoke":
         self.assertEqual(stages[-3:], ["coverage", "visual-unit", "visual"])
 
     def test_failure_stops_at_each_stage(self):
-        order = ["cmake", "validate", "ctest", "smoke"]
+        order = ["cmake", "validate", "audit", "ctest", "smoke"]
         for index, stage in enumerate(order):
             with self.subTest(stage=stage):
                 result, stages = self.run_validation(failure=stage)

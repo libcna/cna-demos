@@ -297,13 +297,14 @@ namespace
 CNA_DEMOS_GAME(RenderTargetCubeDemo, {
     .id = "graphics.render_target.render_target_cube",
     .title = "Rendering into a cube map",
-    .description = "Checks bound-face disposal, renders the scene six times a frame into a RenderTargetCube, then "
-                   "draws a mirror sphere whose EnvironmentMapEffect samples the dynamic environment map.",
+    .description = "Checks bound-face disposal and exact rendered-face readback, renders the scene six times a frame "
+                   "into a RenderTargetCube, then samples it through a mirror sphere's EnvironmentMapEffect.",
     .apis = {"RenderTargetCube::RenderTargetCube", "RenderTargetBinding::RenderTargetBinding",
              "RenderTargetBinding::CubeMapFace", "GraphicsDevice::SetRenderTarget",
              "GraphicsDevice::GetRenderTargets", "GraphicsResource::Dispose",
              "GraphicsResource::IsDisposed", "CubeMapFace",
              "RenderTargetCube::ContentLost", "RenderTargetCube::IsContentLost",
+             "RenderTargetCube::GetData",
              "RenderTargetCube::DepthStencilFormat", "RenderTargetCube::MultiSampleCount",
              "RenderTargetCube::RenderTargetUsage",
              "EnvironmentMapEffect::EnvironmentMap", "Matrix::CreatePerspectiveFieldOfView"},

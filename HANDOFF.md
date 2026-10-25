@@ -1,3 +1,22 @@
+# Current handoff — 2026-10-25 (cna-examples retirement migration)
+
+The source-level migration audit accounts for all 13 areas, 79 categories and 248/248 registered
+`cna-examples` screens with zero unaccounted. The generated ledger is
+`docs/CNA_EXAMPLES_MIGRATION.json`; its concise summary is the adjacent Markdown file. The live
+validator checks legacy source hashes, catalog structure, all required evidence and every current
+destination ID. Final dispositions are 183 `ALREADY_COVERED`, 39 `COVERED_BY_MULTIPLE`, ten
+`EXTEND_EXISTING`, eleven `MANUAL_INTEGRATION`, three `MIGRATE_NEW`, one `OBSOLETE` and one
+`INTENTIONALLY_NOT_MIGRATED`.
+
+Commits `c64dad3`, `3b8f58d` and `7f950f0` add the justified input, graphics/media and opt-in host
+integration work. The suite now has 730 valid IDs. Eleven existing IDs were extended; the eleven
+new stable IDs are listed in `docs/CNA_EXAMPLES_MIGRATION.md`. Manual effects require an explicit
+key and clean up camera/sensor subscriptions, tray state, mouse capture and device state. The
+pre-change baseline against CNA `9d49828f4` is archived under
+`build/linux-full/reports/migration-baseline/`: catalog 719/0, all 732 enabled CTests passed,
+SOFTWARE 671/0/45/3, OPENGLES3 709/0/7/3 and six exact visual references had zero differing
+pixels. A final complete 730-ID validation is the remaining checkpoint for this handoff section.
+
 # Current handoff — 2026-10-24 (final audit)
 
 CNA root `handoff.md` is the current continuation point; read it first. This file's top only

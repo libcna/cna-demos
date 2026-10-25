@@ -5,6 +5,23 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
 
 ## [Unreleased]
 
+### Added
+- Completed the source-level `cna-examples` retirement migration: all 248 registered screens in
+  13 areas and 79 categories have machine-readable behavioral evidence, a final disposition and
+  validated destination IDs, with zero unaccounted screens.
+- Added focused typematic-repeat, render-target fade-transition and current Opus playback-behavior
+  demos, plus eight opt-in manual workflows for a real camera, native dialogs, URL launching,
+  system tray, live host sensors, global mouse position/warp and mouse capture.
+- Added an attributed external MonoGame LZX fixture from CNA's Ms-PL test corpus so the existing
+  XNB interoperability demo verifies a real independently produced compressed asset.
+
+### Changed
+- Extended eleven existing input, audio, texture, SpriteBatch and render-target demos to preserve
+  useful legacy behaviors without duplicating already equivalent CNA demonstrations.
+- Integrated the 248-screen audit validator into `tools/validate.sh`; it checks the live legacy
+  inventory and source hashes when the sibling checkout is present, as well as every destination
+  against the current cna-demos catalog.
+
 ### Validation
 - Run the windowless CI test and smoke suites under private Xvfb so the SOFTWARE renderer remains
   GPU-independent while platform screen-saver integration has the display service it requires.

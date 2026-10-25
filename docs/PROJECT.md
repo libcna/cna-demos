@@ -35,13 +35,20 @@ The same demo serves several purposes at once:
 | **CNA unit tests** (`CnaTests`, GoogleTest, inside CNA) | prove every member behaves per the XNA spec | one assertion per behaviour, no user-facing program | CNA maintainers |
 | **CNA integration/regression tests** (pixel oracles, renderer contract tests) | prove renderers agree with references | scenes engineered for comparison | CNA maintainers |
 | **cna-samples** (114 ports of the XNA Game Studio samples) | show complete techniques and small games | one sample = many features | game developers learning techniques |
-| **cna-examples** (one catalog app, ~250 screens) | an interactive tour of CNA features | screens inside one shared app framework | people exploring CNA |
+| **cna-examples** (legacy catalog, 248 screens) | an interactive tour of CNA features | screens inside one shared app framework | people exploring CNA |
 | **cna-template** | a starting point for a new game | one game skeleton | new projects |
 | **CNA Demos** | executable documentation, one concept per program | **one concept, one ID, one file** | developers looking up a capability; CI; CNA maintainers checking coverage |
 
 A demo is not a test: it is written to be *read*, and its checks verify only what it shows. A
 demo is not a sample: it deliberately avoids combining features. Where a sample demonstrates a
 technique built from many APIs, a demo isolates one of those APIs.
+
+The legacy `cna-examples` catalog has been audited at source level rather than replaced by name
+matching. All 248 registered screens have a machine-readable disposition and semantic destination
+evidence in `CNA_EXAMPLES_MIGRATION.json`; the concise counts and stable IDs are in
+`CNA_EXAMPLES_MIGRATION.md`. Useful complete recipes and real host/device workflows remain focused
+independent demos, while the legacy browser, shared screen framework and redundant assets were not
+imported.
 
 ## Principles
 
