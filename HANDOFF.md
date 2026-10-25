@@ -5,6 +5,8 @@ This closure started from clean `cna-demos` `develop` commit
 `e87d32f92910ebd1adeccf6d4c6e3c94b4fafc00`, and clean read-only `cna-examples`
 `develop` commit `ede347336dba86c0bf3332f676e7a473e8b8f0e7`. The destination remains
 `cna-demos/develop`; no branch was switched, and neither dependency repository was modified.
+The implementation and generated ledger are commit `cc32234` (`demos: close cna-examples
+retirement gaps`); the following documentation-only commit records that immutable checkpoint.
 
 The six independent-audit findings are closed. `audio.microphone.input_level` now requires an
 attended fresh key before capture, retains and removes its `BufferReady` token, prevents callbacks
