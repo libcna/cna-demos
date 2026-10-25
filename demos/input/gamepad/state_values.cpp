@@ -83,6 +83,14 @@ namespace
                       physicalDPad.getRightProperty() == ButtonState::Pressed,
                   "all fifteen physical button flags reach IsButtonDown and their component properties");
 
+        const GamePadButtons fromArray = GamePadButtons::FromButtonArray(
+            {Buttons::A, Buttons::LeftShoulder, Buttons::Start});
+        ctx.Check(fromArray == GamePadButtons(Buttons::A | Buttons::LeftShoulder | Buttons::Start) &&
+                      fromArray.getAProperty() == ButtonState::Pressed &&
+                      fromArray.getLeftShoulderProperty() == ButtonState::Pressed &&
+                      fromArray.getStartProperty() == ButtonState::Pressed,
+                  "FromButtonArray combines a list into the same button flags as the bitwise constructor");
+
         const GamePadState positiveAnalog(Vector2(1.0f, 1.0f), Vector2(1.0f, 1.0f), 1.0f, 1.0f, {});
         const std::array positiveFlags = {
             Buttons::LeftThumbstickRight, Buttons::LeftThumbstickUp,
@@ -184,7 +192,8 @@ CNA_DEMOS_CONSOLE(StateValues, {
              "GamePadThumbSticks::op_Equality", "GamePadThumbSticks::op_Inequality",
              "GamePadTriggers::Equals", "GamePadTriggers::GetHashCode", "GamePadTriggers::op_Equality",
              "GamePadTriggers::op_Inequality", "GamePadThumbSticks::GamePadThumbSticks",
-             "GamePadTriggers::GamePadTriggers", "GamePadButtons::GamePadButtons", "GamePadDPad::GamePadDPad",
+             "GamePadTriggers::GamePadTriggers", "GamePadButtons::GamePadButtons",
+             "GamePadButtons::FromButtonArray", "GamePadDPad::GamePadDPad",
              "Buttons", "GamePadButtons::A", "GamePadDPad::Up", "GamePadThumbSticks::Left",
              "GamePadThumbSticks::Right", "GamePadTriggers::Left", "GamePadTriggers::Right",
              "Buttons::A", "Buttons::B", "Buttons::X", "Buttons::Y", "Buttons::Back", "Buttons::Start",

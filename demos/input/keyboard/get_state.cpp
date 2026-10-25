@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
 // Polling the keyboard once per frame with Keyboard::GetState.
+#include <array>
 #include <memory>
 #include <optional>
 
@@ -12,6 +13,7 @@
 #include "Microsoft/Xna/Framework/Graphics/SpriteSortMode.hpp"
 #include "Microsoft/Xna/Framework/Input/Keyboard.hpp"
 #include "Microsoft/Xna/Framework/Input/KeyboardState.hpp"
+#include "Microsoft/Xna/Framework/PlayerIndex.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 
 using namespace Microsoft::Xna::Framework;
@@ -33,6 +35,19 @@ namespace
         {
             // A snapshot of every key, taken once per frame.
             const KeyboardState keyboard = Keyboard::GetState();
+
+            // XNA also exposes four local-player overloads. A desktop has one physical
+            // keyboard, so all four slots intentionally see the same published snapshot.
+            const std::array playerStates = {
+                Keyboard::GetState(PlayerIndex::One), Keyboard::GetState(PlayerIndex::Two),
+                Keyboard::GetState(PlayerIndex::Three), Keyboard::GetState(PlayerIndex::Four)};
+            if (!checkedPlayerSlots_)
+            {
+                Context().Check(playerStates[0] == keyboard && playerStates[1] == keyboard &&
+                                    playerStates[2] == keyboard && playerStates[3] == keyboard,
+                                "all four Keyboard::GetState(PlayerIndex) slots expose the physical keyboard");
+                checkedPlayerSlots_ = true;
+            }
 
             spaceDown_ = keyboard.IsKeyDown(Keys::Space);
 
@@ -59,6 +74,7 @@ namespace
 
     private:
         bool spaceDown_ = false;
+        bool checkedPlayerSlots_ = false;
         std::size_t lastPressedCount_ = 0;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
@@ -68,10 +84,11 @@ namespace
 CNA_DEMOS_GAME(KeyboardStateDemo, {
     .id = "input.keyboard.get_state",
     .title = "Keyboard state",
-    .description = "Polls Keyboard::GetState every frame; the screen turns green while Space is held and the "
-                   "number of pressed keys is printed when it changes.",
-    .apis = {"Keyboard::GetState", "KeyboardState::IsKeyDown", "KeyboardState::GetPressedKeys"},
-    .tags = {"keys", "polling"},
+    .description = "Polls Keyboard::GetState every frame, including all four PlayerIndex overloads; the screen turns "
+                   "green while Space is held and the number of pressed keys is printed when it changes.",
+    .apis = {"Keyboard::GetState", "Keyboard::GetState(PlayerIndex)", "KeyboardState::IsKeyDown",
+             "KeyboardState::GetPressedKeys"},
+    .tags = {"keys", "polling", "player-index"},
     .automation = CnaDemos::Automation::SmokeOnly,
     .needs = CnaDemos::Need::Keyboard,
     .assets = {"fonts/pixel_font.cnb"},

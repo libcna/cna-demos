@@ -49,7 +49,15 @@ namespace
         {
             // Position is in back-buffer pixels from the window's top-left corner (and can lie
             // outside it). The wheel value is a running total: 120 per notch.
-            mouse_ = Mouse::GetState();
+            const MouseState next = Mouse::GetState();
+            if (havePrevious_)
+            {
+                verticalDelta_ = next.getScrollWheelValueProperty() - mouse_.getScrollWheelValueProperty();
+                horizontalDelta_ = next.getHorizontalScrollWheelValueEXTProperty() -
+                    mouse_.getHorizontalScrollWheelValueEXTProperty();
+            }
+            mouse_ = next;
+            havePrevious_ = true;
             Game::Update(gameTime);
         }
 
@@ -87,8 +95,11 @@ namespace
                                      Vector2(40.0f, 140.0f), Color::White);
             spriteBatch_->DrawString(*font_,
                                      "HorizontalScrollWheelValueEXT " +
-                                         std::to_string(mouse_.getHorizontalScrollWheelValueEXTProperty()),
+                                         std::to_string(mouse_.getHorizontalScrollWheelValueEXTProperty()) +
+                                         "  frame delta " + std::to_string(horizontalDelta_),
                                      Vector2(40.0f, 170.0f), Color::LightGray);
+            spriteBatch_->DrawString(*font_, "Vertical frame delta " + std::to_string(verticalDelta_),
+                                     Vector2(40.0f, 195.0f), Color::LightGray);
             // The wheel total moves a marker along a track, 20 pixels per notch.
             spriteBatch_->Draw(*pixel_, Rectangle(40, 220, 720, 4), Color::Gray);
             const int marker = 400 + std::clamp(wheel / 120 * 20, -360, 360);
@@ -99,6 +110,9 @@ namespace
 
     private:
         MouseState mouse_;
+        bool havePrevious_ = false;
+        int verticalDelta_ = 0;
+        int horizontalDelta_ = 0;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
         std::unique_ptr<Texture2D> pixel_;
@@ -109,11 +123,12 @@ CNA_DEMOS_GAME(MouseStateDemo, {
     .id = "input.mouse.get_state",
     .title = "Mouse state",
     .description = "Polls Mouse::GetState every frame: a crosshair follows the cursor, five boxes light up with the "
-                   "buttons and a marker moves with the scroll wheel total.",
+                   "buttons, and vertical and horizontal wheel totals are compared with the previous frame to "
+                   "derive wheel deltas.",
     .apis = {"Mouse::GetState", "MouseState::X", "MouseState::Y", "MouseState::LeftButton", "MouseState::MiddleButton",
              "MouseState::RightButton", "MouseState::XButton1", "MouseState::XButton2", "MouseState::ScrollWheelValue",
              "MouseState::HorizontalScrollWheelValueEXT", "Game::IsMouseVisible", "ButtonState"},
-    .tags = {"mouse", "cursor", "buttons", "wheel", "polling"},
+    .tags = {"mouse", "cursor", "buttons", "wheel", "delta", "polling"},
     .automation = CnaDemos::Automation::SmokeOnly,
     .needs = CnaDemos::Need::Mouse,
     .assets = {"fonts/pixel_font.cnb"},

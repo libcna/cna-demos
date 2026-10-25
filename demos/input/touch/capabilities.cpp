@@ -34,6 +34,8 @@ namespace
             // Whether there is a touch screen, and how many fingers XNA promises to track.
             const TouchPanelCapabilities caps = TouchPanel::GetCapabilities();
             lines_.push_back(std::string("IsConnected: ") + (caps.getIsConnectedProperty() ? "true" : "false"));
+            const bool deviceExists = TouchPanel::getTouchDeviceExistsProperty();
+            lines_.push_back(std::string("TouchDeviceExistsEXT: ") + (deviceExists ? "true" : "false"));
             lines_.push_back("MaximumTouchCount: " + std::to_string(caps.getMaximumTouchCountProperty()));
 
             // Touch positions are reported in a coordinate space of DisplayWidth x DisplayHeight.
@@ -52,6 +54,8 @@ namespace
             Context().Check(TouchPanel::getDisplayWidthProperty() == pp.getBackBufferWidthProperty() &&
                                 TouchPanel::getDisplayHeightProperty() == pp.getBackBufferHeightProperty(),
                             "the touch coordinate space is the back-buffer size");
+            Context().Check(deviceExists == caps.getIsConnectedProperty(),
+                            "TouchDeviceExistsEXT agrees with TouchPanelCapabilities::IsConnected");
             if (!caps.getIsConnectedProperty())
                 Context().Check(caps.getMaximumTouchCountProperty() == 0, "without a touch screen no touches are promised");
         }
@@ -78,10 +82,12 @@ namespace
 CNA_DEMOS_GAME(TouchCapabilitiesDemo, {
     .id = "input.touch.capabilities",
     .title = "Touch panel capabilities",
-    .description = "Shows TouchPanel::GetCapabilities (IsConnected, MaximumTouchCount) and the touch coordinate "
+    .description = "Shows TouchPanel::GetCapabilities (IsConnected, MaximumTouchCount), the CNAEXT physical-device "
+                   "presence query, and the touch coordinate "
                    "space -- DisplayWidth and DisplayHeight, set to the back-buffer size by the device -- and "
                    "DisplayOrientation.",
-    .apis = {"TouchPanel::GetCapabilities", "TouchPanelCapabilities::IsConnected",
+    .apis = {"TouchPanel::GetCapabilities", "TouchPanel::TouchDeviceExistsEXT",
+             "TouchPanelCapabilities::IsConnected",
              "TouchPanelCapabilities::MaximumTouchCount", "TouchPanel::DisplayWidth", "TouchPanel::DisplayHeight",
              "TouchPanel::DisplayOrientation",
              "DisplayOrientation"},

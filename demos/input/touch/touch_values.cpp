@@ -7,6 +7,7 @@
 #include "Microsoft/Xna/Framework/Input/Touch/TouchCollection.hpp"
 #include "Microsoft/Xna/Framework/Input/Touch/TouchLocation.hpp"
 #include "Microsoft/Xna/Framework/Input/Touch/TouchLocationState.hpp"
+#include "Microsoft/Xna/Framework/Input/Touch/TouchPanel.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 #include "System/ArgumentOutOfRangeException.hpp"
 
@@ -59,10 +60,10 @@ namespace
         TouchLocation found;
         ctx.Check(frame.FindById(9, found) && found.getPositionProperty() == Vector2(600.0f, 300.0f),
                   "FindById finds the second finger");
-        ctx.Check(!frame.FindById(3, found) && found.getIdProperty() == -1 &&
+        ctx.Check(!frame.FindById(3, found) && found.getIdProperty() == TouchPanel::NO_FINGER &&
                       found.getStateProperty() == TouchLocationState::Invalid &&
                       found.getPositionProperty() == Vector2::Zero,
-                  "FindById reports a missing finger and writes the documented invalid sentinel");
+                  "FindById reports a missing finger and writes TouchPanel::NO_FINGER");
         ctx.Check(frame.Contains(held) && frame.IndexOf(held) == 0 && frame[1].getIdProperty() == 9,
                   "Contains, IndexOf and the indexer work like any list");
 
@@ -144,6 +145,7 @@ CNA_DEMOS_CONSOLE(TouchValues, {
              "TouchCollection.Enumerator::System#Collections#IEnumerator#Current",
              "TouchCollection.Enumerator::System#Collections#IEnumerator#Reset",
              "TouchCollection.Enumerator::Dispose",
+             "TouchPanel::NO_FINGER",
              "TouchLocationState::Invalid", "TouchLocationState::Released",
              "TouchLocationState::Pressed", "TouchLocationState::Moved"},
     .tags = {"touch", "multitouch", "finger", "testing", "value", "collection"},
