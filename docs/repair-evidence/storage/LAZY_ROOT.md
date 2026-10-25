@@ -43,6 +43,7 @@ No Windows/Android/browser storage runtime or full CNA regression pass is claime
 No historical CNA-DEMOS ID is closed by this museum-only subfinding. ISSUE-152 and
 the remaining museum StorageContainer error-path defects remain actionable.
 
-Continuation authority/state: CNA `CNA_MUSEUM_REPAIR_HANDOFF.md`. Next batch is
+Continuation authority/state was CNA's `CNA_MUSEUM_REPAIR_HANDOFF.md` (removed 2026-10-25; CNA Git history,
+`9d49828f4`). Next batch was
 StorageContainer argument/IO exception mappings; existing genuine reference evidence
 `StoragePathErrorsOracle.cs` has 29/29 passing public-call checks against XNA4.

@@ -112,7 +112,8 @@ capability has a demo. See docs/PROJECT.md.
 **Latest checkpoint (2026-10-22): museum browser WebGPU blockers under investigation.**
 CNA next `93baa9363`, demos `059bf7ee8`. Three museum repairs are committed separately:
 host-machine migration `cd9868526`, join state `04fb4978a`, tray labels `93baa9363`.
-Native evidence is in CNA's `CNA_MUSEUM_REPAIR_HANDOFF.md`; museum reruns are pending.
+Native evidence was in CNA's `CNA_MUSEUM_REPAIR_HANDOFF.md` (removed 2026-10-25; `git -C ../cna show
+9d49828f4:CNA_MUSEUM_REPAIR_HANDOFF.md`); the museum's reruns are in `../museum-simulator/docs/CNA_FINDINGS.md`.
 No push/merge. No previous external-v3/v4/count validation remains live.
 ISSUE-113 external-v4 preserved132 outcomes (eight known082 failures), six exact visuals
 PASS. Its candidate remains uncommitted/open: genuine XNA DWORD and real-GPU oracles
