@@ -7,6 +7,10 @@ This closure started from clean `cna-demos` `develop` commit
 `cna-demos/develop`; no branch was switched, and neither dependency repository was modified.
 The implementation and generated ledger are commit `cc32234` (`demos: close cna-examples
 retirement gaps`); the following documentation-only commit records that immutable checkpoint.
+After validation, the clean CNA checkout advanced concurrently to `406ea24ffc348d0ced885470a76cff5153e3e08c`
+on `next` (one commit ahead of `origin/next`). That unrelated commit changes only CNA documentation
+(`handoff.md`, `plans/plan_gltf.md` and removal of `misc/gltfissues.md`); this task neither created
+nor modified it, and CNA product source remains identical to the validated `e87d32f9` checkpoint.
 
 The six independent-audit findings are closed. `audio.microphone.input_level` now requires an
 attended fresh key before capture, retains and removes its `BufferReady` token, prevents callbacks
