@@ -1277,6 +1277,10 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   ISSUE-055 assertions; both images inspected. SOFTWARE declares its capability boundary.
 
 ### Changed
+- `docs/CNA_ISSUES.md` no longer lists 45 fixed entries under "Open": the section is empty, the
+  three fixes awaiting only native Windows validation (003, 101, 152) have their own section,
+  and the other 43 joined "Resolved" with their text unchanged. README's status no longer calls
+  the project an early foundation.
 - `core.renderer.metadata` and `c_api.platform.renderer_metadata` use CNA's renamed renderer
   classifications (`CNA::GraphicsRendererCategory`/`GraphicsRendererMaturity`, C ABI 0.49.0
   `CNA_GraphicsRenderer*`/`cna_graphics_renderer_*`) and expect WEBGPU's `Supported` maturity.

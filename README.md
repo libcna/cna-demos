@@ -23,12 +23,14 @@ $ cna-demos graphics.sprite_batch.draw_texture
 
 ## Status
 
-**Early, working foundation (version 0.1.0).** The infrastructure is complete and validated: one
+**Version 0.1.0; coverage roadmap complete.** The infrastructure is complete and validated: one
 executable with an interactive terminal browser and a scripting CLI, a self-registering demo
 registry with metadata and validation, unattended runs with frame limits and screenshots, CTest
-integration with one test per demo, a JSON catalog, and an API coverage report. The demo
-collection itself is at its beginning; see [docs/COVERAGE.md](docs/COVERAGE.md) for the current
-numbers and [docs/ROADMAP.md](docs/ROADMAP.md) for what comes next.
+integration with one test per demo, a JSON catalog, and an API coverage report. All roadmap phases
+are done (719 demos as of 2026-10-24), and every CNA issue the demos found has a final
+disposition; no demo is marked as a known failure. See [docs/COVERAGE.md](docs/COVERAGE.md) for the
+current numbers, [docs/ROADMAP.md](docs/ROADMAP.md) for the phases and their remaining documented
+boundaries, and [docs/CNA_ISSUES.md](docs/CNA_ISSUES.md) for the issue log.
 
 The long-term scope is every meaningful CNA capability -- potentially thousands of demos. It is a
 multi-session project; [HANDOFF.md](HANDOFF.md) always describes the current state.

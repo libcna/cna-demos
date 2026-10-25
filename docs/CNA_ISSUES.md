@@ -6,7 +6,8 @@ failing visibly or is marked with the issue ID in its `restrictions` metadata.
 
 Each entry records the affected CNA area, the demo(s) involved, reproduction steps, observed
 and expected behaviour, the environment, and the investigation status. IDs are permanent
-(`CNA-DEMOS-ISSUE-NNN`); a fixed issue stays listed under "Resolved".
+(`CNA-DEMOS-ISSUE-NNN`); a fixed issue stays listed under "Resolved", or under "Resolved; native
+Windows validation pending" while only that platform validation remains.
 
 CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d77588000104947f8d`
 (CNA 0.1.0, "chore(release): prepare v0.1.0").
@@ -15,7 +16,200 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
+None. The final handoff audit (2026-10-24) gave every historical ID a final disposition, and
+no demo carries a `knownIssue` marker. A newly found CNA problem is added here.
 
+---
+
+## Resolved; native Windows validation pending
+
+Fixed in CNA and validated on the Linux renderers; only native Windows validation, which this
+Linux host cannot perform, remains. Each entry states what is still to be validated.
+
+### CNA-DEMOS-ISSUE-003 -- `SpriteBatch` does not leave its texture in `GraphicsDevice::Textures[0]`
+
+- **Status: Resolved on validated Linux renderers; native Windows/D3D9 validation pending
+  (2026-10-22).** CNA repair `3b6a2eaf3bc51a7cf44cf645b5cfa66494e0a6bb` retains movable
+  public texture identities, publishes the slot after custom passes, and prevents replay of
+  failed Immediate submissions. WebGPU and D3D9 now honor the existing Immediate hook.
+  The22 focused native regressions pass on SOFTWARE, OPENGLES3, OPENGL33, SDL_GPU,
+  FNA3D and WEBGPU, including their enabled compiled paths; the separate SDL compiled-off
+  refusal control remains intact. Both original demos pass on the four external renderers;
+  the rectangle demo preserves its seven checks and adds two direct binding/refusal checks.
+  Full native/default11027=10917PASS/110unchangedSKIP, focused sanitizer22PASS, external
+  regression/smoke deltas and visual evidence are preserved in the repair handoff. Those
+  runs used the shared worktree with unchanged, separately tracked011/082 candidates;
+  their unrelated failures are not waived or included in this repair commit.
+  D3D9's five relevant Windows translation units compile without diagnostics, but no
+  native Windows runtime pass is claimed. See
+  [final focused evidence](repair-evidence/graphics/SPRITE_BINDING_FINAL_FOCUS.md) and
+  [complete triage/history](repair-evidence/graphics/SPRITE_TEXTURE_BINDING_TRIAGE.md).
+  The historical finding follows unchanged except for its status label.
+
+- **Area:** graphics -- `Microsoft::Xna::Framework::Graphics::SpriteBatch`
+  (`modules/graphics/src/Xna/SpriteBatch.cpp`): sprites are submitted through the renderer's own
+  sprite path, which never assigns the device's `TextureCollection`.
+- **Demo:** `graphics.texture2d.set_data_rectangle` follows the XNA rule (it unsets `Textures[0]`
+  before `SetData`) and checks that `SetData` on a bound texture throws -- which CNA implements --
+  but it cannot show the situation XNA programmers actually run into.
+- **Reproduction:**
+  ```cpp
+  spriteBatch.Begin();
+  spriteBatch.Draw(canvas, Vector2::Zero, Color::White);
+  spriteBatch.End();
+  device.getTexturesProperty()[0];             // nullptr in CNA
+  canvas.SetData(pixels.data(), count);       // succeeds in CNA
+  ```
+- **Observed:** `Textures[0]` is null after `End` (SOFTWARE and OPENGLES3), so a following
+  `SetData` on the last drawn texture succeeds.
+- **Expected:** XNA 4.0's SpriteBatch assigns `GraphicsDevice.Textures[0]` for every batch it
+  draws (CNA's own comment in `SpriteBatch.cpp` says "XNA assigns Textures[0] after the pass"), so
+  after `End` the last sprite texture is still set on the device and `SetData` on it throws
+  `InvalidOperationException` ("You may not call SetData on a resource while it is actively set on
+  the GraphicsDevice") until the program unsets it. CNA's `Texture::ThrowIfDataTransferResourceInUseEXT`
+  implements that throw for textures set explicitly.
+- **Impact:** low. XNA programs keep working on CNA (they already unset the texture). Programs
+  written against CNA can call `SetData` where XNA would throw, and code that reads
+  `Textures[0]` after drawing sprites sees null.
+- **Environment:** CNA 0.1.0, Linux, SOFTWARE and OPENGLES3 renderers.
+- **Historical status:** open; observed behaviour above; not reported upstream yet.
+
+### CNA-DEMOS-ISSUE-101 -- Video URI resolution and deferred file failures diverge from FNA
+
+- **Resolved locally; native Windows validation pending (2026-10-21):** CNA
+  `abbd8a4ea7ae3f511e0f3aac3faaba411f6de0a4`, using Sharp Runtime `c26614e85`,
+  fixes URI resolution and genuine-XNA deferred missing-file ArgumentException.
+  Native53/media355/full10885PASS+101sameSKIP, sanitizer53, external112 comparisons,
+  original URI9 on both renderers, pure-C real-frame smoke and final10 renderer/
+  8CTest checks pass. The knownIssue marker is removed; behavior assertions remain.
+  Existing invalid-codec/public-Play timing still requires a functional native
+  Windows reference: Wine failed its valid WMV control. No speculative FNA-based
+  exception change was made. Final disposition: FIXED_PLATFORM_VALIDATION_PENDING.
+  See [validated repair](repair-evidence/media/VIDEO_C_CONTRACT_ALIGNMENT.md) and
+  [exact platform requirement](repair-evidence/media/VIDEO_CODEC_REFERENCE_LIMITATION.md).
+  All earlier open-state observations below are historical.
+
+- **Latest candidate validation (2026-10-21; CONFIRMED_OPEN):** owner approved
+  genuine-XNA ArgumentException/INVALID_ARGUMENT and URI contract correction.
+  Exact new baseline5FAIL/1PASS becomes6PASS; combined49 focused and351 media
+  cases pass, full10881PASS/101sameSKIP retains every previous outcome. C API
+  metadata gate still fails on stale content/audio inventory; sanitizer/external
+  acceptance remains pending. No marker removed or final repair commit. This
+  supersedes older pending-decision/no-correction notes, preserving their history.
+  See [contract alignment](repair-evidence/media/VIDEO_C_CONTRACT_ALIGNMENT.md).
+
+- **Reference correction (2026-10-21; still CONFIRMED_OPEN):**32 genuine XNA
+  guard/translator checks establish exact ArgumentException for deferred missing
+  files, not the FNA-based FileNotFoundException expectation. No production/test
+  correction has been applied yet. A subsequent normal-decoder observer recorded
+  partial immediate returns under Wine, but its valid WMV control hit unimplemented
+  MFCreateVideoMediaType; it is NOT a passing codec/public-Play reference. Do not
+  infer immediate refusal for every existing invalid file from FNA alone. Preserve
+  the historical finding below; see [reference limitation](repair-evidence/media/VIDEO_CODEC_REFERENCE_LIMITATION.md).
+
+- **Latest validation (2026-10-21; still CONFIRMED_OPEN):** native full
+  10,847PASS/101unchangedSKIP, sanitizer43PASS/no findings and actual external
+  43PASS. Original URI9 nowPASS on SOFTWARE and OPENGLES3. Combined video gate
+  remains unaccepted due to unchanged public C contract conflicts; actual
+  decoder-open failures also need follow-up. No marker removed or CNA production
+  commit. See [latest checkpoint](repair-evidence/media/VIDEO_URI_REPAIR_CHECKPOINT.md).
+
+- **Local candidate (2026-10-21; still CONFIRMED_OPEN):** URI classification/
+  LocalPath now live in Sharp Runtime; File.Exists rejects embedded NUL rather
+  than naming the existing prefix. Dependency baseline18,158 PASS becomes
+  18,193 PASS, zero skips/failures. CNA uses that layer for file URIs, resolves
+  relative URIs through the existing title-path bridge and reports deferred
+  missing files. Native/external/sanitizer acceptance is pending; no marker
+  removed or production commit/closure. The historical reproduction below is
+  retained. See [URI checkpoint](repair-evidence/media/VIDEO_URI_REPAIR_CHECKPOINT.md).
+
+- **Current verification (2026-10-21; CONFIRMED_OPEN):** unchanged original demo
+  retains exactly four failures on SOFTWARE and OPENGLES3. New focused native
+  reproduction confirms those contracts plus percent-decoding: fiveFAIL/fourPASS,
+  no skips or production edit. See [checkpoint](repair-evidence/media/VIDEO_REPAIR_VALIDATION_CHECKPOINT.md).
+
+- **Area/API:** `Video::FromUriEXT`, the trusted-metadata Video constructor and
+  `VideoPlayer::Play`.
+- **Demo:** `media.video.uri_and_metadata`.
+- **Reproduction:** use the generated local `track_matrix.mkv` through a plain absolute path, its
+  absolute `file:///` URI and a title-relative URI while the process current directory points
+  elsewhere. Also pass a non-file HTTPS URI. Finally construct a Video with trusted metadata and a
+  nonexistent local path, then call Play. Exception checks accept only the exact System type.
+- **Observed:** the plain absolute path succeeds. CNA treats the `file:///` and HTTPS strings as
+  literal filesystem paths and throws FileNotFoundException; the relative string is resolved below
+  the process current directory instead of TitleLocation and also fails. Trusted construction
+  correctly does no I/O, but Play silently returns in Stopped/null-Video state when decoder open
+  fails rather than reporting the missing file. A separate real-file metadata mismatch does throw
+  InvalidOperationException and closes atomically as documented.
+- **Expected/reference:** FNA's `Video.FromUriEXT(Uri, GraphicsDevice)` converts an absolute local
+  file URI to `LocalPath`, combines a relative URI with `TitleLocation.Path`, and rejects a
+  non-file absolute URI with InvalidOperationException. Its trusted/XNB constructor deliberately
+  postpones file access, while codec Play throws FileNotFoundException when opening the referenced
+  file fails. See FNA's public
+  [`Video.cs`](https://github.com/FNA-XNA/FNA/blob/master/src/Media/Video/Video.cs) and
+  [`VideoPlayerTheora.cs`](https://github.com/FNA-XNA/FNA/blob/master/src/Media/Video/VideoPlayerTheora.cs).
+- **Cause observed in source:** CNA changes the factory parameter from Uri to `std::string` and
+  forwards it unchanged to the raw-file constructor; no URI parsing or TitleLocation combination
+  occurs. `VideoPlayer::OpenDecoder` clears its decoder and Video pointer when `Open` returns false,
+  then `Play` treats the null decoder as an ordinary early return.
+- **Scope/status:** open against clean isolated CNA
+  `d23e139de9e5c15511b6be745de290896a69ee37`. The reproduction is local and deterministic; the
+  HTTPS spelling is classified without making a network request. No CNA source was modified and no
+  upstream message was sent.
+
+### CNA-DEMOS-ISSUE-152 -- StorageContainer ignores the requested FileShare policy
+
+- **Status: Resolved, platform validation pending (2026-10-23).** Sharp Runtime
+  `c6984ecef98aa6a04634e76145763545a90c68fe` implements native sharing on the actual
+  stream handle; `f51bf9acf8374088a425024b40ef1c7b697c5ba5` strengthens cross-process
+  regression coverage. CNA `21b4cd64cd122353431dafb5793a19ac568956fd` forwards the policy
+  and corrects exclusive/Append defaults; `169470ee7550471844d01a0789dd5e25770544b6`
+  corrects and tests the C contract. The owner selected native .NET sharing per platform.
+  Linux full Sharp18,218/18,218, CNA storage50/50, focused sanitizers23/23 and both storage
+  sweeps7/7 pass. The original demo's8 assertions are unchanged; only its knownIssue is removed.
+  Full719-ID sweeps introduce no failing assertion against the preceding checkpoint, and6
+  visual references are exact. Full CTest still has6 independent failures (2 unmarked
+  assertion failures and4 stale expected-pass markers); these remain visible and unresolved.
+  Windows C++ runtime validation remains pending; MinGW/Emscripten strict syntax checks pass.
+  FileStream's private ABI changed and all consumers must rebuild. Historical observations
+  below are retained. See [the complete repair evidence](repair-evidence/storage/FILE_SHARE.md).
+
+- **Repair-campaign clarification (2026-10-20):** genuine XNA/.NET execution disproves
+  the historical ReadWrite-default suggestion below. Both shorter StorageContainer
+  OpenFile overloads are exclusive (`FileShare.None`), two-argument Append uses write
+  access, and File.Create is exclusive. Direct three-argument FileStream and File.OpenRead
+  instead use read sharing. The expanded opening/lifetime oracle passes21/21. Actual
+  Windows and modern Unix .NET sharing matrices differ (25 versus81 admitted pairs out
+  of144); the original exclusive-open demo remains valid on both. The platform policy
+  is being resolved separately, with no relaxed demo assertion or152 closure. Evidence:
+  `docs/repair-evidence/storage/README.md` and its genuine oracle sources.
+- **Area/API:** `StorageContainer::OpenFile(file, mode, access, fileShare)` in
+  `modules/storage/src/StorageContainer.cpp`; the C `cna_storage_container_open_file_share` route
+  inherits the same implementation.
+- **Demo/reproduction:** run `storage.storage_container.file_modes`. After the existing file-mode
+  and access checks, it opens `log.txt` for read with `FileShare::None`, then attempts a second
+  read handle before releasing the exclusive one. A positive control releases it and proves that
+  two handles opened with `FileShare::Read` can read concurrently.
+- **Observed:** the exclusive second open succeeds. The demo passes7/8 controls and fails only the
+  exclusivity assertion on both SOFTWARE and OPENGLES3 labels; five repeated runs per label are
+  byte-identical at stdout SHA-256
+  `5a08d9908c6c806f20618bea5e3eaf3bec7892e64e759a85f9a80c205fddc388` with empty stderr.
+- **Expected/reference:** the public header says the argument controls concurrent access. The
+  checked-in genuine-XNA implementation forwards all four arguments to
+  `File.Open(path, fileMode, fileAccess, fileShare)`, where `FileShare::None` refuses another
+  handle until the first closes.
+- **Cause:** CNA comments the parameter name out and constructs Sharp Runtime's three-argument
+  `FileStream`, which has no share-policy constructor. Every FileShare value therefore follows the
+  same path.
+- **Suggested repair/status:** implement and enforce FileShare in Sharp Runtime's FileStream and
+  pass this argument through CNA. Keep the three shorter overloads' documented ReadWrite default.
+  Open against pinned CNA `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA or Sharp Runtime
+  source was modified and no fresh XNA execution or upstream message is claimed. Evidence:
+  `/tmp/checkpoint-1109-storage-public-headers/*`.
+
+---
+
+## Resolved
 
 ### CNA-DEMOS-ISSUE-114 -- Releasing a nonterminal SoundEffect loop drops its authored tail
 
@@ -143,7 +337,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   and `7a2cfc151a43ead9fc54e24ff18133dfc76d095a00e38836da0c2fa6b2220464`.
   No CNA source was modified and no upstream message was sent.
 
-
 ### CNA-DEMOS-ISSUE-104 -- STUB does not provide the promised WarnAndStub Texture3D null object
 
 - **Resolved (2026-10-24):** CNA `718e428fe` gives STUB and HEADLESS the WarnAndStub Texture3D null
@@ -229,89 +422,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   `93baa280e929bff3a999e8eb90556ea7c05915e075a90f064523e932e1709346`. No CNA source was modified,
   no unsafe runtime call was made and no upstream message was sent. This source-diagnosed memory-
   safety issue adds no runtime knownIssue marker.
-
-### CNA-DEMOS-ISSUE-101 -- Video URI resolution and deferred file failures diverge from FNA
-
-- **Resolved locally; native Windows validation pending (2026-10-21):** CNA
-  `abbd8a4ea7ae3f511e0f3aac3faaba411f6de0a4`, using Sharp Runtime `c26614e85`,
-  fixes URI resolution and genuine-XNA deferred missing-file ArgumentException.
-  Native53/media355/full10885PASS+101sameSKIP, sanitizer53, external112 comparisons,
-  original URI9 on both renderers, pure-C real-frame smoke and final10 renderer/
-  8CTest checks pass. The knownIssue marker is removed; behavior assertions remain.
-  Existing invalid-codec/public-Play timing still requires a functional native
-  Windows reference: Wine failed its valid WMV control. No speculative FNA-based
-  exception change was made. Final disposition: FIXED_PLATFORM_VALIDATION_PENDING.
-  See [validated repair](repair-evidence/media/VIDEO_C_CONTRACT_ALIGNMENT.md) and
-  [exact platform requirement](repair-evidence/media/VIDEO_CODEC_REFERENCE_LIMITATION.md).
-  All earlier open-state observations below are historical.
-
-- **Latest candidate validation (2026-10-21; CONFIRMED_OPEN):** owner approved
-  genuine-XNA ArgumentException/INVALID_ARGUMENT and URI contract correction.
-  Exact new baseline5FAIL/1PASS becomes6PASS; combined49 focused and351 media
-  cases pass, full10881PASS/101sameSKIP retains every previous outcome. C API
-  metadata gate still fails on stale content/audio inventory; sanitizer/external
-  acceptance remains pending. No marker removed or final repair commit. This
-  supersedes older pending-decision/no-correction notes, preserving their history.
-  See [contract alignment](repair-evidence/media/VIDEO_C_CONTRACT_ALIGNMENT.md).
-
-- **Reference correction (2026-10-21; still CONFIRMED_OPEN):**32 genuine XNA
-  guard/translator checks establish exact ArgumentException for deferred missing
-  files, not the FNA-based FileNotFoundException expectation. No production/test
-  correction has been applied yet. A subsequent normal-decoder observer recorded
-  partial immediate returns under Wine, but its valid WMV control hit unimplemented
-  MFCreateVideoMediaType; it is NOT a passing codec/public-Play reference. Do not
-  infer immediate refusal for every existing invalid file from FNA alone. Preserve
-  the historical finding below; see [reference limitation](repair-evidence/media/VIDEO_CODEC_REFERENCE_LIMITATION.md).
-
-- **Latest validation (2026-10-21; still CONFIRMED_OPEN):** native full
-  10,847PASS/101unchangedSKIP, sanitizer43PASS/no findings and actual external
-  43PASS. Original URI9 nowPASS on SOFTWARE and OPENGLES3. Combined video gate
-  remains unaccepted due to unchanged public C contract conflicts; actual
-  decoder-open failures also need follow-up. No marker removed or CNA production
-  commit. See [latest checkpoint](repair-evidence/media/VIDEO_URI_REPAIR_CHECKPOINT.md).
-
-- **Local candidate (2026-10-21; still CONFIRMED_OPEN):** URI classification/
-  LocalPath now live in Sharp Runtime; File.Exists rejects embedded NUL rather
-  than naming the existing prefix. Dependency baseline18,158 PASS becomes
-  18,193 PASS, zero skips/failures. CNA uses that layer for file URIs, resolves
-  relative URIs through the existing title-path bridge and reports deferred
-  missing files. Native/external/sanitizer acceptance is pending; no marker
-  removed or production commit/closure. The historical reproduction below is
-  retained. See [URI checkpoint](repair-evidence/media/VIDEO_URI_REPAIR_CHECKPOINT.md).
-
-- **Current verification (2026-10-21; CONFIRMED_OPEN):** unchanged original demo
-  retains exactly four failures on SOFTWARE and OPENGLES3. New focused native
-  reproduction confirms those contracts plus percent-decoding: fiveFAIL/fourPASS,
-  no skips or production edit. See [checkpoint](repair-evidence/media/VIDEO_REPAIR_VALIDATION_CHECKPOINT.md).
-
-- **Area/API:** `Video::FromUriEXT`, the trusted-metadata Video constructor and
-  `VideoPlayer::Play`.
-- **Demo:** `media.video.uri_and_metadata`.
-- **Reproduction:** use the generated local `track_matrix.mkv` through a plain absolute path, its
-  absolute `file:///` URI and a title-relative URI while the process current directory points
-  elsewhere. Also pass a non-file HTTPS URI. Finally construct a Video with trusted metadata and a
-  nonexistent local path, then call Play. Exception checks accept only the exact System type.
-- **Observed:** the plain absolute path succeeds. CNA treats the `file:///` and HTTPS strings as
-  literal filesystem paths and throws FileNotFoundException; the relative string is resolved below
-  the process current directory instead of TitleLocation and also fails. Trusted construction
-  correctly does no I/O, but Play silently returns in Stopped/null-Video state when decoder open
-  fails rather than reporting the missing file. A separate real-file metadata mismatch does throw
-  InvalidOperationException and closes atomically as documented.
-- **Expected/reference:** FNA's `Video.FromUriEXT(Uri, GraphicsDevice)` converts an absolute local
-  file URI to `LocalPath`, combines a relative URI with `TitleLocation.Path`, and rejects a
-  non-file absolute URI with InvalidOperationException. Its trusted/XNB constructor deliberately
-  postpones file access, while codec Play throws FileNotFoundException when opening the referenced
-  file fails. See FNA's public
-  [`Video.cs`](https://github.com/FNA-XNA/FNA/blob/master/src/Media/Video/Video.cs) and
-  [`VideoPlayerTheora.cs`](https://github.com/FNA-XNA/FNA/blob/master/src/Media/Video/VideoPlayerTheora.cs).
-- **Cause observed in source:** CNA changes the factory parameter from Uri to `std::string` and
-  forwards it unchanged to the raw-file constructor; no URI parsing or TitleLocation combination
-  occurs. `VideoPlayer::OpenDecoder` clears its decoder and Video pointer when `Open` returns false,
-  then `Play` treats the null decoder as an ordinary early return.
-- **Scope/status:** open against clean isolated CNA
-  `d23e139de9e5c15511b6be745de290896a69ee37`. The reproduction is local and deterministic; the
-  HTTPS spelling is classified without making a network request. No CNA source was modified and no
-  upstream message was sent.
 
 ### CNA-DEMOS-ISSUE-100 -- Detached Video track preferences are ignored by VideoPlayer::Play
 
@@ -1091,54 +1201,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   demos remain valid because they pass caller-owned Songs/collections. Revisit a safe regression
   demo after CNA repairs the lifetime order.
 
-### CNA-DEMOS-ISSUE-003 -- `SpriteBatch` does not leave its texture in `GraphicsDevice::Textures[0]`
-
-- **Status: Resolved on validated Linux renderers; native Windows/D3D9 validation pending
-  (2026-10-22).** CNA repair `3b6a2eaf3bc51a7cf44cf645b5cfa66494e0a6bb` retains movable
-  public texture identities, publishes the slot after custom passes, and prevents replay of
-  failed Immediate submissions. WebGPU and D3D9 now honor the existing Immediate hook.
-  The22 focused native regressions pass on SOFTWARE, OPENGLES3, OPENGL33, SDL_GPU,
-  FNA3D and WEBGPU, including their enabled compiled paths; the separate SDL compiled-off
-  refusal control remains intact. Both original demos pass on the four external renderers;
-  the rectangle demo preserves its seven checks and adds two direct binding/refusal checks.
-  Full native/default11027=10917PASS/110unchangedSKIP, focused sanitizer22PASS, external
-  regression/smoke deltas and visual evidence are preserved in the repair handoff. Those
-  runs used the shared worktree with unchanged, separately tracked011/082 candidates;
-  their unrelated failures are not waived or included in this repair commit.
-  D3D9's five relevant Windows translation units compile without diagnostics, but no
-  native Windows runtime pass is claimed. See
-  [final focused evidence](repair-evidence/graphics/SPRITE_BINDING_FINAL_FOCUS.md) and
-  [complete triage/history](repair-evidence/graphics/SPRITE_TEXTURE_BINDING_TRIAGE.md).
-  The historical finding follows unchanged except for its status label.
-
-- **Area:** graphics -- `Microsoft::Xna::Framework::Graphics::SpriteBatch`
-  (`modules/graphics/src/Xna/SpriteBatch.cpp`): sprites are submitted through the renderer's own
-  sprite path, which never assigns the device's `TextureCollection`.
-- **Demo:** `graphics.texture2d.set_data_rectangle` follows the XNA rule (it unsets `Textures[0]`
-  before `SetData`) and checks that `SetData` on a bound texture throws -- which CNA implements --
-  but it cannot show the situation XNA programmers actually run into.
-- **Reproduction:**
-  ```cpp
-  spriteBatch.Begin();
-  spriteBatch.Draw(canvas, Vector2::Zero, Color::White);
-  spriteBatch.End();
-  device.getTexturesProperty()[0];             // nullptr in CNA
-  canvas.SetData(pixels.data(), count);       // succeeds in CNA
-  ```
-- **Observed:** `Textures[0]` is null after `End` (SOFTWARE and OPENGLES3), so a following
-  `SetData` on the last drawn texture succeeds.
-- **Expected:** XNA 4.0's SpriteBatch assigns `GraphicsDevice.Textures[0]` for every batch it
-  draws (CNA's own comment in `SpriteBatch.cpp` says "XNA assigns Textures[0] after the pass"), so
-  after `End` the last sprite texture is still set on the device and `SetData` on it throws
-  `InvalidOperationException` ("You may not call SetData on a resource while it is actively set on
-  the GraphicsDevice") until the program unsets it. CNA's `Texture::ThrowIfDataTransferResourceInUseEXT`
-  implements that throw for textures set explicitly.
-- **Impact:** low. XNA programs keep working on CNA (they already unset the texture). Programs
-  written against CNA can call `SetData` where XNA would throw, and code that reads
-  `Textures[0]` after drawing sprites sees null.
-- **Environment:** CNA 0.1.0, Linux, SOFTWARE and OPENGLES3 renderers.
-- **Historical status:** open; observed behaviour above; not reported upstream yet.
-
 ### CNA-DEMOS-ISSUE-005 -- `Color` is polymorphic, so XNA-style custom vertex structs silently break
 
 - **Resolved (2026-10-24):** CNA `2df868a13` refuses, at compile time, a vertex type that is not
@@ -1563,7 +1625,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 - **Status:** open (low: one ContentManager per content build avoids it); not reported upstream
   yet.
 
-
 ### CNA-DEMOS-ISSUE-022 -- A compiled glTF with an embedded texture refers to a file the build never writes
 
 - **Resolved (2026-10-24):** CNA `cd1f5ef0a` (the owner chose XNA's behaviour) always builds a
@@ -1915,8 +1976,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ---
 
-## Resolved
-
 ### CNA-DEMOS-ISSUE-017 -- `Achievement::EarnedOnline` is always true
 
 - **Resolved (2026-10-23):** CNA `2ac45d2f06b8f3fe7e8a38d8419919ad9bf0ff16` defaults synthetic/offline values to EarnedOnline=false and marks only actually earned service records online. No ABI or storage-format change.
@@ -2029,7 +2088,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   catch to show "network not available"; a `std::runtime_error` escapes such handlers.
 - **Environment:** CNA 0.1.0, Linux.
 - **Status:** open (low impact; same family as ISSUE-010); not reported upstream yet.
-
 
 ### CNA-DEMOS-ISSUE-026 -- On Linux, a process that searched before a host started does not find it
 
@@ -2182,12 +2240,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   added failures in each full719-ID renderer suite with no other semantic delta. Evidence:
   `/tmp/focused-1127/` and `build/linux-full/reports/checkpoint-1128-*`.
 
-
-
-
-
-
-
 ### CNA-DEMOS-ISSUE-050 -- Owner-only C game operations enter the foreign-thread queue
 
 - **Resolved (2026-10-23):** CNA `12837955407ec964ebce9752b1fae0b3e47b6b14` encodes
@@ -2260,8 +2312,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   count and C/custom-content child list. Selected hashes and normalized stderr are unchanged.
   Original evidence and strict reviews: reports/checkpoint-446-owner-*.
 
-
-
 ### CNA-DEMOS-ISSUE-150 -- documented `CNA::Runtime` facade has no linkable implementation
 
 - **Resolved:** CNA `379bac6d3f76f452ffce7c7760149b2d1df30b95` retires the declaration-only
@@ -2331,57 +2381,6 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
   timing does not try to catch up after the long loading frame (paraphrased from the sample's
   comment). The next frame should run one ordinary step.
 - **Environment:** CNA 0.1.0, Linux, SOFTWARE and OPENGLES3.
-
-
-### CNA-DEMOS-ISSUE-152 -- StorageContainer ignores the requested FileShare policy
-
-- **Status: Resolved, platform validation pending (2026-10-23).** Sharp Runtime
-  `c6984ecef98aa6a04634e76145763545a90c68fe` implements native sharing on the actual
-  stream handle; `f51bf9acf8374088a425024b40ef1c7b697c5ba5` strengthens cross-process
-  regression coverage. CNA `21b4cd64cd122353431dafb5793a19ac568956fd` forwards the policy
-  and corrects exclusive/Append defaults; `169470ee7550471844d01a0789dd5e25770544b6`
-  corrects and tests the C contract. The owner selected native .NET sharing per platform.
-  Linux full Sharp18,218/18,218, CNA storage50/50, focused sanitizers23/23 and both storage
-  sweeps7/7 pass. The original demo's8 assertions are unchanged; only its knownIssue is removed.
-  Full719-ID sweeps introduce no failing assertion against the preceding checkpoint, and6
-  visual references are exact. Full CTest still has6 independent failures (2 unmarked
-  assertion failures and4 stale expected-pass markers); these remain visible and unresolved.
-  Windows C++ runtime validation remains pending; MinGW/Emscripten strict syntax checks pass.
-  FileStream's private ABI changed and all consumers must rebuild. Historical observations
-  below are retained. See [the complete repair evidence](repair-evidence/storage/FILE_SHARE.md).
-
-- **Repair-campaign clarification (2026-10-20):** genuine XNA/.NET execution disproves
-  the historical ReadWrite-default suggestion below. Both shorter StorageContainer
-  OpenFile overloads are exclusive (`FileShare.None`), two-argument Append uses write
-  access, and File.Create is exclusive. Direct three-argument FileStream and File.OpenRead
-  instead use read sharing. The expanded opening/lifetime oracle passes21/21. Actual
-  Windows and modern Unix .NET sharing matrices differ (25 versus81 admitted pairs out
-  of144); the original exclusive-open demo remains valid on both. The platform policy
-  is being resolved separately, with no relaxed demo assertion or152 closure. Evidence:
-  `docs/repair-evidence/storage/README.md` and its genuine oracle sources.
-- **Area/API:** `StorageContainer::OpenFile(file, mode, access, fileShare)` in
-  `modules/storage/src/StorageContainer.cpp`; the C `cna_storage_container_open_file_share` route
-  inherits the same implementation.
-- **Demo/reproduction:** run `storage.storage_container.file_modes`. After the existing file-mode
-  and access checks, it opens `log.txt` for read with `FileShare::None`, then attempts a second
-  read handle before releasing the exclusive one. A positive control releases it and proves that
-  two handles opened with `FileShare::Read` can read concurrently.
-- **Observed:** the exclusive second open succeeds. The demo passes7/8 controls and fails only the
-  exclusivity assertion on both SOFTWARE and OPENGLES3 labels; five repeated runs per label are
-  byte-identical at stdout SHA-256
-  `5a08d9908c6c806f20618bea5e3eaf3bec7892e64e759a85f9a80c205fddc388` with empty stderr.
-- **Expected/reference:** the public header says the argument controls concurrent access. The
-  checked-in genuine-XNA implementation forwards all four arguments to
-  `File.Open(path, fileMode, fileAccess, fileShare)`, where `FileShare::None` refuses another
-  handle until the first closes.
-- **Cause:** CNA comments the parameter name out and constructs Sharp Runtime's three-argument
-  `FileStream`, which has no share-policy constructor. Every FileShare value therefore follows the
-  same path.
-- **Suggested repair/status:** implement and enforce FileShare in Sharp Runtime's FileStream and
-  pass this argument through CNA. Keep the three shorter overloads' documented ReadWrite default.
-  Open against pinned CNA `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA or Sharp Runtime
-  source was modified and no fresh XNA execution or upstream message is claimed. Evidence:
-  `/tmp/checkpoint-1109-storage-public-headers/*`.
 
 ### CNA-DEMOS-ISSUE-131 -- BoundingFrustum ray intersection omits outside entry and boundary start
 
@@ -2740,8 +2739,6 @@ the earlier pending/no-repair status statements.
   catalog and metadata validation pass. No audible validation is claimed.
 - **Status:** runtime-confirmed missing disposal guards; not reported upstream.
 
-
-
 ### CNA-DEMOS-ISSUE-057 -- Content staging scavenger warns during normal concurrent lifecycle
 
 - **Resolved (2026-10-21), FIXED_VALIDATED:** CNA
@@ -2877,7 +2874,6 @@ the earlier pending/no-repair status statements.
   full validation after recording the defect, and retain this issue even if scheduling permits a
   clean retry. The eleven OcclusionQuery controls already pass on both renderers independently.
   No sibling source was changed, unknown staging directory deleted or upstream message sent.
-
 
 ### CNA-DEMOS-ISSUE-047 -- AddOutputFile refuses a generated file in the configured output directory
 
@@ -3199,7 +3195,6 @@ the earlier pending/no-repair status statements.
   continue; it does not relabel the exception or fall back to a lower-priority asset. Temporary
   files belong to this demo and are removed by scoped cleanup. No CNA edits or upstream report.
 
-
 ### CNA-DEMOS-ISSUE-103 -- C content loaders discard canonical `ContentLoadException` identity
 
 - **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `68a3c7b1f`.
@@ -3305,9 +3300,6 @@ the earlier pending/no-repair status statements.
   Focused evidence is under `/tmp/checkpoint-1093-intermediate-envelope-syntax/*`. No CNA or
   sharp-runtime source was modified, and no fresh XNA execution or upstream message is claimed.
 
-
-
-
 ### CNA-DEMOS-ISSUE-016 -- Linking `CNA_GamerServices` after another library duplicates CNA in the executable
 
 - **Resolved (2026-10-20), FIXED_VALIDATED:** CNA `470b12a5d` repairs shared-runtime
@@ -3411,7 +3403,6 @@ the earlier pending/no-repair status statements.
   `CMakeLists.txt` to the first CMake that de-duplicates correctly, or de-duplicate the
   WHOLE_ARCHIVE list in `cmake/SharedRuntimeLibrary.cmake` so cycle repetition cannot occur.
 - **Status:** documented; not yet reported upstream.
-
 
 ### CNA-DEMOS-ISSUE-013 -- The content manifest lists the content pipeline's bookkeeping files
 
@@ -3606,7 +3597,6 @@ the earlier pending/no-repair status statements.
   `994a2ae3717617eb1f5b8c101fada0e70f70dad5e06d734028a44951b5f74615`. Open against clean
   isolated CNA `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA source was modified and no upstream
   message was sent. The issue is a passing diagnostic rather than a runtime `knownIssue` marker.
-
 
 ### CNA-DEMOS-ISSUE-111 -- Direct XNA XNB writer ignores its build environment platform and profile
 
@@ -4076,7 +4066,6 @@ the earlier pending/no-repair status statements.
 - **Status:** Resolved by CNA `3a1437725`; historical metadata defect and evidence
   retained. ISSUE-047 remains open and its marker is unchanged.
 
-
 ### CNA-DEMOS-ISSUE-149 -- intermediate null reads report broader exceptions than XNA
 
 - **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
@@ -4125,7 +4114,6 @@ the earlier pending/no-repair status statements.
   `/tmp/checkpoint-1094-intermediate-null-semantics/*`. No CNA source was modified, and no fresh XNA
   execution or upstream message is claimed.
 
-
 ### CNA-DEMOS-ISSUE-147 -- intermediate NUL character reports XmlException instead of ArgumentException
 
 - **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
@@ -4162,7 +4150,6 @@ the earlier pending/no-repair status statements.
   Focused evidence is under `/tmp/checkpoint-1089-intermediate-text-values/*`. The reference is
   CNA's checked-in genuine-XNA corpus; no fresh XNA execution, CNA/sharp-runtime source
   modification or upstream message is claimed.
-
 
 ### CNA-DEMOS-ISSUE-146 -- OpaqueDataDictionary reports the wrong null-value exception
 
@@ -4201,7 +4188,6 @@ the earlier pending/no-repair status statements.
   `/tmp/checkpoint-1085-opaque-data/*`. The XML oracle is CNA's checked-in genuine-XNA corpus;
   no fresh XNA execution, CNA source modification or upstream message is claimed.
 
-
 ### CNA-DEMOS-ISSUE-151 -- disposed StorageContainer remains fully usable
 
 - **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
@@ -4236,7 +4222,6 @@ the earlier pending/no-repair status statements.
   CNA `d23e139de9e5c15511b6be745de290896a69ee37`; no CNA source was modified and no fresh XNA
   execution or upstream message is claimed. Evidence:
   `/tmp/checkpoint-1109-storage-public-headers/*`.
-
 
 ### CNA-DEMOS-ISSUE-145 -- TitleContainer accepts rooted names and reports non-XNA path exceptions
 
@@ -4273,7 +4258,6 @@ the earlier pending/no-repair status statements.
   `7a7c6be52d3dab90c85dd30a44b881870276d4af86d8f96345280fcf326c5e64` and empty stderr. Focused CNA
   evidence is under `/tmp/checkpoint-1078-root-values/*`. No CNA source was modified and no
   upstream message was sent.
-
 
 ### CNA-DEMOS-ISSUE-056 -- File stream position becomes -1 after a short EOF read
 
@@ -4322,7 +4306,6 @@ the earlier pending/no-repair status statements.
   (37passes/one failure,38total) on both requested selections, in checkpoint-467-scene-focused-*.
   Reproduce via `cna-demos c_api.storage.save_game --automated --renderer SOFTWARE` after building.
 
-
 ### CNA-DEMOS-ISSUE-144 -- LaunchParameters drops empty values and silently ignores duplicate Add
 
 - **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
@@ -4361,7 +4344,6 @@ the earlier pending/no-repair status statements.
   metadata710/0 and three exact SOFTWARE CTests pass. No CNA source was modified and no upstream
   message was sent.
 
-
 ### CNA-DEMOS-ISSUE-143 -- GameComponentCollection differs on Insert validation and null Clear events
 
 - **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
@@ -4399,7 +4381,6 @@ the earlier pending/no-repair status statements.
   `/tmp/checkpoint-1076-game-components/*`. The warning-free three-job build and five exact
   SOFTWARE CTests pass. No CNA source was modified and no upstream message was sent.
 
-
 ### CNA-DEMOS-ISSUE-142 -- component change events bypass and precede their protected hooks
 
 - **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
@@ -4431,7 +4412,6 @@ the earlier pending/no-repair status statements.
   hashes are shared with ISSUE-143 under `/tmp/checkpoint-1076-game-components/*`. The focused
   build and exact CTests are clean; no CNA source was modified and no upstream message was sent.
 
-
 ### CNA-DEMOS-ISSUE-141 -- repeated GameComponent Dispose suppresses XNA's repeated event
 
 - **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
@@ -4459,10 +4439,6 @@ the earlier pending/no-repair status statements.
 - **Evidence/status:** open against pinned CNA d23e139 on Linux. The genuine-XNA main probe and
   focused CNA evidence are shared with ISSUE-142/-143. No CNA source was modified and no upstream
   message was sent.
-
-
-
-
 
 ### CNA-DEMOS-ISSUE-132 -- Color nonfinite interpolation and multiplication differ from XNA
 
@@ -4501,7 +4477,6 @@ the earlier pending/no-repair status statements.
   three-job build, all four exact SOFTWARE CTests, metadata705/0 and self-tests5/5 plus4/4 pass;
   ten runs per demo and renderer label reproduce only the two documented assertions with empty
   stderr. No CNA source was modified and no upstream message was sent.
-
 
 ### CNA-DEMOS-ISSUE-133 -- BoundingFrustum boundary and equal-instance containment differ from XNA
 
@@ -4614,7 +4589,6 @@ the earlier pending/no-repair status statements.
   warning-free three-job build, all four exact SOFTWARE CTests, metadata701/0 and self-tests5/5
   plus4/4 pass; ten runs per demo and renderer label reproduce only the two documented BoundingBox
   assertions with empty stderr. No CNA source was modified and no upstream message was sent.
-
 
 ### CNA-DEMOS-ISSUE-135 -- BoundingFrustum identity text preserves derived negative zeros
 
@@ -4755,16 +4729,6 @@ the earlier pending/no-repair status statements.
   renderer label reproduce only the documented assertions with empty stderr. No CNA source was
   modified and no upstream message was sent.
 
-
-
-
-
-
-
-
-
-
-
 ### CNA-DEMOS-ISSUE-024 -- `BoundingBox::ToString` and `Ray::ToString` print doubled braces
 
 - **Repair-campaign resolution (2026-10-20): FIXED_VALIDATED.**
@@ -4796,7 +4760,6 @@ the earlier pending/no-repair status statements.
 - **Status:** open (low: text only); not reported upstream yet.
 
 ---
-
 
 ### CNA-DEMOS-ISSUE-140 -- Matrix CreateShadow does not normalize its plane
 
@@ -5008,7 +4971,6 @@ the earlier pending/no-repair status statements.
   both exact known-issue CTests, metadata701/0 and self-tests5/5 plus4/4 pass; ten runs per demo
   and renderer label reproduce only the two documented assertions with empty stderr. No CNA source
   was modified and no upstream message was sent.
-
 
 ### CNA-DEMOS-ISSUE-136 -- MathHelper Min and Max lose a NaN first operand
 
@@ -5284,7 +5246,6 @@ the earlier pending/no-repair status statements.
   Exact known-issue CTest, metadata693/0 and self-tests5/5 plus4/4 pass. No CNA source was modified
   and no upstream message was sent.
 
-
 ### CNA-DEMOS-ISSUE-138 -- Curve evaluation loses NaN and exact duplicate-position behavior
 
 - **Repair-campaign resolution (2026-10-19): FIXED_VALIDATED.** CNA commit
@@ -5477,7 +5438,6 @@ the earlier pending/no-repair status statements.
   exactly one failure (actual2, expected4). Its exact SOFTWARE CTest passes the expected-failure
   contract; ten runs per label are byte-stable with empty stderr. Genuine XNA ran from the
   installed Windows XNA 4.0 assembly under Wine. Evidence:`/tmp/checkpoint-1073-curve-members/*`.
-
 
 ### CNA-DEMOS-ISSUE-155 -- MathTypeConverter comments contradict its conversion policy
 
@@ -6133,7 +6093,6 @@ the earlier pending/no-repair status statements.
 - **Status:** confirmed documentation contradictions with native Picture and file-based Album
   evidence. No CNA source changed and no upstream report sent.
 
-
 ### CNA-DEMOS-ISSUE-042 -- Root-prefix comments describe an older mesh-cancellation representation
 
 - **Repair-campaign resolution (2026-10-19): DOCUMENTATION_CORRECTED.** CNA commit `66918da04` corrects the public contract; runtime behavior and demo assertions are unchanged.
@@ -6204,7 +6163,6 @@ the earlier pending/no-repair status statements.
   XNB texture-profile policy from CNB processing without implying every field affects every route.
 - **Status:** confirmed public-comment mismatch; runtime behavior is correct. No CNA source
   changed, upstream message sent, failing assertion suppressed or new known-failure demo added.
-
 
 ### CNA-DEMOS-ISSUE-116 -- Singular affine Matrix inversion loses XNA's finite components
 
@@ -6417,8 +6375,6 @@ the earlier pending/no-repair status statements.
   smoke suites with exact prior35/36failed assertions retained. No CNA source edited/reverted, warning suppressed, runtime
   knownIssue marker or upstream message.
 
-
-
 ### CNA-DEMOS-ISSUE-052 -- In-flight cgltf implementation split breaks the importer build
 
 - **Area:** external uncommitted changes to `modules/content/src/GltfImport/GltfImportCore.cpp`
@@ -6450,7 +6406,6 @@ the earlier pending/no-repair status statements.
   by cna-demos. The external cgltf split/fix was subsequently committed as bf9089edc; later clean
   ced719909 was observed during checkpoint 455 runtime. Resolved for the exercised build; no
   runtime knownIssue marker or upstream message.
-
 
 ### CNA-DEMOS-ISSUE-044 -- In-flight C API generation shadows a result-handle parameter
 
