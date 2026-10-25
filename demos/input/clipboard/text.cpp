@@ -12,10 +12,13 @@
 #include "Microsoft/Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteFont.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteSortMode.hpp"
+#include "Microsoft/Xna/Framework/Input/Keyboard.hpp"
+#include "Microsoft/Xna/Framework/Input/Keys.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
+using namespace Microsoft::Xna::Framework::Input;
 using DeviceClipboard = CNA::Devices::Clipboard;
 using InputClipboard = CNA::Input::Clipboard;
 
@@ -28,6 +31,36 @@ namespace
         {
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
+            previousKeyboard_ = Keyboard::GetState();
+            Context().Check(std::string("Score: 12345").size() == 12,
+                            "the deterministic clipboard probe text is available without host access");
+        }
+
+        void Update(GameTime& gameTime) override
+        {
+            const KeyboardState keyboard = Keyboard::GetState();
+            if (!Context().Automated() && keyboard.IsKeyDown(Keys::C) && previousKeyboard_.IsKeyUp(Keys::C))
+                RunClipboardProbe();
+            previousKeyboard_ = keyboard;
+            Game::Update(gameTime);
+        }
+
+        void Draw(const GameTime& gameTime) override
+        {
+            getGraphicsDeviceProperty().Clear(Color::DarkSlateGray);
+            spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
+            spriteBatch_->DrawString(*font_, "C: explicitly run the real clipboard text probe",
+                                     Vector2(40.0f, 40.0f), Color::White);
+            spriteBatch_->DrawString(*font_, read_, Vector2(60.0f, 75.0f), Color::LightGreen);
+            spriteBatch_->DrawString(*font_, primary_ ? "Primary selection: available" : "Primary selection: none",
+                                     Vector2(40.0f, 130.0f), Color::LightGray);
+            spriteBatch_->End();
+            Game::Draw(gameTime);
+        }
+
+    private:
+        void RunClipboardProbe()
+        {
 
             // The clipboard belongs to the desktop, so keep what the person had copied.
             const std::optional<std::string> previous =
@@ -64,7 +97,7 @@ namespace
             Context().Check(DeviceClipboard::setTextProperty(previous.value_or("")) &&
                                 DeviceClipboard::getHasTextProperty() == previous.has_value() &&
                                 (!previous || DeviceClipboard::getTextProperty() == *previous),
-                            "the prior clipboard text or empty state is restored exactly");
+                            "the prior clipboard text or empty text state is restored");
             InputClipboard::SetPrimarySelectionTextEXT(previousPrimary.value_or(""));
             Context().Check(InputClipboard::HasPrimarySelectionTextEXT() == previousPrimary.has_value() &&
                                 (!previousPrimary ||
@@ -72,21 +105,7 @@ namespace
                             "the prior primary-selection text or empty state is restored exactly");
         }
 
-        void Draw(const GameTime& gameTime) override
-        {
-            getGraphicsDeviceProperty().Clear(Color::DarkSlateGray);
-            spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
-            spriteBatch_->DrawString(*font_, "Copied and read back:", Vector2(40.0f, 40.0f), Color::White);
-            spriteBatch_->DrawString(*font_, read_, Vector2(60.0f, 75.0f), Color::LightGreen);
-            spriteBatch_->DrawString(*font_, primary_ ? "Primary selection: available" : "Primary selection: none",
-                                     Vector2(40.0f, 130.0f), Color::LightGray);
-            spriteBatch_->DrawString(*font_, "The previous clipboard text was put back.", Vector2(40.0f, 160.0f),
-                                     Color::LightGray);
-            spriteBatch_->End();
-            Game::Draw(gameTime);
-        }
-
-    private:
+        KeyboardState previousKeyboard_;
         std::string read_;
         bool primary_ = false;
         std::unique_ptr<SpriteBatch> spriteBatch_;
@@ -97,16 +116,20 @@ namespace
 CNA_DEMOS_GAME(ClipboardTextDemo, {
     .id = "input.clipboard.text",
     .title = "Clipboard text (CNAEXT)",
-    .description = "Writes and reads text across CNA::Devices::Clipboard and CNA::Input::Clipboard, tries the "
-                   "X11/Wayland primary selection, then restores both prior text states including empty ones.",
+    .description = "After a fresh C press in an attended run, writes and reads text across the CNA::Devices and "
+                   "CNA::Input wrappers, tries the primary selection and restores prior text states. The public API "
+                   "cannot snapshot arbitrary non-text clipboard formats.",
     .apis = {"CNA::Input::Clipboard::SetTextEXT", "CNA::Input::Clipboard::GetTextEXT",
              "CNA::Input::Clipboard::HasTextEXT", "CNA::Input::Clipboard::SetPrimarySelectionTextEXT",
              "CNA::Input::Clipboard::GetPrimarySelectionTextEXT",
              "CNA::Input::Clipboard::HasPrimarySelectionTextEXT", "CNA::Devices::Clipboard::Text",
              "CNA::Devices::Clipboard::HasText"},
-    .tags = {"clipboard", "copy", "paste", "text", "cnaext"},
-    .needs = CnaDemos::Need::Window,
+    .tags = {"clipboard", "copy", "paste", "text", "cnaext", "explicit-consent"},
+    .automation = CnaDemos::Automation::SmokeOnly,
+    .needs = CnaDemos::Need::Keyboard,
     .frames = 3,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
+    .restrictions = {"Unattended runs never write the host clipboard. C explicitly consents to text replacement; "
+                     "text/primary text are restored, but CNA cannot restore unrelated foreign MIME formats."},
 })

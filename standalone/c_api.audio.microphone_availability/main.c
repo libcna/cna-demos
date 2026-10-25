@@ -1,12 +1,10 @@
 /* SPDX-License-Identifier: MS-PL */
 /* Host microphone availability and the common indexed upper bound through the C ABI. */
-#define _POSIX_C_SOURCE 199309L
 #include <CNA/C/cna.h>
 
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 
 #include "CnaDemos/CApiDemo.h"
 
@@ -66,9 +64,6 @@ int main(int argc, char** argv)
         char untouched[sizeof(name)];
         uint64_t name_bytes = UINT64_C(0);
         uint64_t copied = UINT64_C(0);
-        uint64_t captured_bytes = UINT64_C(0);
-        int64_t original_duration = INT64_C(0);
-        int wait_step;
 
         memset(name, 0xA5, sizeof(name));
         cna_demo_check(
@@ -93,37 +88,17 @@ int main(int argc, char** argv)
         cna_demo_check(
             &demo,
             cna_microphone_get_buffer_duration_ticks_at(
-                game, default_index, &original_duration) == CNA_RESULT_SUCCESS &&
-                original_duration >= INT64_C(1000000) &&
+                game, default_index, &duration) == CNA_RESULT_SUCCESS &&
+                duration >= INT64_C(1000000) &&
                 cna_microphone_get_is_headset_at(
                     game, default_index, &headset) == CNA_RESULT_SUCCESS &&
                 (headset == CNA_FALSE || headset == CNA_TRUE) &&
-                cna_microphone_get_state_at(game, default_index, &state) == CNA_RESULT_SUCCESS &&
-                state == CNA_MICROPHONE_STATE_STOPPED,
-            "read the default microphone's duration, headset flag and stopped state");
-        duration = INT64_C(0);
-        cna_demo_check(
-            &demo,
-            cna_microphone_set_buffer_duration_ticks_at(
-                game, default_index, INT64_C(1000000)) == CNA_RESULT_SUCCESS &&
-                cna_microphone_get_buffer_duration_ticks_at(
-                    game, default_index, &duration) == CNA_RESULT_SUCCESS &&
-                duration == INT64_C(1000000),
-            "set and read the minimum 100 ms capture-buffer duration");
-        cna_demo_check_result(
-            &demo,
-            cna_microphone_subscribe_buffer_ready_at(
-                game, default_index, on_buffer_ready, &ready_calls, &registration),
-            "subscribe to the default microphone's BufferReady event");
-        cna_demo_check(
-            &demo,
-            cna_microphone_start_at(game, default_index) == CNA_RESULT_SUCCESS &&
-                cna_microphone_get_state_at(game, default_index, &state) == CNA_RESULT_SUCCESS &&
-                state == CNA_MICROPHONE_STATE_STARTED &&
                 cna_microphone_get_sample_rate_at(
                     game, default_index, &sample_rate) == CNA_RESULT_SUCCESS &&
-                sample_rate > 0,
-            "start capture and read the negotiated sample rate");
+                sample_rate > 0 &&
+                cna_microphone_get_state_at(game, default_index, &state) == CNA_RESULT_SUCCESS &&
+                (state == CNA_MICROPHONE_STATE_STOPPED || state == CNA_MICROPHONE_STATE_STARTED),
+            "read duration, headset, sample-rate and state metadata without opening capture");
         cna_demo_check(
             &demo,
             cna_microphone_get_sample_size_in_bytes_at(
@@ -132,42 +107,7 @@ int main(int argc, char** argv)
                 cna_microphone_get_sample_duration_ticks_at(
                     game, default_index, sample_bytes, &duration) == CNA_RESULT_SUCCESS &&
                 duration == INT64_C(1000000),
-            "capture sample-size and duration conversion round-trips 100 ms exactly");
-        for (wait_step = 0; wait_step < 30 && ready_calls == 0; ++wait_step) {
-            const struct timespec delay = {0, 20000000L};
-            (void)nanosleep(&delay, NULL);
-            (void)cna_microphone_check_all_buffers_ext(game);
-        }
-        memset(captured, 0xA5, sizeof(captured));
-        cna_demo_check(
-            &demo,
-            ready_calls > 0 &&
-                cna_microphone_get_data_at(
-                    game, default_index, captured, (uint64_t)sample_bytes, &captured_bytes) ==
-                    CNA_RESULT_SUCCESS &&
-                captured_bytes > 0U && captured_bytes <= (uint64_t)sample_bytes,
-            "BufferReady precedes a bounded nonempty capture read");
-        cna_demo_check(
-            &demo,
-            cna_microphone_stop_at(game, default_index) == CNA_RESULT_SUCCESS &&
-                cna_microphone_get_state_at(game, default_index, &state) == CNA_RESULT_SUCCESS &&
-                state == CNA_MICROPHONE_STATE_STOPPED,
-            "Stop closes capture and restores the stopped state");
-        cna_demo_check(
-            &demo,
-            cna_audio_unsubscribe_ext(registration) == CNA_RESULT_SUCCESS &&
-                cna_audio_unsubscribe_ext(registration) == CNA_RESULT_INVALID_HANDLE,
-            "the BufferReady registration releases exactly once");
-        registration = CNA_INVALID_HANDLE;
-        duration = INT64_C(0);
-        cna_demo_check(
-            &demo,
-            cna_microphone_set_buffer_duration_ticks_at(
-                game, default_index, original_duration) == CNA_RESULT_SUCCESS &&
-                cna_microphone_get_buffer_duration_ticks_at(
-                    game, default_index, &duration) == CNA_RESULT_SUCCESS &&
-                duration == original_duration,
-            "restore the microphone's original capture-buffer duration");
+            "sample-size and duration conversion round-trips 100 ms without opening capture");
     }
 
     memset(name, 0xA5, sizeof(name));

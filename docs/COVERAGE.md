@@ -6,22 +6,22 @@ Generated 2026-10-25 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 ## Demos
 
-**730 demos** in 19 categories. Kinds: console 208, game 307, standalone 215. Automation: automated 687, manual 11, smoke-only 32.
+**733 demos** in 19 categories. Kinds: console 207, game 311, standalone 215. Automation: automated 685, manual 10, smoke-only 38.
 
 | Category | Demos | Automated | Smoke-only | Manual | Run on SOFTWARE (passed / skipped / failed / not run / absent) | Run on OPENGLES3 (passed / skipped / failed / not run / absent) |
 |---|---|---|---|---|---|---|
-| audio | 23 | 20 | 2 | 1 | 22 / 0 / 0 / 1 / 0 | 22 / 0 / 0 / 1 / 0 |
+| audio | 23 | 20 | 3 | 0 | 23 / 0 / 0 / 0 / 0 | 23 / 0 / 0 / 0 / 0 |
 | c_api | 177 | 176 | 1 | 0 | 177 / 0 / 0 / 0 / 0 | 177 / 0 / 0 / 0 / 0 |
 | cnaext | 4 | 4 | 0 | 0 | 2 / 2 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
 | content | 73 | 73 | 0 | 0 | 73 / 0 / 0 / 0 / 0 | 73 / 0 / 0 / 0 / 0 |
 | core | 6 | 6 | 0 | 0 | 6 / 0 / 0 / 0 / 0 | 6 / 0 / 0 / 0 / 0 |
 | design | 4 | 4 | 0 | 0 | 4 / 0 / 0 / 0 / 0 | 4 / 0 / 0 / 0 / 0 |
-| devices | 12 | 6 | 0 | 6 | 5 / 1 / 0 / 6 / 0 | 6 / 0 / 0 / 6 / 0 |
+| devices | 12 | 5 | 1 | 6 | 5 / 1 / 0 / 6 / 0 | 6 / 0 / 0 / 6 / 0 |
 | diagnostics | 6 | 6 | 0 | 0 | 2 / 4 / 0 / 0 / 0 | 2 / 4 / 0 / 0 / 0 |
 | game | 33 | 28 | 4 | 1 | 25 / 7 / 0 / 1 / 0 | 32 / 0 / 0 / 1 / 0 |
 | gamer_services | 20 | 19 | 0 | 1 | 19 / 0 / 0 / 1 / 0 | 19 / 0 / 0 / 1 / 0 |
-| graphics | 187 | 187 | 0 | 0 | 164 / 23 / 0 / 0 / 0 | 184 / 3 / 0 / 0 / 0 |
-| input | 43 | 17 | 24 | 2 | 35 / 6 / 0 / 2 / 0 | 41 / 0 / 0 / 2 / 0 |
+| graphics | 190 | 190 | 0 | 0 | 167 / 23 / 0 / 0 / 0 | 187 / 3 / 0 / 0 / 0 |
+| input | 43 | 13 | 28 | 2 | 38 / 3 / 0 / 2 / 0 | 41 / 0 / 0 / 2 / 0 |
 | inspector | 3 | 3 | 0 | 0 | 3 / 0 / 0 / 0 / 0 | 3 / 0 / 0 / 0 / 0 |
 | math | 95 | 95 | 0 | 0 | 95 / 0 / 0 / 0 / 0 | 95 / 0 / 0 / 0 / 0 |
 | media | 18 | 17 | 1 | 0 | 18 / 0 / 0 / 0 / 0 | 18 / 0 / 0 / 0 / 0 |
@@ -37,12 +37,12 @@ Generated 2026-10-25 from cna-demos 0.1.0 built against CNA 0.1.0 (renderers com
 
 - **Types with at least one demo: 308 of 329** (93.6 %).
 - **Methods, properties, constructors and events named by a demo: 2128 of 2326** (91.5 %).
-- Fields and enum values named by a demo: 674 of 753 (reported separately: a demo per enum value is not a goal).
+- Fields and enum values named by a demo: 672 of 753 (reported separately: a demo per enum value is not a goal).
 
 | Namespace | Types demonstrated | Members demonstrated | Fields/enum values named |
 |---|---|---|---|
 | `Microsoft.Xna.Framework` | 42 / 42 | 635 / 643 | 78 / 78 |
-| `Microsoft.Xna.Framework.Audio` | 17 / 19 | 114 / 121 | 11 / 11 |
+| `Microsoft.Xna.Framework.Audio` | 17 / 19 | 114 / 121 | 9 / 11 |
 | `Microsoft.Xna.Framework.Content` | 7 / 11 | 41 / 48 | 0 / 0 |
 | `Microsoft.Xna.Framework.Design` | 13 / 13 | 51 / 51 | 2 / 2 |
 | `Microsoft.Xna.Framework.GamerServices` | 44 / 52 | 170 / 244 | 160 / 223 |
@@ -66,7 +66,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 
 ## CNA C ABI routes demonstrated
 
-- **C ABI routes named by a demo: 3089 of 3212** (96.2 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
+- **C ABI routes named by a demo: 3085 of 3212** (96.0 %), counted from the `CNA_C_API` declarations in CNA's `modules/c-api/include/CNA/C/*.h`. The c_api demos are standalone C programs.
 
 | Header | Routes demonstrated |
 |---|---|
@@ -79,7 +79,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `core.h` | 7 / 7 |
 | `core_ext.h` | 56 / 57 |
 | `curve.h` | 45 / 45 |
-| `devices.h` | 59 / 62 |
+| `devices.h` | 58 / 62 |
 | `display.h` | 22 / 22 |
 | `effects.h` | 290 / 290 |
 | `gamer_services.h` | 237 / 239 |
@@ -92,9 +92,9 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `index_resources.h` | 8 / 10 |
 | `input.h` | 14 / 15 |
 | `input_cursor.h` | 6 / 6 |
-| `input_devices.h` | 31 / 37 |
+| `input_devices.h` | 30 / 37 |
 | `input_gamepad.h` | 63 / 63 |
-| `input_haptics.h` | 33 / 36 |
+| `input_haptics.h` | 32 / 36 |
 | `input_joystick.h` | 27 / 30 |
 | `input_keyboard.h` | 17 / 17 |
 | `input_mouse.h` | 20 / 20 |
@@ -116,7 +116,7 @@ The backlog this report derives from CNA's own inventory. Grouped by namespace.
 | `runtime_components.h` | 35 / 39 |
 | `runtime_graphics_manager.h` | 33 / 38 |
 | `runtime_window.h` | 20 / 20 |
-| `sensors.h` | 116 / 144 |
+| `sensors.h` | 115 / 144 |
 | `sprite_font.h` | 9 / 9 |
 | `storage.h` | 47 / 49 |
 | `texture.h` | 21 / 21 |
@@ -1282,7 +1282,6 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `CNA::Input::Haptics::IsMouseHapticEXT` -- input.devices.list, input.haptics.rumble
 - `CNA::Input::Haptics::OpenEXT` -- input.haptics.effects, input.haptics.rumble
 - `CNA::Input::Haptics::OpenFromJoystickEXT` -- input.haptics.effects
-- `CNA::Input::Haptics::OpenFromMouseEXT` -- input.haptics.rumble
 - `CNA::Input::InputDeviceInfoEXT` -- input.devices.list
 - `CNA::Input::InputDevices::GetKeyboardsEXT` -- input.devices.list
 - `CNA::Input::InputDevices::GetMiceEXT` -- input.devices.list
@@ -1921,16 +1920,18 @@ API names in demo metadata that are not documented XNA 4.0 members: CNA extensio
 - `Model::GltfImportReportEXT` -- graphics.model.animation_validation, graphics.model.clip_interpolation, graphics.model.import_report, graphics.model.imported_topology, graphics.model.morph_animation_import, graphics.model.multi_skin_animation_report, graphics.model.node_animation, graphics.model.node_instances, graphics.model.skin_weight_import, graphics.model.skinned_animation
 - `Model::MaterialVariantEXT` -- graphics.model.material_variants
 - `Model::MaterialVariantNamesEXT` -- graphics.model.material_variants
+- `Model::Model` -- graphics.model.procedural_construction
 - `Model::SkinsEXT` -- graphics.model.multi_skin_animation_report
 - `Model::getCamerasEXTProperty` -- graphics.model.gltf_cameras
 - `ModelAnimationsEXT` -- graphics.model.animation_validation, graphics.model.clip_interpolation, graphics.model.gltf_cameras, graphics.model.node_animation
+- `ModelBone::ModelBone` -- graphics.model.procedural_construction
 - `ModelBoneCollection::Contains` -- graphics.model.bones
 - `ModelBoneCollection::Count` -- graphics.model.bones
 - `ModelCameraEXT` -- graphics.model.gltf_cameras
-- `ModelMesh::ModelMesh` -- graphics.model.mesh_parts
+- `ModelMesh::ModelMesh` -- graphics.model.mesh_parts, graphics.model.procedural_construction
 - `ModelMeshCollection::Contains` -- graphics.model.bones
 - `ModelMeshCollection::Count` -- graphics.model.bones, graphics.model.draw
-- `ModelMeshPart::ModelMeshPart` -- graphics.model.mesh_parts
+- `ModelMeshPart::ModelMeshPart` -- graphics.model.mesh_parts, graphics.model.procedural_construction
 - `ModelMeshPart::SamplerStatesEXT` -- graphics.model.material_variants
 - `ModelSkinEXT` -- graphics.model.multi_skin_animation_report
 - `MorphTargetDataEXT` -- graphics.model.material_variants, graphics.model.morph_animation_import, graphics.model.morph_targets

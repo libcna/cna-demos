@@ -29,12 +29,13 @@ namespace
         {
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
+            uWasDown_ = Keyboard::GetState().IsKeyDown(Keys::U);
         }
 
         void Update(GameTime& gameTime) override
         {
             const bool uDown = Keyboard::GetState().IsKeyDown(Keys::U);
-            if (uDown && !uWasDown_)
+            if (!Context().Automated() && uDown && !uWasDown_)
             {
                 try
                 {

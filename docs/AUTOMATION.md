@@ -7,11 +7,17 @@ Every demo declares what an unattended run of it proves (`DemoInfo::automation`)
 | Class | Unattended run | Feature verified by the run? | Examples |
 |---|---|---|---|
 | `automated` | runs a bounded number of frames (Game) or to completion (console) | **yes** -- the demo's `Check`s decide pass/fail; Game demos also prove start-up, frames and cleanup | math, content loading, render targets, audio API with the dummy driver |
-| `smoke-only` | runs a bounded number of frames | **no** -- only start-up, frame loop and shutdown; the feature needs a person | keyboard, mouse, gamepad and touch demos |
+| `smoke-only` | runs a bounded number of frames | **safe path only** -- capability/value checks and cleanup may run, but real input or physical/host effects require a person | keyboard, mouse, gamepad, haptics and touch demos |
 | `manual` | not started; reported as NOT RUN | no | hardware without an emulation, network services, credentials |
 
 Kinds are orthogonal: console, Game and standalone demos can each be in any class
 (see [ARCHITECTURE.md](ARCHITECTURE.md) section 4).
+
+`smoke-only` is not a consent mechanism. A demo with a physical or host side effect must also
+guard the mutating call with a fresh, observable input transition and `!Context().Automated()`.
+`manual` demos are rejected by the runner before their factory is called. The static
+`tools/hardware_safety_audit.py` guard pins these reviewed boundaries in the standard validation
+workflow.
 
 Status words used everywhere (CLI, reports, coverage):
 

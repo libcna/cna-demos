@@ -12,15 +12,15 @@
   },
   "destination": {
     "repository": "cna-demos",
-    "catalog_demo_count": 730
+    "catalog_demo_count": 733
   },
   "disposition_counts": {
-    "ALREADY_COVERED": 183,
-    "COVERED_BY_MULTIPLE": 39,
-    "EXTEND_EXISTING": 10,
+    "ALREADY_COVERED": 176,
+    "COVERED_BY_MULTIPLE": 38,
+    "EXTEND_EXISTING": 15,
     "INTENTIONALLY_NOT_MIGRATED": 1,
     "MANUAL_INTEGRATION": 11,
-    "MIGRATE_NEW": 3,
+    "MIGRATE_NEW": 6,
     "OBSOLETE": 1
   },
   "screens": [
@@ -833,8 +833,8 @@
         {
           "id": "audio.microphone.input_level",
           "source": "demos/audio/microphone/input_level.cpp",
-          "automation": "manual",
-          "description": "Enumerates Microphone::All, classifies the default as a headset or ordinary microphone, records 100 ms buffers and shows their input level while checking byte/duration conversion.",
+          "automation": "smoke-only",
+          "description": "Enumerates microphones and validates sample conversion without opening hardware. In an attended run, a fresh Space press starts owned capture; another press or shutdown stops it, restores the prior buffer duration and removes the token-owned BufferReady handler.",
           "shared_api_members": [
             "Microphone::All",
             "Microphone::Default",
@@ -845,12 +845,12 @@
       ],
       "missing_meaningful_behavior": "none",
       "disposition": "ALREADY_COVERED",
-      "migration_decision_rationale": "The current focused demo audio.microphone.input_level states: Enumerates Microphone::All, classifies the default as a headset or ordinary microphone, records 100 ms buffers and shows their input level while checking byte/duration conversion. This is the same meaningful behavior as the legacy description: Microphone::All / Default + per-device properties",
+      "migration_decision_rationale": "The current focused demo audio.microphone.input_level states: Enumerates microphones and validates sample conversion without opening hardware. In an attended run, a fresh Space press starts owned capture; another press or shutdown stops it, restores the prior buffer duration and removes the token-owned BufferReady handler. This is the same meaningful behavior as the legacy description: Microphone::All / Default + per-device properties",
       "final_destination_ids": [
         "audio.microphone.input_level"
       ],
       "validation_evidence": "Every destination ID, source path and automation class is validated against the live cna-demos catalog; semantic evidence above records the exact catalog descriptions. Final CTest, renderer-sweep and visual results are summarized in HANDOFF.md.",
-      "limitations": "Manual/platform/hardware outcome depends on the host and is not claimed as automated runtime coverage.",
+      "limitations": "Bounded smoke automation covers safe control flow; physical interaction is limited as stated in destination metadata.",
       "ranked_catalog_candidates": [
         {
           "id": "audio.microphone.input_level",
@@ -858,7 +858,7 @@
         },
         {
           "id": "c_api.audio.microphone_availability",
-          "score": 16
+          "score": 15
         },
         {
           "id": "audio.dynamic_sound_effect_instance.buffer_formats",
@@ -916,38 +916,35 @@
         "OnDemoUnload"
       ],
       "primary_kind": "hardware integration",
-      "existing_equivalent_ids": [
-        "audio.microphone.input_level"
-      ],
+      "existing_equivalent_ids": [],
       "semantic_equivalence_evidence": [
         {
           "id": "audio.microphone.input_level",
           "source": "demos/audio/microphone/input_level.cpp",
-          "automation": "manual",
-          "description": "Enumerates Microphone::All, classifies the default as a headset or ordinary microphone, records 100 ms buffers and shows their input level while checking byte/duration conversion.",
+          "automation": "smoke-only",
+          "description": "Enumerates microphones and validates sample conversion without opening hardware. In an attended run, a fresh Space press starts owned capture; another press or shutdown stops it, restores the prior buffer duration and removes the token-owned BufferReady handler.",
           "shared_api_members": [
             "Microphone::BufferDuration",
             "Microphone::Default",
             "Microphone::GetData",
             "Microphone::Start",
             "Microphone::State",
-            "Microphone::Stop",
-            "MicrophoneState::Started"
+            "Microphone::Stop"
           ]
         }
       ],
-      "missing_meaningful_behavior": "none",
-      "disposition": "ALREADY_COVERED",
-      "migration_decision_rationale": "The current focused demo audio.microphone.input_level states: Enumerates Microphone::All, classifies the default as a headset or ordinary microphone, records 100 ms buffers and shows their input level while checking byte/duration conversion. This is the same meaningful behavior as the legacy description: Start/Stop + GetData() + the BufferReady event",
+      "missing_meaningful_behavior": "The repaired C++ demo now matches the legacy opt-in lifecycle: a fresh attended key press starts capture, the BufferReady token is owned and removed, only demo-owned capture is stopped, callback state is weakly held, and unattended runs retain enumeration and sample-conversion coverage without opening hardware.",
+      "disposition": "EXTEND_EXISTING",
+      "migration_decision_rationale": "The repaired C++ demo now matches the legacy opt-in lifecycle: a fresh attended key press starts capture, the BufferReady token is owned and removed, only demo-owned capture is stopped, callback state is weakly held, and unattended runs retain enumeration and sample-conversion coverage without opening hardware.",
       "final_destination_ids": [
         "audio.microphone.input_level"
       ],
       "validation_evidence": "Every destination ID, source path and automation class is validated against the live cna-demos catalog; semantic evidence above records the exact catalog descriptions. Final CTest, renderer-sweep and visual results are summarized in HANDOFF.md.",
-      "limitations": "Manual/platform/hardware outcome depends on the host and is not claimed as automated runtime coverage.",
+      "limitations": "Bounded smoke automation covers safe control flow; physical interaction is limited as stated in destination metadata.",
       "ranked_catalog_candidates": [
         {
           "id": "audio.microphone.input_level",
-          "score": 102
+          "score": 90
         },
         {
           "id": "c_api.audio.microphone_availability",
@@ -2799,15 +2796,13 @@
         "OnDemoUnload"
       ],
       "primary_kind": "hardware integration",
-      "existing_equivalent_ids": [
-        "devices.vibrate_controller.start_stop"
-      ],
+      "existing_equivalent_ids": [],
       "semantic_equivalence_evidence": [
         {
           "id": "devices.vibrate_controller.start_stop",
           "source": "demos/devices/vibrate_controller/start_stop.cpp",
-          "automation": "automated",
-          "description": "Buzzes VibrateController::Default for 150 ms, then more weakly with the CNAEXT intensity and dual-motor overloads and stops them early; invalid durations are refused. It reports the selected haptic capability, while a host without a suitable motor follows the documented no-op.",
+          "automation": "smoke-only",
+          "description": "Inspects VibrateController capability and duration validation automatically. Fresh Space, I or D presses in an attended run request full, intensity or dual-motor vibration; only output owned by this demo is stopped on timeout or shutdown.",
           "shared_api_members": [
             "VibrateController::Default",
             "VibrateController::DeviceName",
@@ -2815,18 +2810,18 @@
           ]
         }
       ],
-      "missing_meaningful_behavior": "none",
-      "disposition": "ALREADY_COVERED",
-      "migration_decision_rationale": "The current focused demo devices.vibrate_controller.start_stop states: Buzzes VibrateController::Default for 150 ms, then more weakly with the CNAEXT intensity and dual-motor overloads and stops them early; invalid durations are refused. It reports the selected haptic capability, while a host without a suitable motor follows the documented no-op. This is the same meaningful behavior as the legacy description: The device's vibration motor -- try this on Android",
+      "missing_meaningful_behavior": "The C++ demo retains automatic capability and invalid-duration checks, but every valid vibration overload now requires a fresh attended key press and only demo-owned output is stopped on timeout or shutdown.",
+      "disposition": "EXTEND_EXISTING",
+      "migration_decision_rationale": "The C++ demo retains automatic capability and invalid-duration checks, but every valid vibration overload now requires a fresh attended key press and only demo-owned output is stopped on timeout or shutdown.",
       "final_destination_ids": [
         "devices.vibrate_controller.start_stop"
       ],
       "validation_evidence": "Every destination ID, source path and automation class is validated against the live cna-demos catalog; semantic evidence above records the exact catalog descriptions. Final CTest, renderer-sweep and visual results are summarized in HANDOFF.md.",
-      "limitations": "No additional platform limitation beyond destination metadata.",
+      "limitations": "Bounded smoke automation covers safe control flow; physical interaction is limited as stated in destination metadata.",
       "ranked_catalog_candidates": [
         {
           "id": "devices.vibrate_controller.start_stop",
-          "score": 53
+          "score": 54
         },
         {
           "id": "c_api.devices.vibration",
@@ -3226,11 +3221,11 @@
           "score": 11
         },
         {
-          "id": "c_api.devices.sensor_lifecycle",
+          "id": "c_api.devices.sensor_values",
           "score": 11
         },
         {
-          "id": "c_api.devices.sensor_values",
+          "id": "devices.display_info.scale_and_safe_area",
           "score": 11
         }
       ]
@@ -3277,19 +3272,19 @@
         {
           "id": "input.clipboard.text",
           "source": "demos/input/clipboard/text.cpp",
-          "automation": "automated",
-          "description": "Writes and reads text across CNA::Devices::Clipboard and CNA::Input::Clipboard, tries the X11/Wayland primary selection, then restores both prior text states including empty ones.",
+          "automation": "smoke-only",
+          "description": "After a fresh C press in an attended run, writes and reads text across the CNA::Devices and CNA::Input wrappers, tries the primary selection and restores prior text states. The public API cannot snapshot arbitrary non-text clipboard formats.",
           "shared_api_members": []
         }
       ],
       "missing_meaningful_behavior": "none",
       "disposition": "ALREADY_COVERED",
-      "migration_decision_rationale": "Current focused destination evidence: input.clipboard.text: Writes and reads text across CNA::Devices::Clipboard and CNA::Input::Clipboard, tries the X11/Wayland primary selection, then restores both prior text states including empty ones.",
+      "migration_decision_rationale": "Current focused destination evidence: input.clipboard.text: After a fresh C press in an attended run, writes and reads text across the CNA::Devices and CNA::Input wrappers, tries the primary selection and restores prior text states. The public API cannot snapshot arbitrary non-text clipboard formats.",
       "final_destination_ids": [
         "input.clipboard.text"
       ],
       "validation_evidence": "Every destination ID, source path and automation class is validated against the live cna-demos catalog; semantic evidence above records the exact catalog descriptions. Final CTest, renderer-sweep and visual results are summarized in HANDOFF.md.",
-      "limitations": "No additional platform limitation beyond destination metadata.",
+      "limitations": "Bounded smoke automation covers safe control flow; physical interaction is limited as stated in destination metadata.",
       "ranked_catalog_candidates": [
         {
           "id": "devices.desktop.system_tray",
@@ -8800,7 +8795,8 @@
       ],
       "primary_kind": "visual example",
       "existing_equivalent_ids": [
-        "graphics.vertex_declaration.stock_vertex_types"
+        "graphics.vertex_declaration.stock_vertex_types",
+        "graphics.index_buffer.indexed_cube"
       ],
       "semantic_equivalence_evidence": [
         {
@@ -8809,17 +8805,29 @@
           "automation": "automated",
           "description": "Asks the four stock vertex structs for their VertexDeclaration through IVertexType (strides 16, 24, 32, 20) and draws a quad of VertexPositionColorTexture -- a repeating checker texture tinted by each corner's colour -- with DrawUserPrimitives and no explicit declaration.",
           "shared_api_members": []
+        },
+        {
+          "id": "graphics.index_buffer.indexed_cube",
+          "source": "demos/graphics/index_buffer/indexed_cube.cpp",
+          "automation": "automated",
+          "description": "Draws a vertex-coloured cube from a VertexBuffer with 8 corners and an IndexBuffer with 36 16-bit indices through GraphicsDevice::DrawIndexedPrimitives.",
+          "shared_api_members": []
         }
       ],
       "missing_meaningful_behavior": "none",
-      "disposition": "ALREADY_COVERED",
-      "migration_decision_rationale": "Current focused destination evidence: graphics.vertex_declaration.stock_vertex_types: Asks the four stock vertex structs for their VertexDeclaration through IVertexType (strides 16, 24, 32, 20) and draws a quad of VertexPositionColorTexture -- a repeating checker texture tinted by each corner's colour -- with DrawUserPrimitives and no explicit declaration.",
+      "disposition": "COVERED_BY_MULTIPLE",
+      "migration_decision_rationale": "The stock-type demo verifies VertexPositionColor's exact declaration, fields and value contract; the indexed-cube demo supplies the legacy screen's missing rendered, unlit vertex-colour cube workflow.",
       "final_destination_ids": [
-        "graphics.vertex_declaration.stock_vertex_types"
+        "graphics.vertex_declaration.stock_vertex_types",
+        "graphics.index_buffer.indexed_cube"
       ],
       "validation_evidence": "Every destination ID, source path and automation class is validated against the live cna-demos catalog; semantic evidence above records the exact catalog descriptions. Final CTest, renderer-sweep and visual results are summarized in HANDOFF.md.",
       "limitations": "No additional platform limitation beyond destination metadata.",
       "ranked_catalog_candidates": [
+        {
+          "id": "graphics.camera.orbiting_view",
+          "score": 44
+        },
         {
           "id": "graphics.rasterizer_state.cull_mode",
           "score": 40
@@ -8835,10 +8843,6 @@
         {
           "id": "graphics.device.viewport_split_screen",
           "score": 36
-        },
-        {
-          "id": "graphics.primitives.draw_user_primitives",
-          "score": 33
         }
       ]
     },
@@ -8889,29 +8893,33 @@
       ],
       "primary_kind": "visual example",
       "existing_equivalent_ids": [
-        "graphics.basic_effect.texture"
+        "graphics.camera.orbiting_view"
       ],
       "semantic_equivalence_evidence": [
         {
-          "id": "graphics.basic_effect.texture",
-          "source": "demos/graphics/basic_effect/texture.cpp",
+          "id": "graphics.camera.orbiting_view",
+          "source": "demos/graphics/camera/orbiting_view.cpp",
           "automation": "automated",
-          "description": "Draws a cube with BasicEffect::TextureEnabled and a Texture; each vertex carries the texture coordinate used for its corner of the face.",
+          "description": "Keeps three cubes' World matrices fixed while the camera position travels around them and Matrix::CreateLookAt is recomputed every frame, isolating camera motion from object motion.",
           "shared_api_members": [
-            "BasicEffect::Texture",
-            "BasicEffect::TextureEnabled"
+            "Matrix::CreateLookAt",
+            "Matrix::CreatePerspectiveFieldOfView"
           ]
         }
       ],
       "missing_meaningful_behavior": "none",
       "disposition": "ALREADY_COVERED",
-      "migration_decision_rationale": "The current focused demo graphics.basic_effect.texture states: Draws a cube with BasicEffect::TextureEnabled and a Texture; each vertex carries the texture coordinate used for its corner of the face. This is the same meaningful behavior as the legacy description: Position + UV only -- an unlit, procedurally-textured cube",
+      "migration_decision_rationale": "The current focused demo graphics.camera.orbiting_view states: Keeps three cubes' World matrices fixed while the camera position travels around them and Matrix::CreateLookAt is recomputed every frame, isolating camera motion from object motion. This is the same meaningful behavior as the legacy description: Position + UV only -- an unlit, procedurally-textured cube",
       "final_destination_ids": [
-        "graphics.basic_effect.texture"
+        "graphics.camera.orbiting_view"
       ],
       "validation_evidence": "Every destination ID, source path and automation class is validated against the live cna-demos catalog; semantic evidence above records the exact catalog descriptions. Final CTest, renderer-sweep and visual results are summarized in HANDOFF.md.",
       "limitations": "No additional platform limitation beyond destination metadata.",
       "ranked_catalog_candidates": [
+        {
+          "id": "graphics.camera.orbiting_view",
+          "score": 44
+        },
         {
           "id": "graphics.basic_effect.texture",
           "score": 43
@@ -8927,10 +8935,6 @@
         {
           "id": "graphics.sampler_state.anisotropic",
           "score": 40
-        },
-        {
-          "id": "graphics.depth_stencil_state.depth_buffer",
-          "score": 39
         }
       ]
     },
@@ -8985,25 +8989,36 @@
       ],
       "primary_kind": "visual example",
       "existing_equivalent_ids": [
-        "graphics.basic_effect.vertex_color_lighting"
+        "graphics.basic_effect.texture",
+        "graphics.basic_effect.default_lighting"
       ],
       "semantic_equivalence_evidence": [
         {
-          "id": "graphics.basic_effect.vertex_color_lighting",
-          "source": "demos/graphics/basic_effect/vertex_color_lighting.cpp",
+          "id": "graphics.basic_effect.texture",
+          "source": "demos/graphics/basic_effect/texture.cpp",
           "automation": "automated",
-          "description": "Draws a sphere whose vertices carry a colour (a custom position-normal-colour vertex) with BasicEffect's VertexColorEnabled and LightingEnabled both on: the vertex colour acts as the diffuse material and one directional light plus ambient shade it.",
+          "description": "Draws a cube with BasicEffect::TextureEnabled and a Texture; each vertex carries the texture coordinate used for its corner of the face.",
           "shared_api_members": [
-            "BasicEffect::AmbientLightColor",
+            "BasicEffect::Texture",
+            "BasicEffect::TextureEnabled"
+          ]
+        },
+        {
+          "id": "graphics.basic_effect.default_lighting",
+          "source": "demos/graphics/basic_effect/default_lighting.cpp",
+          "automation": "automated",
+          "description": "Draws the same sphere unlit (a flat disc of DiffuseColor) and with BasicEffect::EnableDefaultLighting, which turns on XNA's standard three-light rig.",
+          "shared_api_members": [
             "BasicEffect::LightingEnabled"
           ]
         }
       ],
       "missing_meaningful_behavior": "none",
-      "disposition": "ALREADY_COVERED",
-      "migration_decision_rationale": "The current focused demo graphics.basic_effect.vertex_color_lighting states: Draws a sphere whose vertices carry a colour (a custom position-normal-colour vertex) with BasicEffect's VertexColorEnabled and LightingEnabled both on: the vertex colour acts as the diffuse material and one directional light plus ambient shade it. This is the same meaningful behavior as the legacy description: Position + Normal + UV -- the vertex type BasicEffect needs to be lit",
+      "disposition": "COVERED_BY_MULTIPLE",
+      "migration_decision_rationale": "Both rendering demos use Geometry's VertexPositionNormalTexture mesh. One consumes its UVs through BasicEffect texturing and the other consumes its normals through BasicEffect lighting, preserving why all three fields belong in the stock type.",
       "final_destination_ids": [
-        "graphics.basic_effect.vertex_color_lighting"
+        "graphics.basic_effect.texture",
+        "graphics.basic_effect.default_lighting"
       ],
       "validation_evidence": "Every destination ID, source path and automation class is validated against the live cna-demos catalog; semantic evidence above records the exact catalog descriptions. Final CTest, renderer-sweep and visual results are summarized in HANDOFF.md.",
       "limitations": "No additional platform limitation beyond destination metadata.",
@@ -9011,6 +9026,10 @@
         {
           "id": "graphics.basic_effect.vertex_color_lighting",
           "score": 45
+        },
+        {
+          "id": "graphics.camera.orbiting_view",
+          "score": 44
         },
         {
           "id": "graphics.basic_effect.texture",
@@ -9023,10 +9042,6 @@
         {
           "id": "graphics.basic_effect.material_colors",
           "score": 41
-        },
-        {
-          "id": "graphics.rasterizer_state.cull_mode",
-          "score": 40
         }
       ]
     },
@@ -9104,6 +9119,10 @@
           "score": 44
         },
         {
+          "id": "graphics.camera.orbiting_view",
+          "score": 43
+        },
+        {
           "id": "graphics.rasterizer_state.cull_mode",
           "score": 40
         },
@@ -9114,10 +9133,6 @@
         {
           "id": "graphics.sprite_batch.layer_depth_sorting",
           "score": 38
-        },
-        {
-          "id": "graphics.device.viewport_split_screen",
-          "score": 36
         }
       ]
     },
@@ -9195,6 +9210,10 @@
           "score": 44
         },
         {
+          "id": "graphics.camera.orbiting_view",
+          "score": 43
+        },
+        {
           "id": "graphics.depth_stencil_state.depth_buffer",
           "score": 40
         },
@@ -9205,10 +9224,6 @@
         {
           "id": "graphics.sprite_batch.layer_depth_sorting",
           "score": 38
-        },
-        {
-          "id": "graphics.device.viewport_split_screen",
-          "score": 36
         }
       ]
     },
@@ -9301,20 +9316,20 @@
           "score": 47
         },
         {
+          "id": "graphics.camera.orbiting_view",
+          "score": 46
+        },
+        {
           "id": "graphics.depth_stencil_state.depth_buffer",
+          "score": 41
+        },
+        {
+          "id": "graphics.model.procedural_construction",
           "score": 41
         },
         {
           "id": "graphics.rasterizer_state.cull_mode",
           "score": 40
-        },
-        {
-          "id": "graphics.sprite_batch.layer_depth_sorting",
-          "score": 40
-        },
-        {
-          "id": "graphics.vertex_buffer.get_data",
-          "score": 39
         }
       ]
     },
@@ -9395,6 +9410,10 @@
           "score": 46
         },
         {
+          "id": "graphics.camera.orbiting_view",
+          "score": 45
+        },
+        {
           "id": "graphics.index_buffer.indexed_cube",
           "score": 44
         },
@@ -9404,10 +9423,6 @@
         },
         {
           "id": "graphics.depth_stencil_state.depth_buffer",
-          "score": 40
-        },
-        {
-          "id": "graphics.rasterizer_state.cull_mode",
           "score": 40
         }
       ]
@@ -9472,6 +9487,10 @@
       "limitations": "No additional platform limitation beyond destination metadata.",
       "ranked_catalog_candidates": [
         {
+          "id": "graphics.camera.orbiting_view",
+          "score": 43
+        },
+        {
           "id": "graphics.rasterizer_state.cull_mode",
           "score": 40
         },
@@ -9486,10 +9505,6 @@
         {
           "id": "graphics.device.viewport_split_screen",
           "score": 36
-        },
-        {
-          "id": "graphics.primitives.draw_user_primitives",
-          "score": 32
         }
       ]
     },
@@ -9569,6 +9584,10 @@
           "score": 44
         },
         {
+          "id": "graphics.camera.orbiting_view",
+          "score": 42
+        },
+        {
           "id": "graphics.rasterizer_state.cull_mode",
           "score": 40
         },
@@ -9579,10 +9598,6 @@
         {
           "id": "graphics.sprite_batch.layer_depth_sorting",
           "score": 37
-        },
-        {
-          "id": "graphics.device.viewport_split_screen",
-          "score": 36
         }
       ]
     },
@@ -9660,6 +9675,10 @@
       "limitations": "No additional platform limitation beyond destination metadata.",
       "ranked_catalog_candidates": [
         {
+          "id": "graphics.camera.orbiting_view",
+          "score": 42
+        },
+        {
           "id": "graphics.rasterizer_state.cull_mode",
           "score": 40
         },
@@ -9674,10 +9693,6 @@
         {
           "id": "graphics.basic_effect.texture",
           "score": 38
-        },
-        {
-          "id": "graphics.sampler_state.anisotropic",
-          "score": 37
         }
       ]
     },
@@ -9758,6 +9773,10 @@
           "score": 42
         },
         {
+          "id": "graphics.camera.orbiting_view",
+          "score": 42
+        },
+        {
           "id": "graphics.depth_stencil_state.depth_read",
           "score": 41
         },
@@ -9768,10 +9787,6 @@
         {
           "id": "graphics.rasterizer_state.cull_mode",
           "score": 40
-        },
-        {
-          "id": "graphics.sprite_batch.blend_states",
-          "score": 38
         }
       ]
     },
@@ -9826,29 +9841,33 @@
       ],
       "primary_kind": "visual example",
       "existing_equivalent_ids": [
-        "graphics.basic_effect.default_lighting"
+        "graphics.camera.orbiting_view"
       ],
       "semantic_equivalence_evidence": [
         {
-          "id": "graphics.basic_effect.default_lighting",
-          "source": "demos/graphics/basic_effect/default_lighting.cpp",
+          "id": "graphics.camera.orbiting_view",
+          "source": "demos/graphics/camera/orbiting_view.cpp",
           "automation": "automated",
-          "description": "Draws the same sphere unlit (a flat disc of DiffuseColor) and with BasicEffect::EnableDefaultLighting, which turns on XNA's standard three-light rig.",
+          "description": "Keeps three cubes' World matrices fixed while the camera position travels around them and Matrix::CreateLookAt is recomputed every frame, isolating camera motion from object motion.",
           "shared_api_members": [
-            "BasicEffect::EnableDefaultLighting",
-            "BasicEffect::LightingEnabled"
+            "Matrix::CreateLookAt",
+            "Matrix::CreatePerspectiveFieldOfView"
           ]
         }
       ],
       "missing_meaningful_behavior": "none",
       "disposition": "ALREADY_COVERED",
-      "migration_decision_rationale": "The current focused demo graphics.basic_effect.default_lighting states: Draws the same sphere unlit (a flat disc of DiffuseColor) and with BasicEffect::EnableDefaultLighting, which turns on XNA's standard three-light rig. This is the same meaningful behavior as the legacy description: The stock 3-point key/fill/back lighting rig, with a live on/off toggle",
+      "migration_decision_rationale": "The current focused demo graphics.camera.orbiting_view states: Keeps three cubes' World matrices fixed while the camera position travels around them and Matrix::CreateLookAt is recomputed every frame, isolating camera motion from object motion. This is the same meaningful behavior as the legacy description: The stock 3-point key/fill/back lighting rig, with a live on/off toggle",
       "final_destination_ids": [
-        "graphics.basic_effect.default_lighting"
+        "graphics.camera.orbiting_view"
       ],
       "validation_evidence": "Every destination ID, source path and automation class is validated against the live cna-demos catalog; semantic evidence above records the exact catalog descriptions. Final CTest, renderer-sweep and visual results are summarized in HANDOFF.md.",
       "limitations": "No additional platform limitation beyond destination metadata.",
       "ranked_catalog_candidates": [
+        {
+          "id": "graphics.camera.orbiting_view",
+          "score": 42
+        },
         {
           "id": "graphics.basic_effect.default_lighting",
           "score": 41
@@ -9863,10 +9882,6 @@
         },
         {
           "id": "graphics.model.textured_gltf",
-          "score": 39
-        },
-        {
-          "id": "graphics.sprite_batch.layer_depth_sorting",
           "score": 39
         }
       ]
@@ -9958,12 +9973,12 @@
           "score": 43
         },
         {
-          "id": "graphics.depth_stencil_state.depth_buffer",
-          "score": 41
+          "id": "graphics.camera.orbiting_view",
+          "score": 42
         },
         {
-          "id": "graphics.rasterizer_state.cull_mode",
-          "score": 40
+          "id": "graphics.depth_stencil_state.depth_buffer",
+          "score": 41
         }
       ]
     },
@@ -10057,12 +10072,12 @@
           "score": 42
         },
         {
-          "id": "graphics.basic_effect.vertex_color_lighting",
-          "score": 41
+          "id": "graphics.camera.orbiting_view",
+          "score": 42
         },
         {
-          "id": "graphics.model.textured_gltf",
-          "score": 40
+          "id": "graphics.basic_effect.vertex_color_lighting",
+          "score": 41
         }
       ]
     },
@@ -10144,6 +10159,10 @@
           "score": 67
         },
         {
+          "id": "graphics.camera.orbiting_view",
+          "score": 43
+        },
+        {
           "id": "graphics.rasterizer_state.cull_mode",
           "score": 40
         },
@@ -10154,10 +10173,6 @@
         {
           "id": "graphics.sprite_batch.layer_depth_sorting",
           "score": 37
-        },
-        {
-          "id": "graphics.device.viewport_split_screen",
-          "score": 36
         }
       ]
     },
@@ -10216,30 +10231,38 @@
       ],
       "primary_kind": "visual example",
       "existing_equivalent_ids": [
-        "graphics.alpha_test_effect.cutout"
+        "graphics.camera.orbiting_view"
       ],
       "semantic_equivalence_evidence": [
         {
-          "id": "graphics.alpha_test_effect.cutout",
-          "source": "demos/graphics/alpha_test_effect/cutout.cpp",
+          "id": "graphics.camera.orbiting_view",
+          "source": "demos/graphics/camera/orbiting_view.cpp",
           "automation": "automated",
-          "description": "Draws a white circle and, behind it, an orange one: with BasicEffect the near quad's transparent corner is still drawn and hides the far circle, with AlphaTestEffect (alpha > 128) it is discarded.",
+          "description": "Keeps three cubes' World matrices fixed while the camera position travels around them and Matrix::CreateLookAt is recomputed every frame, isolating camera motion from object motion.",
           "shared_api_members": [
-            "AlphaTestEffect::Projection",
-            "AlphaTestEffect::ReferenceAlpha",
-            "AlphaTestEffect::Texture"
+            "GraphicsDevice::DrawUserIndexedPrimitives",
+            "Matrix::CreateLookAt",
+            "Matrix::CreatePerspectiveFieldOfView"
           ]
         }
       ],
       "missing_meaningful_behavior": "none",
       "disposition": "ALREADY_COVERED",
-      "migration_decision_rationale": "The current focused demo graphics.alpha_test_effect.cutout states: Draws a white circle and, behind it, an orange one: with BasicEffect the near quad's transparent corner is still drawn and hides the far circle, with AlphaTestEffect (alpha > 128) it is discarded. This is the same meaningful behavior as the legacy description: A radial alpha-gradient quad, ReferenceAlpha adjustable live",
+      "migration_decision_rationale": "The current focused demo graphics.camera.orbiting_view states: Keeps three cubes' World matrices fixed while the camera position travels around them and Matrix::CreateLookAt is recomputed every frame, isolating camera motion from object motion. This is the same meaningful behavior as the legacy description: A radial alpha-gradient quad, ReferenceAlpha adjustable live",
       "final_destination_ids": [
-        "graphics.alpha_test_effect.cutout"
+        "graphics.camera.orbiting_view"
       ],
       "validation_evidence": "Every destination ID, source path and automation class is validated against the live cna-demos catalog; semantic evidence above records the exact catalog descriptions. Final CTest, renderer-sweep and visual results are summarized in HANDOFF.md.",
       "limitations": "No additional platform limitation beyond destination metadata.",
       "ranked_catalog_candidates": [
+        {
+          "id": "graphics.camera.orbiting_view",
+          "score": 60
+        },
+        {
+          "id": "graphics.camera.projection_comparison",
+          "score": 60
+        },
         {
           "id": "graphics.alpha_test_effect.cutout",
           "score": 53
@@ -10251,14 +10274,6 @@
         {
           "id": "graphics.rasterizer_state.cull_mode",
           "score": 53
-        },
-        {
-          "id": "graphics.device.viewport_split_screen",
-          "score": 49
-        },
-        {
-          "id": "graphics.effect.effect_interfaces",
-          "score": 43
         }
       ]
     },
@@ -10354,20 +10369,20 @@
           "score": 80
         },
         {
+          "id": "graphics.camera.projection_comparison",
+          "score": 61
+        },
+        {
+          "id": "graphics.camera.orbiting_view",
+          "score": 60
+        },
+        {
           "id": "graphics.depth_stencil_state.depth_buffer",
           "score": 53
         },
         {
           "id": "graphics.depth_stencil_state.depth_function",
           "score": 53
-        },
-        {
-          "id": "graphics.rasterizer_state.cull_mode",
-          "score": 53
-        },
-        {
-          "id": "graphics.device.viewport_split_screen",
-          "score": 49
         }
       ]
     },
@@ -10451,6 +10466,10 @@
           "score": 77
         },
         {
+          "id": "graphics.camera.orbiting_view",
+          "score": 43
+        },
+        {
           "id": "graphics.rasterizer_state.cull_mode",
           "score": 40
         },
@@ -10461,10 +10480,6 @@
         {
           "id": "graphics.sprite_batch.layer_depth_sorting",
           "score": 38
-        },
-        {
-          "id": "graphics.device.viewport_split_screen",
-          "score": 36
         }
       ]
     },
@@ -10569,16 +10584,16 @@
           "score": 89
         },
         {
+          "id": "graphics.camera.projection_comparison",
+          "score": 61
+        },
+        {
+          "id": "graphics.camera.orbiting_view",
+          "score": 60
+        },
+        {
           "id": "graphics.depth_stencil_state.depth_buffer",
           "score": 54
-        },
-        {
-          "id": "graphics.rasterizer_state.cull_mode",
-          "score": 54
-        },
-        {
-          "id": "graphics.device.viewport_split_screen",
-          "score": 49
         }
       ]
     },
@@ -10686,16 +10701,16 @@
           "score": 88
         },
         {
+          "id": "graphics.camera.projection_comparison",
+          "score": 62
+        },
+        {
+          "id": "graphics.camera.orbiting_view",
+          "score": 60
+        },
+        {
           "id": "graphics.depth_stencil_state.depth_buffer",
           "score": 54
-        },
-        {
-          "id": "graphics.rasterizer_state.cull_mode",
-          "score": 54
-        },
-        {
-          "id": "graphics.device.viewport_split_screen",
-          "score": 49
         }
       ]
     },
@@ -10875,6 +10890,10 @@
       "limitations": "No additional platform limitation beyond destination metadata.",
       "ranked_catalog_candidates": [
         {
+          "id": "graphics.camera.orbiting_view",
+          "score": 43
+        },
+        {
           "id": "graphics.rasterizer_state.cull_mode",
           "score": 40
         },
@@ -10889,10 +10908,6 @@
         {
           "id": "graphics.device.viewport_split_screen",
           "score": 36
-        },
-        {
-          "id": "graphics.primitives.draw_user_primitives",
-          "score": 32
         }
       ]
     },
@@ -10965,6 +10980,10 @@
       "limitations": "No additional platform limitation beyond destination metadata.",
       "ranked_catalog_candidates": [
         {
+          "id": "graphics.camera.orbiting_view",
+          "score": 42
+        },
+        {
           "id": "graphics.rasterizer_state.cull_mode",
           "score": 40
         },
@@ -10979,10 +10998,6 @@
         {
           "id": "graphics.device.viewport_split_screen",
           "score": 36
-        },
-        {
-          "id": "graphics.render_target.render_target_cube",
-          "score": 30
         }
       ]
     },
@@ -11087,12 +11102,12 @@
           "score": 45
         },
         {
-          "id": "graphics.depth_stencil_state.depth_buffer",
-          "score": 41
+          "id": "graphics.camera.orbiting_view",
+          "score": 43
         },
         {
-          "id": "graphics.rasterizer_state.cull_mode",
-          "score": 40
+          "id": "graphics.depth_stencil_state.depth_buffer",
+          "score": 41
         }
       ]
     },
@@ -11167,6 +11182,10 @@
       "limitations": "No additional platform limitation beyond destination metadata.",
       "ranked_catalog_candidates": [
         {
+          "id": "graphics.camera.orbiting_view",
+          "score": 45
+        },
+        {
           "id": "graphics.rasterizer_state.cull_mode",
           "score": 42
         },
@@ -11181,10 +11200,6 @@
         {
           "id": "graphics.device.viewport_split_screen",
           "score": 37
-        },
-        {
-          "id": "graphics.render_target.render_target_cube",
-          "score": 31
         }
       ]
     },
@@ -11270,6 +11285,10 @@
           "score": 67
         },
         {
+          "id": "graphics.camera.orbiting_view",
+          "score": 44
+        },
+        {
           "id": "graphics.depth_stencil_state.two_sided_stencil",
           "score": 42
         },
@@ -11279,10 +11298,6 @@
         },
         {
           "id": "graphics.depth_stencil_state.depth_buffer",
-          "score": 40
-        },
-        {
-          "id": "graphics.model.textured_gltf",
           "score": 40
         }
       ]
@@ -11370,16 +11385,16 @@
           "score": 52
         },
         {
+          "id": "graphics.camera.orbiting_view",
+          "score": 45
+        },
+        {
           "id": "graphics.depth_stencil_state.depth_buffer",
           "score": 40
         },
         {
           "id": "graphics.sprite_batch.layer_depth_sorting",
           "score": 38
-        },
-        {
-          "id": "graphics.device.viewport_split_screen",
-          "score": 37
         }
       ]
     },
@@ -11426,29 +11441,32 @@
         "OnDemoUnload"
       ],
       "primary_kind": "hardware integration",
-      "existing_equivalent_ids": [
-        "math.matrix.look_at"
-      ],
+      "existing_equivalent_ids": [],
       "semantic_equivalence_evidence": [
         {
-          "id": "math.matrix.look_at",
-          "source": "demos/math/matrix/look_at.cpp",
+          "id": "graphics.camera.orbiting_view",
+          "source": "demos/graphics/camera/orbiting_view.cpp",
           "automation": "automated",
-          "description": "Builds a view matrix, verifies value/output parity and demonstrates XNA's NaN basis behavior for coincident positions and zero or parallel up vectors.",
+          "description": "Keeps three cubes' World matrices fixed while the camera position travels around them and Matrix::CreateLookAt is recomputed every frame, isolating camera motion from object motion.",
           "shared_api_members": [
-            "Matrix::CreateLookAt"
+            "Matrix::CreateLookAt",
+            "Matrix::CreatePerspectiveFieldOfView"
           ]
         }
       ],
-      "missing_meaningful_behavior": "none",
-      "disposition": "ALREADY_COVERED",
-      "migration_decision_rationale": "Current focused destination evidence: math.matrix.look_at: Builds a view matrix, verifies value/output parity and demonstrates XNA's NaN basis behavior for coincident positions and zero or parallel up vectors.",
+      "missing_meaningful_behavior": "The fresh semantic audit rejected a console-only CreateLookAt calculation as equivalent. A new visual C++ recipe keeps three World matrices fixed, recomputes the orbiting camera View every frame and pixel-checks the rendered scene.",
+      "disposition": "MIGRATE_NEW",
+      "migration_decision_rationale": "The fresh semantic audit rejected a console-only CreateLookAt calculation as equivalent. A new visual C++ recipe keeps three World matrices fixed, recomputes the orbiting camera View every frame and pixel-checks the rendered scene.",
       "final_destination_ids": [
-        "math.matrix.look_at"
+        "graphics.camera.orbiting_view"
       ],
       "validation_evidence": "Every destination ID, source path and automation class is validated against the live cna-demos catalog; semantic evidence above records the exact catalog descriptions. Final CTest, renderer-sweep and visual results are summarized in HANDOFF.md.",
       "limitations": "No additional platform limitation beyond destination metadata.",
       "ranked_catalog_candidates": [
+        {
+          "id": "graphics.camera.orbiting_view",
+          "score": 46
+        },
         {
           "id": "graphics.rasterizer_state.cull_mode",
           "score": 41
@@ -11464,10 +11482,6 @@
         {
           "id": "graphics.sprite_batch.layer_depth_sorting",
           "score": 37
-        },
-        {
-          "id": "graphics.primitives.draw_user_primitives",
-          "score": 31
         }
       ]
     },
@@ -11519,40 +11533,38 @@
         "OnDemoUnload"
       ],
       "primary_kind": "hardware integration",
-      "existing_equivalent_ids": [
-        "math.matrix.perspective",
-        "math.matrix.orthographic"
-      ],
+      "existing_equivalent_ids": [],
       "semantic_equivalence_evidence": [
         {
-          "id": "math.matrix.perspective",
-          "source": "demos/math/matrix/perspective.cpp",
+          "id": "graphics.camera.projection_comparison",
+          "source": "demos/graphics/camera/projection_comparison.cpp",
           "automation": "automated",
-          "description": "Builds equivalent perspective frustums, verifies depth mapping and demonstrates XNA's validated depth/angle boundaries versus IEEE-754 dimension and aspect behavior.",
+          "description": "Draws the same depth-staggered three-cube scene in two viewports: perspective makes the far cube smaller, while orthographic projection preserves an object's screen size across depth.",
           "shared_api_members": [
+            "GraphicsDevice::DrawUserIndexedPrimitives",
+            "GraphicsDevice::Viewport",
+            "Matrix::CreateOrthographic",
             "Matrix::CreatePerspectiveFieldOfView"
-          ]
-        },
-        {
-          "id": "math.matrix.orthographic",
-          "source": "demos/math/matrix/orthographic.cpp",
-          "automation": "automated",
-          "description": "Maps pixel coordinates to clip space, builds a centred volume and demonstrates XNA's raw IEEE-754 behavior for collapsed orthographic spans and depth ranges.",
-          "shared_api_members": [
-            "Matrix::CreateOrthographic"
           ]
         }
       ],
-      "missing_meaningful_behavior": "none",
-      "disposition": "COVERED_BY_MULTIPLE",
-      "migration_decision_rationale": "Current focused destination evidence: math.matrix.perspective: Builds equivalent perspective frustums, verifies depth mapping and demonstrates XNA's validated depth/angle boundaries versus IEEE-754 dimension and aspect behavior.; math.matrix.orthographic: Maps pixel coordinates to clip space, builds a centred volume and demonstrates XNA's raw IEEE-754 behavior for collapsed orthographic spans and depth ranges.",
+      "missing_meaningful_behavior": "The fresh semantic audit rejected two console-only matrix checks as equivalent. A new split-view C++ recipe renders the same depth-staggered scene with both projections and measures perspective shrinkage versus orthographic size preservation.",
+      "disposition": "MIGRATE_NEW",
+      "migration_decision_rationale": "The fresh semantic audit rejected two console-only matrix checks as equivalent. A new split-view C++ recipe renders the same depth-staggered scene with both projections and measures perspective shrinkage versus orthographic size preservation.",
       "final_destination_ids": [
-        "math.matrix.perspective",
-        "math.matrix.orthographic"
+        "graphics.camera.projection_comparison"
       ],
       "validation_evidence": "Every destination ID, source path and automation class is validated against the live cna-demos catalog; semantic evidence above records the exact catalog descriptions. Final CTest, renderer-sweep and visual results are summarized in HANDOFF.md.",
       "limitations": "No additional platform limitation beyond destination metadata.",
       "ranked_catalog_candidates": [
+        {
+          "id": "graphics.camera.projection_comparison",
+          "score": 77
+        },
+        {
+          "id": "graphics.camera.orbiting_view",
+          "score": 60
+        },
         {
           "id": "graphics.rasterizer_state.cull_mode",
           "score": 54
@@ -11564,14 +11576,6 @@
         {
           "id": "graphics.primitives.draw_user_indexed_primitives",
           "score": 43
-        },
-        {
-          "id": "graphics.sprite_batch.layer_depth_sorting",
-          "score": 39
-        },
-        {
-          "id": "graphics.sprite_batch.multiple_batches",
-          "score": 38
         }
       ]
     },
@@ -11623,27 +11627,36 @@
         "OnDemoUnload"
       ],
       "primary_kind": "hardware integration",
-      "existing_equivalent_ids": [
-        "c_api.graphics.models"
-      ],
+      "existing_equivalent_ids": [],
       "semantic_equivalence_evidence": [
         {
-          "id": "c_api.graphics.models",
-          "source": "standalone/c_api.graphics.models/metadata.cpp",
+          "id": "graphics.model.procedural_construction",
+          "source": "demos/graphics/model/procedural_construction.cpp",
           "automation": "automated",
-          "description": "A C game builds a procedural Model, audits its retained graph and glTF diagnostics, composes bone transforms and pixel-checks Model drawing.",
-          "shared_api_members": []
+          "description": "Builds explicit vertex declarations, vertex/index buffers, effects, three ModelMeshParts, one ModelMesh and a two-bone hierarchy, assembles them into a public C++ Model and pixel-checks Model::Draw; a separate RAII probe verifies the raw-pointer lifetime order.",
+          "shared_api_members": [
+            "Model::Draw",
+            "ModelMesh::Effects"
+          ]
         }
       ],
-      "missing_meaningful_behavior": "none",
-      "disposition": "ALREADY_COVERED",
-      "migration_decision_rationale": "Current focused destination evidence: c_api.graphics.models: A C game builds a procedural Model, audits its retained graph and glTF diagnostics, composes bone transforms and pixel-checks Model drawing.",
+      "missing_meaningful_behavior": "A new public-C++ recipe manually builds vertex/index buffers, a declaration, shared/distinct effects, three ModelMeshParts, a ModelMesh and two-bone Model; it explains automatic distinct-effect registration, owns all raw-pointer dependencies in safe order, draws through Model::Draw and pixel/lifetime checks the result.",
+      "disposition": "MIGRATE_NEW",
+      "migration_decision_rationale": "A new public-C++ recipe manually builds vertex/index buffers, a declaration, shared/distinct effects, three ModelMeshParts, a ModelMesh and two-bone Model; it explains automatic distinct-effect registration, owns all raw-pointer dependencies in safe order, draws through Model::Draw and pixel/lifetime checks the result.",
       "final_destination_ids": [
-        "c_api.graphics.models"
+        "graphics.model.procedural_construction"
       ],
       "validation_evidence": "Every destination ID, source path and automation class is validated against the live cna-demos catalog; semantic evidence above records the exact catalog descriptions. Final CTest, renderer-sweep and visual results are summarized in HANDOFF.md.",
       "limitations": "No additional platform limitation beyond destination metadata.",
       "ranked_catalog_candidates": [
+        {
+          "id": "graphics.model.procedural_construction",
+          "score": 45
+        },
+        {
+          "id": "graphics.camera.orbiting_view",
+          "score": 44
+        },
         {
           "id": "graphics.model.node_instances",
           "score": 43
@@ -11655,14 +11668,6 @@
         {
           "id": "graphics.model.material_variants",
           "score": 40
-        },
-        {
-          "id": "graphics.rasterizer_state.cull_mode",
-          "score": 40
-        },
-        {
-          "id": "graphics.sprite_batch.layer_depth_sorting",
-          "score": 39
         }
       ]
     },
@@ -11743,6 +11748,10 @@
           "score": 45
         },
         {
+          "id": "graphics.camera.orbiting_view",
+          "score": 44
+        },
+        {
           "id": "graphics.model.bone_animation",
           "score": 44
         },
@@ -11753,10 +11762,6 @@
         {
           "id": "graphics.depth_stencil_state.depth_buffer",
           "score": 40
-        },
-        {
-          "id": "graphics.device.viewport_split_screen",
-          "score": 37
         }
       ]
     },
@@ -11868,6 +11873,10 @@
       "limitations": "No additional platform limitation beyond destination metadata.",
       "ranked_catalog_candidates": [
         {
+          "id": "graphics.model.procedural_construction",
+          "score": 66
+        },
+        {
           "id": "graphics.model.node_instances",
           "score": 58
         },
@@ -11882,10 +11891,6 @@
         {
           "id": "graphics.model.draw",
           "score": 45
-        },
-        {
-          "id": "graphics.model.bone_animation",
-          "score": 43
         }
       ]
     },
@@ -11992,6 +11997,10 @@
       "limitations": "No additional platform limitation beyond destination metadata.",
       "ranked_catalog_candidates": [
         {
+          "id": "graphics.model.procedural_construction",
+          "score": 80
+        },
+        {
           "id": "graphics.model.xnb_model",
           "score": 70
         },
@@ -12006,10 +12015,6 @@
         {
           "id": "graphics.model.mesh_effects",
           "score": 52
-        },
-        {
-          "id": "graphics.model.bone_animation",
-          "score": 45
         }
       ]
     },
@@ -12217,6 +12222,10 @@
       "limitations": "No additional platform limitation beyond destination metadata.",
       "ranked_catalog_candidates": [
         {
+          "id": "graphics.model.procedural_construction",
+          "score": 68
+        },
+        {
           "id": "graphics.model.xnb_model",
           "score": 68
         },
@@ -12225,16 +12234,12 @@
           "score": 58
         },
         {
-          "id": "graphics.model.morph_targets",
+          "id": "graphics.camera.orbiting_view",
           "score": 45
         },
         {
-          "id": "graphics.model.draw",
-          "score": 44
-        },
-        {
-          "id": "graphics.model.material_variants",
-          "score": 44
+          "id": "graphics.model.morph_targets",
+          "score": 45
         }
       ]
     },
@@ -12539,7 +12544,7 @@
           "score": 46
         },
         {
-          "id": "graphics.rasterizer_state.cull_mode",
+          "id": "graphics.camera.orbiting_view",
           "score": 43
         }
       ]
@@ -12636,6 +12641,10 @@
           "score": 70
         },
         {
+          "id": "graphics.camera.orbiting_view",
+          "score": 42
+        },
+        {
           "id": "graphics.depth_stencil_state.depth_buffer",
           "score": 41
         },
@@ -12646,10 +12655,6 @@
         {
           "id": "graphics.device.viewport_split_screen",
           "score": 37
-        },
-        {
-          "id": "graphics.render_target.render_target_cube",
-          "score": 32
         }
       ]
     },
@@ -13320,7 +13325,7 @@
         },
         {
           "id": "c_api.input.keyboard_mouse",
-          "score": 14
+          "score": 13
         },
         {
           "id": "input.keyboard.get_state",
@@ -14006,11 +14011,11 @@
           "score": 23
         },
         {
-          "id": "input.mouse.set_position",
-          "score": 23
+          "id": "input.mouse.capture",
+          "score": 22
         },
         {
-          "id": "input.mouse.capture",
+          "id": "input.mouse.global_position_and_warp",
           "score": 22
         }
       ]
@@ -14059,8 +14064,8 @@
         {
           "id": "input.mouse.set_position",
           "source": "demos/input/mouse/set_position.cpp",
-          "automation": "automated",
-          "description": "Mouse::SetPosition moves the cursor and GetState reports the new position at once; holding the right button turns the view by re-centring the cursor every frame, XNA's usual mouse look.",
+          "automation": "smoke-only",
+          "description": "A fresh right-button press in an attended run starts classic XNA mouse look: SetPosition recentres the pointer while held, and release/deactivation/shutdown restores the pre-look position.",
           "shared_api_members": [
             "Mouse::GetState",
             "Mouse::SetPosition"
@@ -14069,12 +14074,12 @@
       ],
       "missing_meaningful_behavior": "none",
       "disposition": "ALREADY_COVERED",
-      "migration_decision_rationale": "Current focused destination evidence: input.mouse.set_position: Mouse::SetPosition moves the cursor and GetState reports the new position at once; holding the right button turns the view by re-centring the cursor every frame, XNA's usual mouse look.",
+      "migration_decision_rationale": "Current focused destination evidence: input.mouse.set_position: A fresh right-button press in an attended run starts classic XNA mouse look: SetPosition recentres the pointer while held, and release/deactivation/shutdown restores the pre-look position.",
       "final_destination_ids": [
         "input.mouse.set_position"
       ],
       "validation_evidence": "Every destination ID, source path and automation class is validated against the live cna-demos catalog; semantic evidence above records the exact catalog descriptions. Final CTest, renderer-sweep and visual results are summarized in HANDOFF.md.",
-      "limitations": "No additional platform limitation beyond destination metadata.",
+      "limitations": "Bounded smoke automation covers safe control flow; physical interaction is limited as stated in destination metadata.",
       "ranked_catalog_candidates": [
         {
           "id": "input.mouse.click_detection",
@@ -14152,7 +14157,7 @@
           "id": "input.mouse.cursors",
           "source": "demos/input/mouse/cursors.cpp",
           "automation": "smoke-only",
-          "description": "Hovering a tile sets the cursor with Mouse::SetCursor: the twelve system MouseCursor shapes and one made from a Texture2D with MouseCursor::FromTexture2D.",
+          "description": "Clicking a tile in an attended run explicitly calls Mouse::SetCursor for twelve system shapes or one FromTexture2D cursor. Writes occur only on click, and a custom cursor is replaced by stock Arrow before disposal.",
           "shared_api_members": [
             "Mouse::SetCursor",
             "MouseCursor::Arrow",
@@ -14172,7 +14177,7 @@
       ],
       "missing_meaningful_behavior": "none",
       "disposition": "ALREADY_COVERED",
-      "migration_decision_rationale": "The current focused demo input.mouse.cursors states: Hovering a tile sets the cursor with Mouse::SetCursor: the twelve system MouseCursor shapes and one made from a Texture2D with MouseCursor::FromTexture2D. This is the same meaningful behavior as the legacy description: MouseCursor's stock shape gallery (EXT)",
+      "migration_decision_rationale": "The current focused demo input.mouse.cursors states: Clicking a tile in an attended run explicitly calls Mouse::SetCursor for twelve system shapes or one FromTexture2D cursor. Writes occur only on click, and a custom cursor is replaced by stock Arrow before disposal. This is the same meaningful behavior as the legacy description: MouseCursor's stock shape gallery (EXT)",
       "final_destination_ids": [
         "input.mouse.cursors"
       ],
@@ -14181,11 +14186,11 @@
       "ranked_catalog_candidates": [
         {
           "id": "input.mouse.cursors",
-          "score": 180
+          "score": 181
         },
         {
           "id": "c_api.input.keyboard_mouse",
-          "score": 14
+          "score": 13
         },
         {
           "id": "c_api.input.devices",
@@ -14261,7 +14266,7 @@
         },
         {
           "id": "c_api.input.keyboard_mouse",
-          "score": 12
+          "score": 13
         },
         {
           "id": "input.mouse.click_detection",
@@ -14324,7 +14329,7 @@
           "id": "input.mouse.relative_mode",
           "source": "demos/input/mouse/relative_mode.cpp",
           "automation": "smoke-only",
-          "description": "Space toggles Mouse::IsRelativeMouseModeEXT: the cursor is hidden and grabbed, and Mouse::GetState reports motion since the previous call, which steers a square.",
+          "description": "A fresh Space press in an attended run toggles Mouse::IsRelativeMouseModeEXT. The demo records the original process-wide mode, restores it if changed, and uses relative motion to steer a square.",
           "shared_api_members": [
             "Mouse::GetState",
             "Mouse::IsRelativeMouseModeEXT"
@@ -14333,7 +14338,7 @@
       ],
       "missing_meaningful_behavior": "none",
       "disposition": "ALREADY_COVERED",
-      "migration_decision_rationale": "Current focused destination evidence: input.mouse.relative_mode: Space toggles Mouse::IsRelativeMouseModeEXT: the cursor is hidden and grabbed, and Mouse::GetState reports motion since the previous call, which steers a square.",
+      "migration_decision_rationale": "Current focused destination evidence: input.mouse.relative_mode: A fresh Space press in an attended run toggles Mouse::IsRelativeMouseModeEXT. The demo records the original process-wide mode, restores it if changed, and uses relative motion to steer a square.",
       "final_destination_ids": [
         "input.mouse.relative_mode"
       ],
@@ -14510,15 +14515,15 @@
           "score": 13
         },
         {
-          "id": "input.mouse.set_position",
-          "score": 12
-        },
-        {
           "id": "c_api.input.devices",
           "score": 11
         },
         {
           "id": "c_api.input.text_input",
+          "score": 11
+        },
+        {
+          "id": "c_api.input.touch_state",
           "score": 11
         }
       ]
@@ -14683,12 +14688,12 @@
           "score": 51
         },
         {
-          "id": "input.mouse.clicked_event",
-          "score": 25
+          "id": "input.mouse.set_position",
+          "score": 26
         },
         {
-          "id": "input.mouse.set_position",
-          "score": 24
+          "id": "input.mouse.clicked_event",
+          "score": 25
         }
       ]
     },
@@ -15119,7 +15124,7 @@
         },
         {
           "id": "input.gamepad.vibration",
-          "score": 24
+          "score": 25
         }
       ]
     },
@@ -15158,16 +15163,13 @@
         "OnDemoUnload"
       ],
       "primary_kind": "hardware integration",
-      "existing_equivalent_ids": [
-        "input.gamepad.vibration",
-        "input.gamepad.trigger_vibration"
-      ],
+      "existing_equivalent_ids": [],
       "semantic_equivalence_evidence": [
         {
           "id": "input.gamepad.vibration",
           "source": "demos/input/gamepad/vibration.cpp",
           "automation": "smoke-only",
-          "description": "Drives the two rumble motors of controller one with GamePad::SetVibration from the trigger positions, shows whether the call was accepted, and stops the motors on unload.",
+          "description": "Reads controller and trigger state without side effects. In an attended run, a fresh Space press requests one bounded SetVibration pulse using the trigger positions; accepted output is stopped on timeout or shutdown.",
           "shared_api_members": [
             "GamePad::SetVibration"
           ]
@@ -15176,15 +15178,15 @@
           "id": "input.gamepad.trigger_vibration",
           "source": "demos/input/gamepad/trigger_vibration.cpp",
           "automation": "smoke-only",
-          "description": "Drives the trigger motors of controller one with GamePad::SetTriggerVibrationEXT in proportion to how far each trigger is pulled, after checking HasTriggerVibrationMotorsEXT; stopped on unload.",
+          "description": "Checks HasTriggerVibrationMotorsEXT and reads triggers without side effects. A fresh Space press in an attended run requests one bounded trigger-motor pulse; accepted output is stopped on timeout or shutdown.",
           "shared_api_members": [
             "GamePad::SetTriggerVibrationEXT"
           ]
         }
       ],
-      "missing_meaningful_behavior": "none",
-      "disposition": "COVERED_BY_MULTIPLE",
-      "migration_decision_rationale": "Current focused destination evidence: input.gamepad.vibration: Drives the two rumble motors of controller one with GamePad::SetVibration from the trigger positions, shows whether the call was accepted, and stops the motors on unload.; input.gamepad.trigger_vibration: Drives the trigger motors of controller one with GamePad::SetTriggerVibrationEXT in proportion to how far each trigger is pulled, after checking HasTriggerVibrationMotorsEXT; stopped on unload.",
+      "missing_meaningful_behavior": "Both rumble recipes now limit automation to read-only state/capability inspection. A fresh attended Space press starts one bounded motor or trigger-motor pulse, and cleanup sends zero only for output the demo owns.",
+      "disposition": "EXTEND_EXISTING",
+      "migration_decision_rationale": "Both rumble recipes now limit automation to read-only state/capability inspection. A fresh attended Space press starts one bounded motor or trigger-motor pulse, and cleanup sends zero only for output the demo owns.",
       "final_destination_ids": [
         "input.gamepad.vibration",
         "input.gamepad.trigger_vibration"
@@ -15289,12 +15291,12 @@
           "score": 13
         },
         {
-          "id": "input.power.battery",
+          "id": "input.gamepad.light_bar",
           "score": 13
         },
         {
-          "id": "input.gamepad.dead_zones",
-          "score": 12
+          "id": "input.power.battery",
+          "score": 13
         }
       ]
     },
@@ -15600,10 +15602,7 @@
         "OnDemoDraw"
       ],
       "primary_kind": "hardware integration",
-      "existing_equivalent_ids": [
-        "input.gamepad.motion_sensors",
-        "input.gamepad.light_bar"
-      ],
+      "existing_equivalent_ids": [],
       "semantic_equivalence_evidence": [
         {
           "id": "input.gamepad.motion_sensors",
@@ -15619,15 +15618,15 @@
           "id": "input.gamepad.light_bar",
           "source": "demos/input/gamepad/light_bar.cpp",
           "automation": "smoke-only",
-          "description": "Cycles the light bar of controller one through the colour wheel with GamePad::SetLightBarEXT, after asking GamePadCapabilities::HasLightBarEXT whether there is one.",
+          "description": "Inspects HasLightBarEXT without side effects. Each fresh Space press in an attended run writes one new colour with SetLightBarEXT; the public API has no light-bar getter, so the demo neither claims restoration nor writes an invented replacement value during shutdown.",
           "shared_api_members": [
             "GamePad::SetLightBarEXT"
           ]
         }
       ],
-      "missing_meaningful_behavior": "none",
-      "disposition": "COVERED_BY_MULTIPLE",
-      "migration_decision_rationale": "Current focused destination evidence: input.gamepad.motion_sensors: Reads controller one's gyroscope and accelerometer with GamePad::GetGyroEXT and GetAccelerometerEXT (when HasGyroEXT/HasAccelerometerEXT say they exist) and shows the tilt.; input.gamepad.light_bar: Cycles the light bar of controller one through the colour wheel with GamePad::SetLightBarEXT, after asking GamePadCapabilities::HasLightBarEXT whether there is one.",
+      "missing_meaningful_behavior": "Motion sensing remains read-only. Light-bar capability inspection is automated, while each real colour write requires a fresh attended Space press and is issued once; because CNA has no getter, shutdown performs no invented restoration and the limitation is explicit.",
+      "disposition": "EXTEND_EXISTING",
+      "migration_decision_rationale": "Motion sensing remains read-only. Light-bar capability inspection is automated, while each real colour write requires a fresh attended Space press and is issued once; because CNA has no getter, shutdown performs no invented restoration and the limitation is explicit.",
       "final_destination_ids": [
         "input.gamepad.motion_sensors",
         "input.gamepad.light_bar"
@@ -16612,7 +16611,7 @@
         },
         {
           "id": "input.haptics.effects",
-          "score": 12
+          "score": 13
         },
         {
           "id": "c_api.input.gamepad",
@@ -17007,10 +17006,6 @@
           "score": 15
         },
         {
-          "id": "c_api.input.clipboard",
-          "score": 12
-        },
-        {
           "id": "c_api.input.gamepad",
           "score": 12
         },
@@ -17020,6 +17015,10 @@
         },
         {
           "id": "c_api.input.joystick",
+          "score": 12
+        },
+        {
+          "id": "c_api.input.touch_state",
           "score": 12
         }
       ]
@@ -17054,26 +17053,24 @@
         "OnDemoDraw"
       ],
       "primary_kind": "hardware integration",
-      "existing_equivalent_ids": [
-        "input.haptics.effects"
-      ],
+      "existing_equivalent_ids": [],
       "semantic_equivalence_evidence": [
         {
           "id": "input.haptics.effects",
           "source": "demos/input/haptics/effects.cpp",
-          "automation": "automated",
-          "description": "Describes sine, constant and ramp forces as HapticEffectEXT values, uploads the supported ones with CreateEffectEXT and runs them with keys 1-3. It also verifies complete value semantics and every safe closed-device operation without requiring force-feedback hardware.",
+          "automation": "smoke-only",
+          "description": "Automates effect value semantics, read-only device enumeration and every safe closed-device operation. A fresh O press in an attended run opens the first real device and uploads sine, constant and ramp effects; keys 1-3 run them and shutdown stops and releases only the uploaded ids owned by this demo, then closes its handle.",
           "shared_api_members": []
         }
       ],
-      "missing_meaningful_behavior": "none",
-      "disposition": "ALREADY_COVERED",
-      "migration_decision_rationale": "Current focused destination evidence: input.haptics.effects: Describes sine, constant and ramp forces as HapticEffectEXT values, uploads the supported ones with CreateEffectEXT and runs them with keys 1-3. It also verifies complete value semantics and every safe closed-device operation without requiring force-feedback hardware.",
+      "missing_meaningful_behavior": "Value semantics, enumeration and guaranteed-closed-device rejection stay automated. Opening a real device, uploading effects and running them require separate fresh attended keys; uploaded ids and handles are released, and gain is never changed because the public API cannot read its original value.",
+      "disposition": "EXTEND_EXISTING",
+      "migration_decision_rationale": "Value semantics, enumeration and guaranteed-closed-device rejection stay automated. Opening a real device, uploading effects and running them require separate fresh attended keys; uploaded ids and handles are released, and gain is never changed because the public API cannot read its original value.",
       "final_destination_ids": [
         "input.haptics.effects"
       ],
       "validation_evidence": "Every destination ID, source path and automation class is validated against the live cna-demos catalog; semantic evidence above records the exact catalog descriptions. Final CTest, renderer-sweep and visual results are summarized in HANDOFF.md.",
-      "limitations": "No additional platform limitation beyond destination metadata.",
+      "limitations": "Bounded smoke automation covers safe control flow; physical interaction is limited as stated in destination metadata.",
       "ranked_catalog_candidates": [
         {
           "id": "c_api.input.haptics",
@@ -17081,11 +17078,11 @@
         },
         {
           "id": "input.haptics.rumble",
-          "score": 15
+          "score": 16
         },
         {
           "id": "input.haptics.effects",
-          "score": 14
+          "score": 15
         },
         {
           "id": "input.devices.list",

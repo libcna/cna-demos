@@ -4,9 +4,8 @@
 CNA_DEMOS_STANDALONE({
     .id = "c_api.audio.microphone_availability",
     .title = "Microphone availability in C",
-    .description = "A C program reports the host microphone count and default, captures one bounded "
-                   "buffer when a device is available, restores its duration setting, and verifies "
-                   "that the first index beyond the snapshot is refused consistently.",
+    .description = "A C program reports the host microphone count/default and reads capability metadata without "
+                   "opening capture. It checks sample conversion plus every safe first-index-beyond-snapshot route.",
     .apis = {"cna_microphone_get_count", "cna_microphone_get_default_index_ext",
              "cna_microphone_get_name_size_at", "cna_microphone_copy_name_at",
              "cna_microphone_get_buffer_duration_ticks_at",
@@ -20,7 +19,7 @@ CNA_DEMOS_STANDALONE({
     .tags = {"c", "binding", "audio", "microphone", "capture", "availability"},
     .needs = CnaDemos::Need::CApi | CnaDemos::Need::Audio,
     .frames = 1,
-    .restrictions = "Standalone C program. Automated capture uses the selected audio backend's device (SDL dummy "
-                    "in CI), so it validates API state, buffering and delivery without claiming a physical microphone, "
-                    "audible content, input quality or callback latency. Fixed type-name formatting is trivial.",
+    .restrictions = "Standalone C program. It never starts or reads a real microphone; real BufferReady/GetData "
+                    "lifecycle coverage is the explicitly activated audio.microphone.input_level demo. Mutating C "
+                    "routes are exercised only with the invalid Count index, before hardware access.",
 })

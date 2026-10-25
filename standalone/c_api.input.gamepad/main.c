@@ -448,6 +448,19 @@ static void disconnected_device_contract(CNA_Handle game, CnaDemo* demo)
     int text_ok = 1;
     size_t index;
 
+    cna_demo_check(
+        demo,
+        cna_gamepad_set_vibration(game, (CNA_PlayerIndex)99, 0.5f, 0.75f, &applied) ==
+                CNA_RESULT_INVALID_ARGUMENT &&
+            cna_gamepad_set_trigger_vibration_ext(
+                game, (CNA_PlayerIndex)99, 0.25f, 1.0f, &applied) == CNA_RESULT_INVALID_ARGUMENT &&
+            cna_gamepad_set_light_bar_ext(
+                game, (CNA_PlayerIndex)99, (CNA_Color){10U, 20U, 30U, 255U}) ==
+                CNA_RESULT_INVALID_ARGUMENT &&
+            cna_gamepad_set_player_index_ext(game, (CNA_PlayerIndex)99, 2, &applied) ==
+                CNA_RESULT_INVALID_ARGUMENT,
+        "all physical-output routes reject an invalid player before platform access");
+
     for (player = CNA_PLAYER_INDEX_ONE; player <= CNA_PLAYER_INDEX_FOUR; ++player) {
         blank_state(&snapshot);
         if (cna_gamepad_get_state(game, player, &snapshot) == CNA_RESULT_SUCCESS &&
@@ -462,17 +475,6 @@ static void disconnected_device_contract(CNA_Handle game, CnaDemo* demo)
 
     cna_demo_check(
         demo,
-        cna_gamepad_set_vibration(game, player, 0.5f, 0.75f, &applied) == CNA_RESULT_SUCCESS &&
-            applied == CNA_FALSE &&
-            ((applied = UINT8_C(9)),
-             cna_gamepad_set_trigger_vibration_ext(game, player, 0.25f, 1.0f, &applied) == CNA_RESULT_SUCCESS) &&
-            applied == CNA_FALSE &&
-            cna_gamepad_set_light_bar_ext(game, player, (CNA_Color){10U, 20U, 30U, 255U}) ==
-                CNA_RESULT_SUCCESS,
-        "a disconnected slot refuses both vibration kinds while its light-bar request is a successful no-op");
-
-    cna_demo_check(
-        demo,
         cna_gamepad_get_gyro_ext(game, player, &reading, &available) == CNA_RESULT_SUCCESS &&
             available == CNA_FALSE && same_vector3(&reading, 1.0f, 2.0f, 3.0f) &&
             ((available = UINT8_C(9)),
@@ -483,10 +485,8 @@ static void disconnected_device_contract(CNA_Handle game, CnaDemo* demo)
     cna_demo_check(
         demo,
         cna_gamepad_get_player_index_ext(game, player, &player_number) == CNA_RESULT_SUCCESS &&
-            player_number == -1 &&
-            cna_gamepad_set_player_index_ext(game, player, 2, &applied) == CNA_RESULT_SUCCESS &&
-            applied == CNA_FALSE,
-        "a disconnected controller has player index -1 and refuses an attempted index assignment");
+            player_number == -1,
+        "a disconnected controller has player index minus one without a configuration write");
 
     cna_demo_check(
         demo,

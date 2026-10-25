@@ -27,7 +27,7 @@ $ cna-demos graphics.sprite_batch.draw_texture
 executable with an interactive terminal browser and a scripting CLI, a self-registering demo
 registry with metadata and validation, unattended runs with frame limits and screenshots, CTest
 integration with one test per demo, a JSON catalog, and an API coverage report. All roadmap phases
-are done (730 demos as of 2026-10-25), and every CNA issue the demos found has a final
+are done (733 demos as of 2026-10-25), and every CNA issue the demos found has a final
 disposition; no demo is marked as a known failure. See [docs/COVERAGE.md](docs/COVERAGE.md) for the
 current numbers, [docs/ROADMAP.md](docs/ROADMAP.md) for the phases and their remaining documented
 boundaries, [docs/CNA_EXAMPLES_MIGRATION.md](docs/CNA_EXAMPLES_MIGRATION.md) for the complete

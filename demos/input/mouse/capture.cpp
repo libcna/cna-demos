@@ -35,6 +35,7 @@ namespace
         {
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
+            cWasDown_ = Keyboard::GetState().IsKeyDown(Keys::C);
         }
 
         void UnloadContent() override { ReleaseCapture(); }
@@ -49,7 +50,7 @@ namespace
             }
 
             const bool cDown = Keyboard::GetState().IsKeyDown(Keys::C);
-            if (cDown && !cWasDown_)
+            if (!Context().Automated() && cDown && !cWasDown_)
             {
                 if (captured_)
                 {

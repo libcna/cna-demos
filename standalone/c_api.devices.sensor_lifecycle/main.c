@@ -106,18 +106,6 @@ static void on_motion_calibration(void* context)
     ++((MotionEvents*)context)->calibrations;
 }
 
-static int check_start_contract(CnaDemo* demo, CNA_Result first, CNA_Result second,
-                                CNA_Result stop_result, CNA_Result error_result,
-                                CNA_Bool has_error, CNA_Bool supported, const char* label)
-{
-    const int supported_path = supported == CNA_TRUE && first == CNA_RESULT_SUCCESS &&
-        second == CNA_RESULT_INVALID_STATE && stop_result == CNA_RESULT_SUCCESS &&
-        error_result == CNA_RESULT_SUCCESS && has_error == CNA_TRUE;
-    const int missing_path = supported == CNA_FALSE && first == CNA_RESULT_INVALID_STATE &&
-        error_result == CNA_RESULT_SUCCESS && has_error == CNA_TRUE;
-    return cna_demo_check(demo, supported_path || missing_path, label);
-}
-
 static void accelerometer_contract(CNA_Handle game, CnaDemo* demo)
 {
     CNA_AccelerometerHandle sensor = CNA_INVALID_HANDLE;
@@ -127,13 +115,7 @@ static void accelerometer_contract(CNA_Handle game, CnaDemo* demo)
     CNA_SensorState sensor_state = UINT32_C(99);
     CNA_Bool supported = UINT8_C(9);
     CNA_Bool valid = UINT8_C(9);
-    CNA_Bool has_error = UINT8_C(9);
-    int32_t error_id = 0;
     int64_t ticks = INT64_C(-1);
-    CNA_Result first_start;
-    CNA_Result second_start = CNA_RESULT_SUCCESS;
-    CNA_Result stop_result = CNA_RESULT_SUCCESS;
-    CNA_Result error_result;
     AccelerometerEvents events;
 
     memset(&events, 0, sizeof(events));
@@ -155,17 +137,8 @@ static void accelerometer_contract(CNA_Handle game, CnaDemo* demo)
     }
     printf("  accelerometer supported: %u\n", (unsigned)supported);
 
-    first_start = cna_accelerometer_start(sensor);
-    if (first_start == CNA_RESULT_SUCCESS) {
-        second_start = cna_accelerometer_start(sensor);
-    }
-    error_result = cna_sensors_get_last_error_id_ext(&error_id, &has_error);
-    if (first_start == CNA_RESULT_SUCCESS) {
-        stop_result = cna_accelerometer_stop(sensor);
-    }
-    check_start_contract(demo, first_start, second_start, stop_result, error_result, has_error,
-                         supported,
-                         "accelerometer Start follows host support and failures publish an error id");
+    cna_demo_check(demo, supported == CNA_FALSE || supported == CNA_TRUE,
+                   "accelerometer host support is reported without starting physical acquisition");
 
     cna_demo_check(
         demo,
@@ -242,9 +215,6 @@ static void gyroscope_contract(CNA_Handle game, CnaDemo* demo)
     CNA_Bool supported = UINT8_C(9);
     CNA_Bool valid = UINT8_C(9);
     int64_t ticks = INT64_C(-1);
-    CNA_Result first_start;
-    CNA_Result second_start = CNA_RESULT_SUCCESS;
-    CNA_Result stop_result = CNA_RESULT_SUCCESS;
     GyroscopeEvents events;
 
     memset(&events, 0, sizeof(events));
@@ -264,17 +234,8 @@ static void gyroscope_contract(CNA_Handle game, CnaDemo* demo)
         return;
     }
     printf("  gyroscope supported: %u\n", (unsigned)supported);
-    first_start = cna_gyroscope_start(sensor);
-    if (first_start == CNA_RESULT_SUCCESS) {
-        second_start = cna_gyroscope_start(sensor);
-        stop_result = cna_gyroscope_stop(sensor);
-    }
-    cna_demo_check(
-        demo,
-        (supported == CNA_FALSE && first_start == CNA_RESULT_INVALID_STATE) ||
-            (supported == CNA_TRUE && first_start == CNA_RESULT_SUCCESS &&
-             second_start == CNA_RESULT_INVALID_STATE && stop_result == CNA_RESULT_SUCCESS),
-        "gyroscope Start and Stop follow the reported host support");
+    cna_demo_check(demo, supported == CNA_FALSE || supported == CNA_TRUE,
+                   "gyroscope host support is reported without starting physical acquisition");
     cna_demo_check(
         demo,
         cna_gyroscope_set_time_between_updates_ticks(sensor, INT64_C(300000)) ==
@@ -332,7 +293,6 @@ static void compass_contract(CNA_Handle game, CnaDemo* demo)
     CNA_Bool supported = UINT8_C(9);
     CNA_Bool valid = UINT8_C(9);
     int64_t ticks = INT64_C(-1);
-    CNA_Result first_start;
     CompassEvents events;
 
     memset(&events, 0, sizeof(events));
@@ -352,14 +312,8 @@ static void compass_contract(CNA_Handle game, CnaDemo* demo)
         return;
     }
     printf("  compass supported: %u\n", (unsigned)supported);
-    first_start = cna_compass_start(sensor);
-    cna_demo_check(
-        demo,
-        (supported == CNA_FALSE && first_start == CNA_RESULT_INVALID_STATE &&
-         cna_compass_get_current_value(sensor, &current) == CNA_RESULT_INVALID_STATE) ||
-            (supported == CNA_TRUE && first_start == CNA_RESULT_SUCCESS &&
-             cna_compass_stop(sensor) == CNA_RESULT_SUCCESS),
-        "the platform compass path follows its reported availability");
+    cna_demo_check(demo, supported == CNA_FALSE || supported == CNA_TRUE,
+                   "compass host support is reported without starting physical acquisition");
 
     cna_demo_check(
         demo,
@@ -438,7 +392,6 @@ static void motion_contract(CNA_Handle game, CnaDemo* demo)
     CNA_Bool valid = UINT8_C(9);
     CNA_Bool north = UINT8_C(9);
     int64_t ticks = INT64_C(-1);
-    CNA_Result first_start;
     MotionEvents events;
 
     memset(&events, 0, sizeof(events));
@@ -468,14 +421,8 @@ static void motion_contract(CNA_Handle game, CnaDemo* demo)
         return;
     }
     printf("  fused motion supported: %u\n", (unsigned)supported);
-    first_start = cna_motion_start(sensor);
-    cna_demo_check(
-        demo,
-        (supported == CNA_FALSE && first_start == CNA_RESULT_INVALID_STATE &&
-         cna_motion_get_current_value(sensor, &current) == CNA_RESULT_INVALID_STATE) ||
-            (supported == CNA_TRUE && first_start == CNA_RESULT_SUCCESS &&
-             cna_motion_stop(sensor) == CNA_RESULT_SUCCESS),
-        "the platform fused-motion path follows its reported availability");
+    cna_demo_check(demo, supported == CNA_FALSE || supported == CNA_TRUE,
+                   "fused-motion host support is reported without starting physical acquisition");
     cna_demo_check(
         demo,
         cna_motion_set_test_backend_ext(sensor, CNA_TRUE, CNA_TRUE, CNA_FALSE) ==

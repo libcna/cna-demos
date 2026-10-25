@@ -14,10 +14,13 @@
 #include "Microsoft/Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteFont.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteSortMode.hpp"
+#include "Microsoft/Xna/Framework/Input/Keyboard.hpp"
+#include "Microsoft/Xna/Framework/Input/Keys.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
+using namespace Microsoft::Xna::Framework::Input;
 using CNA::Input::Clipboard;
 
 namespace
@@ -34,6 +37,41 @@ namespace
         {
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
+            previousKeyboard_ = Keyboard::GetState();
+            Context().Check(Bytes("CNA") == std::vector<std::uint8_t>({67, 78, 65}),
+                            "the custom format payload owns the exact authored bytes");
+        }
+
+        void Update(GameTime& gameTime) override
+        {
+            const KeyboardState keyboard = Keyboard::GetState();
+            if (!Context().Automated() && keyboard.IsKeyDown(Keys::C) && previousKeyboard_.IsKeyUp(Keys::C))
+                RunClipboardProbe();
+            previousKeyboard_ = keyboard;
+            Game::Update(gameTime);
+        }
+
+        void Draw(const GameTime& gameTime) override
+        {
+            getGraphicsDeviceProperty().Clear(Color::DarkSlateGray);
+            spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
+            spriteBatch_->DrawString(*font_, "C: replace the real clipboard and run the format probe",
+                                     Vector2(40.0f, 40.0f), Color::White);
+            float y = 75.0f;
+            for (const std::string& type : offered_)
+            {
+                spriteBatch_->DrawString(*font_, type, Vector2(60.0f, y), Color::LightGreen);
+                y += 28.0f;
+            }
+            spriteBatch_->DrawString(*font_, "As text: " + text_, Vector2(40.0f, y + 20.0f), Color::LightGray);
+            spriteBatch_->End();
+            Game::Draw(gameTime);
+        }
+
+    private:
+        void RunClipboardProbe()
+        {
+            offered_.clear();
 
             const std::optional<std::string> previous =
                 Clipboard::HasTextEXT() ? std::optional(Clipboard::GetTextEXT()) : std::nullopt;
@@ -58,27 +96,10 @@ namespace
             text_ = Clipboard::GetTextEXT();
             Context().Check(text_ == "3 1 4 1 5 9 2 6", "a text editor would paste the text version");
 
-            if (previous)
-                Clipboard::SetTextEXT(*previous);
+            Clipboard::SetTextEXT(previous.value_or(""));
         }
 
-        void Draw(const GameTime& gameTime) override
-        {
-            getGraphicsDeviceProperty().Clear(Color::DarkSlateGray);
-            spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
-            spriteBatch_->DrawString(*font_, "One copied item, offered as:", Vector2(40.0f, 40.0f), Color::White);
-            float y = 75.0f;
-            for (const std::string& type : offered_)
-            {
-                spriteBatch_->DrawString(*font_, type, Vector2(60.0f, y), Color::LightGreen);
-                y += 28.0f;
-            }
-            spriteBatch_->DrawString(*font_, "As text: " + text_, Vector2(40.0f, y + 20.0f), Color::LightGray);
-            spriteBatch_->End();
-            Game::Draw(gameTime);
-        }
-
-    private:
+        KeyboardState previousKeyboard_;
         std::vector<std::string> offered_;
         std::string text_;
         std::unique_ptr<SpriteBatch> spriteBatch_;
@@ -89,15 +110,18 @@ namespace
 CNA_DEMOS_GAME(DataFormatsDemo, {
     .id = "input.clipboard.data_formats",
     .title = "Clipboard data formats (CNAEXT)",
-    .description = "Copies bytes under a custom MIME type with Clipboard::SetDataEXT, reads them back, then offers "
-                   "one item as both custom data and text/plain and lists the offered types; the previous clipboard "
-                   "text is restored.",
+    .description = "After a fresh C press in an attended run, copies a custom MIME payload, reads it back and offers "
+                   "the item as custom data plus text/plain. It restores prior text when possible and explicitly "
+                   "documents that the public API cannot snapshot arbitrary prior formats.",
     .apis = {"CNA::Input::Clipboard::SetDataEXT", "CNA::Input::Clipboard::GetDataEXT",
              "CNA::Input::Clipboard::HasDataEXT", "CNA::Input::Clipboard::GetMimeTypesEXT",
              "CNA::Input::Clipboard::HasTextEXT", "CNA::Input::Clipboard::GetTextEXT"},
-    .tags = {"clipboard", "copy", "paste", "mime", "data", "cnaext"},
-    .needs = CnaDemos::Need::Window,
+    .tags = {"clipboard", "copy", "paste", "mime", "data", "cnaext", "explicit-consent"},
+    .automation = CnaDemos::Automation::SmokeOnly,
+    .needs = CnaDemos::Need::Keyboard,
     .frames = 3,
     .deterministic = true,
     .assets = {"fonts/pixel_font.cnb"},
+    .restrictions = {"Unattended runs never write the host clipboard. C explicitly consents to replacement; CNA can "
+                     "restore prior text but cannot snapshot/restore arbitrary foreign MIME formats."},
 })

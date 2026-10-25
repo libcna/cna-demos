@@ -157,40 +157,31 @@ namespace
             missing.Dispose();
             Context().Check(!missing.IsOpenEXT(), "disposing a closed haptic device twice is safe");
 
-            const std::vector<HapticInfoEXT> haptics = Haptics::GetHapticsEXT();
-            if (!haptics.empty())
-                device_ = Haptics::OpenEXT(haptics.front().id);
-            if (!device_.IsOpenEXT())
+            haptics_ = Haptics::GetHapticsEXT();
+            lines_.push_back("Read-only inventory: " + std::to_string(haptics_.size()) + " haptic device(s)");
+            for (const HapticInfoEXT& info : haptics_)
+                lines_.push_back("  #" + std::to_string(info.id) + ": " + info.name);
+            if (haptics_.empty())
             {
                 lines_.push_back("No force-feedback device found");
-                return;
+                lines_.push_back("Automated checks use the deterministic closed-device contract above");
             }
-            const HapticCapabilitiesEXT caps = device_.GetCapabilitiesEXT();
-            lines_.push_back("\"" + device_.GetNameEXT() + "\": up to " + std::to_string(caps.maxEffects) +
-                             " effects stored, " + std::to_string(caps.maxEffectsPlaying) + " playing at once");
-            // Effects are uploaded once and then run by id, as often as needed.
-            const char* names[] = {"1: sine", "2: constant", "3: ramp"};
-            const HapticEffectEXT effects[] = {Sine(), Constant(), Ramp()};
-            for (int i = 0; i < 3; ++i)
-            {
-                ids_[i] = device_.IsEffectSupportedEXT(effects[i]) ? device_.CreateEffectEXT(effects[i]) : -1;
-                lines_.push_back(std::string(names[i]) + (ids_[i] >= 0 ? " -- ready" : " -- not supported"));
-            }
-            // Optional device controls, present only when the feature flags say so.
-            if ((caps.features & HapticFeatureEXT::Gain) != HapticFeatureEXT::None)
-                device_.SetGainEXT(80);
-            hasStatus_ = (caps.features & HapticFeatureEXT::Status) != HapticFeatureEXT::None;
+            lines_.push_back("O: explicitly open first device and upload effects; then keys 1-3 run them");
+            lines_.push_back("Gain is never changed: the public API cannot read and restore its prior value");
+            previous_ = Keyboard::GetState();
         }
 
         void UnloadContent() override
         {
             if (device_.IsOpenEXT())
             {
-                device_.StopAllEffectsEXT();
                 for (const int id : ids_)
                 {
                     if (id >= 0)
+                    {
+                        device_.StopEffectEXT(id);
                         device_.DestroyEffectEXT(id);
+                    }
                 }
             }
             device_.Dispose();
@@ -199,10 +190,16 @@ namespace
         void Update(GameTime& gameTime) override
         {
             const KeyboardState keyboard = Keyboard::GetState();
+            if (!Context().Automated() && !device_.IsOpenEXT() && !haptics_.empty() &&
+                keyboard.IsKeyDown(Keys::O) && previous_.IsKeyUp(Keys::O))
+            {
+                OpenAndUpload();
+            }
             const Keys keys[] = {Keys::D1, Keys::D2, Keys::D3};
             for (int i = 0; i < 3; ++i)
             {
-                if (ids_[i] >= 0 && keyboard.IsKeyDown(keys[i]) && previous_.IsKeyUp(keys[i]))
+                if (!Context().Automated() && ids_[i] >= 0 && keyboard.IsKeyDown(keys[i]) &&
+                    previous_.IsKeyUp(keys[i]))
                     device_.RunEffectEXT(ids_[i], 1);
             }
             previous_ = keyboard;
@@ -227,10 +224,34 @@ namespace
         }
 
     private:
+        void OpenAndUpload()
+        {
+            device_ = Haptics::OpenEXT(haptics_.front().id);
+            if (!device_.IsOpenEXT())
+            {
+                lines_.push_back("The selected device could not be opened (disconnected or unavailable)");
+                return;
+            }
+
+            const HapticCapabilitiesEXT caps = device_.GetCapabilitiesEXT();
+            lines_.push_back("Opened \"" + device_.GetNameEXT() + "\": up to " +
+                             std::to_string(caps.maxEffects) + " effects stored, " +
+                             std::to_string(caps.maxEffectsPlaying) + " playing at once");
+            const char* names[] = {"1: sine", "2: constant", "3: ramp"};
+            const HapticEffectEXT effects[] = {Sine(), Constant(), Ramp()};
+            for (int i = 0; i < 3; ++i)
+            {
+                ids_[i] = device_.IsEffectSupportedEXT(effects[i]) ? device_.CreateEffectEXT(effects[i]) : -1;
+                lines_.push_back(std::string(names[i]) + (ids_[i] >= 0 ? " -- ready" : " -- not supported"));
+            }
+            hasStatus_ = (caps.features & HapticFeatureEXT::Status) != HapticFeatureEXT::None;
+        }
+
         HapticDevice device_;
         int ids_[3] = {-1, -1, -1};
         bool hasStatus_ = false;
         bool playing_ = false;
+        std::vector<HapticInfoEXT> haptics_;
         std::vector<std::string> lines_;
         KeyboardState previous_;
         std::unique_ptr<SpriteBatch> spriteBatch_;
@@ -241,9 +262,10 @@ namespace
 CNA_DEMOS_GAME(EffectsDemo, {
     .id = "input.haptics.effects",
     .title = "Force-feedback effects (CNAEXT)",
-    .description = "Describes sine, constant and ramp forces as HapticEffectEXT values, uploads the supported ones "
-                   "with CreateEffectEXT and runs them with keys 1-3. It also verifies complete value semantics and "
-                   "every safe closed-device operation without requiring force-feedback hardware.",
+    .description = "Automates effect value semantics, read-only device enumeration and every safe closed-device "
+                   "operation. A fresh O press in an attended run opens the first real device and uploads sine, "
+                   "constant and ramp effects; keys 1-3 run them and shutdown stops and releases only the uploaded "
+                   "ids owned by this demo, then closes its handle.",
     .apis = {"CNA::Input::HapticEffectEXT", "CNA::Input::HapticDirectionEXT",
              "CNA::Input::HapticDirectionTypeEXT", "CNA::Input::HapticEffectTypeEXT",
              "CNA::Input::HapticFeatureEXT", "CNA::Input::HapticCapabilitiesEXT", "CNA::Input::HapticInfoEXT",
@@ -259,8 +281,11 @@ CNA_DEMOS_GAME(EffectsDemo, {
              "CNA::Input::HapticDevice::SetGainEXT", "CNA::Input::HapticDevice::SetAutocenterEXT",
              "CNA::Input::HapticDevice::PauseEXT", "CNA::Input::HapticDevice::ResumeEXT",
              "CNA::Input::HapticDevice::Dispose"},
-    .tags = {"haptics", "force-feedback", "wheel", "joystick", "effects", "cnaext"},
-    .automation = CnaDemos::Automation::Automated,
+    .tags = {"haptics", "force-feedback", "wheel", "joystick", "effects", "cnaext", "explicit-consent"},
+    .automation = CnaDemos::Automation::SmokeOnly,
+    .needs = CnaDemos::Need::Keyboard,
     .frames = 3,
     .assets = {"fonts/pixel_font.cnb"},
+    .restrictions = {"Unattended runs enumerate only; opening devices, uploading/running effects and other physical "
+                     "operations require fresh attended key presses. Gain is never changed because CNA has no getter."},
 })

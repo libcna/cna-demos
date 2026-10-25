@@ -176,26 +176,19 @@ static void enumerate_haptics(CNA_Handle game, CnaDemo* demo)
     }
     printf("  haptic devices: %u\n", (unsigned)count);
     for (index = UINT32_C(0); index < count; ++index) {
-        CNA_HapticDeviceHandle device = CNA_INVALID_HANDLE;
-        CNA_Bool open = UINT8_C(9);
         memset(name, 0, sizeof(name));
         entries_ok = entries_ok && cna_haptics_get_id_at(game, index, &id) == CNA_RESULT_SUCCESS &&
                      cna_haptics_get_name_size_at(game, index, &bytes) == CNA_RESULT_SUCCESS &&
                      bytes < (uint64_t)sizeof(name) &&
                      cna_haptics_copy_name_at(game, index, name, sizeof(name), &bytes) ==
                          CNA_RESULT_SUCCESS &&
-                     strlen(name) == (size_t)bytes &&
-                     cna_haptics_open(game, id, &device) == CNA_RESULT_SUCCESS &&
-                     device != CNA_INVALID_HANDLE &&
-                     cna_haptic_device_get_is_open(device, &open) == CNA_RESULT_SUCCESS &&
-                     (open == CNA_FALSE || open == CNA_TRUE) &&
-                     cna_haptic_device_destroy(device) == CNA_RESULT_SUCCESS;
+                     strlen(name) == (size_t)bytes;
         if (entries_ok) {
-            printf("    #%u %s, open %u\n", (unsigned)id, name, (unsigned)open);
+            printf("    #%u %s\n", (unsigned)id, name);
         }
     }
     cna_demo_check(demo, entries_ok,
-                   "every reported haptic device has an exact name and an owned open result");
+                   "every reported haptic device has an exact id and name without being opened");
     cna_demo_check(
         demo,
         cna_haptics_get_id_at(game, count, &id) == CNA_RESULT_INVALID_ARGUMENT &&
@@ -296,26 +289,18 @@ static void closed_device_contract(CNA_Handle game, CnaDemo* demo)
         "device disposal is idempotent while handle destruction releases the closed device");
 }
 
-static void alternative_open_routes(CNA_Handle game, CnaDemo* demo)
+static void alternative_capability_routes(CNA_Handle game, CnaDemo* demo)
 {
-    CNA_HapticDeviceHandle mouse_device = CNA_INVALID_HANDLE;
     CNA_HapticDeviceHandle joystick_device = CNA_INVALID_HANDLE;
     CNA_Bool mouse_haptic = UINT8_C(9);
     CNA_Bool joystick_haptic = UINT8_C(9);
-    CNA_Bool mouse_open = UINT8_C(9);
     CNA_Bool joystick_open = UINT8_C(9);
 
     cna_demo_check(
         demo,
         cna_haptics_get_is_mouse_haptic(game, &mouse_haptic) == CNA_RESULT_SUCCESS &&
-            (mouse_haptic == CNA_FALSE || mouse_haptic == CNA_TRUE) &&
-            cna_haptics_open_from_mouse(game, &mouse_device) == CNA_RESULT_SUCCESS &&
-            mouse_device != CNA_INVALID_HANDLE &&
-            cna_haptic_device_get_is_open(mouse_device, &mouse_open) == CNA_RESULT_SUCCESS &&
-            (mouse_open == CNA_FALSE || mouse_open == CNA_TRUE) &&
-            (mouse_haptic != CNA_FALSE || mouse_open == CNA_FALSE) &&
-            cna_haptic_device_destroy(mouse_device) == CNA_RESULT_SUCCESS,
-        "the mouse capability query and owned open result form a coherent optional-device answer");
+            (mouse_haptic == CNA_FALSE || mouse_haptic == CNA_TRUE),
+        "the mouse-haptic capability is inspected without opening the physical device");
     cna_demo_check(
         demo,
         cna_haptics_get_is_joystick_haptic(game, UINT32_C(0xFFFFFFFF), &joystick_haptic) ==
@@ -342,7 +327,7 @@ static CNA_Result update(CNA_Handle game, const CNA_GameTime* game_time, void* c
     state->validated = 1;
     enumerate_haptics(game, state->demo);
     closed_device_contract(game, state->demo);
-    alternative_open_routes(game, state->demo);
+    alternative_capability_routes(game, state->demo);
     return CNA_RESULT_SUCCESS;
 }
 

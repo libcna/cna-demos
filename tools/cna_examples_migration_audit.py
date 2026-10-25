@@ -28,6 +28,53 @@ DISPOSITIONS = {
 }
 
 OVERRIDES = {
+    "Audio / Microphone / Capture": (
+        "EXTEND_EXISTING", ["audio.microphone.input_level"],
+        "The repaired C++ demo now matches the legacy opt-in lifecycle: a fresh attended key press starts capture, "
+        "the BufferReady token is owned and removed, only demo-owned capture is stopped, callback state is weakly "
+        "held, and unattended runs retain enumeration and sample-conversion coverage without opening hardware."),
+    "Devices / Vibration / VibrateController": (
+        "EXTEND_EXISTING", ["devices.vibrate_controller.start_stop"],
+        "The C++ demo retains automatic capability and invalid-duration checks, but every valid vibration overload "
+        "now requires a fresh attended key press and only demo-owned output is stopped on timeout or shutdown."),
+    "3D Graphics / Device State, Camera & Model / Model / Procedural Construction": (
+        "MIGRATE_NEW", ["graphics.model.procedural_construction"],
+        "A new public-C++ recipe manually builds vertex/index buffers, a declaration, shared/distinct effects, three "
+        "ModelMeshParts, a ModelMesh and two-bone Model; it explains automatic distinct-effect registration, owns all "
+        "raw-pointer dependencies in safe order, draws through Model::Draw and pixel/lifetime checks the result."),
+    "3D Graphics / Primitives & Vertex Types / Vertex Types / VertexPositionColor": (
+        "COVERED_BY_MULTIPLE", ["graphics.vertex_declaration.stock_vertex_types", "graphics.index_buffer.indexed_cube"],
+        "The stock-type demo verifies VertexPositionColor's exact declaration, fields and value contract; the indexed-"
+        "cube demo supplies the legacy screen's missing rendered, unlit vertex-colour cube workflow."),
+    "3D Graphics / Primitives & Vertex Types / Vertex Types / VertexPositionNormalTexture": (
+        "COVERED_BY_MULTIPLE", ["graphics.basic_effect.texture", "graphics.basic_effect.default_lighting"],
+        "Both rendering demos use Geometry's VertexPositionNormalTexture mesh. One consumes its UVs through "
+        "BasicEffect texturing and the other consumes its normals through BasicEffect lighting, preserving why all "
+        "three fields belong in the stock type."),
+    "3D Graphics / Device State, Camera & Model / Camera & Projection / Orbiting View Matrix": (
+        "MIGRATE_NEW", ["graphics.camera.orbiting_view"],
+        "The fresh semantic audit rejected a console-only CreateLookAt calculation as equivalent. A new visual C++ "
+        "recipe keeps three World matrices fixed, recomputes the orbiting camera View every frame and pixel-checks "
+        "the rendered scene."),
+    "3D Graphics / Device State, Camera & Model / Camera & Projection / Perspective vs. Orthographic": (
+        "MIGRATE_NEW", ["graphics.camera.projection_comparison"],
+        "The fresh semantic audit rejected two console-only matrix checks as equivalent. A new split-view C++ recipe "
+        "renders the same depth-staggered scene with both projections and measures perspective shrinkage versus "
+        "orthographic size preservation."),
+    "Input / Gamepad / Vibration": (
+        "EXTEND_EXISTING", ["input.gamepad.vibration", "input.gamepad.trigger_vibration"],
+        "Both rumble recipes now limit automation to read-only state/capability inspection. A fresh attended Space "
+        "press starts one bounded motor or trigger-motor pulse, and cleanup sends zero only for output the demo owns."),
+    "Input / Gamepad / Motion Sensors & Light Bar": (
+        "EXTEND_EXISTING", ["input.gamepad.motion_sensors", "input.gamepad.light_bar"],
+        "Motion sensing remains read-only. Light-bar capability inspection is automated, while each real colour write "
+        "requires a fresh attended Space press and is issued once; because CNA has no getter, shutdown performs no "
+        "invented restoration and the limitation is explicit."),
+    "Input / Other / Haptics": (
+        "EXTEND_EXISTING", ["input.haptics.effects"],
+        "Value semantics, enumeration and guaranteed-closed-device rejection stay automated. Opening a real device, "
+        "uploading effects and running them require separate fresh attended keys; uploaded ids and handles are released, "
+        "and gain is never changed because the public API cannot read its original value."),
     "Content / XNB Format / XNB Fixtures": (
         "EXTEND_EXISTING", ["content.xnb.same_assets"],
         "The existing CNB/XNB comparison now verifies the LZX container flag and loads a real external MonoGame-produced compressed Texture2D; generated DXT XNB coverage remains separate."),
@@ -188,7 +235,7 @@ DESTINATIONS = {
     "2D Graphics / Render Targets / Render-to-Texture Basics / Draw Into & Sample": ["graphics.render_target.render_target2d"],
     "2D Graphics / Render Targets / Render-to-Texture Basics / Multi-Target Round Trip": ["graphics.render_target.render_target2d", "c_api.graphics.render_target_bindings"],
     "2D Graphics / Render Targets / Dispose Safety / Dispose While Bound Throws": ["graphics.render_target.render_target2d"],
-    "3D Graphics / Primitives & Vertex Types / Vertex Types / VertexPositionColor": ["graphics.vertex_declaration.stock_vertex_types"],
+    "3D Graphics / Primitives & Vertex Types / Vertex Types / VertexPositionColor": ["graphics.vertex_declaration.stock_vertex_types", "graphics.index_buffer.indexed_cube"],
     "3D Graphics / Primitives & Vertex Types / Buffers / Immediate vs. Buffered Draw": ["graphics.primitives.draw_user_indexed_primitives", "graphics.index_buffer.indexed_cube"],
     "3D Graphics / Primitives & Vertex Types / Buffers / DynamicVertexBuffer Ripple": ["graphics.vertex_buffer.dynamic_vertex_buffer"],
     "3D Graphics / BasicEffect & Lighting / Basic Rendering / VertexColorEnabled": ["graphics.basic_effect.vertex_color_lighting"],
@@ -198,9 +245,9 @@ DESTINATIONS = {
     "3D Graphics / Effects Gallery / Custom Shader / Invalid Shader Handling": ["graphics.shader_effect.compiler_diagnostics"],
     "3D Graphics / Device State, Camera & Model / Depth & Culling / DepthStencilState: Default vs. None": ["graphics.depth_stencil_state.depth_buffer"],
     "3D Graphics / Device State, Camera & Model / Depth & Culling / RasterizerState: FillMode": ["graphics.rasterizer_state.wireframe"],
-    "3D Graphics / Device State, Camera & Model / Camera & Projection / Orbiting View Matrix": ["math.matrix.look_at"],
-    "3D Graphics / Device State, Camera & Model / Camera & Projection / Perspective vs. Orthographic": ["math.matrix.perspective", "math.matrix.orthographic"],
-    "3D Graphics / Device State, Camera & Model / Model / Procedural Construction": ["c_api.graphics.models"],
+    "3D Graphics / Device State, Camera & Model / Camera & Projection / Orbiting View Matrix": ["graphics.camera.orbiting_view"],
+    "3D Graphics / Device State, Camera & Model / Camera & Projection / Perspective vs. Orthographic": ["graphics.camera.projection_comparison"],
+    "3D Graphics / Device State, Camera & Model / Model / Procedural Construction": ["graphics.model.procedural_construction"],
     "3D Graphics / Device State, Camera & Model / Model / ModelBone Hierarchy": ["graphics.model.bones"],
     "3D Graphics / Device State, Camera & Model / Model / Load & Traverse": ["c_api.content.cnb_model_from_cnj", "c_api.graphics.models"],
     "3D Graphics / Device State, Camera & Model / Model / EffectMaterial & Effect Swapping": ["graphics.model.mesh_effects", "c_api.graphics.effect_concrete_types"],
@@ -281,6 +328,23 @@ STOP = {
     "the", "a", "an", "and", "or", "to", "of", "in", "on", "with", "from", "for", "is",
     "vs", "real", "live", "screen", "demo", "property", "properties", "state", "states", "value",
     "values", "get", "set", "ext", "xna", "cna", "basic", "basics",
+}
+
+# Regression guard for the six reported false dispositions plus the two visual false mappings
+# found by the independent final review. These are exact joins, not token-ranking suggestions.
+REQUIRED_CORRECTIONS = {
+    path: (disposition, ids)
+    for path, (disposition, ids, _rationale) in OVERRIDES.items()
+    if path in {
+        "Audio / Microphone / Capture",
+        "Devices / Vibration / VibrateController",
+        "3D Graphics / Device State, Camera & Model / Model / Procedural Construction",
+        "Input / Gamepad / Vibration",
+        "Input / Gamepad / Motion Sensors & Light Bar",
+        "Input / Other / Haptics",
+        "3D Graphics / Device State, Camera & Model / Camera & Projection / Orbiting View Matrix",
+        "3D Graphics / Device State, Camera & Model / Camera & Projection / Perspective vs. Orthographic",
+    }
 }
 
 
@@ -623,6 +687,12 @@ def validate(data: dict, legacy: Path | None, executable: Path | None) -> list[s
         if row.get("disposition") == "MANUAL_INTEGRATION" and by_id:
             if not ids or any(by_id[demo_id]["automation"] != "manual" for demo_id in ids if demo_id in by_id):
                 problems.append(f"{path}: manual integration destination is not catalogued manual")
+    rows_by_path = {row.get("legacy_path"): row for row in rows}
+    for path, (expected_disposition, expected_ids) in REQUIRED_CORRECTIONS.items():
+        row = rows_by_path.get(path, {})
+        if row.get("disposition") != expected_disposition or row.get("final_destination_ids") != expected_ids:
+            problems.append(
+                f"{path}: known false mapping regression; expected {expected_disposition} -> {expected_ids}")
     counts = collections.Counter(row.get("disposition") for row in rows)
     if data.get("disposition_counts") != dict(sorted(counts.items())):
         problems.append("disposition_counts does not match rows")

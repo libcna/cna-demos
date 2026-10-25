@@ -1,92 +1,141 @@
 // SPDX-License-Identifier: MS-PL
-// Microsoft.Devices.VibrateController: the phone's vibration motor (on a desktop: the gamepad's).
-#include <chrono>
+// Microsoft.Devices.VibrateController: capability checks plus explicitly requested output.
 #include <string>
-#include <thread>
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Devices/VibrateController.hpp"
+#include "Microsoft/Xna/Framework/Color.hpp"
+#include "Microsoft/Xna/Framework/Input/Keyboard.hpp"
+#include "Microsoft/Xna/Framework/Input/Keys.hpp"
 #include "System/ArgumentOutOfRangeException.hpp"
 #include "System/TimeSpan.hpp"
 
 using Microsoft::Devices::VibrateController;
+using namespace Microsoft::Xna::Framework;
+using namespace Microsoft::Xna::Framework::Input;
 
 namespace
 {
-    void StartStop(CnaDemos::DemoContext& ctx)
+    class StartStopDemo final : public CnaDemos::DemoGame
     {
-        // One controller per device, reached through Default.
-        VibrateController* vibrate = VibrateController::getDefaultProperty();
-        ctx.Check(vibrate != nullptr && vibrate == VibrateController::getDefaultProperty(),
-                  "Default is the one shared controller");
-
-        const bool supported = vibrate->getIsSupportedProperty();
-        const std::string deviceName = vibrate->getDeviceNameProperty();
-        ctx.Check(supported == vibrate->getIsSupportedProperty() &&
-                      deviceName == vibrate->getDeviceNameProperty() &&
-                      (!supported || !deviceName.empty()),
-                  "support and diagnostic device name form a stable capability snapshot");
-
-        // A short buzz as feedback for a hit. Without a motor (a desktop without a gamepad)
-        // Start does nothing, so the same game code runs everywhere.
-        vibrate->Start(System::TimeSpan::FromMilliseconds(150.0));
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
-
-        // CNAEXT: a weaker buzz; plain Start always vibrates at full strength.
-        vibrate->Start(System::TimeSpan::FromMilliseconds(300.0), 0.3f);
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        vibrate->Stop(); // ends it early
-
-        // CNAEXT: distinct low/high-frequency motor strengths. On a host without a suitable
-        // phone-style haptic device this follows the same documented no-op path as Start.
-        vibrate->StartLeftRight(0.8f, 0.25f, System::TimeSpan::FromMilliseconds(50.0));
-        vibrate->Stop();
-        ctx.Check(true, "the dual-motor overload accepts an in-range request or documented no-op");
-
-        // Windows Phone limits a single vibration to five seconds.
-        bool refused = false;
-        try
+    protected:
+        void LoadContent() override
         {
-            vibrate->Start(System::TimeSpan::FromSeconds(6.0));
-        }
-        catch (const System::ArgumentOutOfRangeException&)
-        {
-            refused = true;
-        }
-        ctx.Check(refused, "a duration over five seconds throws ArgumentOutOfRangeException");
+            vibrate_ = VibrateController::getDefaultProperty();
+            Context().Check(vibrate_ != nullptr && vibrate_ == VibrateController::getDefaultProperty(),
+                            "Default is the one shared controller");
+            supported_ = vibrate_->getIsSupportedProperty();
+            deviceName_ = vibrate_->getDeviceNameProperty();
+            Context().Check(supported_ == vibrate_->getIsSupportedProperty() &&
+                                deviceName_ == vibrate_->getDeviceNameProperty() &&
+                                (!supported_ || !deviceName_.empty()),
+                            "support and diagnostic device name form a stable capability snapshot");
 
-        bool negativeRefused = false;
-        bool dualOverlongRefused = false;
-        try
-        {
-            vibrate->Start(System::TimeSpan::FromMilliseconds(-1.0));
+            bool overlongRefused = false;
+            bool negativeRefused = false;
+            bool dualOverlongRefused = false;
+            try { vibrate_->Start(System::TimeSpan::FromSeconds(6.0)); }
+            catch (const System::ArgumentOutOfRangeException&) { overlongRefused = true; }
+            try { vibrate_->Start(System::TimeSpan::FromMilliseconds(-1.0)); }
+            catch (const System::ArgumentOutOfRangeException&) { negativeRefused = true; }
+            try { vibrate_->StartLeftRight(0.5f, 0.5f, System::TimeSpan::FromSeconds(6.0)); }
+            catch (const System::ArgumentOutOfRangeException&) { dualOverlongRefused = true; }
+            Context().Check(overlongRefused && negativeRefused && dualOverlongRefused,
+                            "invalid durations are rejected before device access");
+
+            previous_ = Keyboard::GetState();
+            Context().Print("VibrateController support: {}; device: {}; Space=full, I=intensity, D=dual motor",
+                            supported_, deviceName_.empty() ? "none" : deviceName_);
         }
-        catch (const System::ArgumentOutOfRangeException&)
+
+        void UnloadContent() override { StopOwnedOutput(); }
+
+        void Update(GameTime& gameTime) override
         {
-            negativeRefused = true;
+            const KeyboardState keyboard = Keyboard::GetState();
+            if (!Context().Automated())
+            {
+                if (Fresh(keyboard, Keys::Space))
+                    StartFull(gameTime, System::TimeSpan::FromMilliseconds(150.0));
+                else if (Fresh(keyboard, Keys::I))
+                    StartIntensity(gameTime, System::TimeSpan::FromMilliseconds(300.0), 0.3f);
+                else if (Fresh(keyboard, Keys::D))
+                    StartDual(gameTime, System::TimeSpan::FromMilliseconds(300.0));
+            }
+            previous_ = keyboard;
+
+            if (ownsOutput_ && gameTime.getTotalGameTimeProperty().getTotalSecondsProperty() >= stopAtSeconds_)
+                StopOwnedOutput();
+            Game::Update(gameTime);
         }
-        try
+
+        void Draw(const GameTime& gameTime) override
         {
-            vibrate->StartLeftRight(0.5f, 0.5f, System::TimeSpan::FromSeconds(6.0));
+            getGraphicsDeviceProperty().Clear(ownsOutput_ ? Color::OrangeRed : Color::DarkSlateGray);
+            Game::Draw(gameTime);
         }
-        catch (const System::ArgumentOutOfRangeException&)
+
+    private:
+        [[nodiscard]] bool Fresh(const KeyboardState& keyboard, Keys key) const
         {
-            dualOverlongRefused = true;
+            return keyboard.IsKeyDown(key) && previous_.IsKeyUp(key);
         }
-        ctx.Check(negativeRefused && dualOverlongRefused,
-                  "negative and dual-motor overlong durations are refused before hardware access");
-        vibrate->Stop();
-    }
+
+        void BeginOwned(const GameTime& gameTime, System::TimeSpan duration)
+        {
+            ownsOutput_ = true;
+            stopAtSeconds_ = gameTime.getTotalGameTimeProperty().getTotalSecondsProperty() +
+                duration.getTotalSecondsProperty();
+        }
+
+        void StartFull(const GameTime& gameTime, System::TimeSpan duration)
+        {
+            StopOwnedOutput();
+            vibrate_->Start(duration);
+            BeginOwned(gameTime, duration);
+        }
+
+        void StartIntensity(const GameTime& gameTime, System::TimeSpan duration, float intensity)
+        {
+            StopOwnedOutput();
+            vibrate_->Start(duration, intensity);
+            BeginOwned(gameTime, duration);
+        }
+
+        void StartDual(const GameTime& gameTime, System::TimeSpan duration)
+        {
+            StopOwnedOutput();
+            vibrate_->StartLeftRight(0.8f, 0.25f, duration);
+            BeginOwned(gameTime, duration);
+        }
+
+        void StopOwnedOutput()
+        {
+            if (!ownsOutput_)
+                return;
+            vibrate_->Stop();
+            ownsOutput_ = false;
+        }
+
+        VibrateController* vibrate_ = nullptr;
+        KeyboardState previous_;
+        bool supported_ = false;
+        bool ownsOutput_ = false;
+        double stopAtSeconds_ = 0.0;
+        std::string deviceName_;
+    };
 }
 
-CNA_DEMOS_CONSOLE(StartStop, {
+CNA_DEMOS_GAME(StartStopDemo, {
     .id = "devices.vibrate_controller.start_stop",
     .title = "Vibration",
-    .description = "Buzzes VibrateController::Default for 150 ms, then more weakly with the CNAEXT intensity "
-                   "and dual-motor overloads and stops them early; invalid durations are refused. It reports the "
-                   "selected haptic capability, while a host without a suitable motor follows the documented no-op.",
-    .apis = {"VibrateController::Default", "VibrateController::IsSupported",
-             "VibrateController::DeviceName", "VibrateController::Start",
-             "VibrateController::StartLeftRight", "VibrateController::Stop"},
-    .tags = {"devices", "vibration", "haptics", "phone", "feedback"},
+    .description = "Inspects VibrateController capability and duration validation automatically. Fresh Space, I or D "
+                   "presses in an attended run request full, intensity or dual-motor vibration; only output owned by "
+                   "this demo is stopped on timeout or shutdown.",
+    .apis = {"VibrateController::Default", "VibrateController::IsSupported", "VibrateController::DeviceName",
+             "VibrateController::Start", "VibrateController::StartLeftRight", "VibrateController::Stop"},
+    .tags = {"devices", "vibration", "haptics", "phone", "feedback", "explicit-consent"},
+    .automation = CnaDemos::Automation::SmokeOnly,
+    .needs = CnaDemos::Need::Keyboard,
+    .restrictions = {"Unattended runs never issue a valid Start call; physical output requires a fresh key press."},
 })

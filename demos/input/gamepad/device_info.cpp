@@ -64,6 +64,7 @@ namespace
         {
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
+            pWasDown_ = Keyboard::GetState().IsKeyDown(Keys::P);
         }
 
         void Update(GameTime& gameTime) override
@@ -71,7 +72,7 @@ namespace
             // Writing a controller's hardware LED is deliberately opt-in. Save the value the
             // device reported before the first change so leaving the demo can restore it.
             const bool pDown = Keyboard::GetState().IsKeyDown(Keys::P);
-            if (pDown && !pWasDown_)
+            if (!Context().Automated() && pDown && !pWasDown_)
             {
                 bool found = false;
                 for (int i = 0; i < 4 && !found; ++i)
@@ -162,6 +163,6 @@ CNA_DEMOS_GAME(DeviceInfoDemo, {
     .automation = CnaDemos::Automation::SmokeOnly,
     .needs = CnaDemos::Need::GamePad | CnaDemos::Need::Keyboard,
     .assets = {"fonts/pixel_font.cnb"},
-    .restrictions = "Writing the LED needs a connected controller that implements the SDL player-index command; "
-                    "an unattended run only exercises enumeration and cleanup.",
+    .restrictions = "Writing the LED needs a fresh P press in an attended run and a connected controller that "
+                    "implements the SDL player-index command; unattended runs only exercise read-only enumeration.",
 })

@@ -32,12 +32,13 @@ namespace
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
             supported_ = CNA::Devices::MessageBox::getIsSupportedProperty();
+            mWasDown_ = Keyboard::GetState().IsKeyDown(Keys::M);
         }
 
         void Update(GameTime& gameTime) override
         {
             const bool mDown = Keyboard::GetState().IsKeyDown(Keys::M);
-            if (mDown && !mWasDown_)
+            if (!Context().Automated() && mDown && !mWasDown_)
             {
                 if (!supported_)
                     result_ = "Native message boxes are unsupported on this host.";

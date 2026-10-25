@@ -55,6 +55,7 @@ namespace
                 std::string("Compass: ") + (Compass::getIsSupportedProperty() ? "supported" : "absent"),
                 std::string("Motion: ") + (Motion::getIsSupportedProperty() ? "supported" : "absent"),
             };
+            spaceWasDown_ = Keyboard::GetState().IsKeyDown(Keys::Space);
         }
 
         void UnloadContent() override { CloseSensors(); }
@@ -62,7 +63,7 @@ namespace
         void Update(GameTime& gameTime) override
         {
             const bool spaceDown = Keyboard::GetState().IsKeyDown(Keys::Space);
-            if (spaceDown && !spaceWasDown_)
+            if (!Context().Automated() && spaceDown && !spaceWasDown_)
             {
                 if (opened_)
                     CloseSensors();

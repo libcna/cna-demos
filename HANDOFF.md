@@ -1,3 +1,70 @@
+# Current handoff — 2026-10-25 (final semantic and safety closure)
+
+This closure started from clean `cna-demos` `develop` commit
+`46233993eea5895e34d572c113f36b43c537847c`, clean `cna` `next` commit
+`e87d32f92910ebd1adeccf6d4c6e3c94b4fafc00`, and clean read-only `cna-examples`
+`develop` commit `ede347336dba86c0bf3332f676e7a473e8b8f0e7`. The destination remains
+`cna-demos/develop`; no branch was switched, and neither dependency repository was modified.
+
+The six independent-audit findings are closed. `audio.microphone.input_level` now requires an
+attended fresh key before capture, retains and removes its `BufferReady` token, prevents callbacks
+through a destroyed game object, stops only capture it owns, restores the duration it changed, and
+keeps deterministic enumeration and conversion checks. New
+`graphics.model.procedural_construction` demonstrates the complete public C++ buffer, declaration,
+effect, mesh-part, mesh, bone and `Model` graph, including duplicate-effect registration, raw-pointer
+lifetime, `Model::Draw`, pixels and a separate destruction probe. `devices.vibrate_controller.start_stop`,
+`input.gamepad.vibration` and `input.gamepad.trigger_vibration` gate every real physical output on
+fresh attended input and stop only owned output. `input.gamepad.light_bar` performs one attended
+write rather than continuous writes; CNA exposes no light-bar getter, so the demo explicitly does
+not claim restoration. `input.haptics.effects` separates safe enumeration/value checks from attended
+open/upload/run operations, releases owned effects and the handle, and does not change gain because
+the public API has no getter with which to restore it.
+
+The cross-cutting review also repaired consent and cleanup boundaries in
+`input.haptics.rumble`, `input.gamepad.device_info`, the clipboard demos, mouse capture/warp/cursor
+demos, camera, sensors, dialogs, tray and URL launch. Automated processes select the dummy SDL audio
+driver unless the caller explicitly selected one. Safe standalone C coverage no longer opens or
+mutates real microphone, haptics, sensor, gamepad, mouse or clipboard state. The new
+`tools/hardware_safety_audit.py`, run by `tools/validate.sh`, pins 65 runner, classification,
+consent, ownership and standalone safety invariants. Manual classification is enforced before demo
+factory construction, so CTest and full smoke sweeps cannot reach those workflows.
+
+A fresh category-by-category semantic review of all 248 source screens found two additional false
+mappings: the legacy orbiting-view and perspective-versus-orthographic screens had been mapped only
+to console matrix checks. New `graphics.camera.orbiting_view` and
+`graphics.camera.projection_comparison` preserve their rendered behavior and validate it. The weak
+legacy vertex-type mappings were also tightened to cite the existing stock-type indexed cube and
+lit textured stock-type mesh. The live-source ledger now records 176 `ALREADY_COVERED`, 38
+`COVERED_BY_MULTIPLE`, 15 `EXTEND_EXISTING`, 11 `MANUAL_INTEGRATION`, six `MIGRATE_NEW`, one
+`OBSOLETE` and one `INTENTIONALLY_NOT_MIGRATED`: 248/248 accounted for, zero unaccounted, against
+a 733-ID destination catalog. The validator explicitly rejects the eight known false mappings.
+
+Final validation used at most eight build jobs and the existing shared compiler cache. The
+warning-free Linux build passed catalog validation (733/0), all 65 hardware-safety invariants, and
+the live legacy audit (13 areas, 79 categories, 248/248). All 739 enabled CTests passed; ten manual
+tests were disabled. Full SOFTWARE smoke produced 681 PASS, zero FAIL, 42 declared SKIP and ten
+manual NOT RUN. Full OPENGLES3 smoke under Xvfb produced 716 PASS, zero FAIL, seven declared SKIP
+and ten manual NOT RUN. Five visual unit tests passed, and all six exact SOFTWARE/OPENGLES3 visual
+comparisons had zero differing pixels at tolerance zero. Generated coverage is 733 demos,
+308/329 C++ types and 2128/2326 members. Compared with the preserved 730-demo migration baseline,
+no old PASS became FAIL and failed assertions remained zero; changed check counts are the reviewed
+removal of unattended physical mutations or added safe paths. Evidence is archived under
+`build/linux-full/reports/retirement-final/`.
+
+The closure does not claim real-device exercise of microphones, cameras, sensors, vibration,
+light bars or haptics, nor native Windows/macOS/Android validation. SOFTWARE and OPENGLES3 received
+complete sweeps; OPENGL33, SDL_GPU, HEADLESS and STUB were present in the build but did not receive
+complete sweeps here. CNA cannot read the original gamepad light-bar value or haptics gain through
+the relevant public APIs, so the light-bar limitation is disclosed and gain mutation is avoided.
+Those are platform/manual validation limits, not remaining unattended side effects or semantic
+gaps. The checked-in ledger remains usable after the historical source repository is removed; its
+live-source hash revalidation naturally requires retaining or separately archiving that source.
+
+Conclusion: all useful behavior has a defensible destination, the newly found gaps are implemented,
+and unattended paths have deterministic no-side-effect coverage. `SAFE_TO_DELETE_CNA_EXAMPLES: YES`.
+This conclusion authorizes retirement on semantic and safety grounds only; this work did not delete,
+push or merge anything.
+
 # Current handoff — 2026-10-25 (cna-examples retirement migration)
 
 The source-level migration audit accounts for all 13 areas, 79 categories and 248/248 registered

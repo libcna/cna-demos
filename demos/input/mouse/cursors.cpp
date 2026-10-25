@@ -15,6 +15,7 @@
 #include "Microsoft/Xna/Framework/Graphics/SpriteSortMode.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Texture2D.hpp"
 #include "Microsoft/Xna/Framework/Input/Mouse.hpp"
+#include "Microsoft/Xna/Framework/Input/ButtonState.hpp"
 #include "Microsoft/Xna/Framework/Input/MouseCursor.hpp"
 #include "Microsoft/Xna/Framework/Input/MouseState.hpp"
 #include "Microsoft/Xna/Framework/Rectangle.hpp"
@@ -87,12 +88,15 @@ namespace
             cursorImage_ = std::make_unique<Texture2D>(getGraphicsDeviceProperty(), Size, Size);
             cursorImage_->SetData(pixels.data(), static_cast<int>(pixels.size()));
             custom_.emplace(MouseCursor::FromTexture2D(*cursorImage_, Size / 2, Size / 2));
+            leftWasDown_ = Mouse::GetState().getLeftButtonProperty() == ButtonState::Pressed;
         }
 
         void UnloadContent() override
         {
-            // The cursor is process-wide: restore the default before the custom one goes away.
-            Mouse::SetCursor(MouseCursor::getArrowProperty());
+            // There is no current-cursor getter. Only replace a cursor this demo installed, and
+            // use the documented stock Arrow so a custom cursor is never left dangling.
+            if (wroteCursor_)
+                Mouse::SetCursor(MouseCursor::getArrowProperty());
             custom_->Dispose();
         }
 
@@ -105,17 +109,17 @@ namespace
                 if (TileBounds(i).Contains(mouse.getXProperty(), mouse.getYProperty()))
                     hovered = i;
             }
-            // SetCursor only when the shape has to change.
-            if (hovered != hovered_)
+            hovered_ = hovered;
+            const bool leftDown = mouse.getLeftButtonProperty() == ButtonState::Pressed;
+            if (!Context().Automated() && leftDown && !leftWasDown_ && hovered >= 0)
             {
-                hovered_ = hovered;
-                if (hovered < 0)
-                    Mouse::SetCursor(MouseCursor::getArrowProperty());
-                else if (hovered < static_cast<int>(SystemTiles.size()))
+                if (hovered < static_cast<int>(SystemTiles.size()))
                     Mouse::SetCursor(SystemTiles[static_cast<std::size_t>(hovered)].cursor());
                 else
                     Mouse::SetCursor(*custom_);
+                wroteCursor_ = true;
             }
+            leftWasDown_ = leftDown;
             Game::Update(gameTime);
         }
 
@@ -123,7 +127,7 @@ namespace
         {
             getGraphicsDeviceProperty().Clear(Color::DarkSlateGray);
             spriteBatch_->Begin(SpriteSortMode::Deferred, nullptr, &SamplerState::PointClamp, nullptr, nullptr);
-            spriteBatch_->DrawString(*font_, "Hover over a tile to change the cursor", Vector2(40.0f, 20.0f),
+            spriteBatch_->DrawString(*font_, "Click a tile to explicitly change the cursor", Vector2(40.0f, 20.0f),
                                      Color::White);
             for (int i = 0; i < TileCount; ++i)
             {
@@ -145,6 +149,8 @@ namespace
 
     private:
         int hovered_ = -2;
+        bool leftWasDown_ = false;
+        bool wroteCursor_ = false;
         std::unique_ptr<Texture2D> cursorImage_;
         std::optional<MouseCursor> custom_;
         std::unique_ptr<SpriteBatch> spriteBatch_;
@@ -156,14 +162,17 @@ namespace
 CNA_DEMOS_GAME(CursorsDemo, {
     .id = "input.mouse.cursors",
     .title = "Cursor shapes (CNAEXT)",
-    .description = "Hovering a tile sets the cursor with Mouse::SetCursor: the twelve system MouseCursor shapes and "
-                   "one made from a Texture2D with MouseCursor::FromTexture2D.",
+    .description = "Clicking a tile in an attended run explicitly calls Mouse::SetCursor for twelve system shapes or "
+                   "one FromTexture2D cursor. Writes occur only on click, and a custom cursor is replaced by stock "
+                   "Arrow before disposal.",
     .apis = {"Mouse::SetCursor", "MouseCursor::FromTexture2D", "MouseCursor::Arrow", "MouseCursor::Crosshair",
              "MouseCursor::Hand", "MouseCursor::IBeam", "MouseCursor::No", "MouseCursor::SizeAll",
              "MouseCursor::SizeNESW", "MouseCursor::SizeNS", "MouseCursor::SizeNWSE", "MouseCursor::SizeWE",
              "MouseCursor::Wait", "MouseCursor::WaitArrow", "MouseCursor::Dispose"},
-    .tags = {"mouse", "cursor", "pointer", "hand", "custom-cursor", "cnaext"},
+    .tags = {"mouse", "cursor", "pointer", "hand", "custom-cursor", "cnaext", "explicit-consent"},
     .automation = CnaDemos::Automation::SmokeOnly,
-    .needs = CnaDemos::Need::Mouse | CnaDemos::Need::Window,
+    .needs = CnaDemos::Need::Mouse,
     .assets = {"fonts/pixel_font.cnb"},
+    .restrictions = {"Unattended runs never call SetCursor. CNA has no current-cursor getter, so after an explicit "
+                     "change shutdown uses stock Arrow as a safe fallback and does not claim exact restoration."},
 })

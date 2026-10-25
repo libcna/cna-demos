@@ -37,14 +37,13 @@ namespace
             const Color white = Color::White;
             pixel_->SetData(&white, 1);
 
-            // The new position is in window coordinates and GetState reports it at once.
-            Mouse::SetPosition(123, 77);
-            const MouseState moved = Mouse::GetState();
-            Context().Print("after SetPosition(123, 77): X {}, Y {}", moved.getXProperty(), moved.getYProperty());
-            Context().Check(moved.getXProperty() == 123 && moved.getYProperty() == 77,
-                            "GetState reports the position SetPosition moved the cursor to");
             setIsMouseVisibleProperty(true);
+            rightWasDown_ = Mouse::GetState().getRightButtonProperty() == ButtonState::Pressed;
+            Context().Check(CentreX == 400 && CentreY == 240,
+                            "the deterministic look target is the centre of the 800x480 demo window");
         }
+
+        void UnloadContent() override { EndOwnedLook(); }
 
         void Update(GameTime& gameTime) override
         {
@@ -52,16 +51,24 @@ namespace
             // moved from the window centre, then put it back there. The cursor never reaches the
             // edge of the window, so the view can turn forever.
             const MouseState mouse = Mouse::GetState();
-            const bool looking = getIsActiveProperty() && mouse.getRightButtonProperty() == ButtonState::Pressed;
-            if (looking && wasLooking_)
+            const bool rightDown = mouse.getRightButtonProperty() == ButtonState::Pressed;
+            if (!Context().Automated() && getIsActiveProperty() && rightDown && !rightWasDown_)
+            {
+                originalX_ = mouse.getXProperty();
+                originalY_ = mouse.getYProperty();
+                ownsLook_ = true;
+                Mouse::SetPosition(CentreX, CentreY);
+                setIsMouseVisibleProperty(false);
+            }
+            if (ownsLook_ && rightDown && rightWasDown_)
             {
                 yaw_ += static_cast<float>(mouse.getXProperty() - CentreX);
                 pitch_ += static_cast<float>(mouse.getYProperty() - CentreY);
-            }
-            if (looking)
                 Mouse::SetPosition(CentreX, CentreY);
-            setIsMouseVisibleProperty(!looking);
-            wasLooking_ = looking;
+            }
+            if (ownsLook_ && (!rightDown || !getIsActiveProperty()))
+                EndOwnedLook();
+            rightWasDown_ = rightDown;
             Game::Update(gameTime);
         }
 
@@ -85,9 +92,21 @@ namespace
         }
 
     private:
+        void EndOwnedLook()
+        {
+            if (!ownsLook_)
+                return;
+            Mouse::SetPosition(originalX_, originalY_);
+            setIsMouseVisibleProperty(true);
+            ownsLook_ = false;
+        }
+
         float yaw_ = 0.0f;
         float pitch_ = 0.0f;
-        bool wasLooking_ = false;
+        bool rightWasDown_ = false;
+        bool ownsLook_ = false;
+        int originalX_ = 0;
+        int originalY_ = 0;
         std::unique_ptr<SpriteBatch> spriteBatch_;
         std::optional<SpriteFont> font_;
         std::unique_ptr<Texture2D> pixel_;
@@ -97,10 +116,12 @@ namespace
 CNA_DEMOS_GAME(SetPositionDemo, {
     .id = "input.mouse.set_position",
     .title = "Move the cursor (mouse look)",
-    .description = "Mouse::SetPosition moves the cursor and GetState reports the new position at once; holding the "
-                   "right button turns the view by re-centring the cursor every frame, XNA's usual mouse look.",
+    .description = "A fresh right-button press in an attended run starts classic XNA mouse look: SetPosition recentres "
+                   "the pointer while held, and release/deactivation/shutdown restores the pre-look position.",
     .apis = {"Mouse::SetPosition", "Mouse::GetState", "Game::IsActive", "Game::IsMouseVisible"},
-    .tags = {"mouse", "cursor", "warp", "mouse-look", "camera", "fps"},
+    .tags = {"mouse", "cursor", "warp", "mouse-look", "camera", "fps", "explicit-consent"},
+    .automation = CnaDemos::Automation::SmokeOnly,
     .needs = CnaDemos::Need::Mouse,
     .assets = {"fonts/pixel_font.cnb"},
+    .restrictions = {"Unattended runs never call SetPosition; an attended press owns and restores the pointer warp."},
 })

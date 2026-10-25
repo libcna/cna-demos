@@ -35,6 +35,7 @@ namespace
         {
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
+            wWasDown_ = Keyboard::GetState().IsKeyDown(Keys::W);
         }
 
         void UnloadContent() override { RestoreCursor(); }
@@ -45,7 +46,7 @@ namespace
             window_ = Mouse::GetState();
 
             const bool wDown = Keyboard::GetState().IsKeyDown(Keys::W);
-            if (wDown && !wWasDown_ && !restorePending_)
+            if (!Context().Automated() && wDown && !wWasDown_ && !restorePending_)
             {
                 originalX_ = globalX_;
                 originalY_ = globalY_;

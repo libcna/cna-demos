@@ -22,6 +22,8 @@ typedef struct InputState {
     int frames;
     int polls_failed;
     int global_pointer_unavailable;
+    int manual_controls_run;
+    int m_was_down;
 } InputState;
 
 typedef struct ClickRecord {
@@ -491,9 +493,14 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
     }
     if (result == CNA_RESULT_SUCCESS) {
         demonstrate_keyboard_platform(state->demo, game);
-        demonstrate_mouse_platform(state, game);
-        if (!state->global_pointer_unavailable) {
-            demonstrate_mouse_cursors(state, game);
+        {
+            CNA_KeyboardState keyboard;
+            memset(&keyboard, 0, sizeof(keyboard));
+            keyboard.struct_size = (uint32_t)sizeof(keyboard);
+            keyboard.struct_version = UINT32_C(1);
+            if (cna_keyboard_get_state(game, &keyboard) == CNA_RESULT_SUCCESS) {
+                state->m_was_down = key_down(&keyboard, CNA_KEY_M);
+            }
         }
     }
     if (result == CNA_RESULT_SUCCESS) {
@@ -523,6 +530,14 @@ static CNA_Result update(CNA_Handle game, const CNA_GameTime* game_time, void* c
     if (key_down(&keyboard, CNA_KEY_ESCAPE)) {
         return cna_game_request_exit(game);
     }
+    if (!state->demo->automated && key_down(&keyboard, CNA_KEY_M) && !state->m_was_down) {
+        state->manual_controls_run = 1;
+        demonstrate_mouse_platform(state, game);
+        if (!state->global_pointer_unavailable) {
+            demonstrate_mouse_cursors(state, game);
+        }
+    }
+    state->m_was_down = key_down(&keyboard, CNA_KEY_M);
     state->square_x += (key_down(&keyboard, CNA_KEY_RIGHT) - key_down(&keyboard, CNA_KEY_LEFT)) * 4;
     state->square_y += (key_down(&keyboard, CNA_KEY_DOWN) - key_down(&keyboard, CNA_KEY_UP)) * 4;
     if (state->demo->frames > 0 && state->frames >= state->demo->frames) {
@@ -660,7 +675,7 @@ int main(int argc, char** argv)
     if (!cna_demo_check_result(&demo, cna_game_create(&create_info, &game), "cna_game_create")) {
         return cna_demo_finish(&demo);
     }
-    printf("arrow keys move the square, the dot follows the mouse, Escape quits\n");
+    printf("arrow keys move the square; M explicitly runs pointer/cursor mutation checks; Escape quits\n");
     cna_demo_check_result(&demo, cna_demo_use_hidef(game, &manager), "HiDef profile (back-buffer read-back)");
     cna_demo_check_result(&demo, cna_game_run(game), "cna_game_run");
     cna_demo_check(&demo, state.polls_failed == 0, "the keyboard and the mouse were polled every update");
@@ -673,7 +688,7 @@ int main(int argc, char** argv)
     }
     cna_demo_check_result(&demo, cna_graphics_device_manager_destroy(manager), "cna_graphics_device_manager_destroy");
     cna_demo_check_result(&demo, cna_game_destroy(game), "cna_game_destroy");
-    if (state.global_pointer_unavailable && demo.failures == 0) {
+    if (state.manual_controls_run && state.global_pointer_unavailable && demo.failures == 0) {
         return cna_demo_skip("no desktop pointer is available for the global-warp control");
     }
     return cna_demo_finish(&demo);

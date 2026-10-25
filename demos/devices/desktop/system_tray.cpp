@@ -32,6 +32,7 @@ namespace
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
             supported_ = CNA::Devices::SystemTray::getIsSupportedProperty();
             pendingClicks_ = std::make_shared<std::atomic<int>>(0);
+            tWasDown_ = Keyboard::GetState().IsKeyDown(Keys::T);
         }
 
         void UnloadContent() override
@@ -52,7 +53,7 @@ namespace
             }
 
             const bool tDown = Keyboard::GetState().IsKeyDown(Keys::T);
-            if (tDown && !tWasDown_)
+            if (!Context().Automated() && tDown && !tWasDown_)
             {
                 if (tray_)
                     DestroyTray();

@@ -41,6 +41,9 @@ fi
 echo "== validate"
 "$bin" --validate | tail -1
 
+echo "== hardware/desktop safety audit"
+python3 "$root/tools/hardware_safety_audit.py" --exe "$bin"
+
 echo "== cna-examples migration ledger"
 migration_args=(--exe "$bin")
 if [[ -d "$root/../cna-examples/src" ]]; then

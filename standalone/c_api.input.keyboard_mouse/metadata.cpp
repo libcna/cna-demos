@@ -4,9 +4,9 @@
 CNA_DEMOS_STANDALONE({
     .id = "c_api.input.keyboard_mouse",
     .title = "Input in C: keyboard and mouse state",
-    .description = "A C program exercises keyboard values, live player slots, modifiers and key-name mapping, then "
-                   "polls keyboard/mouse state, exercises mouse position, relative, capture, warp and clicked-event "
-                   "behavior, and demonstrates cursor lifetimes; arrow keys move a square and Escape quits.",
+    .description = "A C program exercises keyboard/mouse values and read-only live polling. In an attended run, a "
+                   "fresh M press explicitly runs position, relative, capture, warp, clicked-event and cursor lifetime "
+                   "checks, restoring observable state where the API supports it.",
     .apis = {"cna_keyboard_get_state", "cna_keyboard_state_is_key_down", "cna_keyboard_state_is_key_up",
              "cna_keyboard_state_init_from_keys", "cna_keyboard_state_get_pressed_key_count",
              "cna_keyboard_state_copy_pressed_keys", "cna_keyboard_state_init",
@@ -32,6 +32,8 @@ CNA_DEMOS_STANDALONE({
     .automation = CnaDemos::Automation::SmokeOnly,
     .needs = CnaDemos::Need::CApi | CnaDemos::Need::Keyboard | CnaDemos::Need::Mouse | CnaDemos::Need::Window,
     .frames = 30,
-    .restrictions = "Standalone C program (one C game per process); built only when CNA has its C API "
-                    "(CNA_BUILD_C_API=ON). The global-pointer control skips when no desktop pointer is available.",
+    .restrictions = "Standalone C program (one C game per process); built only when CNA has its C API. Automated "
+                    "runs only poll. Host pointer/cursor mutation requires a fresh M press; position/relative/warp "
+                    "are restored. CNA has no current-cursor getter, so the explicitly requested cursor check ends at "
+                    "stock Arrow and does not claim exact restoration.",
 })

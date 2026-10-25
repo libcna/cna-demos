@@ -58,6 +58,9 @@ namespace
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
             supported_ = CNA::Devices::FileDialog::getIsSupportedProperty();
             state_ = std::make_shared<DialogState>();
+            const KeyboardState keyboard = Keyboard::GetState();
+            oWasDown_ = keyboard.IsKeyDown(Keys::O);
+            fWasDown_ = keyboard.IsKeyDown(Keys::F);
         }
 
         void UnloadContent() override
@@ -72,7 +75,7 @@ namespace
             const KeyboardState keyboard = Keyboard::GetState();
             const bool oDown = keyboard.IsKeyDown(Keys::O);
             const bool fDown = keyboard.IsKeyDown(Keys::F);
-            if ((oDown && !oWasDown_) || (fDown && !fWasDown_))
+            if (!Context().Automated() && ((oDown && !oWasDown_) || (fDown && !fWasDown_)))
             {
                 bool canStart = supported_;
                 {

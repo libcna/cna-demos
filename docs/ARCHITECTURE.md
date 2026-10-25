@@ -237,6 +237,28 @@ CNA's C API they are SKIPPED without being started.
 `RunStatus` is Passed, Failed, Skipped or NotRun. A single-demo run exits 0 / 1 / 77 / 1; batch
 runs exit 1 if anything failed. Usage errors exit 2.
 
+### Unattended host and hardware safety
+
+Automation is not permission to operate real devices or the desktop. The invariant is that
+`--automated`, `--smoke` and CTest may inspect capabilities and use deterministic test backends,
+but must not capture microphone/camera data, start motors or force feedback, change controller
+lights, warp/capture the pointer, replace clipboard contents, create host UI, or launch an external
+handler.
+
+* `Automation::Manual` is enforced by `RunDemo()` before the demo factory is called. A manual demo
+  therefore cannot reach construction, `LoadContent()` or a side-effect branch in an automated run.
+* `Automation::SmokeOnly` means the safe read-only or fixture path may run unattended. Any real
+  side effect still requires a fresh input transition and an explicit `!Context().Automated()`
+  branch; the automation label is not itself the safety gate.
+* The CLI selects SDL's dummy audio driver for automated runs unless the caller deliberately set an
+  audio driver. CTest applies the same default to browser and standalone tests.
+* Cleanup changes only state the demo actually owns. Restorable state is captured before the first
+  mutation; when CNA has no getter (for example the gamepad light bar or current mouse cursor), the
+  limitation is documented and shutdown does not pretend an invented value is the original one.
+* `tools/hardware_safety_audit.py`, run by `tools/validate.sh`, pins the reviewed consent branches,
+  ownership cleanup, manual-runner guard and synthetic C-API seams. Runtime smoke tests complement
+  this static guard but cannot prove that absent physical hardware was exercised.
+
 ## 7. Categories and the CMake architecture
 
 ```text

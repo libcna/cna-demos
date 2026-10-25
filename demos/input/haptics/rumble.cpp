@@ -35,43 +35,43 @@ namespace
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));
 
-            // A haptic device is opened by id (from GetHapticsEXT), from a joystick, or from the
-            // mouse. Where there is none, the returned device simply is not open.
-            if (!Haptics::IsMouseHapticEXT())
-                Context().Check(!Haptics::OpenFromMouseEXT().IsOpenEXT(),
-                                "without a force-feedback mouse OpenFromMouseEXT gives a closed device");
-            const std::vector<HapticInfoEXT> haptics = Haptics::GetHapticsEXT();
-            if (!haptics.empty())
-                device_ = Haptics::OpenEXT(haptics.front().id);
-
-            if (device_.IsOpenEXT())
-            {
-                const HapticCapabilitiesEXT caps = device_.GetCapabilitiesEXT();
-                status_ = "Opened \"" + device_.GetNameEXT() + "\", " + std::to_string(caps.axisCount) + " axes, " +
-                          (caps.rumbleSupported ? "rumble supported" : "no simple rumble");
-                // Simple rumble needs one initialisation, then any number of PlayRumbleEXT calls.
-                rumbleReady_ = caps.rumbleSupported && device_.InitRumbleEXT();
-            }
-            else
-            {
-                status_ = "No force-feedback device found";
-            }
+            mouseHaptic_ = Haptics::IsMouseHapticEXT();
+            Context().Check(mouseHaptic_ == Haptics::IsMouseHapticEXT(),
+                            "mouse haptic capability inspection is stable and does not open the device");
+            haptics_ = Haptics::GetHapticsEXT();
+            status_ = haptics_.empty() ? "No force-feedback device found"
+                                       : "O: explicitly open and initialize \"" + haptics_.front().name + "\"";
+            previous_ = Keyboard::GetState();
             Context().Print("{}", status_);
         }
 
         void UnloadContent() override
         {
-            if (rumbleReady_)
+            if (playedRumble_)
                 device_.StopRumbleEXT();
             device_.Dispose();
         }
 
         void Update(GameTime& gameTime) override
         {
-            // Space: a 300 ms rumble at 75 % strength.
             const KeyboardState keyboard = Keyboard::GetState();
-            if (rumbleReady_ && keyboard.IsKeyDown(Keys::Space) && previous_.IsKeyUp(Keys::Space))
-                device_.PlayRumbleEXT(0.75f, 300);
+            if (!Context().Automated() && !device_.IsOpenEXT() && !haptics_.empty() &&
+                keyboard.IsKeyDown(Keys::O) && previous_.IsKeyUp(Keys::O))
+            {
+                device_ = Haptics::OpenEXT(haptics_.front().id);
+                if (device_.IsOpenEXT())
+                {
+                    const HapticCapabilitiesEXT caps = device_.GetCapabilitiesEXT();
+                    rumbleReady_ = caps.rumbleSupported && device_.InitRumbleEXT();
+                    status_ = "Opened \"" + device_.GetNameEXT() + "\", " + std::to_string(caps.axisCount) +
+                              " axes, " + (rumbleReady_ ? "Space: rumble" : "no simple rumble");
+                }
+                else
+                    status_ = "Selected device disconnected before it could be opened";
+            }
+            if (!Context().Automated() && rumbleReady_ && keyboard.IsKeyDown(Keys::Space) &&
+                previous_.IsKeyUp(Keys::Space))
+                playedRumble_ = device_.PlayRumbleEXT(0.75f, 300) || playedRumble_;
             previous_ = keyboard;
             Game::Update(gameTime);
         }
@@ -90,6 +90,9 @@ namespace
     private:
         HapticDevice device_;
         bool rumbleReady_ = false;
+        bool playedRumble_ = false;
+        bool mouseHaptic_ = false;
+        std::vector<HapticInfoEXT> haptics_;
         std::string status_;
         KeyboardState previous_;
         std::unique_ptr<SpriteBatch> spriteBatch_;
@@ -100,17 +103,19 @@ namespace
 CNA_DEMOS_GAME(RumbleDemo, {
     .id = "input.haptics.rumble",
     .title = "Force-feedback rumble (CNAEXT)",
-    .description = "Opens the first device from Haptics::GetHapticsEXT, reads its capabilities and plays a simple "
-                   "rumble with InitRumbleEXT/PlayRumbleEXT on Space; a missing device opens closed instead of "
-                   "throwing.",
+    .description = "Enumerates haptic devices and mouse capability without opening them. In an attended run, O opens "
+                   "and initializes the first device and a later Space press requests 300 ms of simple rumble; "
+                   "owned output and the handle are released on shutdown.",
     .apis = {"CNA::Input::Haptics::GetHapticsEXT", "CNA::Input::Haptics::OpenEXT",
-             "CNA::Input::Haptics::OpenFromMouseEXT", "CNA::Input::Haptics::IsMouseHapticEXT",
+             "CNA::Input::Haptics::IsMouseHapticEXT",
              "CNA::Input::HapticDevice::IsOpenEXT", "CNA::Input::HapticDevice::GetNameEXT",
              "CNA::Input::HapticDevice::GetCapabilitiesEXT", "CNA::Input::HapticDevice::InitRumbleEXT",
              "CNA::Input::HapticDevice::PlayRumbleEXT", "CNA::Input::HapticDevice::StopRumbleEXT",
              "CNA::Input::HapticDevice::Dispose"},
-    .tags = {"haptics", "force-feedback", "rumble", "joystick", "cnaext"},
+    .tags = {"haptics", "force-feedback", "rumble", "joystick", "cnaext", "explicit-consent"},
     .automation = CnaDemos::Automation::SmokeOnly,
-    .needs = CnaDemos::Need::GamePad,
+    .needs = CnaDemos::Need::Keyboard,
     .assets = {"fonts/pixel_font.cnb"},
+    .restrictions = {"Unattended runs only enumerate. Device opening/initialization and output require separate fresh "
+                     "O and Space presses in an attended run."},
 })

@@ -59,6 +59,7 @@ namespace
             cameras_ = CNA::Devices::Camera::getAvailableCamerasProperty();
             Context().Print("camera backend {}, {} physical device(s)", supported_ ? "available" : "unavailable",
                             cameras_.size());
+            spaceWasDown_ = Keyboard::GetState().IsKeyDown(Keys::Space);
         }
 
         void UnloadContent() override
@@ -71,7 +72,7 @@ namespace
         void Update(GameTime& gameTime) override
         {
             const bool spaceDown = Keyboard::GetState().IsKeyDown(Keys::Space);
-            if (spaceDown && !spaceWasDown_)
+            if (!Context().Automated() && spaceDown && !spaceWasDown_)
             {
                 if (camera_)
                 {

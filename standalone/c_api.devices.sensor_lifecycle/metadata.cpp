@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "A C game observes host availability, then uses CNA's public synthetic accelerometer, gyroscope, "
                    "compass and fused-motion support to exercise acquisition state, current readings, update "
                    "intervals, event order, calibration, unsubscribe, stop, disposal and handle ownership.",
-    .apis = {"cna_sensors_get_last_error_id_ext", "cna_sensor_unsubscribe_ext",
+    .apis = {"cna_sensor_unsubscribe_ext",
              "cna_accelerometer_get_is_supported", "cna_accelerometer_create",
              "cna_accelerometer_get_state", "cna_accelerometer_start", "cna_accelerometer_stop",
              "cna_accelerometer_dispose", "cna_accelerometer_get_current_value",
@@ -43,7 +43,7 @@ CNA_DEMOS_STANDALONE({
     .tags = {"c", "binding", "devices", "sensors", "events", "lifecycle", "accelerometer", "gyroscope", "compass", "motion", "cnaext"},
     .needs = CnaDemos::Need::CApi,
     .deterministic = true,
-    .restrictions = "Standalone C program (one C game per process); built only when CNA has its C API "
-                    "(CNA_BUILD_C_API=ON). Host availability is reported, while deterministic supported paths use "
-                    "CNA's documented synthetic/test backends; no physical measurement is claimed.",
+    .restrictions = "Standalone C program (one C game per process); built only when CNA has its C API. Host "
+                    "availability is read only: unattended runs never start physical acquisition. Every Start/Stop "
+                    "and event assertion runs after selecting CNA's documented deterministic synthetic/test backend.",
 })

@@ -307,6 +307,14 @@ missing in this environment).
             return *error;
         }
 
+        // Unattended execution must never select a physical capture or playback device. This is
+        // set before any CNA/SDL service is initialized and is inherited by standalone children.
+        // Attended runs keep the user's configured audio backend.
+        if (args.run.automated && std::getenv("SDL_AUDIO_DRIVER") == nullptr)
+        {
+            SetEnvironment("SDL_AUDIO_DRIVER", "dummy");
+        }
+
         // CNA logs at TRACE level in debug builds; demo output stays readable unless asked for.
         const auto logLevel = ParseLogLevel(args.logLevel);
         if (!logLevel)

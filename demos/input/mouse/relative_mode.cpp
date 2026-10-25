@@ -35,20 +35,26 @@ namespace
             pixel_ = std::make_unique<Texture2D>(getGraphicsDeviceProperty(), 1, 1);
             const Color white = Color::White;
             pixel_->SetData(&white, 1);
+            originalRelative_ = Mouse::getIsRelativeMouseModeEXTProperty();
+            previousKeyboard_ = Keyboard::GetState();
         }
 
         void UnloadContent() override
         {
-            // The mode belongs to the process, not the game: give the pointer back.
-            Mouse::setIsRelativeMouseModeEXTProperty(false);
+            if (changedByDemo_ && Mouse::getIsRelativeMouseModeEXTProperty() != originalRelative_)
+                Mouse::setIsRelativeMouseModeEXTProperty(originalRelative_);
         }
 
         void Update(GameTime& gameTime) override
         {
             // Space switches the mode. It grabs the pointer (Escape still leaves the demo).
             const KeyboardState keyboard = Keyboard::GetState();
-            if (keyboard.IsKeyDown(Keys::Space) && previousKeyboard_.IsKeyUp(Keys::Space))
+            if (!Context().Automated() && keyboard.IsKeyDown(Keys::Space) &&
+                previousKeyboard_.IsKeyUp(Keys::Space))
+            {
                 Mouse::setIsRelativeMouseModeEXTProperty(!Mouse::getIsRelativeMouseModeEXTProperty());
+                changedByDemo_ = true;
+            }
             previousKeyboard_ = keyboard;
 
             // In relative mode X and Y are the motion since the previous GetState -- not limited by
@@ -87,6 +93,8 @@ namespace
     private:
         KeyboardState previousKeyboard_;
         bool relative_ = false;
+        bool originalRelative_ = false;
+        bool changedByDemo_ = false;
         int deltaX_ = 0;
         int deltaY_ = 0;
         Vector2 ship_{400.0f, 300.0f};
@@ -99,11 +107,13 @@ namespace
 CNA_DEMOS_GAME(RelativeModeDemo, {
     .id = "input.mouse.relative_mode",
     .title = "Relative mouse mode (CNAEXT)",
-    .description = "Space toggles Mouse::IsRelativeMouseModeEXT: the cursor is hidden and grabbed, and "
-                   "Mouse::GetState reports motion since the previous call, which steers a square.",
+    .description = "A fresh Space press in an attended run toggles Mouse::IsRelativeMouseModeEXT. The demo records "
+                   "the original process-wide mode, restores it if changed, and uses relative motion to steer a square.",
     .apis = {"Mouse::IsRelativeMouseModeEXT", "Mouse::GetState"},
     .tags = {"mouse", "relative", "mouse-look", "grab", "fps", "cnaext"},
     .automation = CnaDemos::Automation::SmokeOnly,
     .needs = CnaDemos::Need::Mouse | CnaDemos::Need::Keyboard,
     .assets = {"fonts/pixel_font.cnb"},
+    .restrictions = {"Unattended runs only read state; relative pointer capture requires Space and restores the "
+                     "original mode on shutdown."},
 })

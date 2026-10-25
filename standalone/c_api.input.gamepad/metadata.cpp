@@ -40,7 +40,7 @@ CNA_DEMOS_STANDALONE({
     .tags = {"c", "binding", "input", "gamepad", "controller", "dead-zone"},
     .needs = CnaDemos::Need::CApi | CnaDemos::Need::GamePad,
     .frames = 10,
-    .restrictions = "Standalone C program (one C game per process); built only when CNA has its C API "
-                    "(CNA_BUILD_C_API=ON). The automated contract uses one disconnected player slot. Physical "
-                    "controller actuation, sensor data, identity values and touchpad input require manual testing.",
+    .restrictions = "Standalone C program (one C game per process); built only when CNA has its C API. Live "
+                    "assertions are read-only; vibration, trigger vibration, light-bar and player-index routes are "
+                    "validated with an invalid player so unattended runs cannot reach physical hardware.",
 })
