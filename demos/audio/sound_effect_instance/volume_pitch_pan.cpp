@@ -16,7 +16,8 @@ namespace
 {
     void VolumePitchPan(CnaDemos::DemoContext& ctx)
     {
-        ContentManager content(nullptr, "assets");
+        ContentManager content;
+        content.setRootDirectoryProperty("assets");
         const SoundEffect tone = content.Load<SoundEffect>("sounds/tone_440");
         SoundEffectInstance voice = tone.CreateInstance();
         ctx.Check(voice.getVolumeProperty() == 1.0f && voice.getPitchProperty() == 0.0f && voice.getPanProperty() == 0.0f,

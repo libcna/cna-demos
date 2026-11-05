@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MS-PL
+// TQ-032 (d86bb8ada): Stop retains the first packet's spatial mode; switching needs a fresh voice.
 // Positional sound: AudioListener and AudioEmitter with SoundEffectInstance::Apply3D.
 #include <array>
 #include <chrono>
@@ -26,7 +27,8 @@ namespace
 {
     void Apply3DDemo(CnaDemos::DemoContext& ctx)
     {
-        ContentManager content(nullptr, "assets");
+        ContentManager content;
+        content.setRootDirectoryProperty("assets");
         const SoundEffect tone = content.Load<SoundEffect>("sounds/tone_440");
 
         // The listener (the player's ears) at the origin, facing -Z with +Y up -- XNA's defaults.
@@ -110,52 +112,69 @@ namespace
         ctx.Check(listener.getVelocityProperty() == Vector3(3.0f, -2.0f, 1.0f) &&
                       emitter.getUpProperty() == Vector3::Backward,
                   "listener velocity and emitter up retain independently authored vectors");
-        voice.Apply3D(listener, emitter);
-        ctx.Check(voice.getStateProperty() == SoundState::Stopped,
-                  "Apply3D accepts the authored spatial state before playback");
-        listener.setVelocityProperty(Vector3::Zero);
-        emitter.setUpProperty(Vector3::Up);
-        voice.Apply3D(listener, emitter); // Stop lets the next submission choose 3D instead.
-        voice.Play();
-        voice.Pause();
-        ctx.Check(voice.getStateProperty() == SoundState::Paused,
-                  "after Stop the same voice can start and pause in 3D mode");
-        refused = false;
-        try { voice.setPanProperty(.75f); }
-        catch (const System::InvalidOperationException&) { refused = true; }
-        ctx.Check(refused && voice.getStateProperty() == SoundState::Paused,
-                  "a paused 3D voice refuses Pan without resuming or stopping");
-        // XNA set_Pan refuses the spatial mode before mutating Pan (ISSUE-073).
-        // The previous expectation accidentally required CNA's failed-assignment bug.
-        ctx.Check(voice.getPanProperty() == -.5f,
-                  "the refused Pan setter preserves its prior public property value");
-        voice.Apply3D(listener, emitter);
-        ctx.Check(voice.getStateProperty() == SoundState::Paused,
-                  "a 3D voice can be re-aimed while paused after a refused Pan change");
-
-        voice.Stop();
-        voice.setPanProperty(-.25f); // Stop also permits switching back from 3D to pan.
-        voice.Play();
-        voice.Pause();
         refused = false;
         try { voice.Apply3D(listener, emitter); }
         catch (const System::InvalidOperationException&) { refused = true; }
-        ctx.Check(refused && voice.getStateProperty() == SoundState::Paused && voice.getPanProperty() == -.25f,
+        ctx.Check(refused && voice.getStateProperty() == SoundState::Stopped && voice.getPanProperty() == -.5f,
+                  "Stop preserves the original pan-only spatial choice");
+        SoundEffectInstance spatialVoice = tone.CreateInstance();
+        spatialVoice.setIsLoopedProperty(true);
+        spatialVoice.setPanProperty(-.5f);
+        spatialVoice.Apply3D(listener, emitter);
+        ctx.Check(spatialVoice.getStateProperty() == SoundState::Stopped,
+                  "Apply3D accepts the authored spatial state before playback");
+        listener.setVelocityProperty(Vector3::Zero);
+        emitter.setUpProperty(Vector3::Up);
+        spatialVoice.Apply3D(listener, emitter); // The fresh voice chooses 3D before its first Play.
+        spatialVoice.Play();
+        spatialVoice.Pause();
+        ctx.Check(spatialVoice.getStateProperty() == SoundState::Paused,
+                  "a fresh voice can start and pause in 3D mode");
+        refused = false;
+        try { spatialVoice.setPanProperty(.75f); }
+        catch (const System::InvalidOperationException&) { refused = true; }
+        ctx.Check(refused && spatialVoice.getStateProperty() == SoundState::Paused,
+                  "a paused 3D voice refuses Pan without resuming or stopping");
+        // XNA set_Pan refuses the spatial mode before mutating Pan (ISSUE-073).
+        // The previous expectation accidentally required CNA's failed-assignment bug.
+        ctx.Check(spatialVoice.getPanProperty() == -.5f,
+                  "the refused Pan setter preserves its prior public property value");
+        spatialVoice.Apply3D(listener, emitter);
+        ctx.Check(spatialVoice.getStateProperty() == SoundState::Paused,
+                  "a 3D voice can be re-aimed while paused after a refused Pan change");
+
+        spatialVoice.Stop();
+        refused = false;
+        try { spatialVoice.setPanProperty(-.25f); }
+        catch (const System::InvalidOperationException&) { refused = true; }
+        ctx.Check(refused && spatialVoice.getStateProperty() == SoundState::Stopped && spatialVoice.getPanProperty() == -.5f,
+                  "Stop also preserves a 3D voice's Pan refusal and stored pan");
+        SoundEffectInstance panVoice = tone.CreateInstance();
+        panVoice.setIsLoopedProperty(true);
+        panVoice.setPanProperty(-.25f);
+        panVoice.Play();
+        panVoice.Pause();
+        refused = false;
+        try { panVoice.Apply3D(listener, emitter); }
+        catch (const System::InvalidOperationException&) { refused = true; }
+        ctx.Check(refused && panVoice.getStateProperty() == SoundState::Paused && panVoice.getPanProperty() == -.25f,
                   "after Stop switching back to pan restores the Apply3D refusal");
-        voice.Stop();
-        // Restore 3D before the original audible sweep; its first Play selects this mode.
-        voice.Apply3D(listener, emitter);
+        panVoice.Stop();
+        // A new voice is required to choose 3D for the audible sweep.
+        SoundEffectInstance sweepVoice = tone.CreateInstance();
+        sweepVoice.setIsLoopedProperty(true);
+        sweepVoice.Apply3D(listener, emitter);
         for (int step = 0; step <= 8; ++step)
         {
             emitter.setPositionProperty(Vector3(-20.0f + 5.0f * static_cast<float>(step), 0.0f, -5.0f));
             // Apply3D sets the voice's pan, volume (distance attenuation) and Doppler pitch from the
             // two positions; call it before Play and whenever either moves.
-            voice.Apply3D(listener, emitter);
+            sweepVoice.Apply3D(listener, emitter);
             if (step == 0)
-                voice.Play();
+                sweepVoice.Play();
             std::this_thread::sleep_for(std::chrono::milliseconds(120));
         }
-        voice.Stop();
+        sweepVoice.Stop();
 
         // Position controls attenuation and pan; velocity controls Doppler pitch. Play three
         // short phases from the same position so a person can compare approaching, stationary
@@ -168,12 +187,12 @@ namespace
         for (std::size_t phase = 0; phase < velocities.size(); ++phase)
         {
             emitter.setVelocityProperty(velocities[phase]);
-            voice.Apply3D(listener, emitter);
-            voice.Play();
+            sweepVoice.Apply3D(listener, emitter);
+            sweepVoice.Play();
             ctx.Print("Doppler phase: {} (emitter velocity {})", phaseNames[phase],
                       emitter.getVelocityProperty().ToString());
             std::this_thread::sleep_for(std::chrono::milliseconds(300));
-            voice.Stop();
+            sweepVoice.Stop();
         }
         ctx.Check(emitter.getVelocityProperty() == velocities.back(),
                   "AudioEmitter retains the authored receding velocity used by the final Doppler phase");

@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
+/* TQ-084 (3274f9572): Refresh unknown cue/global-name refusals map to INVALID_ARGUMENT. */
 /* XACT wave/sound banks, categories and parent-child lifetime through the C ABI. */
 #include <CNA/C/cna.h>
 
@@ -240,7 +241,7 @@ int main(int argc, char** argv)
         cna_sound_bank_get_cue(sound_bank, view("LowTone"), &music_cue) == CNA_RESULT_SUCCESS &&
             cna_sound_bank_get_cue(sound_bank, view("HighTone"), &sfx_cue) == CNA_RESULT_SUCCESS &&
             cna_sound_bank_get_cue(sound_bank, view("NoSuchCue"), &rejected) ==
-                CNA_RESULT_INVALID_STATE &&
+                CNA_RESULT_INVALID_ARGUMENT &&
             rejected == CNA_INVALID_HANDLE,
         "the sound bank prepares independent caller-owned Music and SFX cues by name");
     cue_info_init(&music_info);

@@ -412,7 +412,8 @@ int main()
             TemporaryOutput cleanup{directory};
             std::cout << "Private compiled content: " << directory << '\n';
             Publish(directory, compiled.logicalName, compiled.output.bytes);
-            ContentManager content(nullptr, directory.string());
+            ContentManager content;
+            content.setRootDirectoryProperty(directory.string());
             bool childMissing = false;
             try { (void)content.Load<LoadedStage>(compiled.logicalName); }
             catch (const ContentLoadException& error) { childMissing = true; std::cout << "Missing child refused: " << error.what() << '\n'; }

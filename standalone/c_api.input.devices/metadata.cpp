@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "A C program compares sensor and device descriptor values, enumerates host mice, keyboards, "
                    "touch devices and sensors, checks unavailable motion readings, exercises all four synchronous "
                    "mouse/keyboard hot-plug events and reads one coherent power snapshot.",
-    .apis = {"cna_sensor_info_init", "cna_sensor_info_equals", "cna_sensors_get_count",
+    .apis = {"cna_game_run_frame_ext", "cna_sensor_info_init", "cna_sensor_info_equals", "cna_sensors_get_count",
              "cna_sensors_get_accelerometer", "cna_sensors_get_gyroscope", "cna_input_device_info_init",
              "cna_input_device_info_equals", "cna_input_devices_get_mouse_count",
              "cna_input_devices_get_mouse_info_at", "cna_input_devices_get_mouse_name_size_at",

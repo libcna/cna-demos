@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MS-PL
+// TQ-005 (3d4e3f3a3): Refresh range-checks pitch and throws on disposed SoundEffect playback.
 // SoundEffect::Play(volume, pitch, pan) and the master volume: fire-and-forget sounds with settings.
 #include <limits>
 #include <optional>
@@ -19,15 +20,20 @@ namespace
 {
     void PlayParameters(CnaDemos::DemoContext& ctx)
     {
-        ContentManager content(nullptr, "assets");
+        ContentManager content;
+        content.setRootDirectoryProperty("assets");
         SoundEffect tone = content.Load<SoundEffect>("sounds/tone_440");
 
         // volume 0..1, pitch -1..1 (one octave down to one octave up), pan -1 (left) .. 1 (right).
         ctx.Check(tone.Play(1.0f, 0.0f, -1.0f), "full volume, original pitch, left");
         ctx.Check(tone.Play(0.5f, 1.0f, 0.0f), "half volume, an octave up, centre");
         ctx.Check(tone.Play(0.25f, -1.0f, 1.0f), "quarter volume, an octave down, right");
-        ctx.Check(tone.Play(1.0f, 5.0f, 0.0f) && tone.Play(1.0f, -5.0f, 0.0f),
-                  "finite pitch outliers clamp to the supported range and still play");
+        bool highPitchRejected = false, lowPitchRejected = false;
+        try { (void)tone.Play(1.0f, 5.0f, 0.0f); }
+        catch (const System::ArgumentOutOfRangeException&) { highPitchRejected = true; }
+        try { (void)tone.Play(1.0f, -5.0f, 0.0f); }
+        catch (const System::ArgumentOutOfRangeException&) { lowPitchRejected = true; }
+        ctx.Check(highPitchRejected && lowPitchRejected, "both pitch outliers are refused instead of clamped");
         bool highPanRejected = false;
         bool lowPanRejected = false;
         try { (void)tone.Play(1.0f, 0.0f, 1.5f); }
@@ -69,9 +75,13 @@ namespace
         bool createRejected = false;
         try { (void)disposedProbe.CreateInstance(); }
         catch (const System::ObjectDisposedException&) { createRejected = true; }
-        ctx.Check(disposedProbe.getIsDisposedProperty() && !disposedProbe.Play() &&
-                      !disposedProbe.Play(1.0f, 0.0f, 0.0f) && createRejected,
-                  "a disposed effect makes Play return false while CreateInstance throws");
+        bool playRejected = false, configuredPlayRejected = false;
+        try { (void)disposedProbe.Play(); }
+        catch (const System::ObjectDisposedException&) { playRejected = true; }
+        try { (void)disposedProbe.Play(1.0f, 0.0f, 0.0f); }
+        catch (const System::ObjectDisposedException&) { configuredPlayRejected = true; }
+        ctx.Check(disposedProbe.getIsDisposedProperty() && playRejected && configuredPlayRejected && createRejected,
+                  "a disposed effect refuses both Play overloads and CreateInstance");
     }
 }
 

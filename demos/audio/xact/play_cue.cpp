@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MS-PL
+// TQ-084 (3274f9572): Refresh GetCue uses ArgumentException; PlayCue retains InvalidOperationException.
 // XACT: an AudioEngine, a WaveBank and a SoundBank -- and a cue played by name.
 #include <chrono>
 #include <memory>
@@ -11,6 +12,7 @@
 #include "Microsoft/Xna/Framework/Audio/WaveBank.hpp"
 #include "Microsoft/Xna/Framework/TitleLocation.hpp"
 #include "System/ArgumentNullException.hpp"
+#include "System/ArgumentException.hpp"
 #include "System/InvalidOperationException.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
@@ -55,13 +57,13 @@ namespace
             const std::unique_ptr<Cue> unexpected(sounds.GetCue("MissingCue"));
             static_cast<void>(unexpected);
         }
-        catch (const System::InvalidOperationException&) { unknownGetRefused = true; }
+        catch (const System::ArgumentException&) { unknownGetRefused = true; }
         try { sounds.PlayCue(""); }
         catch (const System::ArgumentNullException&) { emptyPlayRefused = true; }
         try { sounds.PlayCue("MissingCue"); }
         catch (const System::InvalidOperationException&) { unknownPlayRefused = true; }
         ctx.Check(emptyGetRefused, "GetCue rejects an empty cue name with ArgumentNullException");
-        ctx.Check(unknownGetRefused, "GetCue rejects an unknown cue name with InvalidOperationException");
+        ctx.Check(unknownGetRefused, "GetCue rejects an unknown cue name with ArgumentException");
         ctx.Check(emptyPlayRefused, "PlayCue rejects an empty cue name with ArgumentNullException");
         ctx.Check(unknownPlayRefused, "PlayCue rejects an unknown cue name with InvalidOperationException");
 

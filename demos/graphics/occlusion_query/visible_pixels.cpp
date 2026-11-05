@@ -10,6 +10,7 @@
 #include "System/InvalidOperationException.hpp"
 #include "System/NotSupportedException.hpp"
 #include "System/ObjectDisposedException.hpp"
+#include "System/NullReferenceException.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Graphics/BasicEffect.hpp"
 #include "Microsoft/Xna/Framework/Graphics/DepthFormat.hpp"
@@ -98,9 +99,11 @@ namespace
             scratch.Dispose();
             Context().Check(scratch.getIsDisposedProperty() && !scratch.HasRenderer(),
                             "explicit disposal marks the query disposed and releases its renderer");
-            ExpectRefusal<System::ObjectDisposedException>(Context(), "Begin on a disposed query is refused",
+            // TQ-035/076 (b6b8ab844, 2b2de3ee1): observe before Begin; disposed native access is null.
+            Context().Check(!scratch.getIsCompleteProperty(), "a disposed query is incomplete");
+            ExpectRefusal<System::NullReferenceException>(Context(), "Begin on a disposed query is refused",
                 [&] { scratch.Begin(); });
-            ExpectRefusal<System::ObjectDisposedException>(Context(), "PixelCount on a disposed query is refused",
+            ExpectRefusal<System::InvalidOperationException>(Context(), "PixelCount on a disposed query is refused",
                 [&] { (void)scratch.getPixelCountProperty(); });
 
             // Disposal is also supported while the native Begin/End pair is still open. The fixed
@@ -108,6 +111,7 @@ namespace
             // the renderer's single active-query target back rather than merely disposing the
             // public wrapper.
             OcclusionQuery active(device);
+            Context().Check(!active.getIsCompleteProperty(), "a fresh active-disposal query is incomplete");
             active.Begin();
             active.Dispose();
             Context().Check(active.getIsDisposedProperty() && !active.HasRenderer(),
@@ -115,6 +119,8 @@ namespace
 
             OcclusionQuery owner(device);
             OcclusionQuery contender(device);
+            Context().Check(!owner.getIsCompleteProperty() && !contender.getIsCompleteProperty(),
+                            "both fresh overlapping queries are incomplete");
             owner.Begin();
             bool distinctBeginAccepted = false;
             try { contender.Begin(); distinctBeginAccepted = true; }
@@ -162,6 +168,8 @@ namespace
                 device.setDepthStencilStateProperty(DepthStencilState::None);
                 const auto square = Square(Vector3(0.0f, 0.0f, -1.0f), 0.4f, Color::Yellow);
                 Measure(*overlapControl_, square);
+                (void)overlapOwner_->getIsCompleteProperty();
+                (void)overlapInner_->getIsCompleteProperty();
                 overlapOwner_->Begin(); DrawSquare(square);
                 overlapInner_->Begin(); DrawSquare(square); DrawSquare(square);
                 overlapInner_->End();
@@ -258,6 +266,8 @@ namespace
     private:
         void Measure(OcclusionQuery& query, const std::array<VertexPositionColor, 6>& square)
         {
+            // Refresh requires an IsComplete observation before every Begin, including a fresh query.
+            (void)query.getIsCompleteProperty();
             query.Begin();
             DrawSquare(square);
             query.End();

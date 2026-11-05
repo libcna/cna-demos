@@ -207,14 +207,14 @@ namespace
             const std::size_t own = model ? 1u : 0u;
             exactInventory = exactInventory && writer->InputType() == item.inputType &&
                 writer->Identity() == Pipeline::ContentComponentIdentity{
-                    item.writerName, "1+w5run"} &&
+                    item.writerName, "2+w5run"} &&
                 writer->OutputFormat() == Pipeline::ContentOutputFormat::Xnb &&
                 schemas.size() == own + 1u &&
                 schemas[own].assetTypeId == static_cast<std::uint32_t>(item.assetId) &&
                 schemas[own].assetSchemaVersion == 5u &&
                 schemas[own].assetTypeName == item.assetTypeName &&
                 schemas[own].codec == Pipeline::ContentComponentIdentity{
-                    "CNA.XnbSerializer", "1+w5run"};
+                    "CNA.XnbSerializer", "2+w5run"};
             if (model)
             {
                 exactInventory = exactInventory &&
@@ -222,7 +222,7 @@ namespace
                     schemas[0].assetSchemaVersion == 5u &&
                     schemas[0].assetTypeName == "Microsoft.Xna.Framework.Graphics.Texture2D" &&
                     schemas[0].codec == Pipeline::ContentComponentIdentity{
-                        "CNA.XnbSerializer", "1+w5run"};
+                        "CNA.XnbSerializer", "2+w5run"};
             }
         }
         ctx.Check(exactInventory,
@@ -254,7 +254,7 @@ namespace
                       first.assetTypeId == static_cast<std::uint32_t>(Asset::Texture2D) &&
                       first.assetSchemaVersion == 5u &&
                       first.rootReaderName == "Microsoft.Xna.Framework.Content.Texture2DReader" &&
-                      writer->Identity().version == "1+d5h4p",
+                      writer->Identity().version == "2+d5h4p",
                   "an option-bound writer emits deterministic DesktopGL HiDef LZ4 bytes and reports the actual root reader");
 
         const auto assetRoot =

@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
+/* TQ-066 (ce157d6d6): presentation clones retain the headless extension alongside the Refresh fields. */
 /*
  * Display values from C: DisplayMode computes its aspect ratio and compares its defining fields;
  * PresentationParameters supplies XNA-compatible defaults, clones its native XNA fields and
@@ -107,9 +108,9 @@ int main(int argc, char** argv)
             clone.display_orientation == requested.display_orientation &&
             clone.render_target_usage == requested.render_target_usage &&
             clone.is_full_screen == requested.is_full_screen &&
-            clone.headless_ext == CNA_FALSE && clone.reserved[0] == 0U &&
+            clone.headless_ext == requested.headless_ext && clone.reserved[0] == 0U &&
             clone.reserved[1] == 0U,
-        "the native clone preserves XNA fields and resets its non-XNA headless extension");
+        "the native clone preserves every XNA field and its CNA headless extension");
 
     cna_demo_check(
         &demo,

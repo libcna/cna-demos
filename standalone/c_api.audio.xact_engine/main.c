@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
+/* TQ-084 (3274f9572): Refresh unknown cue/global-name refusals map to INVALID_ARGUMENT. */
 /* XACT AudioEngine construction, renderer values, variables and disposal through the C ABI. */
 #include <CNA/C/cna.h>
 
@@ -187,7 +188,7 @@ int main(int argc, char** argv)
                 CNA_RESULT_SUCCESS &&
             value == 1000.0F &&
             cna_audio_engine_get_global_variable(engine, view("Intensity"), &value) ==
-                CNA_RESULT_INVALID_STATE,
+                CNA_RESULT_INVALID_ARGUMENT,
         "global writes clamp to the authored range and cannot address cue-scoped variables");
     cna_demo_check_result(&demo, cna_audio_engine_update(engine),
                           "pump the XACT engine's bookkeeping explicitly");

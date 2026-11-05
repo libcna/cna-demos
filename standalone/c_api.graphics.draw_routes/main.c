@@ -18,6 +18,8 @@ typedef struct DrawRouteState {
     CnaDemo* demo;
     CNA_VertexDeclarationHandle declaration;
     CNA_VertexBufferHandle vertices;
+    CNA_VertexBufferHandle instances;
+    CNA_VertexDeclarationHandle instance_declaration;
     CNA_IndexBufferHandle indices;
     CNA_EffectHandle effect;
     int loads;
@@ -144,8 +146,26 @@ static int create_buffers(DrawRouteState* state, CNA_Handle device)
     transfer.index_element_size = CNA_INDEX_ELEMENT_SIZE_SIXTEEN_BITS;
     transfer.options = CNA_SET_DATA_NONE;
     transfer.element_count = UINT64_C(6);
-    return cna_index_buffer_set_data(
-               state->indices, &transfer, indices, UINT64_C(6)) == CNA_RESULT_SUCCESS;
+    if (cna_index_buffer_set_data(state->indices, &transfer, indices, UINT64_C(6)) != CNA_RESULT_SUCCESS)
+        return 0;
+    /* TQ-021 (89dd16a3d): an instanced draw requires an actual per-instance stream. */
+    /* Stock renderers consume four per-instance vectors as a world matrix. */
+    const CNA_VertexElement instance_elements[4] = {
+        {0, CNA_VERTEX_ELEMENT_FORMAT_VECTOR4, CNA_VERTEX_ELEMENT_USAGE_TEXTURE_COORDINATE, 1},
+        {16, CNA_VERTEX_ELEMENT_FORMAT_VECTOR4, CNA_VERTEX_ELEMENT_USAGE_TEXTURE_COORDINATE, 2},
+        {32, CNA_VERTEX_ELEMENT_FORMAT_VECTOR4, CNA_VERTEX_ELEMENT_USAGE_TEXTURE_COORDINATE, 3},
+        {48, CNA_VERTEX_ELEMENT_FORMAT_VECTOR4, CNA_VERTEX_ELEMENT_USAGE_TEXTURE_COORDINATE, 4}};
+    CNA_Matrix instances[2];
+    if (cna_matrix_get_identity(&instances[0]) != CNA_RESULT_SUCCESS ||
+        cna_matrix_get_identity(&instances[1]) != CNA_RESULT_SUCCESS)
+        return 0;
+    if (cna_vertex_declaration_create_with_stride(64, instance_elements, 4U,
+                                                 &state->instance_declaration) != CNA_RESULT_SUCCESS)
+        return 0;
+    vertex_info.vertex_declaration = state->instance_declaration;
+    vertex_info.vertex_count = 2;
+    return cna_vertex_buffer_create(device, &vertex_info, &state->instances) == CNA_RESULT_SUCCESS &&
+        cna_vertex_buffer_set_data_raw(state->instances, instances, sizeof(instances), 2U, 64U) == CNA_RESULT_SUCCESS;
 }
 
 static CNA_Result load_content(
@@ -298,13 +318,15 @@ static CNA_Result draw(
         state->demo, draw_ok,
         "the caller-indexed route honors its nonzero index offset and draws exact yellow");
 
+    CNA_VertexBufferBinding bindings[2] = {
+        {state->vertices, 0, 0}, {state->instances, 0, 1}};
     draw_ok = clear_frame(device) == CNA_RESULT_SUCCESS &&
-        cna_graphics_device_set_vertex_buffer(device, state->vertices) == CNA_RESULT_SUCCESS &&
+        cna_graphics_device_set_vertex_buffers(device, bindings, 2U) == CNA_RESULT_SUCCESS &&
         cna_graphics_device_set_index_buffer(device, state->indices) == CNA_RESULT_SUCCESS &&
         cna_graphics_device_set_blend_enabled(device, CNA_TRUE) == CNA_RESULT_SUCCESS &&
-        cna_graphics_device_draw_instanced_primitives(
-            device, CNA_PRIMITIVE_TRIANGLE_LIST, 0, 0, 6, 0, 2, 2) ==
-            CNA_RESULT_SUCCESS &&
+        cna_demo_check_result(state->demo, cna_graphics_device_draw_instanced_primitives(
+            device, CNA_PRIMITIVE_TRIANGLE_LIST, 0, 0, 6, 0, 2, 2),
+            "submit two instanced quads") &&
         read_probe(device, &pixel) == CNA_RESULT_SUCCESS &&
         pixel.r >= 185U && pixel.r <= 195U && pixel.g == 0U && pixel.b == 0U;
     printf("  instanced blend probe: %u,%u,%u,%u\n", (unsigned)pixel.r,
@@ -314,9 +336,9 @@ static CNA_Result draw(
         "two identical half-alpha instances accumulate to the expected three-quarter red pixel");
     draw_ok = clear_frame(device) == CNA_RESULT_SUCCESS &&
         cna_graphics_device_set_blend_enabled(device, CNA_FALSE) == CNA_RESULT_SUCCESS &&
-        cna_graphics_device_draw_instanced_primitives(
-            device, CNA_PRIMITIVE_TRIANGLE_LIST, 0, 0, 6, 0, 2, 2) ==
-            CNA_RESULT_SUCCESS &&
+        cna_demo_check_result(state->demo, cna_graphics_device_draw_instanced_primitives(
+            device, CNA_PRIMITIVE_TRIANGLE_LIST, 0, 0, 6, 0, 2, 2),
+            "submit two instanced quads") &&
         read_probe(device, &pixel) == CNA_RESULT_SUCCESS &&
         pixel.r == 255U && pixel.g == 0U && pixel.b == 0U;
     cna_demo_check(
@@ -436,6 +458,12 @@ int main(int argc, char** argv)
     if (state.indices != CNA_INVALID_HANDLE) {
         cna_demo_check_result(
             &demo, cna_index_buffer_destroy(state.indices), "destroy the index-buffer owner");
+    }
+    if (state.instances != CNA_INVALID_HANDLE) {
+        cna_demo_check_result(&demo, cna_vertex_buffer_destroy(state.instances), "destroy the instance stream");
+    }
+    if (state.instance_declaration != CNA_INVALID_HANDLE) {
+        cna_demo_check_result(&demo, cna_vertex_declaration_destroy(state.instance_declaration), "destroy the instance declaration");
     }
     if (state.vertices != CNA_INVALID_HANDLE) {
         cna_demo_check_result(

@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "A C game builds depth-tested and overlay line lists, copies their exact vertices, exercises "
                    "frame reset/clear/end semantics and validates box, clamped sphere, frustum and cross geometry "
                    "before issuing the real draw.",
-    .apis = {"cna_debug_draw_create", "cna_debug_draw_destroy",
+    .apis = {"cna_game_run_frame_ext", "cna_debug_draw_create", "cna_debug_draw_destroy",
              "cna_debug_draw_begin", "cna_debug_draw_end", "cna_debug_draw_clear",
              "cna_debug_draw_add_line", "cna_debug_draw_add_box",
              "cna_debug_draw_add_sphere", "cna_debug_draw_add_bounding_sphere",

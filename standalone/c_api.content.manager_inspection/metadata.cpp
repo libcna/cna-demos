@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "Content paths, manifest and device association in C",
     .description = "A C-owned content manager resolves paths and cache keys, inspects its device and "
                    "walks the deployed asset manifest including native extensions and XNB reader usage.",
-    .apis = {"cna_content_manager_create", "cna_content_manager_get_asset_path_size",
+    .apis = {"cna_game_run_frame_ext", "cna_content_manager_create", "cna_content_manager_get_asset_path_size",
              "cna_content_manager_copy_asset_path", "cna_content_manager_get_normalized_key_size",
              "cna_content_manager_copy_normalized_key", "cna_content_manager_register_builtin_loaders",
              "cna_content_manager_get_has_service_provider",

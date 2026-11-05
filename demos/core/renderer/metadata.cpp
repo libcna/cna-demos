@@ -47,7 +47,7 @@ namespace
                          CNA::GraphicsRendererCategory::Diagnostic, CNA::GraphicsRendererMaturity::Supported},
         RendererMetadata{CNA::GraphicsRendererType::DirectX9, "DIRECTX9",
                          CNA::GraphicsRendererCategory::Native, CNA::GraphicsRendererMaturity::Production},
-        RendererMetadata{CNA::GraphicsRendererType::SdlGpu, "SDL_GPU",
+        RendererMetadata{CNA::GraphicsRendererType::SdlGpu, "SDLGPU",
                          CNA::GraphicsRendererCategory::TranslationLayer, CNA::GraphicsRendererMaturity::Supported},
         RendererMetadata{CNA::GraphicsRendererType::Fna3d, "FNA3D",
                          CNA::GraphicsRendererCategory::TranslationLayer, CNA::GraphicsRendererMaturity::Experimental},
@@ -90,7 +90,7 @@ namespace
         ctx.Check(roundTripsMatch, "every canonical renderer name parses back to its identity");
 
         CNA::GraphicsRendererType mixedCase = CNA::GraphicsRendererType::Stub;
-        ctx.Check(CNA::tryParseGraphicsRendererName("sDl_GpU", mixedCase) &&
+        ctx.Check(CNA::tryParseGraphicsRendererName("sDlGpU", mixedCase) &&
                       mixedCase == CNA::GraphicsRendererType::SdlGpu,
                   "renderer names parse case-insensitively");
 

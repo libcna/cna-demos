@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
+/* TQ-032 (d86bb8ada): Stop keeps spatial mode; test multiple listeners on the already-positioned voice. */
 /* Spatial-audio POD values, process scales and Apply3D ordering from the C ABI. */
 #include <CNA/C/cna.h>
 
@@ -143,13 +144,13 @@ int main(int argc, char** argv)
                 CNA_RESULT_INVALID_STATE &&
             cna_sound_effect_instance_apply_3d_multi_ext(
                 unaimed, &listener, 1U, &emitter) == CNA_RESULT_INVALID_STATE,
-        "an instance first played in 2D refuses both spatial routes until it stops");
+        "an instance first played in 2D retains that spatial choice");
     cna_demo_check(
         &demo,
         cna_sound_effect_instance_stop(unaimed, CNA_TRUE) == CNA_RESULT_SUCCESS &&
             cna_sound_effect_instance_apply_3d(unaimed, &listener, &emitter) ==
-                CNA_RESULT_SUCCESS,
-        "stopping the unaimed voice permits a later spatial choice");
+                CNA_RESULT_INVALID_STATE,
+        "stopping the unaimed voice preserves its 2D choice");
 
     cna_demo_check(
         &demo,
@@ -161,12 +162,12 @@ int main(int argc, char** argv)
     cna_demo_check(
         &demo,
         cna_sound_effect_instance_apply_3d_multi_ext(
-            unaimed, listeners, 2U, &emitter) == CNA_RESULT_SUCCESS,
+            positioned, listeners, 2U, &emitter) == CNA_RESULT_SUCCESS,
         "the multi-listener route accepts a second listener closer to the emitter");
     cna_demo_check(
         &demo,
         cna_sound_effect_instance_apply_3d_multi_ext(
-            unaimed, listeners, 0U, &emitter) == CNA_RESULT_INVALID_ARGUMENT &&
+            positioned, listeners, 0U, &emitter) == CNA_RESULT_INVALID_ARGUMENT &&
             cna_sound_effect_instance_apply_3d_multi_ext(
                 unaimed, NULL, 1U, &emitter) == CNA_RESULT_INVALID_ARGUMENT,
         "the multi-listener route refuses empty and missing listener arrays");

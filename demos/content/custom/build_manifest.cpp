@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MS-PL
+// CNA-FIX-D06 (136c4a2da): external font dependencies require manifest version 11.
 // Turn one successful in-memory build result into deterministic incremental-build state.
 #include <algorithm>
 #include <chrono>
@@ -82,7 +83,7 @@ namespace
 
     void BuildManifest(CnaDemos::DemoContext& ctx)
     {
-        ctx.Check(Pipeline::ContentBuildManifestVersion == 10u &&
+        ctx.Check(Pipeline::ContentBuildManifestVersion == 11u &&
                       std::string(Pipeline::ContentBuildManifestFileName) ==
                           ".cna-content-manifest.json" &&
                       Pipeline::ContentSha256({'a', 'b', 'c'}) ==
@@ -255,7 +256,7 @@ namespace
         const auto parsed = Pipeline::ContentBuildManifest::Parse(serialized);
         ctx.Check(!serialized.empty() && serialized.back() == '\n' &&
                       serialized.find("CNA.ContentPipeline.Manifest") != std::string::npos &&
-                      serialized.find("\"version\":10") != std::string::npos &&
+                      serialized.find("\"version\":11") != std::string::npos &&
                       serialized.find("\"generatedOutput\":false") != std::string::npos &&
                       serialized.find(canonical.generic_string()) == std::string::npos &&
                       parsed.Entries() == manifest.Entries() && parsed.Serialize() == serialized,
@@ -290,7 +291,7 @@ namespace
         const bool malformed = Refuses(
             [] { (void)Pipeline::ContentBuildManifest::Parse("{"); }, {});
         bool incompatible = true;
-        for (const unsigned version : {8u, 9u})
+        for (const unsigned version : {8u, 9u, 10u})
         {
             std::string oldVersion = serialized;
             oldVersion.replace(oldVersion.find(currentVersion), currentVersion.size(),

@@ -199,7 +199,8 @@ int main()
                   initialBattle->runtimeReferences.size() == 1 && initialHud->runtimeReferences.size() == 1,
                   "both consumers have runtime references but only battle records a strong build edge without reading enemy source");
             {
-                ContentManager content(nullptr, output.string());
+                ContentManager content;
+                content.setRootDirectoryProperty(output.string());
                 check(content.Load<std::uint32_t>("battle") == 21 && content.Load<std::uint32_t>("hud") == 14,
                       "runtime loaders resolve the shared enemy profile and compute both authored budgets");
             }
@@ -220,7 +221,8 @@ int main()
                   ReadText(output / "battle.cnb") == originalBattle && ReadText(output / "hud.cnb") == originalHud,
                   "the strong dependent's effective fingerprint changes despite identical direct inputs and output bytes");
             {
-                ContentManager content(nullptr, output.string()); // a fresh runtime cache observes the published profile
+                ContentManager content;
+                content.setRootDirectoryProperty(output.string()); // a fresh runtime cache observes the published profile
                 check(content.Load<std::uint32_t>("battle") == 27 && content.Load<std::uint32_t>("hud") == 18,
                       "both fresh runtime loads see the updated profile even though only the strong consumer was rebuilt");
             }

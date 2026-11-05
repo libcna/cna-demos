@@ -308,7 +308,8 @@ namespace
                 hostChangedToken_ = session_->HostChanged.Add([this](System::Object*,
                                                                      const HostChangedEventArgs& args) {
                     hostChanged_ = true;
-                    oldHost_ = args.getOldHostProperty()->getGamertagProperty();
+                    const auto* oldHost = args.getOldHostProperty();
+                    oldHost_ = oldHost ? oldHost->getGamertagProperty() : std::string{};
                     newHostIsLocal_ = args.getNewHostProperty()->getIsLocalProperty();
                     report_.Log("HostChanged: " + oldHost_ + " -> " + args.getNewHostProperty()->getGamertagProperty());
                 });
@@ -340,8 +341,8 @@ namespace
             // With migration the session goes on: a remaining gamer -- here this machine's --
             // becomes the host.
             report_.Check(!ended_.has_value(), "with migration, the session does not end");
-            report_.Check(hostChanged_ && oldHost_ == HostGamertag && newHostIsLocal_,
-                  "HostChanged names Demo Player as the old host and this machine's gamer as the new one");
+            report_.Check(hostChanged_ && oldHost_.empty() && newHostIsLocal_,
+                  "HostChanged has no old host after departure and names this machine's gamer as the new one");
             report_.Check(left_ == HostGamertag, "GamerLeft reports Demo Player");
             report_.Check(session_->getIsHostProperty() && session_->getAllGamersProperty().getCountProperty() == 1,
                   "Second Player now hosts the session, alone");

@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "A C program compares raw-joystick descriptors, enumerates host devices, verifies disconnected "
                    "capability and owned state snapshots, and exercises synchronous hot-plug subscriptions, raises, "
                    "selective unsubscribe and reset.",
-    .apis = {"cna_joystick_info_init", "cna_joystick_info_equals",
+    .apis = {"cna_game_run_frame_ext", "cna_joystick_info_init", "cna_joystick_info_equals",
              "cna_joystick_capabilities_init", "cna_joystick_capabilities_equals",
              "cna_joysticks_get_count", "cna_joysticks_get_capabilities",
              "cna_joysticks_get_capabilities_name_size", "cna_joysticks_copy_capabilities_name",

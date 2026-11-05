@@ -86,8 +86,8 @@ namespace
             spriteBatch_->DrawString(*font_, spin, quarterTurnPosition, Color::Orange, MathHelper::PiOver2, centre,
                                      2.0f, SpriteEffects::None, 0.0f);
 
-            // Mirroring applies to the complete layout. Distinct L/J glyphs make a per-glyph-only
-            // implementation observably different from the expected whole-string reflection.
+            // Refresh reverses the whole pen layout and applies each glyph's cropping rule.
+            // Distinct L/J glyphs still expose an implementation that only flips the textures.
             const std::string mirrorText = "LJ";
             constexpr float mirrorScale = 4.0f;
             constexpr float mirrorY = 380.0f;
@@ -133,6 +133,19 @@ namespace
                 const Vector2 mirrorSize = font_->MeasureString(mirrorText) * mirrorScale;
                 const int mirrorWidth = static_cast<int>(mirrorSize.X);
                 const int mirrorHeight = static_cast<int>(mirrorSize.Y);
+                // TQ-020 (69d398a38): XNA uses crop.X-crop.Width, so this trimmed
+                // 12-pixel cell/10-pixel glyph sits 2*scale left of a geometric reflection.
+                // Pin the fixture too: the pixel comparison must not adapt to changed metrics.
+                bool mirrorMetrics = true;
+                for (charcs character : {u'L', u'J'}) {
+                    const auto& characters = font_->getCharactersProperty();
+                    const auto index = std::find(characters.begin(), characters.end(), character) - characters.begin();
+                    const auto& crop = font_->getCroppingEXT().at(index);
+                    const auto& glyph = font_->getGlyphBoundsEXT().at(index);
+                    mirrorMetrics = mirrorMetrics && crop.X == 0 && crop.Y == 0 &&
+                        crop.Width == 12 && crop.Height == 20 && glyph.Width == 10 && glyph.Height == 14;
+                }
+                Context().Check(mirrorMetrics, "L/J retain the exact trimmed-cell metrics used by the flip oracle");
                 const auto matchesMirror = [&](int candidate, bool flipX, bool flipY)
                 {
                     for (int y = 0; y < mirrorHeight; ++y)
@@ -142,7 +155,7 @@ namespace
                             const bool normal = pixels.At(static_cast<int>(mirrorPositions[0].X) + x,
                                                           static_cast<int>(mirrorPositions[0].Y) + y) ==
                                                 Color::LightSkyBlue;
-                            const int candidateX = flipX ? mirrorWidth - 1 - x : x;
+                            const int candidateX = flipX ? mirrorWidth - 1 - x - 8 : x;
                             const int candidateY = flipY ? mirrorHeight - 1 - y : y;
                             const bool reflected = pixels.At(static_cast<int>(mirrorPositions[candidate].X) + candidateX,
                                                              static_cast<int>(mirrorPositions[candidate].Y) + candidateY) ==
@@ -154,7 +167,7 @@ namespace
                 };
                 Context().Check(matchesMirror(1, true, false) && matchesMirror(2, false, true) &&
                                     matchesMirror(3, true, true),
-                                "horizontal, vertical and combined flags mirror the complete multi-glyph layout");
+                                "horizontal, vertical and combined flags follow the exact Refresh cropped-glyph layout");
             }
             Game::Draw(gameTime);
         }

@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "A C game reports real message-box and file-dialog availability without opening UI, then uses "
                    "CNA's public immediate test service to verify severity, choices, versioned filters, borrowed "
                    "callback results, cancellation, invalid requests and backend restoration.",
-    .apis = {"cna_message_box_get_is_supported_ext", "cna_message_box_show_simple_ext",
+    .apis = {"cna_game_run_frame_ext", "cna_message_box_get_is_supported_ext", "cna_message_box_show_simple_ext",
              "cna_message_box_show_ext", "cna_message_box_set_test_backend_ext",
              "cna_message_box_get_test_log_ext", "cna_file_dialog_get_is_supported_ext",
              "cna_file_dialog_show_open_file_ext", "cna_file_dialog_show_save_file_ext",

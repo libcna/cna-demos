@@ -234,6 +234,7 @@ int main(int argc, char** argv)
     CNA_GameCallbacks callbacks;
     CNA_GameCreateInfo create_info;
     CNA_Handle game = CNA_INVALID_HANDLE;
+    CNA_Bool running = CNA_FALSE;
     CNA_Handle standalone = CNA_INVALID_HANDLE;
     CNA_Handle file_texture = CNA_INVALID_HANDLE;
     CNA_Handle saved_texture = CNA_INVALID_HANDLE;
@@ -428,7 +429,7 @@ int main(int argc, char** argv)
 
     state.encoded_png = png;
     state.encoded_size = png_size;
-    cna_demo_check_result(&demo, cna_game_run_one_frame(game), "run the device-backed I/O callback");
+    cna_demo_check_result(&demo, cna_game_run_frame_ext(game, &running), "run the device-backed I/O callback");
     cna_demo_check(&demo, state.loads == 1, "the Texture2D I/O callback ran exactly once");
 
     if (saved_texture != CNA_INVALID_HANDLE) {

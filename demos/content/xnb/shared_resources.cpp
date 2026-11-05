@@ -129,7 +129,8 @@ namespace
         const auto root = std::filesystem::path(CNA::Platform::GetCurrentPlatform().GetFileSystem()->GetBasePath()) / "assets";
         std::weak_ptr<Item> lifetime;
         {
-            ContentManager content(nullptr, root.string());
+            ContentManager content;
+            content.setRootDirectoryProperty(root.string());
             observed = {};
             auto party = content.Load<std::shared_ptr<Party>>("graphs/shared_party");
             if (!ctx.Check(party != nullptr, "the root reader returns a stable heap-owned graph")) return;
@@ -156,7 +157,8 @@ namespace
             ctx.Check(cached == party && observed.roots == 1 && observed.items == 3,
                       "a cached Load returns the same graph without rerunning readers or fixups");
             observed = {};
-            ContentManager another(nullptr, root.string());
+            ContentManager another;
+            another.setRootDirectoryProperty(root.string());
             auto independent = another.Load<std::shared_ptr<Party>>("graphs/shared_party");
             ctx.Check(independent && independent != party && independent->primary != sword &&
                       independent->primary && independent->primary->quantity == 7 && independent->primary == independent->alias,
@@ -183,7 +185,8 @@ namespace
 
         // ReadAsset's supplied recorder must see IDisposable values regardless of whether they
         // arrived through typed ReadObject dispatch or the type-erased shared-resource table.
-        RecordingManager recording(nullptr, root.string());
+        RecordingManager recording;
+        recording.setRootDirectoryProperty(root.string());
         observed = {};
         std::vector<std::shared_ptr<System::IDisposable>> recorded;
         auto recordedParty = recording.ReadOwned(

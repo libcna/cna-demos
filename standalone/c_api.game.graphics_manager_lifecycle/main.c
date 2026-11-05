@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
+/* TQ-037 (3558f22cd): CreateDevice replaces the device; Dispose retains the manager registration (C disposal stays one-shot). */
 /* GraphicsDeviceManager event data, reconfiguration, drawing and disposal through the public C ABI. */
 #include <CNA/C/cna.h>
 
@@ -67,6 +68,7 @@ static CNA_Result exercise_manager(
     CNA_Bool should_draw = UINT8_C(99);
     CNA_Bool service_present = CNA_TRUE;
     int calls_before;
+    int32_t unmodified_width = 0;
     (void)game_time;
     (void)out_error;
 
@@ -100,23 +102,29 @@ static CNA_Result exercise_manager(
         state->demo,
         accepted_or_platform(cna_graphics_device_manager_create_device(state->manager)) &&
             state->mutable_calls > calls_before &&
+            cna_graphics_device_manager_get_graphics_device(state->manager, &device) == CNA_RESULT_SUCCESS &&
             cna_graphics_device_get_presentation_parameters(device, &active) == CNA_RESULT_SUCCESS &&
             active.back_buffer_width == state->requested_width,
         "explicit device creation applies a fresh mutation to the prepared settings");
 
+    cna_demo_check_result(state->demo,
+        cna_graphics_device_manager_get_preferred_back_buffer_width(state->manager, &unmodified_width),
+        "capture the unmodified preferred width");
     state->corrupt_next = 1;
     active.back_buffer_width = 0;
     cna_demo_check(
         state->demo,
         accepted_or_platform(cna_graphics_device_manager_create_device(state->manager)) &&
+            cna_graphics_device_manager_get_graphics_device(state->manager, &device) == CNA_RESULT_SUCCESS &&
             cna_graphics_device_get_presentation_parameters(device, &active) == CNA_RESULT_SUCCESS &&
-            active.back_buffer_width == CNA_GRAPHICS_DEVICE_MANAGER_DEFAULT_BACK_BUFFER_WIDTH,
+            active.back_buffer_width == unmodified_width,
         "a corrupt mutable event value is ignored and the unmodified manager width is applied");
     state->corrupt_next = 0;
     active.back_buffer_width = 0;
     cna_demo_check(
         state->demo,
         accepted_or_platform(cna_graphics_device_manager_create_device(state->manager)) &&
+            cna_graphics_device_manager_get_graphics_device(state->manager, &device) == CNA_RESULT_SUCCESS &&
             cna_graphics_device_get_presentation_parameters(device, &active) == CNA_RESULT_SUCCESS &&
             active.back_buffer_width == state->requested_width,
         "the next valid mutation changes the prepared width again");
@@ -139,8 +147,8 @@ static CNA_Result exercise_manager(
             state->disposed_events == 1 &&
             cna_game_services_contains_ext(
                 game, CNA_GAME_SERVICE_TYPE_GRAPHICS_DEVICE_MANAGER, &service_present) ==
-                CNA_RESULT_SUCCESS && service_present == CNA_FALSE,
-        "manager disposal is idempotent, raises once and unregisters the manager service");
+                CNA_RESULT_SUCCESS && service_present == CNA_TRUE,
+        "C disposal raises once and retains the manager service until destruction");
     return CNA_RESULT_SUCCESS;
 }
 
@@ -151,6 +159,7 @@ int main(int argc, char** argv)
     CNA_GameCallbacks callbacks;
     CNA_GameCreateInfo info;
     CNA_Handle game = CNA_INVALID_HANDLE;
+    CNA_Bool running = CNA_FALSE;
     CNA_GameEventRegistrationHandle registrations[7];
     int i;
 
@@ -205,7 +214,7 @@ int main(int argc, char** argv)
             cna_graphics_device_manager_subscribe_preparing_device_settings_ext(
                 state.manager, mutate_settings, &state, &registrations[6]) == CNA_RESULT_SUCCESS,
         "read-only and mutable registrations share the preparing-settings event");
-    cna_demo_check_result(&demo, cna_game_run_one_frame(game),
+    cna_demo_check_result(&demo, cna_game_run_frame_ext(game, &running),
                           "initialize and exercise the subscribed manager");
     cna_demo_check(&demo, state.validated == 1, "the one-shot manager lifecycle audit ran once");
 

@@ -12,6 +12,7 @@
 #include "Microsoft/Xna/Framework/Content/ContentLoadException.hpp"
 #include "Microsoft/Xna/Framework/Content/ResourceContentManager.hpp"
 #include "Microsoft/Xna/Framework/Curve.hpp"
+#include "Microsoft/Xna/Framework/GameServiceContainer.hpp"
 #include "Microsoft/Xna/Framework/CurveLoopType.hpp"
 #include "System/Resources/ResourceManager.hpp"
 
@@ -49,7 +50,8 @@ namespace
 
         // No content directory or Game involved: assets come from the resource family by name.
         // A cold Load<T> must install its own reader family (regression for CNA-DEMOS-ISSUE-012).
-        ResourceContentManager content(nullptr, &resources);
+        GameServiceContainer services;
+        ResourceContentManager content(&services, &resources);
         std::optional<Curve> bounce;
         try
         {

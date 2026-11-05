@@ -70,6 +70,7 @@ int main(int argc, char** argv)
     CNA_GameCallbacks callbacks = {0};
     CNA_GameCreateInfo info = {0};
     CNA_Handle game = CNA_INVALID_HANDLE;
+    CNA_Bool running = CNA_FALSE;
     CNA_GameEventRegistrationHandle retained = CNA_INVALID_HANDLE;
     CNA_GameEventRegistrationHandle removed = CNA_INVALID_HANDLE;
     CNA_GameEventRegistrationHandle rejected = UINT64_MAX;
@@ -211,7 +212,7 @@ int main(int argc, char** argv)
         "unsubscribe is one-shot and an undefined event clears its output handle");
 
     if (!cna_demo_check_result(
-            &demo, cna_game_run_one_frame(game), "initialize and run one ordinary frame")) {
+            &demo, cna_game_run_frame_ext(game, &running), "initialize and run one ordinary frame")) {
         goto cleanup;
     }
     updates_before = state.updates;

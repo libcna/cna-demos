@@ -3,7 +3,8 @@
  * Render-target state and binding arrays from C. Matching 2D/cube targets form a real two-entry
  * MRT array, whose exact normalized binding state is copied back atomically. A single cube face
  * then replaces it before an empty array restores the backbuffer. An explicit device notification
- * marks both resources lost, raises the subscribed event and lets successful rebinding restore them.
+ * marks both resources lost and raises the subscribed event. Binding preserves the flags; clearing
+ * each bound target restores its content.
  *
  * Arguments: [--automated] [--frames N] [--screenshot PATH] (nothing is drawn).
  * Exit code 0 passed, 1 failed.
@@ -259,19 +260,35 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
             graphics_device, requested, UINT64_C(1)) == CNA_RESULT_SUCCESS &&
             cna_render_target_get_info(state->target_2d, &info_2d) == CNA_RESULT_SUCCESS &&
             cna_render_target_get_info(state->target_cube, &info_cube) == CNA_RESULT_SUCCESS &&
-            info_2d.is_content_lost == CNA_FALSE &&
+            info_2d.is_content_lost == CNA_TRUE &&
             info_cube.is_content_lost == CNA_TRUE && state->content_lost_events == 1,
-        "rebinding only the 2D target clears only its lost-content flag");
+        "rebinding the 2D target preserves both lost-content flags");
+    cna_demo_check(
+        state->demo,
+        cna_graphics_device_clear_rgba(graphics_device, 0.0f, 0.0f, 0.0f, 1.0f) ==
+                CNA_RESULT_SUCCESS &&
+            cna_render_target_get_info(state->target_2d, &info_2d) == CNA_RESULT_SUCCESS &&
+            cna_render_target_get_info(state->target_cube, &info_cube) == CNA_RESULT_SUCCESS &&
+            info_2d.is_content_lost == CNA_FALSE && info_cube.is_content_lost == CNA_TRUE &&
+            state->content_lost_events == 1,
+        "clearing the bound 2D target restores only its content");
     cna_demo_check(
         state->demo,
         cna_graphics_device_set_render_target_cube(
             graphics_device, state->target_cube, CNA_CUBE_MAP_FACE_NEGATIVE_Y) ==
                 CNA_RESULT_SUCCESS &&
             cna_render_target_get_info(state->target_cube, &info_cube) == CNA_RESULT_SUCCESS &&
+            info_cube.is_content_lost == CNA_TRUE && state->content_lost_events == 1,
+        "rebinding the cube preserves its lost-content flag");
+    cna_demo_check(
+        state->demo,
+        cna_graphics_device_clear_rgba(graphics_device, 0.0f, 0.0f, 0.0f, 1.0f) ==
+                CNA_RESULT_SUCCESS &&
+            cna_render_target_get_info(state->target_cube, &info_cube) == CNA_RESULT_SUCCESS &&
             info_cube.is_content_lost == CNA_FALSE && state->content_lost_events == 1 &&
             cna_graphics_device_set_render_targets(
                 graphics_device, NULL, UINT64_C(0)) == CNA_RESULT_SUCCESS,
-        "rebinding the cube clears its lost-content flag without another notification");
+        "clearing the bound cube restores its content without another notification");
 
     unsubscribe_result = state->registration != CNA_INVALID_HANDLE
         ? cna_render_target_unsubscribe_content_lost(state->registration)

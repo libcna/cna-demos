@@ -447,6 +447,7 @@ int main(int argc, char** argv)
     CNA_GameCallbacks callbacks;
     CNA_GameCreateInfo create_info;
     CNA_Handle game = CNA_INVALID_HANDLE;
+    CNA_Bool running = CNA_FALSE;
     CNA_Handle manager = CNA_INVALID_HANDLE;
     int ready;
 
@@ -471,7 +472,7 @@ int main(int argc, char** argv)
             cna_graphics_device_manager_apply_changes(manager) == CNA_RESULT_SUCCESS;
     if (cna_demo_check(&demo, ready, "create a HiDef owner for retained part resources")) {
         cna_demo_check_result(
-            &demo, cna_game_run_one_frame(game),
+            &demo, cna_game_run_frame_ext(game, &running),
             "run one frame containing the resource-ownership audit");
         cna_demo_check(&demo, state.loads == 1, "the resource audit ran in one load callback");
     }

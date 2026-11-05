@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "Game component collection and services in C",
     .description = "Caller-owned components move through indexed collection operations while change events, "
                    "absence semantics and the runtime's named service lookup remain explicit.",
-    .apis = {"cna_game_create", "cna_game_run_one_frame", "cna_game_destroy",
+    .apis = {"cna_game_create", "cna_game_run_frame_ext", "cna_game_destroy",
              "cna_game_component_callbacks_init", "cna_game_component_create",
              "cna_game_component_destroy", "cna_game_components_get_count",
              "cna_game_components_get_at", "cna_game_components_add",

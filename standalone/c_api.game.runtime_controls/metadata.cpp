@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "Game runtime controls in C",
     .description = "A C-owned game round-trips timing and window properties, separates the framework "
                    "pump from a frame tick, suppresses one draw and owns event registrations.",
-    .apis = {"cna_game_create", "cna_game_destroy", "cna_game_run_one_frame",
+    .apis = {"cna_game_create", "cna_game_destroy", "cna_game_run_frame_ext",
              "cna_game_set_window_title", "cna_game_window_get_title_size",
              "cna_game_window_copy_title", "cna_game_get_is_mouse_visible",
              "cna_game_set_is_mouse_visible", "cna_game_get_is_fixed_time_step",

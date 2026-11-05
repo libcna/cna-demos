@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
+/* C ABI 0.59 (08d419e34): Current outside the cursor range succeeds with the typed null handle. */
 /* FriendGamer values and mutable GamerCollection iteration through the C ABI. */
 #include <CNA/C/cna.h>
 
@@ -162,7 +163,7 @@ int main(int argc, char** argv)
         cna_demo_check(
             &demo,
             cna_gamer_enumerator_get_current(enumerator, &borrowed) ==
-                    CNA_RESULT_INVALID_STATE &&
+                    CNA_RESULT_SUCCESS && borrowed == CNA_INVALID_HANDLE &&
                 cna_gamer_enumerator_move_next(enumerator, &flag) == CNA_RESULT_SUCCESS &&
                 flag == CNA_TRUE &&
                 cna_gamer_enumerator_get_current(enumerator, &borrowed) ==

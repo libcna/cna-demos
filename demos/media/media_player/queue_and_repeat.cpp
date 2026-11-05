@@ -75,13 +75,13 @@ namespace
         ctx.Print("MoveNext past the end, IsRepeating: #{} {}", queue.getActiveSongIndexProperty(), Active());
         ctx.Check(Active() == "Rising", "with IsRepeating the queue wraps around");
 
-        // MovePrevious steps back; on the first song it stays there (no backward wrap).
+        // TQ-023 (534d7dd26): with repeat enabled, MovePrevious wraps backward at index zero.
         MediaPlayer::MovePrevious();
-        ctx.Check(Active() == "Rising", "MovePrevious on the first song stays on it");
+        ctx.Check(Active() == "Falling", "MovePrevious on the first song wraps to the last");
         MediaPlayer::MoveNext();
         MediaPlayer::MovePrevious();
         ctx.Print("MoveNext, MovePrevious: #{} {}", queue.getActiveSongIndexProperty(), Active());
-        ctx.Check(Active() == "Rising", "MovePrevious returns to the song before");
+        ctx.Check(Active() == "Falling", "MovePrevious wraps again after MoveNext returns to the first song");
 
         // IsShuffled makes the next song a random one from the queue.
         MediaPlayer::setIsShuffledProperty(true);

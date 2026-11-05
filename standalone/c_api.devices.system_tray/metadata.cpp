@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "A C game reports real tray availability without creating a host icon, then uses CNA's public "
                    "in-memory tray to verify owned lifetime, menu indices, checked/enabled state, ignored upper "
                    "bounds, click callbacks and stale-handle refusal.",
-    .apis = {"cna_system_tray_get_is_supported_ext",
+    .apis = {"cna_game_run_frame_ext", "cna_system_tray_get_is_supported_ext",
              "cna_system_tray_create_with_test_backend_ext", "cna_system_tray_set_tooltip",
              "cna_system_tray_add_entry", "cna_system_tray_set_entry_label",
              "cna_system_tray_set_entry_checked", "cna_system_tray_get_entry_checked",

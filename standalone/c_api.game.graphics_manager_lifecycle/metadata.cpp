@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "Graphics device manager lifecycle in C",
     .description = "Manager events expose and mutate prepared settings while explicit apply, recreate, "
                    "full-screen, draw and disposal operations retain their public ownership contracts.",
-    .apis = {"cna_graphics_device_manager_create", "cna_graphics_device_manager_apply_changes",
+    .apis = {"cna_game_run_frame_ext", "cna_graphics_device_manager_create", "cna_graphics_device_manager_apply_changes",
              "cna_graphics_device_manager_create_device", "cna_graphics_device_manager_begin_draw",
              "cna_graphics_device_manager_end_draw", "cna_graphics_device_manager_dispose",
              "cna_graphics_device_manager_subscribe",

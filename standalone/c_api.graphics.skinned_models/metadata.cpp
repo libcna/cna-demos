@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "SkinnedModel skeleton, clips, moves and part ownership in C",
     .description = "A C workflow copies a skeleton and clip, evaluates skin transforms, moves "
                    "models and replaces a tinted owned render part with real graphics resources.",
-    .apis = {"cna_skinned_model_ext_create_default", "cna_skinned_model_ext_create",
+    .apis = {"cna_game_run_frame_ext", "cna_skinned_model_ext_create_default", "cna_skinned_model_ext_create",
              "cna_skinned_model_ext_destroy", "cna_skinned_model_ext_create_move",
              "cna_skinned_model_ext_move_assign", "cna_skinned_model_ext_set_skeleton",
              "cna_skinned_model_ext_get_bone_count",

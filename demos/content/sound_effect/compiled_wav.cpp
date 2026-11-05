@@ -15,7 +15,8 @@ namespace
 {
     void CompiledWav(CnaDemos::DemoContext& ctx)
     {
-        ContentManager content(nullptr, "assets");
+        ContentManager content;
+        content.setRootDirectoryProperty("assets");
         // content/sounds/chime.wav went through CNA.SoundEffectProcessor at build time
         // (sounds/chime.cnb); assets/sounds/tone_660.wav is read as it is. The game code is the same.
         SoundEffect chime = content.Load<SoundEffect>("sounds/chime");

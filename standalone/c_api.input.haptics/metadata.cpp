@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "Input in C: haptic devices",
     .description = "A C program compares haptic direction/effect/capability values, enumerates host devices without "
                    "opening them, then exercises absent-id open paths plus every safe closed-device operation.",
-    .apis = {"cna_haptic_direction_init", "cna_haptic_direction_equals",
+    .apis = {"cna_game_run_frame_ext", "cna_haptic_direction_init", "cna_haptic_direction_equals",
              "cna_haptic_effect_init", "cna_haptic_effect_equals",
              "cna_haptic_capabilities_init", "cna_haptic_capabilities_equals",
              "cna_haptics_get_count", "cna_haptics_open", "cna_haptics_open_from_joystick",

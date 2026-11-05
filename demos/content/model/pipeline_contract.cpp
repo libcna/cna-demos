@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MS-PL
+// 674fd7736: generated compressed CNB texture representations use codec identity 2.
 // Audit the public Model pipeline contract from glTF staging through generated child CNBs.
 #include <algorithm>
 #include <array>
@@ -297,7 +298,7 @@ namespace
         const std::vector<Pipeline::ContentWriterSchemaIdentity> expectedSchemas{
             {Cnb::CnbAssetTypeId::Texture2D, Cnb::CnbTextureSchemaVersion,
              "Microsoft.Xna.Framework.Graphics.Texture2D",
-             {"CNA.Cnb.EncodeTexture2DToCnb", "1"}},
+             {"CNA.Cnb.EncodeTexture2DToCnb", "2"}},
             {Cnb::CnbAssetTypeId::Model, Cnb::CnbModelSchemaVersion,
              "Microsoft.Xna.Framework.Graphics.Model", {"CNA.Cnb.EncodeModelToCnb", "1"}},
             {Cnb::CnbAssetTypeId::Model, Cnb::CnbModelV2SchemaVersion,

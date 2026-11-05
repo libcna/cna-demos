@@ -379,7 +379,8 @@ namespace
         colliding.AddChunk(CollisionChunk, {42}, CnbChunkFlags::Mandatory);
         colliding.WriteToFile((path / "collision.cnb").string());
 
-        ContentManager content(nullptr, path.string());
+        ContentManager content;
+        content.setRootDirectoryProperty(path.string());
         const ConcurrentAsset concurrent = content.Load<ConcurrentAsset>("concurrent");
         ctx.Check(retainedConcurrent && concurrent.registration == retainedConcurrent->registration &&
                       concurrent.payload == 77 && retainedConcurrent->reads == 1,
@@ -412,11 +413,13 @@ namespace
         (void)content.Load<Rules>("rules");
         ctx.Check(ReadCount() == 1, "a second Load uses the manager's cache");
         {
-            ContentManager another(nullptr, path.string());
+            ContentManager another;
+            another.setRootDirectoryProperty(path.string());
             (void)another.Load<Rules>("rules");
             ctx.Check(ReadCount() == 2, "registration is shared but caches belong to each manager");
         }
-        ContentManager replacementManager(nullptr, path.string());
+        ContentManager replacementManager;
+        replacementManager.setRootDirectoryProperty(path.string());
         const Rules afterManagerDestruction = replacementManager.Load<Rules>("rules");
         ctx.Check(afterManagerDestruction.name == "Moon" && ReadCount() == 3,
                   "the retained first factory remains live after a manager is destroyed and replaced");

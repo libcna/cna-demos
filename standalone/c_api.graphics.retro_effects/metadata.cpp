@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "A C game exercises CRT and color-depth effect state where shader effects are supported, then "
                    "runs the renderer-independent ASCII post-process over an authored texture and verifies its "
                    "resulting glyph-grid dimensions and lifetime.",
-    .apis = {"cna_crt_effect_create",
+    .apis = {"cna_game_run_frame_ext", "cna_crt_effect_create",
              "cna_crt_effect_get_scanline_intensity", "cna_crt_effect_set_scanline_intensity",
              "cna_crt_effect_get_curvature", "cna_crt_effect_set_curvature",
              "cna_crt_effect_get_vignette_intensity", "cna_crt_effect_set_vignette_intensity",

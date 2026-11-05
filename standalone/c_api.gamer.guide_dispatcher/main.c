@@ -41,6 +41,7 @@ int main(int argc, char** argv)
     CnaDemo demo;
     CNA_GameCreateInfo info;
     CNA_Handle game = CNA_INVALID_HANDLE;
+    CNA_Bool running = CNA_FALSE;
     CNA_GameComponentHandle component = CNA_INVALID_HANDLE;
     CNA_Handle signed_in_registration = CNA_INVALID_HANDLE;
     CNA_Handle signed_out_registration = CNA_INVALID_HANDLE;
@@ -147,7 +148,7 @@ int main(int argc, char** argv)
             &demo, cna_game_components_add(game, component),
             "add the canonical component to the game") ||
         !cna_demo_check_result(
-            &demo, cna_game_run_one_frame(game),
+            &demo, cna_game_run_frame_ext(game, &running),
             "initialize and update the component in one game frame")) {
         goto cleanup;
     }

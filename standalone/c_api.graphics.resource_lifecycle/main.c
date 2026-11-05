@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
+/* TQ-021 (89dd16a3d): Refresh raises ResourceDestroyed before the resource Disposing event. */
 /*
  * The generic GraphicsResource contract from C, demonstrated through one real device-owned
  * Texture2D. Device-level creation/destruction events and resource tracking surround the generic
@@ -88,7 +89,7 @@ static void resource_destroyed(CNA_Handle device, const CNA_ResourceDestroyedEve
         info->has_tag == CNA_FALSE && all_bytes_are(info->reserved, sizeof(info->reserved), 0U) &&
         info->name.byte_length == (uint64_t)sizeof(ResourceName) && info->name.data != NULL &&
         memcmp(info->name.data, ResourceName, sizeof(ResourceName)) == 0 &&
-        state->disposing_calls == 1) {
+        state->disposing_calls == 0) {
         ++state->resource_destroyed_payloads;
     }
     if (cna_graphics_device_get_tracked_resource_count(device, &tracked) == CNA_RESULT_SUCCESS &&
@@ -306,7 +307,7 @@ static CNA_Result load_content(CNA_Handle game, const CNA_GameTime* game_time, v
             state->resource_destroyed_saw_tracking == 1 &&
             cna_graphics_device_get_tracked_resource_count(device, &tracked) == CNA_RESULT_SUCCESS &&
             tracked == state->tracked_baseline,
-        "device destruction reports the exact name and no native tag before untracking");
+        "ResourceDestroyed precedes Disposing and reports the exact name before untracking");
     is_disposed = CNA_FALSE;
     cna_demo_check(
         state->demo,

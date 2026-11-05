@@ -277,6 +277,7 @@ int main(int argc, char** argv)
     CNA_GameCallbacks callbacks;
     CNA_GameCreateInfo create_info;
     CNA_Handle game = CNA_INVALID_HANDLE;
+    CNA_Bool running = CNA_FALSE;
     CNA_Handle manager = CNA_INVALID_HANDLE;
 
     cna_demo_init(&demo, "c_api.devices.camera_frames", argc, argv, 0);
@@ -303,7 +304,7 @@ int main(int argc, char** argv)
         (void)cna_game_destroy(game);
         return cna_demo_finish(&demo);
     }
-    cna_demo_check_result(&demo, cna_game_run_one_frame(game),
+    cna_demo_check_result(&demo, cna_game_run_frame_ext(game, &running),
                           "run one frame for owner-thread camera operations");
     cna_demo_check(&demo, state.validated == 1,
                    "the update callback completed the camera audit once");

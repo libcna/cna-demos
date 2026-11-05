@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MS-PL
+// TQ-005 (3d4e3f3a3): Refresh refuses invalid sample-helper arguments instead of returning zero.
 // SoundEffect from raw PCM: synthesise samples in code, wrap them in a SoundEffect, play them.
 #include <algorithm>
 #include <cmath>
@@ -64,15 +65,23 @@ namespace
                       SoundEffect::GetSampleSizeInBytes(System::TimeSpan::FromSeconds(1), 44100,
                                                         AudioChannels::Mono) == 88198,
                   "sample helpers use XNA millisecond rounding and whole-frame float arithmetic");
-        ctx.Check(SoundEffect::GetSampleDuration(-1, sampleRate, AudioChannels::Mono) == System::TimeSpan::Zero &&
-                      SoundEffect::GetSampleDuration(1000, 0, AudioChannels::Stereo) == System::TimeSpan::Zero &&
-                      SoundEffect::GetSampleDuration(1000, sampleRate, static_cast<AudioChannels>(0)) ==
-                          System::TimeSpan::Zero &&
-                      SoundEffect::GetSampleSizeInBytes(System::TimeSpan::FromSeconds(1), 0,
-                                                        AudioChannels::Stereo) == 0 &&
-                      SoundEffect::GetSampleSizeInBytes(System::TimeSpan::FromSeconds(1), sampleRate,
-                                                        static_cast<AudioChannels>(0)) == 0,
-                  "sample helpers return zero for nonpositive sizes, rates or channel counts");
+        const auto refuses = []<typename Exception>(auto operation) {
+            try { operation(); }
+            catch (const Exception&) { return true; }
+            return false;
+        };
+        ctx.Check(refuses.template operator()<System::ArgumentException>([&] {
+                      (void)SoundEffect::GetSampleDuration(-1, sampleRate, AudioChannels::Mono); }) &&
+                  refuses.template operator()<System::ArgumentOutOfRangeException>([&] {
+                      (void)SoundEffect::GetSampleDuration(1000, 0, AudioChannels::Stereo); }) &&
+                  refuses.template operator()<System::ArgumentOutOfRangeException>([&] {
+                      (void)SoundEffect::GetSampleDuration(1000, sampleRate, static_cast<AudioChannels>(0)); }) &&
+                  refuses.template operator()<System::ArgumentOutOfRangeException>([&] {
+                      (void)SoundEffect::GetSampleSizeInBytes(System::TimeSpan::FromSeconds(1), 0, AudioChannels::Stereo); }) &&
+                  refuses.template operator()<System::ArgumentOutOfRangeException>([&] {
+                      (void)SoundEffect::GetSampleSizeInBytes(System::TimeSpan::FromSeconds(1), sampleRate,
+                                                            static_cast<AudioChannels>(0)); }),
+                  "sample helpers refuse negative sizes and invalid rates or channels with their exact exception families");
 
         bool offsetRejected = false;
         bool countRejected = false;

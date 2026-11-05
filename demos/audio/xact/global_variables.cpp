@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MS-PL
+// TQ-084 (3274f9572): Refresh maps unknown engine-global names to IndexOutOfRangeException.
 // XACT global variables: values the sound designer's settings define and the game can set.
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Audio/AudioEngine.hpp"
 #include "System/ArgumentNullException.hpp"
-#include "System/InvalidOperationException.hpp"
+#include "System/IndexOutOfRangeException.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
 
@@ -37,9 +38,9 @@ namespace
         try { engine.SetGlobalVariable("", 1.0f); }
         catch (const System::ArgumentNullException&) { emptySetRefused = true; }
         try { static_cast<void>(engine.GetGlobalVariable("MissingVariable")); }
-        catch (const System::InvalidOperationException&) { unknownGetRefused = true; }
+        catch (const System::IndexOutOfRangeException&) { unknownGetRefused = true; }
         try { engine.SetGlobalVariable("MissingVariable", 1.0f); }
-        catch (const System::InvalidOperationException&) { unknownSetRefused = true; }
+        catch (const System::IndexOutOfRangeException&) { unknownSetRefused = true; }
         ctx.Check(emptyGetRefused && emptySetRefused,
                   "both global-variable access directions reject an empty name");
         ctx.Check(unknownGetRefused && unknownSetRefused,

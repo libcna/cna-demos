@@ -16,7 +16,7 @@
       "name": "default",
       "inherits": "base",
       "displayName": "CNA's default renderer for this platform",
-      "description": "One renderer: CNA's current platform default (OPENGLES3 on Linux, SDL_GPU on Windows/macOS). Needs ../cna, ../sharp-runtime (and ../easy-gl, ../meta-gl on Linux)."
+      "description": "One renderer: CNA's current platform default (OPENGLES3 on Linux, SDLGPU on Windows/macOS). Needs ../cna, ../sharp-runtime (and ../easy-gl, ../meta-gl on Linux)."
     },
     {
       "name": "windowless",
@@ -51,12 +51,12 @@
     {
       "name": "linux-full",
       "inherits": "base",
-      "displayName": "Linux: every supported Linux renderer including SDL_GPU, plus the C API",
-      "description": "Adds SDL_GPU (libshaderc) to linux-multi and builds CNA's experimental C API plus optional Inspector module.",
+      "displayName": "Linux: every supported Linux renderer including SDLGPU, plus the C API",
+      "description": "Adds SDLGPU (libshaderc) to linux-multi and builds CNA's experimental C API plus optional Inspector module.",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "cacheVariables": {
         "CNA_GRAPHICS_RENDERER": "OPENGLES3",
-        "CNA_GRAPHICS_RENDERERS": "OPENGLES3;OPENGL33;SDL_GPU;SOFTWARE;HEADLESS;STUB",
+        "CNA_GRAPHICS_RENDERERS": "OPENGLES3;OPENGL33;SDLGPU;SOFTWARE;HEADLESS;STUB",
         "CNA_BUILD_C_API": "ON",
         "CNA_BUILD_INSPECTOR": "ON",
         "CNA_C_API_BUILD_STATIC": "OFF"

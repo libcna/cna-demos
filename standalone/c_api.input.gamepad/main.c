@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
+/* TQ-027/036 (10930f5c0, 713886f49): Refresh exact analog equality, Smart hashes and short-domain normalization. */
 /*
  * Gamepads from C: CNA_GamePadState is a plain struct whose single button mask carries the
  * physical buttons, the D-pad and the virtual stick and trigger buttons XNA derives. The program
@@ -111,8 +112,8 @@ static void button_values(CnaDemo* demo)
         "button queries, equality and inequality observe the combined mask");
     cna_demo_check(
         demo,
-        cna_gamepad_buttons_get_hash_code(from_array, &hash) == CNA_RESULT_SUCCESS && hash == (int32_t)expected,
-        "the canonical button hash is the mask reinterpreted as a signed value");
+        cna_gamepad_buttons_get_hash_code(from_array, &hash) == CNA_RESULT_SUCCESS && hash == INT32_MAX,
+        "A XOR B yields XNA SmartGetHashCode's exact zero-replacement value");
 }
 
 static void dpad_values(CnaDemo* demo)
@@ -147,8 +148,8 @@ static void dpad_values(CnaDemo* demo)
         "D-pad queries and comparisons use only the four directional bits");
     cna_demo_check(
         demo,
-        cna_gamepad_dpad_get_hash_code(up_left, &hash) == CNA_RESULT_SUCCESS && hash == 10,
-        "the D-pad hash uses its canonical Down/Left/Right/Up weights rather than raw button bits");
+        cna_gamepad_dpad_get_hash_code(up_left, &hash) == CNA_RESULT_SUCCESS && hash == INT32_MAX,
+        "Up XOR Left yields XNA SmartGetHashCode's exact zero-replacement value");
 }
 
 static void analog_values(CnaDemo* demo)
@@ -219,14 +220,14 @@ static void analog_values(CnaDemo* demo)
         demo,
         other_triggers.left != triggers.left &&
             cna_gamepad_triggers_equals(&triggers, &other_triggers, &equal) == CNA_RESULT_SUCCESS &&
-            equal == CNA_TRUE,
-        "trigger equality accepts the next representable float through its epsilon comparison");
+            equal == CNA_FALSE,
+        "trigger equality refuses even the next representable float");
     other_triggers.left = 0.5f;
     cna_demo_check(
         demo,
         cna_gamepad_triggers_not_equals(&triggers, &other_triggers, &different) == CNA_RESULT_SUCCESS &&
             different == CNA_TRUE,
-        "trigger inequality detects a difference larger than the comparison epsilon");
+        "trigger inequality detects the exactly changed component");
 }
 
 static void state_values(CnaDemo* demo)
@@ -325,8 +326,8 @@ static void state_values(CnaDemo* demo)
             different == CNA_TRUE &&
             cna_gamepad_state_get_hash_code(&state, &hash) == CNA_RESULT_SUCCESS &&
             cna_gamepad_state_get_hash_code(&component_state, &component_hash) == CNA_RESULT_SUCCESS &&
-            hash == component_hash,
-        "the canonical state hash ignores an analog difference that state equality observes");
+            hash == -INT32_C(1090519039) && component_hash == -INT32_C(1086324735),
+        "the state hash includes the exact trigger float words with all six public value fields");
 
     memset(text, 0xA5, sizeof(text));
     cna_demo_check(
@@ -380,8 +381,8 @@ static void dead_zones(CnaDemo* demo)
     printf("  raw (0.2, 0.2): NONE (%.3f, %.3f), INDEPENDENT_AXES (%.3f, %.3f), CIRCULAR (%.3f, %.3f)\n",
            none.left_thumb_stick.x, none.left_thumb_stick.y, axes.left_thumb_stick.x, axes.left_thumb_stick.y,
            circular.left_thumb_stick.x, circular.left_thumb_stick.y);
-    cna_demo_check(demo, none.left_thumb_stick.x == 0.2f && none.left_thumb_stick.y == 0.2f,
-                   "NONE passes the raw values through");
+    cna_demo_check(demo, none.left_thumb_stick.x == 6553.0f / 32767.0f && none.left_thumb_stick.y == 6553.0f / 32767.0f,
+                   "NONE preserves the exact short-quantized values");
     cna_demo_check(demo, axes.left_thumb_stick.x == 0.0f && axes.left_thumb_stick.y == 0.0f,
                    "INDEPENDENT_AXES (what cna_gamepad_get_state uses) zeroes each small axis");
     cna_demo_check(demo,

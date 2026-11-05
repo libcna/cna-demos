@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
+/* TQ-052 (a808da573): Refresh uses the exact WmpMediaSource resource for the local library name. */
 /* MediaLibrary construction, music collections, disposal and retained ownership through C. */
 #include <CNA/C/cna.h>
 
@@ -40,7 +41,7 @@ int main(int argc, char** argv)
     int32_t playlist_count = -1;
     uint64_t name_bytes = UINT64_C(0);
     uint64_t copied = UINT64_C(0);
-    char source_name[32];
+    char source_name[64];
     char short_name[32];
     char short_before[32];
 
@@ -83,11 +84,11 @@ int main(int argc, char** argv)
             source_type == CNA_MEDIA_SOURCE_TYPE_LOCAL_DEVICE &&
             cna_media_library_get_media_source_name_size(library, &name_bytes) ==
                 CNA_RESULT_SUCCESS &&
-            name_bytes == sizeof("Local Device") - 1U &&
+            name_bytes == sizeof("Local Windows Media Player library") - 1U &&
             cna_media_library_copy_media_source_name(
                 library, source_name, sizeof(source_name), &copied) == CNA_RESULT_SUCCESS &&
             copied == name_bytes &&
-            memcmp(source_name, "Local Device", sizeof("Local Device") - 1U) == 0,
+            memcmp(source_name, "Local Windows Media Player library", sizeof("Local Windows Media Player library") - 1U) == 0,
         "the default library reports its exact local-device source");
     memset(short_name, 0xA5, sizeof(short_name));
     memset(short_before, 0xA5, sizeof(short_before));

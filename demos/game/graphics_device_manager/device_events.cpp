@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MS-PL
+// MTH-CONF-004 (3671c7ee0): Refresh native GraphicsDeviceManager.Dispose repeats Disposed on every explicit call.
 // GraphicsDeviceManager's device lifetime events: DeviceCreated, DeviceResetting, DeviceReset --
 // and the GraphicsDevice's own DeviceResetting/DeviceReset, for code that only holds the device.
 #include <algorithm>
@@ -81,8 +82,8 @@ namespace
             DemoGame::EndRun();
             Graphics().Dispose();
             Graphics().Dispose();
-            Context().Check(disposing_ == 1 && disposed_ == 1 && Graphics().getGraphicsDeviceProperty() == nullptr,
-                            "manager disposal raises both lifetime events once and releases its device reference");
+            Context().Check(disposing_ == 1 && disposed_ == 2 && Graphics().getGraphicsDeviceProperty() == nullptr,
+                            "manager disposal releases its device once and raises Disposed on both explicit calls");
         }
 
     private:

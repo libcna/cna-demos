@@ -87,7 +87,11 @@ namespace
                             "a cube binding retains its exact target and selected face");
 
             device.SetRenderTarget(environment_.get(), CubeMapFace::NegativeZ);
+            Context().Check(environment_->getIsContentLostProperty(),
+                            "binding a cube face preserves its lost-content state");
             device.Clear(Color::Gold);
+            Context().Check(!environment_->getIsContentLostProperty() && contentLostEvents_ == 1,
+                            "clearing the cube face restores content without another ContentLost event");
             bool disposeRefused = false;
             try { environment_->Dispose(); }
             catch (const System::InvalidOperationException&) { disposeRefused = true; }
@@ -173,12 +177,6 @@ namespace
             for (const FaceView& view : Faces)
             {
                 device.SetRenderTarget(environment_.get(), view.face);
-                if (!checkedContentRestore_)
-                {
-                    checkedContentRestore_ = true;
-                    Context().Check(!environment_->getIsContentLostProperty(),
-                                    "binding a cube face for rendering clears its lost-content state");
-                }
                 // After the first frame, rebind +Z without touching it. PreserveContents must keep
                 // its green wall available to the reflective sphere below.
                 if (FramesDrawn() > 0 && view.face == CubeMapFace::PositiveZ)
@@ -290,7 +288,6 @@ namespace
         std::unique_ptr<Texture2D> white_;
         std::unique_ptr<EnvironmentMapEffect> chrome_;
         int contentLostEvents_ = 0;
-        bool checkedContentRestore_ = false;
     };
 }
 

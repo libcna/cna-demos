@@ -3,7 +3,7 @@
  * Touch snapshots from C: CNA's public test hooks provide a deterministic pressed, moved and
  * released finger without requiring touch hardware. The program captures each frame as a
  * CNA_TouchState, finds the finger by id and reconstructs its previous location. A local value
- * snapshot then demonstrates pressure-independent identity, insertion-copy and collection edits.
+ * snapshot then demonstrates pressure-independent identity, insertion-copy and refused collection edits.
  *
  * Arguments: [--automated] [--frames N] [--screenshot PATH] (ignored: nothing is drawn).
  * Exit code 0 passed, 1 failed.
@@ -57,6 +57,7 @@ int main(int argc, char** argv)
     CNA_TouchLocation destination[4];
     CNA_TouchLocation values_input[2];
     CNA_TouchState values;
+    CNA_TouchState values_before;
     CNA_Bool found = CNA_FALSE;
     CNA_Bool equal = CNA_FALSE;
     CNA_Bool contains = CNA_FALSE;
@@ -372,12 +373,12 @@ int main(int argc, char** argv)
     if (cna_demo_check_result(&demo, cna_touch_state_init_from_locations(values_input, 2U, &values),
                               "construct a local two-touch snapshot")) {
         cna_demo_check(&demo,
-                       values.is_connected == CNA_FALSE && values.touch_count == 2U &&
+                       values.is_connected == CNA_TRUE && values.touch_count == 2U &&
                            values.touches[0].id == INT32_C(7) && values.touches[1].id == INT32_C(9),
-                       "the local snapshot copies both touches and has no live connection");
+                       "the array-constructed snapshot copies both touches and reports connected");
     }
     if (cna_demo_check_result(&demo, cna_touch_state_get_is_read_only(&values, &read_only),
-                              "query the collection read-only advisory")) {
+                              "query the collection read-only state")) {
         cna_demo_check(&demo, read_only == CNA_TRUE,
                        "the canonical collection describes itself as read-only");
     }
@@ -418,37 +419,32 @@ int main(int argc, char** argv)
                        "copy_to inserts both touches and shifts the existing tail");
     }
 
-    removed = CNA_FALSE;
-    if (cna_demo_check_result(&demo, cna_touch_state_remove(&values, &high_pressure, &removed),
-                              "remove through pressure-independent equality")) {
-        cna_demo_check(&demo,
-                       removed == CNA_TRUE && values.touch_count == 1U &&
-                           values.touches[0].id == INT32_C(9),
-                       "remove deletes the pressure-equal first touch and shifts the second");
-    }
-    if (cna_demo_check_result(&demo, cna_touch_state_insert(&values, 0, &low_pressure),
-                              "insert the first touch back at index zero")) {
-        cna_demo_check(&demo,
-                       values.touch_count == 2U && values.touches[0].id == INT32_C(7) &&
-                           values.touches[1].id == INT32_C(9),
-                       "insert restores the selected collection order");
-    }
-    if (cna_demo_check_result(&demo, cna_touch_state_remove_at(&values, 1),
-                              "remove the second touch by index")) {
-        cna_demo_check(&demo, values.touch_count == 1U && values.touches[0].id == INT32_C(7),
-                       "remove_at leaves only the first touch");
-    }
-    if (cna_demo_check_result(&demo, cna_touch_state_add(&values, &second_touch),
-                              "append the second touch")) {
-        cna_demo_check(&demo,
-                       values.touch_count == 2U && values.touches[1].id == INT32_C(9),
-                       "add appends even though IsReadOnly reports true");
-    }
-    cna_demo_check_result(&demo, cna_touch_state_clear(&values), "clear the local touch collection");
+    memcpy(&values_before, &values, sizeof(values));
+    removed = CNA_TRUE;
+    cna_demo_check(&demo,
+                   cna_touch_state_remove(&values, &high_pressure, &removed) == CNA_RESULT_NOT_SUPPORTED &&
+                       removed == CNA_TRUE && memcmp(&values, &values_before, sizeof(values)) == 0,
+                   "remove refuses a pressure-equal touch without changing the snapshot or its output");
+    cna_demo_check(&demo,
+                   cna_touch_state_insert(&values, 0, &low_pressure) == CNA_RESULT_NOT_SUPPORTED &&
+                       memcmp(&values, &values_before, sizeof(values)) == 0,
+                   "insert refuses to edit the read-only snapshot");
+    cna_demo_check(&demo,
+                   cna_touch_state_remove_at(&values, 1) == CNA_RESULT_NOT_SUPPORTED &&
+                       memcmp(&values, &values_before, sizeof(values)) == 0,
+                   "remove_at refuses to edit the read-only snapshot");
+    cna_demo_check(&demo,
+                   cna_touch_state_add(&values, &second_touch) == CNA_RESULT_NOT_SUPPORTED &&
+                       memcmp(&values, &values_before, sizeof(values)) == 0,
+                   "add refuses to edit the read-only snapshot");
+    cna_demo_check(&demo,
+                   cna_touch_state_clear(&values) == CNA_RESULT_NOT_SUPPORTED &&
+                       memcmp(&values, &values_before, sizeof(values)) == 0,
+                   "clear refuses to edit the read-only snapshot");
     if (cna_demo_check_result(&demo, cna_touch_state_get_is_empty_ext(&values, &empty),
-                              "query the cleared collection")) {
-        cna_demo_check(&demo, empty == CNA_TRUE && values.touch_count == 0U,
-                       "clear leaves an empty collection");
+                              "query the preserved collection")) {
+        cna_demo_check(&demo, empty == CNA_FALSE && values.touch_count == 2U,
+                       "all refused edits preserve the constructed two-touch snapshot");
     }
 
     cna_demo_check_result(&demo, cna_game_destroy(game), "cna_game_destroy");

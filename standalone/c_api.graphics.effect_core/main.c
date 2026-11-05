@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
+/* TQ-035 (678e4271a): an uncompiled clone preserves the entire source graph, including added techniques. */
 /*
  * Core Effect C API: an empty Effect exposes its owned reflection graph, current-technique rules,
  * clone/disposal behavior and retained child views. A real XNA Effect Framework binary exercises
@@ -313,8 +314,8 @@ static CNA_Result inspect_empty_effect(
             count == UINT64_C(0) &&
             cna_effect_technique_collection_get_count(clone_techniques, &count) ==
                 CNA_RESULT_SUCCESS &&
-            count == UINT64_C(1) && cna_effect_apply(empty_clone) == CNA_RESULT_SUCCESS,
-        "an empty Effect clone owns a fresh canonical graph and preserves the uncompiled state");
+            count == UINT64_C(2) && cna_effect_apply(empty_clone) == CNA_RESULT_SUCCESS,
+        "an uncompiled Effect clone owns both source techniques and preserves the uncompiled state");
     if (empty_clone != CNA_INVALID_HANDLE) {
         result = cna_effect_dispose(empty_clone);
         cna_demo_check(

@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "Additional ContentManager loaders in C",
     .description = "A C-owned manager loads a WAV, a DDS cube and a caller-defined CNJ object, "
                    "including decoded state, independent handles and foreign-object caching.",
-    .apis = {"cna_content_manager_create",
+    .apis = {"cna_game_run_frame_ext", "cna_content_manager_create",
              "cna_content_manager_load_sound_effect", "cna_content_manager_load_texture_cube",
              "cna_content_manager_load_foreign_ext", "cna_content_manager_register_cnj_loader_ext",
              "cna_content_manager_unload", "cna_content_manager_destroy", "CNA_CnjLoaderCallback"},

@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "A C game builds a SpriteFont from an atlas and asymmetric glyph records, proves that the "
                    "caller tables are copied, reads both parallel collections atomically, mutates layout and "
                    "fallback state, measures the resulting text and verifies atlas retention.",
-    .apis = {"cna_sprite_font_create", "cna_sprite_font_get_info",
+    .apis = {"cna_game_run_frame_ext", "cna_sprite_font_create", "cna_sprite_font_get_info",
              "cna_sprite_font_copy_characters", "cna_sprite_font_copy_glyphs",
              "cna_sprite_font_set_default_character", "cna_sprite_font_set_line_spacing",
              "cna_sprite_font_set_spacing", "cna_sprite_font_measure_utf8",

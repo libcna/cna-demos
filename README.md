@@ -68,7 +68,7 @@ tests, cna-samples and cna-examples is explained in [docs/PROJECT.md](docs/PROJE
       libx11-dev libxext-dev libxrandr-dev libxi-dev libxcursor-dev libxfixes-dev \
       libxss-dev libxtst-dev libwayland-dev wayland-protocols libxkbcommon-dev \
       libgl1-mesa-dev libegl-dev libasound2-dev libpulse-dev
-  # optional: SDL_GPU renderer and its Vulkan runtime driver
+  # optional: SDLGPU renderer and its Vulkan runtime driver
   sudo apt-get install -y libvulkan-dev libshaderc-dev glslang-tools mesa-vulkan-drivers
   ```
 
@@ -92,11 +92,11 @@ minutes. `cmake --list-presets` shows all presets:
 
 | Preset | Renderers | Needs |
 |---|---|---|
-| `default` | CNA's platform default (OPENGLES3 on Linux, SDL_GPU on Windows/macOS) | a display for running |
+| `default` | CNA's platform default (OPENGLES3 on Linux, SDLGPU on Windows/macOS) | a display for running |
 | `windowless` | SOFTWARE (default), HEADLESS, STUB | nothing -- no display, no GL siblings; used by CI |
 | `diagnostics-full` | windowless + `CNA_DIAGNOSTICS=FULL` | full profiler zones and trace recording |
 | `linux-multi` | OPENGLES3 (default), OPENGL33, SOFTWARE, HEADLESS, STUB | easy-gl/meta-gl |
-| `linux-full` | linux-multi + SDL_GPU, C API, Inspector | libshaderc; a supported SDL GPU runtime driver |
+| `linux-full` | linux-multi + SDLGPU, C API, Inspector | libshaderc; a supported SDL GPU runtime driver |
 
 Without presets: `cmake -S . -B build -DCNA_ROOT_DIR=/path/to/cna -DCNA_GRAPHICS_RENDERER=...`.
 `CNA_ROOT_DIR` may also be set in the environment. Renderer options are CNA's own

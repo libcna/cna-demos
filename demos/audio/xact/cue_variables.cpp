@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MS-PL
+// TQ-084 (3274f9572): engine-global wrong-domain lookups use IndexOutOfRangeException; cue lookups keep their family.
 // XACT cue variables: values each Cue keeps for itself (unlike the engine's global variables).
 #include <memory>
 #include "CnaDemos/Demo.hpp"
@@ -10,6 +11,7 @@
 #include "Microsoft/Xna/Framework/TitleLocation.hpp"
 #include "System/ArgumentNullException.hpp"
 #include "System/InvalidOperationException.hpp"
+#include "System/IndexOutOfRangeException.hpp"
 #include "System/ObjectDisposedException.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
@@ -60,11 +62,16 @@ namespace
         // Cue variables and global variables are separate: each API sees only its own kind.
         ctx.Check(Refused([&] { (void)first->GetVariable("SpeedOfSound"); }),
                   "a cue does not see the global variable SpeedOfSound");
-        ctx.Check(Refused([&] { (void)engine.GetGlobalVariable("Intensity"); }),
+        const auto globalRefused = [](auto operation) {
+            try { operation(); }
+            catch (const System::IndexOutOfRangeException&) { return true; }
+            return false;
+        };
+        ctx.Check(globalRefused([&] { (void)engine.GetGlobalVariable("Intensity"); }),
                   "the engine does not see the cue variable Intensity");
         ctx.Check(Refused([&] { first->SetVariable("SpeedOfSound", 500.0f); }),
                   "a cue cannot write the engine-global namespace");
-        ctx.Check(Refused([&] { engine.SetGlobalVariable("Intensity", 25.0f); }),
+        ctx.Check(globalRefused([&] { engine.SetGlobalVariable("Intensity", 25.0f); }),
                   "the engine cannot write the cue-local namespace");
 
         bool emptyGetRefused = false;

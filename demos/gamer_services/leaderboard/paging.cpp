@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MS-PL
+// TQ-015 (558963799): a failed PropertyDictionary.TryGetValue clears its out value, as XNA does.
 // LeaderboardReader paging: a board read a page at a time, each row with the columns the game wrote.
 #include <any>
 #include <array>
@@ -277,10 +278,10 @@ namespace
             ctx.Check(firstColumns.ContainsKey("Round") && !firstColumns.ContainsKey("Missing") &&
                           firstColumns.TryGetValue("Round", foundRound) && std::any_cast<int>(foundRound) == 1 &&
                           !firstColumns.TryGetValue("Missing", missingSentinel) &&
-                          std::any_cast<std::string>(missingSentinel) == "unchanged" &&
+                          !missingSentinel.has_value() &&
                           std::any_cast<int>(firstColumns["Round"]) == 1 &&
                           rangedColumns == 8 + (firstColumns.ContainsKey("Replay") ? 1 : 0),
-                      "read dictionaries preserve lookup outputs, Item access and C++ range shape");
+                      "read dictionaries clear a missing lookup output and preserve exact Item values and range shape");
 
             bool replayPersisted = false;
             if (firstColumns.ContainsKey("Replay"))

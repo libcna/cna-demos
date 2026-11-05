@@ -129,10 +129,14 @@ int main(int argc, char** argv)
             cna_network_session_add_local_gamer(session, second) == CNA_RESULT_SUCCESS &&
                 cna_network_session_get_gamer_count(
                     session, CNA_NETWORK_SESSION_ROSTER_LOCAL, &count) == CNA_RESULT_SUCCESS &&
+                count == 1 &&
+                cna_network_session_update(session) == CNA_RESULT_SUCCESS &&
+                cna_network_session_get_gamer_count(
+                    session, CNA_NETWORK_SESSION_ROSTER_LOCAL, &count) == CNA_RESULT_SUCCESS &&
                 count == 2 &&
                 cna_network_session_add_local_gamer(session, second) ==
                     CNA_RESULT_INVALID_ARGUMENT,
-            "a second signed-in gamer joins once and duplicate admission is refused");
+            "a second signed-in gamer joins on Update and duplicate admission is refused");
         cna_demo_check_result(
             &demo, cna_network_session_destroy(session),
             "destroy the properties-overload session");

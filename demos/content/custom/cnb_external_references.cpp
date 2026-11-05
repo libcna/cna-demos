@@ -134,7 +134,8 @@ namespace
         ctx.Check(references.size() == 1 && references.front().logicalName == "profiles/guard" &&
                   references.front().expectedAssetTypeId == CnbAssetTypeIdFromName(ProfileName),
                   "the compiled encounter carries a typed logical reference in its XREF table");
-        ContentManager content(nullptr, path.string());
+        ContentManager content;
+        content.setRootDirectoryProperty(path.string());
         const auto east = content.Load<Encounter>("rooms/east");
         const auto west = content.Load<Encounter>("rooms/west");
         ctx.Check(east.count == 2 && west.count == 5 && east.enemy->name == "Guard" && east.enemy->health == 40 &&
@@ -142,7 +143,8 @@ namespace
                   "two encounters resolve one cached profile through their owning manager");
         ctx.Check(content.Load<SharedProfile>("profiles/guard") == east.enemy && profileReads == 1,
                   "external names resolve from the content root, and direct Load sees the same profile");
-        ContentManager another(nullptr, path.string());
+        ContentManager another;
+        another.setRootDirectoryProperty(path.string());
         const auto independent = another.Load<Encounter>("rooms/east");
         ctx.Check(independent.enemy != east.enemy && independent.enemy->health == east.enemy->health && profileReads == 2,
                   "another manager constructs its own external profile graph");

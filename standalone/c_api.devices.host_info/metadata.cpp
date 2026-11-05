@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "A C game reports CNA's device identity and extension availability, reads a coherent host-power "
                    "snapshot, CPU and RAM capacity, copies every preferred language/country code with exact UTF-8 "
                    "bounds, and compares windowless/windowed display scale and safe-area answers.",
-    .apis = {"cna_environment_get_device_type", "cna_devices_ext_is_available",
+    .apis = {"cna_game_run_frame_ext", "cna_environment_get_device_type", "cna_devices_ext_is_available",
              "cna_power_get_state_ext", "cna_power_get_battery_percent_ext",
              "cna_power_get_seconds_remaining_ext", "cna_system_info_get_logical_cpu_core_count_ext",
              "cna_system_info_get_system_ram_megabytes_ext", "cna_locale_get_preferred_count_ext",

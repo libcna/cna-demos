@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "A C game observes host availability, then uses CNA's public synthetic accelerometer, gyroscope, "
                    "compass and fused-motion support to exercise acquisition state, current readings, update "
                    "intervals, event order, calibration, unsubscribe, stop, disposal and handle ownership.",
-    .apis = {"cna_sensor_unsubscribe_ext",
+    .apis = {"cna_game_run_frame_ext", "cna_sensor_unsubscribe_ext",
              "cna_accelerometer_get_is_supported", "cna_accelerometer_create",
              "cna_accelerometer_get_state", "cna_accelerometer_start", "cna_accelerometer_stop",
              "cna_accelerometer_dispose", "cna_accelerometer_get_current_value",

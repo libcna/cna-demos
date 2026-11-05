@@ -62,11 +62,16 @@ namespace
             device.SetRenderTarget(target_.get());
             if (!checkedRestore_)
             {
-                checkedRestore_ = true;
-                Context().Check(!target_->getIsContentLostProperty(),
-                                "binding the target for new rendering clears its lost-content state");
+                Context().Check(target_->getIsContentLostProperty(),
+                                "binding the target preserves its lost-content state");
             }
             device.Clear(Color::DarkSlateGray);
+            if (!checkedRestore_)
+            {
+                checkedRestore_ = true;
+                Context().Check(!target_->getIsContentLostProperty() && contentLost_ == 1,
+                                "a successful clear restores content without another ContentLost event");
+            }
             spriteBatch_->Begin();
             spriteBatch_->Draw(arrow_, Rectangle(32, 32, 64, 64), Color::White);
             spriteBatch_->End();

@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "A C game enumerates camera descriptors without opening hardware, then uses CNA's public "
                    "synthetic camera to drive permission/loss states and copy exact RGBA frames into "
                    "caller-owned textures with size, empty-frame and lifetime checks.",
-    .apis = {"cna_camera_device_info_init", "cna_camera_get_is_supported_ext",
+    .apis = {"cna_game_run_frame_ext", "cna_camera_device_info_init", "cna_camera_get_is_supported_ext",
              "cna_camera_get_count_ext", "cna_camera_get_info_at_ext",
              "cna_camera_get_name_size_at_ext", "cna_camera_copy_name_at_ext",
              "cna_camera_create_with_test_backend_ext", "cna_camera_get_state_ext",

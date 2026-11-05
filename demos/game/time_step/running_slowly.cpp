@@ -19,9 +19,9 @@ namespace
             {
                 ++slowUpdates_;
             }
-            // Simulate a hitch: 150 ms of work against a 16.7 ms budget (60 Hz). The loop then owes
-            // about nine fixed steps; after falling that far behind it flags IsRunningSlowly.
-            if (updates_ == 5)
+            // TQ-013 (64dd2f458): Refresh needs two catch-up ages within 20 updates.
+            // Two 150 ms hitches create those ages; one hitch alone must not set the flag.
+            if (updates_ == 5 || updates_ == 15)
             {
                 std::this_thread::sleep_for(std::chrono::milliseconds(150));
             }
@@ -52,10 +52,10 @@ namespace
 CNA_DEMOS_GAME(RunningSlowlyDemo, {
     .id = "game.time_step.running_slowly",
     .title = "Running slowly",
-    .description = "Stalls one Update for about nine frames' worth of time and shows the fixed-step loop catching "
+    .description = "Stalls two Updates for about nine frames' worth of time each and shows the fixed-step loop catching "
                    "up with extra Updates, after which GameTime::IsRunningSlowly is set until it recovers.",
     .apis = {"GameTime::IsRunningSlowly", "Game::IsFixedTimeStep"},
     .tags = {"time", "fixed-step", "performance"},
     .frames = 15,
-    .restrictions = "Uses the wall clock (a deliberate 150 ms stall), so the exact counts vary between runs.",
+    .restrictions = "Uses the wall clock (two deliberate 150 ms stalls), so the exact counts vary between runs.",
 })

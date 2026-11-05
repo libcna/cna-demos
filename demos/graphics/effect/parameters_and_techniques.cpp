@@ -66,9 +66,9 @@ namespace
 
             EffectPassCollection& passes = currentTechnique->getPassesProperty();
             EffectPass* firstPass = passes[0];
-            Context().Check(firstPass != nullptr && firstPass->getNameProperty() == "P0" &&
-                                passes["P0"] == firstPass && passes["p0"] == nullptr && passes[-1] == nullptr,
-                            "pass index and exact name lookup return the same authored P0 pass");
+            Context().Check(firstPass != nullptr && firstPass->getNameProperty().empty() &&
+                                passes[""] == firstPass && passes["P0"] == nullptr && passes[-1] == nullptr,
+                            "pass index and empty-name lookup return the same stock pass");
 
             // Stock effects have no authored FX annotations. Add public reflection values to show
             // that technique and pass metadata remain scoped to their respective owner.

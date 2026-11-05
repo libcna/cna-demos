@@ -39,6 +39,7 @@ int main(int argc, char** argv)
     CNA_GameComponentEventRegistrationHandle added = CNA_INVALID_HANDLE;
     CNA_GameComponentEventRegistrationHandle removed = CNA_INVALID_HANDLE;
     CNA_Handle game = CNA_INVALID_HANDLE;
+    CNA_Bool running = CNA_FALSE;
     Changes changes;
     CNA_Bool flag = UINT8_C(99);
     CNA_Bool manager_present = CNA_FALSE;
@@ -55,7 +56,7 @@ int main(int argc, char** argv)
     memset(&changes, 0, sizeof(changes));
 
     if (!cna_demo_check_result(&demo, cna_game_create(&info, &game), "create the collection game") ||
-        !cna_demo_check_result(&demo, cna_game_run_one_frame(game), "initialize its runtime services")) {
+        !cna_demo_check_result(&demo, cna_game_run_frame_ext(game, &running), "initialize its runtime services")) {
         goto cleanup;
     }
     cna_demo_check_result(&demo, cna_game_component_callbacks_init(&callbacks),

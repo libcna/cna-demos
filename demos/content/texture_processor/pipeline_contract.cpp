@@ -419,18 +419,18 @@ namespace
                                                    Pipeline::ImportedTextureCubeType,
                                                    Pipeline::ImportedTexture3DType} &&
                       defaultProcessor.Identity() ==
-                          Pipeline::ContentComponentIdentity{"CNA.TextureProcessor", "3"} &&
+                          Pipeline::ContentComponentIdentity{"CNA.TextureProcessor", "6"} &&
                       defaultProcessor.InputType() == Pipeline::ImportedImageType &&
                       defaultProcessor.OutputType() == Pipeline::ProcessedTexture2DType &&
                       writer.Identity() == Pipeline::ContentComponentIdentity{
-                                               "CNA.Texture2DContentWriter", "1"} &&
+                                               "CNA.Texture2DContentWriter", "2"} &&
                       writer.InputType() == Pipeline::ProcessedTexture2DType &&
                       schemas.size() == 1u &&
                       schemas[0] == Pipeline::ContentWriterSchemaIdentity{
                                             Cnb::CnbAssetTypeId::Texture2D,
                                             Cnb::CnbTextureSchemaVersion,
                                             "Microsoft.Xna.Framework.Graphics.Texture2D",
-                                            {"CNA.Cnb.EncodeTexture2DToCnb", "1"}},
+                                            {"CNA.Cnb.EncodeTexture2DToCnb", "2"}},
                   "the importer, processor and writer expose exact routing, version and persistent schema identities");
 
         Pipeline::ContentProcessorParameters badParameters;

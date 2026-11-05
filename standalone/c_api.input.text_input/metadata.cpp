@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "A C program raises committed UTF-16, UTF-8 composition and candidate events, verifies their "
                    "synchronous copied payloads and registration lifecycle, then exercises bound and unbound text "
                    "activation, input hints, screen-keyboard queries and reset.",
-    .apis = {"cna_text_input_subscribe_text_input_ext", "cna_text_input_subscribe_text_editing_ext",
+    .apis = {"cna_game_run_frame_ext", "cna_text_input_subscribe_text_input_ext", "cna_text_input_subscribe_text_editing_ext",
              "cna_text_input_subscribe_text_editing_candidates_ext", "cna_text_input_unsubscribe_ext",
              "cna_text_input_raise_text_input_ext", "cna_text_input_raise_text_editing_ext",
              "cna_text_input_raise_text_editing_candidates_ext", "cna_text_input_get_window_handle_ext",

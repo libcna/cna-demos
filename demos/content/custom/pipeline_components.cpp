@@ -348,7 +348,8 @@ namespace
                          static_cast<std::streamsize>(built.output.bytes.size()));
             if (!output) throw std::runtime_error("Could not write the compiled patrol");
         }
-        ContentManager content(nullptr, directory.string());
+        ContentManager content;
+        content.setRootDirectoryProperty(directory.string());
         const Patrol patrol = content.Load<Patrol>("patrol");
         ctx.CheckNear(patrol.length, 12.0, 1e-6, "the closed 3-4-5 patrol stores its precomputed length of 12");
         ctx.Check(patrol.points.size() == 3 && patrol.points.back() == Vector2(3.0f, 4.0f),

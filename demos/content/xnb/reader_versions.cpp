@@ -67,7 +67,8 @@ namespace
             // This demo runs in its own process. Withdrawing a built-in must not replace an
             // unknown application's factory or change the registry of the catalog/browser.
             Microsoft::Xna::Framework::Game firstGame;
-            ContentManager cached(nullptr, root.string());
+            ContentManager cached;
+            cached.setRootDirectoryProperty(root.string());
             ctx.Check(cached.Load<std::int32_t>(asset) == -12345,
                       "a Game's declared built-in reader loads the authored signed primitive value");
             ctx.Check(ContentTypeReaderManager::RemoveTypeCreatorEXT(builtin) &&
@@ -76,7 +77,8 @@ namespace
                       "withdrawing the declared Int32 reader removes its factory and direct construction");
             ctx.Check(cached.Load<std::int32_t>(asset) == -12345,
                       "the already-cached primitive remains usable after its built-in reader is withdrawn");
-            ContentManager uncached(nullptr, root.string());
+            ContentManager uncached;
+            uncached.setRootDirectoryProperty(root.string());
             ctx.Check(refusesPrimitive(uncached) && !ContentTypeReaderManager::IsRegistered(builtin) &&
                       !ContentTypeReaderManager::CreateReader(builtin),
                       "an uncached typed load refuses the withdrawn built-in instead of reinstalling it");
@@ -86,7 +88,8 @@ namespace
         }
         {
             Microsoft::Xna::Framework::Game nextGame;
-            ContentManager fresh(nullptr, root.string());
+            ContentManager fresh;
+            fresh.setRootDirectoryProperty(root.string());
             // Load before querying the registry: a query could itself materialize declarations.
             ctx.Check(fresh.Load<std::int32_t>(asset) == -12345,
                       "a subsequent Game declares the built-in readers again and a fresh typed load succeeds");
@@ -120,7 +123,8 @@ namespace
             if (!ctx.Check(strictReader && strictReader->getTypeVersionProperty() == 1 && strictReader->SupportsVersion(1) &&
                            !strictReader->SupportsVersion(0) && !strictReader->SupportsVersion(2),
                            "default strict policy supports only its declared reader version")) return;
-            ContentManager first(nullptr, root.string());
+            ContentManager first;
+            first.setRootDirectoryProperty(root.string());
             auto current = first.Load<Stats>("versions/current_stats");
             ctx.Check(current.health == 120 && current.armor == 25 && reads == 1,
                       "version one reads both authored Health and Armor fields");
@@ -133,7 +137,8 @@ namespace
             }); // a repeated key keeps its original factory
             ignoredPolicy.reset();
             ctx.Check(ignoredLifetime.expired(), "an ignored duplicate registration does not retain the proposed factory's policy");
-            ContentManager uncached(nullptr, root.string());
+            ContentManager uncached;
+            uncached.setRootDirectoryProperty(root.string());
             rejectBeforeRead(uncached, "versions/legacy_stats", "a fresh manager still sees strict policy after duplicate registration");
 
             const bool removed = ContentTypeReaderManager::RemoveTypeCreatorEXT(ReaderName);
@@ -157,7 +162,8 @@ namespace
             if (!ctx.Check(compatibleReader && compatibleReader->getTypeVersionProperty() == 1 && compatibleReader->SupportsVersion(0) &&
                            compatibleReader->SupportsVersion(1) && !compatibleReader->SupportsVersion(2) && !finalPolicyLifetime.expired(),
                            "the replacement factory explicitly accepts legacy and current versions but refuses the future version")) return;
-            ContentManager compatible(nullptr, root.string());
+            ContentManager compatible;
+            compatible.setRootDirectoryProperty(root.string());
             const auto old = compatible.Load<Stats>("versions/legacy_stats");
             ctx.Check(old.health == 80 && old.armor == 0, "legacy content retains Health and the default Armor omitted by its schema");
             const auto now = compatible.Load<Stats>("versions/current_stats");

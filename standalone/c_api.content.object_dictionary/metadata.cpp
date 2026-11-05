@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "Compiled object-dictionary values in C",
     .description = "A deterministic XNB dictionary exposes ordered keys, all public scalar value kinds, "
                    "a packed array, a string, an unknown diagnostic type and a C-created object.",
-    .apis = {"cna_content_manager_load_object_dictionary_ext",
+    .apis = {"cna_game_run_frame_ext", "cna_content_manager_load_object_dictionary_ext",
              "cna_object_dictionary_ext_destroy",
              "cna_object_dictionary_ext_get_runtime_type_name_size",
              "cna_object_dictionary_ext_copy_runtime_type_name",

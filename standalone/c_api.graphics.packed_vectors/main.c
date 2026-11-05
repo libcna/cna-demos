@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
+/* MTH-CONF-003 (ee5c7b4b4): XNA half conversion saturates special inputs instead of preserving IEEE infinities. */
 /* All public packed-vector formats and binary16 helpers through the C ABI. */
 #include <CNA/C/cna.h>
 
@@ -152,9 +153,10 @@ int main(int argc, char** argv)
                 CNA_RESULT_SUCCESS &&
             cna_packed_vector_unpack(
                 CNA_PACKED_VECTOR_FORMAT_HALF_VECTOR4, packed, &expanded) == CNA_RESULT_SUCCESS &&
-            isnan(expanded.x) && isinf(expanded.y) && expanded.y > 0.0f &&
-            isinf(expanded.z) && expanded.z < 0.0f && signbit(expanded.w),
-        "half formats preserve NaN, both infinity signs and negative zero");
+            packed == UINT64_C(0x8000FFFF7FFF7FFF) &&
+            expanded.x == 131008.0f && expanded.y == 131008.0f &&
+            expanded.z == -131008.0f && expanded.w == 0.0f && signbit(expanded.w),
+        "XNA half conversion saturates NaN and infinities to exact finite endpoints and preserves negative zero");
     packed = UINT64_C(0x1122334455667788);
     cna_demo_check(
         &demo,

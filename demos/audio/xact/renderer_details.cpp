@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MS-PL
+// TQ-022/084 (3bcf9b354, 3274f9572): Refresh rejects invalid XGS signatures before native creation.
 // AudioEngine::RendererDetails: the audio outputs XACT can play through, and choosing one.
 #include <any>
 #include <chrono>
@@ -13,6 +14,7 @@
 #include "Microsoft/Xna/Framework/Audio/WaveBank.hpp"
 #include "Microsoft/Xna/Framework/TitleLocation.hpp"
 #include "System/ArgumentNullException.hpp"
+#include "System/ArgumentException.hpp"
 #include "System/InvalidOperationException.hpp"
 #include "System/IO/FileNotFoundException.hpp"
 #include "System/TimeSpan.hpp"
@@ -32,10 +34,10 @@ namespace
         try { AudioEngine unexpected("assets/xact/missing.xgs"); }
         catch (const System::IO::FileNotFoundException&) { missingSettingsRefused = true; }
         try { AudioEngine unexpected("assets/xact/tones.xwb"); }
-        catch (const System::InvalidOperationException&) { corruptSettingsRefused = true; }
+        catch (const System::ArgumentException&) { corruptSettingsRefused = true; }
         ctx.Check(emptySettingsRefused, "an empty settings path is an ArgumentNullException");
         ctx.Check(missingSettingsRefused, "a missing settings file is a FileNotFoundException");
-        ctx.Check(corruptSettingsRefused, "an existing non-XGS file is an InvalidOperationException");
+        ctx.Check(corruptSettingsRefused, "an existing non-XGS file is an ArgumentException");
 
         // An engine lists the outputs; a game shows the friendly names and remembers the id.
         AudioEngine probe("assets/xact/demo.xgs");

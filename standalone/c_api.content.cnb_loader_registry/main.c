@@ -162,6 +162,7 @@ int main(int argc, char** argv)
     CNA_ContentManagerCreateInfo manager_info;
     CNA_Handle device = CNA_INVALID_HANDLE;
     CNA_Handle manager = CNA_INVALID_HANDLE;
+    CNA_Bool has_provider = CNA_FALSE;
     CNA_CnbDocumentHandle document = CNA_INVALID_HANDLE;
     CNA_CnbDocumentHandle curve_document = CNA_INVALID_HANDLE;
     CNA_CnbLoaderHandle loader = CNA_INVALID_HANDLE;
@@ -208,6 +209,11 @@ int main(int argc, char** argv)
             "create the ContentManager required by the canonical loader signature")) {
         goto cleanup;
     }
+    cna_demo_check(
+        &demo,
+        cna_content_manager_get_has_service_provider(manager, &has_provider) == CNA_RESULT_SUCCESS &&
+            has_provider == CNA_TRUE,
+        "the resource-backed manager retains a non-null native service provider");
     cna_demo_check_result(
         &demo, cna_cnb_loader_registry_clear(),
         "start from an empty process-wide loader registry");

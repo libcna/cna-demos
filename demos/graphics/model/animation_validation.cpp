@@ -33,7 +33,18 @@ namespace
                 }
                 catch (const Content::ContentLoadException& error)
                 {
-                    return std::string(error.what());
+                    // TQ-053 (0735d0a10): retain the precise imported diagnostic through its cause chain.
+                    std::string diagnostic = error.what();
+                    auto cause = error.getInnerExceptionProperty();
+                    while (cause) {
+                        try { std::rethrow_exception(cause); }
+                        catch (const System::Exception& inner) {
+                            diagnostic += "\n" + std::string(inner.what());
+                            cause = inner.getInnerExceptionProperty();
+                        }
+                        catch (const std::exception& inner) { diagnostic += "\n" + std::string(inner.what()); break; }
+                    }
+                    return diagnostic;
                 }
             };
 

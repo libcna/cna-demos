@@ -121,14 +121,16 @@ namespace
                 return value;
             });
         xnbReads = cnbReads = looseReads = 0;
-        ContentManager cached(nullptr, path.string());
+        ContentManager cached;
+        cached.setRootDirectoryProperty(path.string());
         cached.RegisterTypeReader<Rules>(std::make_unique<LooseRulesReader>());
         ctx.Check(cached.Load<Rules>("rules").health == 400 && xnbReads == 1 && cnbReads == 0 && looseReads == 0,
                   "XNB wins when all four formats exist for the same logical name");
         std::filesystem::remove(path / "rules.xnb");
         ctx.Check(cached.Load<Rules>("rules").health == 400 && xnbReads == 1 && cnbReads == 0,
                   "a cache hit keeps the loaded XNB value after its file disappears");
-        ContentManager fresh(nullptr, path.string()); // compiled formats need no loose reader
+        ContentManager fresh;
+        fresh.setRootDirectoryProperty(path.string()); // compiled formats need no loose reader
         ctx.Check(fresh.Load<Rules>("rules").health == 300 && cnbReads == 1,
                   "a fresh manager selects CNB ahead of both editable source files");
         cached.Unload();
@@ -137,7 +139,8 @@ namespace
 
         // A present but invalid compiled file must not silently fall through to editable data.
         WriteText(path / "rules.xnb", "XNB");
-        ContentManager retry(nullptr, path.string());
+        ContentManager retry;
+        retry.setRootDirectoryProperty(path.string());
         bool refused = false, wrappedXnbFailure = false;
         try { (void)retry.Load<Rules>("rules"); }
         catch (const ContentLoadException& error)

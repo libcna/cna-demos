@@ -1,4 +1,6 @@
 /* SPDX-License-Identifier: MS-PL */
+/* TQ-052 (a808da573): Refresh uses the exact WmpMediaSource resource for the local library name. */
+/* TQ-023 (534d7dd26): disabled visualization leaves buffers untouched; queue indices clamp to the existing range. */
 /*
  * Background music from C: two songs are created from files under the title's path, put in a song
  * collection (which keeps them alive, so the program releases its own song handles at once) and
@@ -450,7 +452,7 @@ int main(int argc, char** argv)
         CNA_MediaSourceType source_type = CNA_MEDIA_SOURCE_TYPE_WINDOWS_MEDIA_CONNECT;
         uint64_t name_bytes = UINT64_C(77);
         uint64_t copied = UINT64_C(88);
-        char source_name[32];
+        char source_name[64];
         cna_demo_check(&demo,
                        cna_media_source_get_available_count(game, &source_count) == CNA_RESULT_SUCCESS &&
                            source_count == 1U,
@@ -460,11 +462,11 @@ int main(int argc, char** argv)
                        cna_media_source_get_type_at(game, 0U, &source_type) == CNA_RESULT_SUCCESS &&
                            source_type == CNA_MEDIA_SOURCE_TYPE_LOCAL_DEVICE &&
                            cna_media_source_get_name_size_at(game, 0U, &name_bytes) == CNA_RESULT_SUCCESS &&
-                           name_bytes == sizeof("Local Device") - 1U &&
+                           name_bytes == sizeof("Local Windows Media Player library") - 1U &&
                            cna_media_source_copy_name_at(game, 0U, source_name, sizeof(source_name), &copied) ==
                                CNA_RESULT_SUCCESS &&
                            copied == name_bytes &&
-                           memcmp(source_name, "Local Device", sizeof("Local Device") - 1U) == 0,
+                           memcmp(source_name, "Local Windows Media Player library", sizeof("Local Windows Media Player library") - 1U) == 0,
                        "the desktop source is the named local device");
         source_type = CNA_MEDIA_SOURCE_TYPE_WINDOWS_MEDIA_CONNECT;
         name_bytes = UINT64_C(77);
@@ -484,8 +486,7 @@ int main(int argc, char** argv)
                        "the media-source upper bound is refused before changing outputs");
     }
 
-    /* Disabled visualization returns its canonical zero buffer even after live data was captured.
-       This is a state/data contract only; it does not measure audible output or FFT accuracy. */
+    /* TQ-023 (534d7dd26): disabled visualization leaves caller buffers untouched. */
     {
         CNA_Bool visualization_enabled = CNA_TRUE;
         uint32_t i;
@@ -493,6 +494,7 @@ int main(int argc, char** argv)
             state.visualization.frequencies[i] = 1.0f;
             state.visualization.samples[i] = -1.0f;
         }
+        const CNA_VisualizationData before = state.visualization;
         cna_demo_check(&demo,
                        cna_media_player_set_is_visualization_enabled(game, CNA_FALSE) == CNA_RESULT_SUCCESS &&
                            cna_media_player_get_is_visualization_enabled(game, &visualization_enabled) ==
@@ -500,8 +502,8 @@ int main(int argc, char** argv)
                            visualization_enabled == CNA_FALSE &&
                            cna_media_player_get_visualization_data(game, &state.visualization) ==
                                CNA_RESULT_SUCCESS &&
-                           visualization_is_zero(&state.visualization),
-                       "disabled visualization reports false and replaces prior data with zeros");
+                           memcmp(&state.visualization, &before, sizeof(before)) == 0,
+                       "disabled visualization reports false and preserves every caller buffer value");
     }
 
     /* Process-wide playback settings remain directly observable while stopped. Restore their
@@ -702,10 +704,10 @@ int main(int argc, char** argv)
     empty_available = CNA_TRUE;
     cna_demo_check(&demo,
                    cna_media_queue_set_active_song_index(state.queue, 7) == CNA_RESULT_SUCCESS &&
-                       active_index(&state) == 7 &&
+                       active_index(&state) == -1 &&
                        cna_media_queue_get_active_song(state.queue, &empty_song, &empty_available) == CNA_RESULT_SUCCESS &&
                        empty_available == CNA_FALSE && empty_song == CNA_INVALID_HANDLE,
-                   "the unchecked active index is stored but has no active Song");
+                   "an empty queue clamps any requested active index to -1 and has no active Song");
     cna_demo_check(&demo,
                    cna_media_queue_set_active_song_index(state.queue, -1) == CNA_RESULT_SUCCESS &&
                        active_index(&state) == -1,

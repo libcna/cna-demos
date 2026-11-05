@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "Model cameras, skins, bounds and infinite projection in C",
     .description = "A C workflow authors imported-camera values, maps a retained skeleton to a "
                    "real Model mesh and derives its bone-placed aggregate bounding sphere.",
-    .apis = {"cna_model_get_camera_count_ext", "cna_model_get_camera_ext",
+    .apis = {"cna_game_run_frame_ext", "cna_model_get_camera_count_ext", "cna_model_get_camera_ext",
              "cna_model_get_camera_name_byte_count_ext", "cna_model_copy_camera_name_ext",
              "cna_model_clear_cameras_ext", "cna_model_add_camera_ext",
              "cna_model_get_skin_count_ext", "cna_model_get_skin_ext",

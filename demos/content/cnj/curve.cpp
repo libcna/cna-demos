@@ -103,7 +103,8 @@ namespace
         // repeated by postLoop Cycle. XNA authored curves like this as XML in a content project;
         // CNA's pipeline compiles the JSON into curves/bounce.cnb. A Curve needs no graphics
         // device, so a ContentManager without services is enough.
-        ContentManager content(nullptr, "assets");
+        ContentManager content;
+        content.setRootDirectoryProperty("assets");
         const Curve bounce = content.Load<Curve>("curves/bounce");
 
         ctx.Print("{} keys, PreLoop {}, PostLoop {}", bounce.getKeysProperty().getCountProperty(),

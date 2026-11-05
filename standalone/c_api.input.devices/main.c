@@ -334,6 +334,7 @@ int main(int argc, char** argv)
     CNA_GameCallbacks callbacks;
     CNA_GameCreateInfo create_info;
     CNA_Handle game = CNA_INVALID_HANDLE;
+    CNA_Bool running = CNA_FALSE;
 
     cna_demo_init(&demo, "c_api.input.devices", argc, argv, 0);
     descriptor_values(&demo);
@@ -354,7 +355,7 @@ int main(int argc, char** argv)
     if (!cna_demo_check_result(&demo, cna_game_create(&create_info, &game), "cna_game_create")) {
         return cna_demo_finish(&demo);
     }
-    cna_demo_check_result(&demo, cna_game_run_one_frame(game), "run one frame for host-device queries");
+    cna_demo_check_result(&demo, cna_game_run_frame_ext(game, &running), "run one frame for host-device queries");
     cna_demo_check(&demo, state.validated == 1, "the update callback completed the host-device audit once");
     cna_demo_check_result(&demo, cna_game_destroy(game), "cna_game_destroy");
     return cna_demo_finish(&demo);

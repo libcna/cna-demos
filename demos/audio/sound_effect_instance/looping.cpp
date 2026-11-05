@@ -17,7 +17,8 @@ namespace
 {
     void Looping(CnaDemos::DemoContext& ctx)
     {
-        ContentManager content(nullptr, "assets");
+        ContentManager content;
+        content.setRootDirectoryProperty("assets");
         const SoundEffect tone = content.Load<SoundEffect>("sounds/tone_660");  // 0.25 s
         SoundEffectInstance loop = tone.CreateInstance();
         loop.setIsLoopedProperty(true);

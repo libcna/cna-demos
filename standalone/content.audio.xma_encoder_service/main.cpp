@@ -70,7 +70,15 @@ namespace
         PutU16(format, 2u);
         PutU16(format, static_cast<std::uint16_t>(bitsPerSample));
         PutU16(format, 34u);
-        for (std::uint8_t value = 1u; value <= 34u; ++value) format.push_back(value);
+        // CNA-FIX-L16 (24e84090c): the external seam validates real XMA2 fields and packet alignment.
+        PutU16(format, 1u);   // NumStreams
+        PutU32(format, channels == 1 ? 4u : 3u); // ChannelMask
+        PutU32(format, 400u); // SamplesEncoded
+        PutU32(format, 2048u); // BytesPerBlock
+        PutU32(format, 0u); PutU32(format, 400u); // PlayBegin, PlayLength
+        PutU32(format, 13u); PutU32(format, 37u); // LoopBegin, LoopLength
+        format.push_back(255u); format.push_back(4u); // LoopCount, EncoderVersion
+        PutU16(format, 1u); // BlockCount
         return format;
     }
 
@@ -152,7 +160,8 @@ namespace
         const auto dataAt = std::search(wave.begin(), wave.end(), "data", "data" + 4);
         if (dataAt == wave.end() || static_cast<std::size_t>(wave.end() - dataAt) < 8u) return 11;
         const std::size_t payloadAt = static_cast<std::size_t>(dataAt - wave.begin()) + 8u;
-        const std::size_t payloadSize = std::min<std::size_t>(24u, wave.size() - payloadAt);
+        const std::size_t copiedPcmBytes = std::min<std::size_t>(24u, wave.size() - payloadAt);
+        constexpr std::size_t payloadSize = 2048u;
         const auto format = XmaFormat(U16(wave, 22u), static_cast<int>(U32(wave, 24u)), U16(wave, 34u));
 
         std::vector<std::uint8_t> riff;
@@ -162,7 +171,8 @@ namespace
         riff.insert(riff.end(), format.begin(), format.end());
         PutTag(riff, "data"); PutU32(riff, static_cast<std::uint32_t>(payloadSize));
         riff.insert(riff.end(), wave.begin() + static_cast<std::ptrdiff_t>(payloadAt),
-                    wave.begin() + static_cast<std::ptrdiff_t>(payloadAt + payloadSize));
+                    wave.begin() + static_cast<std::ptrdiff_t>(payloadAt + copiedPcmBytes));
+        riff.resize(riff.size() + payloadSize - copiedPcmBytes, 0u);
         std::ofstream output(*outputName, std::ios::binary);
         output.write(reinterpret_cast<const char*>(riff.data()),
                      static_cast<std::streamsize>(riff.size()));
@@ -422,7 +432,10 @@ int main(int argc, char** argv)
             for (const auto& diagnostic : externalResult.diagnostics)
                 exactDiagnostic |= diagnostic ==
                     "controlled-stub quality=medium loop=13+37 pcm=800\n";
-            check(externalResult.succeeded && externalResult.data.size() == 24u &&
+            check(externalResult.succeeded && externalResult.data.size() == 2048u &&
+                      std::equal(originalPcm.begin(), originalPcm.begin() + 24, externalResult.data.begin()) &&
+                      std::all_of(externalResult.data.begin() + 24, externalResult.data.end(),
+                                  [](std::uint8_t value) { return value == 0u; }) &&
                       externalResult.formatBlock == XmaFormat(1, 8000, 16) &&
                       externalResult.loopStart == 13 && externalResult.loopLength == 37 &&
                       exactDiagnostic,

@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "A C game inspects and transfers exact Color payloads through a 2x2x2 Texture3D and all six "
                    "faces of a TextureCube, checks atomic short reads, uploads raw volume bytes and decodes a "
                    "minimal in-memory DXT1 cube DDS.",
-    .apis = {"cna_texture3d_create", "cna_texture3d_get_info", "cna_texture3d_set_data",
+    .apis = {"cna_game_run_frame_ext", "cna_texture3d_create", "cna_texture3d_get_info", "cna_texture3d_set_data",
              "cna_texture3d_get_data", "cna_texture3d_set_data_bytes", "cna_texture3d_destroy",
              "cna_texturecube_create", "cna_texturecube_create_from_dds_memory",
              "cna_texturecube_get_info", "cna_texturecube_set_data", "cna_texturecube_get_data",

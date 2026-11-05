@@ -12,6 +12,7 @@
 #include "Microsoft/Xna/Framework/Audio/SoundBank.hpp"
 #include "Microsoft/Xna/Framework/Audio/WaveBank.hpp"
 #include "Microsoft/Xna/Framework/TitleLocation.hpp"
+#include "System/InvalidOperationException.hpp"
 
 using namespace Microsoft::Xna::Framework::Audio;
 
@@ -22,12 +23,12 @@ namespace
         const std::string musicPath =
             Microsoft::Xna::Framework::TitleLocation::Path() + "/assets/xact/music.xwb";
 
-        // FNA's standard file I/O path does not forward either compatibility argument to FACT.
-        // CNA matches it: even deliberately unusual values still select the same streaming bank.
+        // TQ-022 (3bcf9b354): Refresh forwards the byte offset instead of ignoring it.
         AudioEngine compatibilityEngine("assets/xact/demo.xgs");
-        WaveBank compatibilityBank(&compatibilityEngine, musicPath, -4096, -1);
-        ctx.Check(compatibilityBank.getIsPreparedProperty(),
-                  "streaming offset and packet size are accepted compatibility arguments");
+        bool invalidOffsetRefused = false;
+        try { WaveBank invalid(&compatibilityEngine, musicPath, -4096, -1); }
+        catch (const System::InvalidOperationException&) { invalidOffsetRefused = true; }
+        ctx.Check(invalidOffsetRefused, "a negative streaming offset cannot create a wave-bank resource");
 
         AudioEngine engine("assets/xact/demo.xgs");
         // Short effects live in an in-memory bank; long music is authored as a streaming bank

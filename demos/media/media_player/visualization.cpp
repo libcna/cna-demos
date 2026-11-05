@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MS-PL
+// TQ-023 (534d7dd26): Refresh returns without writing either visualization buffer while disabled.
 // MediaPlayer visualization: the playing music's spectrum and waveform, every frame.
 #include <algorithm>
 #include <array>
@@ -48,15 +49,15 @@ namespace
             data_.samp.fill(-0.5f);
             MediaPlayer::setIsVisualizationEnabledProperty(false);
             MediaPlayer::GetVisualizationData(data_);
-            const bool disabledFrequenciesZero = std::all_of(data_.getFrequenciesProperty().begin(),
+            const bool disabledFrequenciesPreserved = std::all_of(data_.getFrequenciesProperty().begin(),
                                                              data_.getFrequenciesProperty().end(),
-                                                             [](float value) { return value == 0.0f; });
-            const bool disabledSamplesZero = std::all_of(data_.getSamplesProperty().begin(),
+                                                             [](float value) { return value == 0.25f; });
+            const bool disabledSamplesPreserved = std::all_of(data_.getSamplesProperty().begin(),
                                                          data_.getSamplesProperty().end(),
-                                                         [](float value) { return value == 0.0f; });
+                                                         [](float value) { return value == -0.5f; });
             Context().Check(!MediaPlayer::getIsVisualizationEnabledProperty() &&
-                                disabledFrequenciesZero && disabledSamplesZero,
-                            "disabled visualization clears both caller buffers instead of exposing stale data");
+                                disabledFrequenciesPreserved && disabledSamplesPreserved,
+                            "disabled visualization preserves both exact caller buffers");
 
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));

@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
+/* TQ-027 (10930f5c0): Refresh MouseState hashing includes buttons; horizontal wheel remains a CNA extension. */
 /*
  * Input from C: CNA_KeyboardState and CNA_MouseState are plain structs (no handles) captured with
  * cna_keyboard_get_state / cna_mouse_get_state and queried with cna_keyboard_state_* routes.
@@ -236,8 +237,8 @@ static void demonstrate_mouse_values(CnaDemo* demo)
         demo,
         cna_mouse_state_get_hash_code(&ordinary, &ordinary_hash) == CNA_RESULT_SUCCESS &&
             cna_mouse_state_get_hash_code(&extended, &extended_hash) == CNA_RESULT_SUCCESS &&
-            ordinary_hash == extended_hash,
-        "the canonical mouse hash uses position and the vertical wheel only");
+            ordinary_hash == 86 && extended_hash == 87,
+        "the exact mouse hash XORs position, vertical wheel and the five button states");
 
     memset(text, 0, sizeof(text));
     cna_demo_check(

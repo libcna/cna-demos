@@ -167,6 +167,7 @@ int main(int argc, char** argv)
     CNA_GameCallbacks callbacks;
     CNA_GameCreateInfo info;
     CNA_Handle game = CNA_INVALID_HANDLE;
+    CNA_Bool running = CNA_FALSE;
 
     cna_demo_init(&demo, "c_api.content.additional_loaders", argc, argv, 1);
     memset(&state, 0, sizeof(state));
@@ -185,7 +186,7 @@ int main(int argc, char** argv)
     info.callbacks = &callbacks;
 
     if (cna_demo_check_result(&demo, cna_game_create(&info, &game), "create the additional-loader game")) {
-        cna_demo_check_result(&demo, cna_game_run_one_frame(game), "run its content loader callback");
+        cna_demo_check_result(&demo, cna_game_run_frame_ext(game, &running), "run its content loader callback");
         cna_demo_check(&demo, state.validated == 1, "the additional loader audit ran once");
     }
     if (state.manager != CNA_INVALID_HANDLE) {

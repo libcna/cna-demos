@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
+/* CNA-FIX-D18 (e2055f3ea): nonpositive preferred dimensions are refused before mutating preferences. */
 /* GraphicsDeviceInformation and every GraphicsDeviceManager preference through the public C ABI. */
 #include <CNA/C/cna.h>
 
@@ -31,6 +32,7 @@ static CNA_Result validate_preferences(
     CNA_PresentationMode mode = UINT32_MAX;
     CNA_Bool flag = UINT8_C(99);
     CNA_Bool original = CNA_FALSE;
+    int32_t original_width = 0;
     int32_t value = INT32_MIN;
     (void)game_time;
     (void)out_error;
@@ -151,17 +153,18 @@ static CNA_Result validate_preferences(
         "the preferred depth format round-trips and rejects an undefined identity");
     cna_demo_check(
         state->demo,
-        cna_graphics_device_manager_set_preferred_back_buffer_width(state->manager, -7) ==
-                CNA_RESULT_SUCCESS &&
+        cna_graphics_device_manager_get_preferred_back_buffer_width(state->manager, &original_width) == CNA_RESULT_SUCCESS &&
+            cna_graphics_device_manager_set_preferred_back_buffer_width(state->manager, -7) ==
+                CNA_RESULT_INVALID_ARGUMENT &&
             cna_graphics_device_manager_get_preferred_back_buffer_width(state->manager, &value) ==
-                CNA_RESULT_SUCCESS && value == -7 &&
+                CNA_RESULT_SUCCESS && value == original_width &&
             cna_graphics_device_manager_set_preferred_back_buffer_width(state->manager, 640) ==
                 CNA_RESULT_SUCCESS &&
             cna_graphics_device_manager_set_preferred_back_buffer_height(state->manager, 360) ==
                 CNA_RESULT_SUCCESS &&
             cna_graphics_device_manager_get_preferred_back_buffer_height(state->manager, &value) ==
                 CNA_RESULT_SUCCESS && value == 360,
-        "width records even a non-presentable request while height and the final width remain caller choices");
+        "width rejects a non-presentable request atomically while valid width and height remain caller choices");
     cna_demo_check(
         state->demo,
         cna_graphics_device_manager_get_synchronize_with_vertical_retrace(state->manager, &original) ==
@@ -203,6 +206,7 @@ int main(int argc, char** argv)
     CNA_GameCallbacks callbacks;
     CNA_GameCreateInfo info;
     CNA_Handle game = CNA_INVALID_HANDLE;
+    CNA_Bool running = CNA_FALSE;
 
     cna_demo_init(&demo, "c_api.game.graphics_preferences", argc, argv, 1);
     memset(&state, 0, sizeof(state));
@@ -221,7 +225,7 @@ int main(int argc, char** argv)
     info.callbacks = &callbacks;
 
     if (cna_demo_check_result(&demo, cna_game_create(&info, &game), "create the preference game")) {
-        cna_demo_check_result(&demo, cna_game_run_one_frame(game), "run the preference audit callback");
+        cna_demo_check_result(&demo, cna_game_run_frame_ext(game, &running), "run the preference audit callback");
         cna_demo_check(&demo, state.validated == 1, "the one-shot preference audit ran once");
     }
     if (state.manager != CNA_INVALID_HANDLE) {

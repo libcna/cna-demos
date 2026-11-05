@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "A standalone C program creates the resource-backed ContentManager required by "
                    "a custom CNB loader, resolves and invokes copied loaders, and verifies "
                    "callback-scoped handle ownership.",
-    .apis = {"cna_content_manager_create_resource",
+    .apis = {"cna_content_manager_create_resource", "cna_content_manager_get_has_service_provider",
              "cna_cnb_loader_registry_register", "cna_cnb_loader_registry_remove",
              "cna_cnb_loader_registry_clear", "cna_cnb_loader_registry_is_registered",
              "cna_cnb_loader_registry_find",

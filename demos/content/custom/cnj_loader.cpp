@@ -44,7 +44,8 @@ namespace
         // CNJ registration belongs to this manager, unlike the shared CNB loader registry.
         // Captured counters outlive the manager that owns these callbacks.
         int ordinaryReads = 0, eliteReads = 0, nameplateReads = 0;
-        ContentManager content(nullptr, "assets/custom");
+        ContentManager content;
+        content.setRootDirectoryProperty("assets/custom");
         content.RegisterCnjLoader<Enemy>("CnaDemos.Enemy",
             [&ordinaryReads](const std::string& text, ContentManager&) {
                 // CNA supplies raw JSON; a game chooses its own parser for the payload.
@@ -63,15 +64,17 @@ namespace
                 return enemy;
             });
 
-        // The same authored enemy can also supply UI data. Cache entries include requested T,
-        // so a Nameplate reader must run even when Enemy for this logical name is already cached.
-        content.RegisterCnjLoader<Nameplate>("CnaDemos.Enemy",
-            [&nameplateReads](const std::string& text, ContentManager&) {
-                const auto data = nlohmann::json::parse(text).at("data");
-                ++nameplateReads;
-                return Nameplate{data.at("name").get<std::string>() + " (" +
-                                 std::to_string(data.at("health").get<int>()) + " HP)"};
-            });
+        // MTH-CONF-004 (3671c7ee0): one logical asset name has one cached type per manager.
+        const auto loadNameplate = [&nameplateReads](const std::string& text, ContentManager&) {
+            const auto data = nlohmann::json::parse(text).at("data");
+            ++nameplateReads;
+            return Nameplate{data.at("name").get<std::string>() + " (" +
+                             std::to_string(data.at("health").get<int>()) + " HP)"};
+        };
+        content.RegisterCnjLoader<Nameplate>("CnaDemos.Enemy", loadNameplate);
+        ContentManager labels;
+        labels.setRootDirectoryProperty("assets/custom");
+        labels.RegisterCnjLoader<Nameplate>("CnaDemos.Enemy", loadNameplate);
 
         const Enemy guard = content.Load<Enemy>("guard");
         const Enemy elite = content.Load<Enemy>("elite");
@@ -84,13 +87,18 @@ namespace
         (void)content.Load<Enemy>("elite");
         ctx.Check(ordinaryReads == 1 && eliteReads == 1, "both named factories use the manager's asset cache");
 
-        const auto plate = content.Load<Nameplate>("guard");
+        bool cachedTypeRefused = false;
+        try { (void)content.Load<Nameplate>("guard"); }
+        catch (const ContentLoadException&) { cachedTypeRefused = true; }
+        ctx.Check(cachedTypeRefused && nameplateReads == 0,
+                  "an existing cached type refuses another registered type without invoking its factory");
+        const auto plate = labels.Load<Nameplate>("guard");
         ctx.Check(plate.text == "Mossling (12 HP)" && nameplateReads == 1 && ordinaryReads == 1,
-                  "the same asset name and CNJ type produce independently cached Enemy and Nameplate values");
-        (void)content.Load<Nameplate>("guard");
+                  "separate managers cache the same asset name as exact Enemy and Nameplate values");
+        (void)labels.Load<Nameplate>("guard");
         (void)content.Load<Enemy>("guard");
         ctx.Check(nameplateReads == 1 && ordinaryReads == 1,
-                  "repeating either requested C++ type reuses its own cache entry");
+                  "repeating each manager's requested type reuses its existing cache entry");
         bool wrongTypeRefused = false;
         try { (void)content.Load<int>("guard"); }
         catch (const ContentLoadException&) { wrongTypeRefused = true; }
@@ -122,8 +130,9 @@ namespace
         const Enemy reloaded = content.Load<Enemy>("guard");
         ctx.Check(reloaded.health == 12 && ordinaryReads == 2,
                   "Unload clears cached assets but retains this manager's factory registrations");
-        ctx.Check(content.Load<Nameplate>("guard").text == plate.text && nameplateReads == 2,
-                  "Unload also clears the second type's entry while preserving its independent factory");
+        labels.Unload();
+        ctx.Check(labels.Load<Nameplate>("guard").text == plate.text && nameplateReads == 2,
+                  "the label manager Unload clears its cached value while preserving its factory");
 
         // Failed envelope dispatch must not invoke the factory or publish a cache entry. Repair
         // each exact path and retry it through the same manager to prove both properties.
@@ -134,7 +143,8 @@ namespace
             throw std::runtime_error("Could not create a private CNJ content directory");
         TemporaryContent temporary{path};
         int retryReads = 0;
-        ContentManager guarded(nullptr, path.string());
+        ContentManager guarded;
+        guarded.setRootDirectoryProperty(path.string());
 
         bool emptyNameRefused = false;
         try
@@ -209,7 +219,8 @@ namespace
         ctx.Check(repairedVersion.name == "Current" && repairedVersion.health == 34 && retryReads == 2,
                   "repairing the same future-version path retries it without unloading the manager");
 
-        ContentManager unregistered(nullptr, "assets/custom");
+        ContentManager unregistered;
+        unregistered.setRootDirectoryProperty("assets/custom");
         bool isolated = false;
         try { (void)unregistered.Load<Enemy>("guard"); }
         catch (const ContentLoadException&) { isolated = true; }

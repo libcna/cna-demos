@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MS-PL
+// TQ-022/084 (3bcf9b354, 3274f9572): malformed banks fail construction; released-bank lookups retain XNA exception families.
 // Bank disposal releases dependent cues; caller-owned C++ wrappers remain separately owned.
 #include <memory>
 #include "CnaDemos/Demo.hpp"
@@ -54,14 +55,13 @@ namespace
         bool corruptWaveRefused = false;
         try { WaveBank unexpected(&engine, TitleLocation::Path() + "/assets/xact/demo.xgs"); }
         catch (const System::ArgumentException&) { corruptWaveRefused = true; }
-        SoundBank corruptSounds(&engine, "assets/xact/demo.xgs");
-        bool corruptSoundLookupRefused = false;
-        try { static_cast<void>(corruptSounds.GetCue("MidTone")); }
-        catch (const System::InvalidOperationException&) { corruptSoundLookupRefused = true; }
+        bool corruptSoundRefused = false;
+        try { SoundBank unexpected(&engine, "assets/xact/demo.xgs"); }
+        catch (const System::ArgumentException&) { corruptSoundRefused = true; }
         ctx.Check(corruptWaveRefused,
                   "an existing non-XWB file is refused with ArgumentException before bank creation");
-        ctx.Check(!corruptSounds.getIsDisposedProperty() && corruptSoundLookupRefused,
-                  "an existing non-XSB file creates a live sound-bank stub with no cues");
+        ctx.Check(corruptSoundRefused,
+                  "an existing non-XSB file is refused with ArgumentException before bank creation");
 
         bool missingStreamRefused = false;
         try { WaveBank unexpected(&engine, TitleLocation::Path() + "/assets/xact/missing-stream.xwb", 0, 16); }
@@ -122,9 +122,9 @@ namespace
                 const std::unique_ptr<Cue> unexpected(sounds.GetCue("MidTone"));
                 static_cast<void>(unexpected);
             }
-            catch (const System::ObjectDisposedException&) { getCueRefused = true; }
+            catch (const System::ArgumentException&) { getCueRefused = true; }
             try { sounds.PlayCue("MidTone"); }
-            catch (const System::ObjectDisposedException&) { playCueRefused = true; }
+            catch (const System::InvalidOperationException&) { playCueRefused = true; }
             ctx.Check(getCueRefused && playCueRefused,
                       "a disposed sound bank refuses both controlled and fire-and-forget cue creation");
             sounds.Dispose();
@@ -183,11 +183,11 @@ namespace
         bool setVariableRefused = false;
         bool updateCompleted = false;
         try { static_cast<void>(engine.GetCategory("SFX")); }
-        catch (const System::ObjectDisposedException&) { categoryRefused = true; }
+        catch (const System::InvalidOperationException&) { categoryRefused = true; }
         try { static_cast<void>(engine.GetGlobalVariable("SpeedOfSound")); }
-        catch (const System::ObjectDisposedException&) { getVariableRefused = true; }
+        catch (const System::ArgumentException&) { getVariableRefused = true; }
         try { engine.SetGlobalVariable("SpeedOfSound", 500.0f); }
-        catch (const System::ObjectDisposedException&) { setVariableRefused = true; }
+        catch (const System::ArgumentException&) { setVariableRefused = true; }
         try
         {
             engine.Update();

@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MS-PL
+// TQ-045 (1cb049dea): Refresh cleans asset separators to backslashes before ReadAsset.
 // ContentTypeReader<T>: reading your own type from an .xnb file, the XNA way.
 #include <algorithm>
 #include <memory>
@@ -112,8 +113,8 @@ namespace
             const int readsBefore = observed.calls;
             level_ = getContentProperty().Load<Level>("levels/castle");
             ctx.Check(observed.calls == readsBefore + 1, "the first Load invokes the custom reader once");
-            ctx.Check(observed.assetName == "levels/castle" && observed.owner == &getContentProperty(),
-                      "ContentReader carries the logical asset name and owning manager");
+            ctx.Check(observed.assetName == "levels\\castle" && observed.owner == &getContentProperty(),
+                      "ContentReader carries the Refresh-cleaned logical asset name and owning manager");
             ctx.Print("level \"{}\": {} rows, {} gems", level_.name, level_.rows.size(), level_.gems);
             ctx.Check(level_.name == "Castle" && level_.rows.size() == 5, "the reader rebuilt the level from the .xnb");
             int counted = 0;

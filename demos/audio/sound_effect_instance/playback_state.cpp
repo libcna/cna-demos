@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MS-PL
+// TQ-005 (3d4e3f3a3): Refresh Resume after Stop starts playback again.
 // SoundEffectInstance: a controllable voice -- Play, Pause, Resume, Stop and its State.
 #include <chrono>
 #include <string>
@@ -30,7 +31,8 @@ namespace
 
     void PlaybackState(CnaDemos::DemoContext& ctx)
     {
-        ContentManager content(nullptr, "assets");
+        ContentManager content;
+        content.setRootDirectoryProperty("assets");
         const SoundEffect tone = content.Load<SoundEffect>("sounds/tone_660");  // 0.25 s
         SoundEffectInstance voice = tone.CreateInstance();
 
@@ -46,7 +48,7 @@ namespace
         voice.Stop();
         voice.Pause();
         voice.Resume();
-        expect(SoundState::Stopped, "Pause/Resume after Stop");
+        expect(SoundState::Playing, "Pause/Resume after Stop");
 
         voice.Play();
         expect(SoundState::Playing, "Play");

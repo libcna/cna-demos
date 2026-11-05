@@ -278,6 +278,8 @@ namespace
             device.Clear(Color::Black);
             device.setRasterizerStateProperty(RasterizerState::CullNone);
 
+            // TQ-021 (89dd16a3d): user-memory draws unbind streams, so rebind every frame.
+            device.SetVertexBuffer(boundVertexBuffer_.get());
             // FNA retains the declaration's pinned layout after public Dispose. Exercise that
             // active-binding rule before the separate user-memory draw below changes the pixels.
             for (EffectPass& pass : effect_->getCurrentTechniqueProperty()->getPassesProperty())

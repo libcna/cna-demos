@@ -20,7 +20,8 @@ namespace
     {
         // The media content project (content_media/) is built into assets/media; a ContentManager
         // rooted there loads it under the names it was compiled with.
-        ContentManager content(nullptr, "assets/media");
+        ContentManager content;
+        content.setRootDirectoryProperty("assets/media");
         // content_media/music/theme.ogg went through CNA.SongProcessor at build time: the compiled
         // asset holds the song's metadata (its duration was measured then) and the audio stays
         // a compressed stream beside it, read while playing -- XNA's .xnb + .wma pair.
@@ -31,7 +32,8 @@ namespace
                   "the duration measured at build time is the tune's four seconds");
         // As in XNA, the stream is found beside the compiled asset wherever the build sits below
         // the manager's root (CNA-DEMOS-ISSUE-020).
-        ContentManager parent(nullptr, "assets");
+        ContentManager parent;
+        parent.setRootDirectoryProperty("assets");
         const Song relocated = parent.Load<Song>("media/music/theme");
         ctx.Check(relocated.getDurationProperty() == theme.getDurationProperty(),
                   "a manager rooted above the media build loads the same song");

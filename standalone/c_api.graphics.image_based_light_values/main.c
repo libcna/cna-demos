@@ -161,6 +161,7 @@ int main(int argc, char** argv)
     CNA_GameCallbacks callbacks;
     CNA_GameCreateInfo create_info;
     CNA_Handle game = CNA_INVALID_HANDLE;
+    CNA_Bool running = CNA_FALSE;
     CNA_Handle manager = CNA_INVALID_HANDLE;
 
     cna_demo_init(&demo, "c_api.graphics.image_based_light_values", argc, argv, 1);
@@ -183,7 +184,7 @@ int main(int argc, char** argv)
     }
     if (cna_demo_check_result(&demo, cna_demo_use_hidef(game, &manager),
                               "create a HiDef graphics device")) {
-        cna_demo_check_result(&demo, cna_game_run_one_frame(game),
+        cna_demo_check_result(&demo, cna_game_run_frame_ext(game, &running),
                               "run the image-based-light validation callback");
     }
     cna_demo_check(&demo, state.loads == 1,

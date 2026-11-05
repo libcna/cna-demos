@@ -20,7 +20,7 @@ CNA_DEMOS_STANDALONE({
              "cna_gamer_services_component_create",
              "cna_signed_in_gamer_subscribe_signed_in_ext",
              "cna_signed_in_gamer_subscribe_signed_out_ext", "cna_gamer_unsubscribe_ext",
-             "cna_game_create", "cna_game_components_add", "cna_game_run_one_frame",
+             "cna_game_create", "cna_game_components_add", "cna_game_run_frame_ext",
              "cna_game_component_destroy", "cna_game_destroy", "cna_storage_set_app_name_ext"},
     .tags = {"c", "binding", "gamer", "guide", "dispatcher", "component", "events"},
     .needs = CnaDemos::Need::CApi | CnaDemos::Need::Window,

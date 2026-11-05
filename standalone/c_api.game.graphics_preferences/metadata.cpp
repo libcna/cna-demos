@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "Graphics device manager preferences in C",
     .description = "A C game owns a graphics device manager, validates its device-information value and "
                    "round-trips every preference before any reconfiguration is applied.",
-    .apis = {"cna_graphics_device_information_init", "cna_graphics_device_information_clone",
+    .apis = {"cna_game_run_frame_ext", "cna_graphics_device_information_init", "cna_graphics_device_information_clone",
              "cna_graphics_device_manager_create", "cna_graphics_device_manager_get_graphics_profile",
              "cna_graphics_device_manager_set_graphics_profile",
              "cna_graphics_device_manager_get_graphics_device",

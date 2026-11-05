@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MS-PL
+// TQ-005 (3d4e3f3a3): Refresh refuses disposed transport, State and IsLooped writes.
 // CNA C++ audio wrappers: scope destruction, moving a voice and explicit disposal.
 #include <string>
 #include <utility>
@@ -44,19 +45,20 @@ namespace
             ctx.Print("Disposed voice refused: {}", error.what());
         }
         ctx.Check(refused, "a disposed instance cannot be played again");
-        bool resumeRefused = false;
-        bool passiveCallsSafe = true;
+        const auto stateRefused = [](SoundEffectInstance& instance) {
+            try { (void)instance.getStateProperty(); }
+            catch (const System::ObjectDisposedException&) { return true; }
+            return false;
+        };
+        bool resumeRefused = false, pauseRefused = false, stopRefused = false;
         try { moved.Resume(); }
         catch (const System::ObjectDisposedException&) { resumeRefused = true; }
-        try
-        {
-            moved.Pause();
-            moved.Stop();
-        }
-        catch (...) { passiveCallsSafe = false; }
-        ctx.Check(resumeRefused && passiveCallsSafe && moved.getIsDisposedProperty() &&
-                      moved.getStateProperty() == SoundState::Stopped,
-                  "disposed Resume refuses resurrection while Pause and Stop remain safe cleanup calls");
+        try { moved.Pause(); }
+        catch (const System::ObjectDisposedException&) { pauseRefused = true; }
+        try { moved.Stop(); }
+        catch (const System::ObjectDisposedException&) { stopRefused = true; }
+        ctx.Check(resumeRefused && pauseRefused && stopRefused && moved.getIsDisposedProperty() && stateRefused(moved),
+                  "disposed Resume, Pause, Stop and State all refuse access");
         bool volumeRefused = false;
         bool pitchRefused = false;
         bool panRefused = false;
@@ -71,9 +73,9 @@ namespace
                   "disposed Volume, Pitch and Pan setters refuse writes and preserve their values");
         bool loopMutationRefused = false;
         try { moved.setIsLoopedProperty(false); }
-        catch (const System::InvalidOperationException&) { loopMutationRefused = true; }
+        catch (const System::ObjectDisposedException&) { loopMutationRefused = true; }
         ctx.Check(loopMutationRefused && moved.getIsLoopedProperty(),
-                  "a played-and-disposed instance retains the one-way IsLooped mutation lock");
+                  "a disposed instance refuses IsLooped mutation before the playback lock");
 
         SoundEffect oldAssignmentOwner(path);
         SoundEffect newAssignmentOwner(path);
@@ -89,7 +91,7 @@ namespace
         ctx.Check(!assigned.getIsDisposedProperty() && assigned.getStateProperty() == SoundState::Playing,
                   "disposing the destination's former parent does not reach the assigned voice");
         newAssignmentOwner.Dispose();
-        ctx.Check(assigned.getIsDisposedProperty() && assigned.getStateProperty() == SoundState::Stopped,
+        ctx.Check(assigned.getIsDisposedProperty() && stateRefused(assigned),
                   "disposing the source parent follows move assignment and disposes the transferred voice");
 
         SoundEffect parentMoveSource(path);
@@ -101,7 +103,7 @@ namespace
                       parentMoveChild.getStateProperty() == SoundState::Playing,
                   "move construction preserves a SoundEffect resource and its active child");
         parentMoveTarget.Dispose();
-        ctx.Check(parentMoveChild.getIsDisposedProperty() && parentMoveChild.getStateProperty() == SoundState::Stopped,
+        ctx.Check(parentMoveChild.getIsDisposedProperty() && stateRefused(parentMoveChild),
                   "disposing the moved-to SoundEffect still cascades to its original child");
 
         SoundEffect replacedParent(path);

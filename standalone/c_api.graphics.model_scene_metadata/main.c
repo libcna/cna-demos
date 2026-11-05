@@ -339,6 +339,7 @@ int main(int argc, char** argv)
     CNA_GameCallbacks callbacks;
     CNA_GameCreateInfo create_info;
     CNA_Handle game = CNA_INVALID_HANDLE;
+    CNA_Bool running = CNA_FALSE;
     CNA_Handle manager = CNA_INVALID_HANDLE;
     CNA_Matrix sentinel;
     int device_ready;
@@ -393,7 +394,7 @@ int main(int argc, char** argv)
             &demo, device_ready,
             "create a HiDef device for Model and ModelMesh ownership")) {
         cna_demo_check_result(
-            &demo, cna_game_run_one_frame(game),
+            &demo, cna_game_run_frame_ext(game, &running),
             "run one frame containing the scene-metadata audit");
         cna_demo_check(
             &demo, state.loads == 1,

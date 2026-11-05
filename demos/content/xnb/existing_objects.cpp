@@ -116,7 +116,8 @@ namespace
         ContentTypeReaderManager::AddTypeCreator("CnaDemos.LoadoutReader", [] { return std::make_unique<LoadoutReader>(); });
         ContentTypeReaderManager::AddTypeCreator(WeaponReaderName, [] { return std::make_unique<WeaponReader>(); });
         const auto root = std::filesystem::path(CNA::Platform::GetCurrentPlatform().GetFileSystem()->GetBasePath()) / "assets";
-        ContentManager content(nullptr, root.string());
+        ContentManager content;
+        content.setRootDirectoryProperty(root.string());
         observed = {};
         const auto loadout = content.Load<Loadout>("loadouts/existing_slots");
         ctx.Check(observed.tableReadyBeforeInitialize && observed.rootInitializations == 1 && observed.weaponInitializations == 1,

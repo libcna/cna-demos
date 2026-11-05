@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
+/* TQ-005 (3d4e3f3a3): Refresh validates pitch instead of clamping it. */
 /* SoundEffect creation sources, owned state and one-shot playback from the C ABI. */
 #include <CNA/C/cna.h>
 
@@ -240,9 +241,8 @@ int main(int argc, char** argv)
     cna_demo_check(
         &demo,
         cna_sound_effect_play_with_settings(ranged, 0.5f, 99.0f, -0.25f, &played) ==
-                CNA_RESULT_SUCCESS &&
-            played == CNA_TRUE,
-        "the configured one-shot route accepts volume and pan while clamping extreme pitch");
+                CNA_RESULT_INVALID_ARGUMENT,
+        "the configured one-shot route refuses an extreme pitch before starting playback");
     played = UINT8_C(77);
     cna_demo_check(
         &demo,

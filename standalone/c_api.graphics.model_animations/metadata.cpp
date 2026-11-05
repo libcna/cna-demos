@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "ModelAnimationsEXT collections and direct Model posing in C",
     .description = "A C workflow owns sorted scene clips, applies one to selected Model bones and "
                    "uploads a SkinningData bind palette to a real SkinnedEffect.",
-    .apis = {"cna_model_animations_ext_create", "cna_model_animations_ext_destroy",
+    .apis = {"cna_game_run_frame_ext", "cna_model_animations_ext_create", "cna_model_animations_ext_destroy",
              "cna_model_animations_ext_get_type_name_byte_count",
              "cna_model_animations_ext_copy_type_name",
              "cna_model_animations_ext_get_clip_count",

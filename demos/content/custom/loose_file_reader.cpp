@@ -52,7 +52,8 @@ namespace
 
     void LooseFileReader(CnaDemos::DemoContext& ctx)
     {
-        ContentManager content(nullptr, "assets");
+        ContentManager content;
+        content.setRootDirectoryProperty("assets");
         // Register once; from then on Load<Level> finds "levels/level1" as levels/level1.level,
         // caches it like any other asset, and reports failures as ContentLoadException.
         auto reader = std::make_unique<LevelReader>();

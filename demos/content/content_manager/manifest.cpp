@@ -43,7 +43,8 @@ namespace
             std::filesystem::path path;
             ~Cleanup() { std::error_code ignored; std::filesystem::remove_all(path, ignored); }
         } cleanup{path};
-        ContentManager mods(nullptr, path.string());
+        ContentManager mods;
+        mods.setRootDirectoryProperty(path.string());
         ctx.Check(mods.GetContentManifest().empty(), "the first scan captures an empty content root");
 
         std::ofstream file;

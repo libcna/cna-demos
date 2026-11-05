@@ -73,6 +73,7 @@ int main(int argc, char** argv)
     CNA_GameCallbacks callbacks;
     CNA_GameCreateInfo create_info;
     CNA_Handle game = CNA_INVALID_HANDLE;
+    CNA_Bool running = CNA_FALSE;
     CNA_Bool active = CNA_FALSE;
     CNA_Result result;
     char message[512];
@@ -92,7 +93,7 @@ int main(int argc, char** argv)
     memset(&create_info, 0, sizeof(create_info));
     create_info.struct_size = (uint32_t)sizeof(create_info);
     create_info.struct_version = UINT32_C(1);
-    /* This demo needs one Update callback per explicit RunOneFrame call. A fixed-step game may
+    /* This demo needs one Update callback per explicit host frame. A fixed-step game may
        legitimately catch up with two updates when the diagnostic checks above take longer than
        one target interval, making the planned second-callback failure occur in the first call. */
     create_info.is_fixed_time_step = CNA_FALSE;
@@ -230,14 +231,14 @@ int main(int argc, char** argv)
 
     /* 5. A callback's failure stops the frame; the caller sees CALLBACK and the callback's message. */
     printf("5. an update callback that fails\n");
-    cna_demo_check_result(&demo, cna_game_run_one_frame(game), "the first frame runs");
-    result = cna_game_run_one_frame(game);
+    cna_demo_check_result(&demo, cna_game_run_frame_ext(game, &running), "the first frame runs");
+    result = cna_game_run_frame_ext(game, &running);
     cna_demo_check(&demo, result == CNA_RESULT_CALLBACK &&
                               last_error(message, sizeof(message)) == CNA_ERROR_CATEGORY_CALLBACK,
                    "the second frame returns CALLBACK, category CALLBACK");
     cna_demo_check(&demo, strstr(message, callback_message) != NULL, "the diagnostic carries the callback's message");
 
-    result = cna_game_run_one_frame(game);
+    result = cna_game_run_frame_ext(game, &running);
     cna_demo_check(&demo, result == CNA_RESULT_CALLBACK && state.updates == 2 && state.unloads == 0 &&
                    last_error(message, sizeof(message)) == CNA_ERROR_CATEGORY_CALLBACK &&
                    strcmp(message, callback_message) == 0,

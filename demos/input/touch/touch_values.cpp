@@ -10,6 +10,7 @@
 #include "Microsoft/Xna/Framework/Input/Touch/TouchPanel.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
 #include "System/ArgumentOutOfRangeException.hpp"
+#include "System/NotSupportedException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Input::Touch;
@@ -21,7 +22,7 @@ namespace
         // A finger that just touched down has no previous location...
         const TouchLocation down(7, TouchLocationState::Pressed, Vector2(100.0f, 50.0f));
         TouchLocation previous;
-        ctx.Check(!down.TryGetPreviousLocation(previous) && previous.getIdProperty() == 7 &&
+        ctx.Check(!down.TryGetPreviousLocation(previous) && previous.getIdProperty() == TouchPanel::NO_FINGER &&
                       previous.getStateProperty() == TouchLocationState::Invalid &&
                       previous.getPositionProperty() == Vector2::Zero,
                   "a new touch reports no previous location but still writes its invalid sentinel");
@@ -55,15 +56,16 @@ namespace
         // A frame's touches: the Id, not the index, identifies a finger from frame to frame.
         const TouchCollection frame(std::vector<TouchLocation>{
             held, TouchLocation(9, TouchLocationState::Pressed, Vector2(600.0f, 300.0f))});
-        ctx.Check(frame.getCountProperty() == 2, "the collection holds two touches");
+        ctx.Check(frame.getCountProperty() == 2 && frame.getIsConnectedProperty(),
+                  "the array-constructed collection holds two touches and reports connected");
         ctx.Check(frame.getIsReadOnlyProperty(), "a TouchCollection reports itself read-only");
         TouchLocation found;
         ctx.Check(frame.FindById(9, found) && found.getPositionProperty() == Vector2(600.0f, 300.0f),
                   "FindById finds the second finger");
-        ctx.Check(!frame.FindById(3, found) && found.getIdProperty() == TouchPanel::NO_FINGER &&
+        ctx.Check(!frame.FindById(3, found) && found.getIdProperty() == 0 &&
                       found.getStateProperty() == TouchLocationState::Invalid &&
                       found.getPositionProperty() == Vector2::Zero,
-                  "FindById reports a missing finger and writes TouchPanel::NO_FINGER");
+                  "FindById reports a missing finger and writes the default invalid location");
         ctx.Check(frame.Contains(held) && frame.IndexOf(held) == 0 && frame[1].getIdProperty() == 9,
                   "Contains, IndexOf and the indexer work like any list");
 
@@ -96,10 +98,10 @@ namespace
 
         TouchCollection snapshotSource = frame;
         auto snapshotCursor = snapshotSource.GetEnumerator();
-        snapshotSource.Clear();
+        snapshotSource = TouchCollection{};
         ctx.Check(snapshotCursor.MoveNext() && snapshotCursor.Current() == held && snapshotCursor.MoveNext() &&
                       snapshotCursor.Current().getIdProperty() == 9 && !snapshotCursor.MoveNext(),
-                  "an enumerator owns a snapshot that survives later collection mutation");
+                  "an enumerator owns a snapshot that survives replacement of the source value");
 
         std::vector<TouchLocation> copied{down};
         frame.CopyTo(copied, 1);
@@ -110,20 +112,20 @@ namespace
         TouchCollection edited = frame;
         const TouchLocation inserted(5, TouchLocationState::Pressed, Vector2(20.0f, 30.0f));
         const TouchLocation appended(11, TouchLocationState::Released, Vector2(700.0f, 400.0f));
-        edited.Add(appended);
-        edited.Insert(1, inserted);
-        ctx.Check(edited.getIsReadOnlyProperty() && edited.getCountProperty() == 4 &&
-                      edited[0] == held && edited[1] == inserted && edited[2].getIdProperty() == 9 &&
-                      edited[3] == appended,
-                  "IsReadOnly is advisory: Add and Insert mutate an initialized collection like FNA");
-        ctx.Check(edited.Remove(inserted) && !edited.Remove(down) && edited.getCountProperty() == 3,
-                  "Remove reports whether an equal touch was present");
-        edited.RemoveAt(1);
-        ctx.Check(edited.getCountProperty() == 2 && edited[0] == held && edited[1] == appended,
-                  "RemoveAt closes the indexed gap while preserving order");
-        edited.Clear();
-        ctx.Check(edited.getCountProperty() == 0,
-                  "Clear empties the collection despite its advisory read-only flag");
+        const auto refusesEdit = [&ctx, &edited, &frame](auto edit, const char* description) {
+            bool refused = false;
+            try { edit(); }
+            catch (const System::NotSupportedException&) { refused = true; }
+            ctx.Check(refused && edited.getIsReadOnlyProperty() && edited.getCountProperty() == 2 &&
+                          edited[0] == frame[0] && edited[1] == frame[1], description);
+        };
+        refusesEdit([&] { edited.Add(appended); }, "Add throws without changing the read-only snapshot");
+        refusesEdit([&] { edited.Insert(1, inserted); }, "Insert throws without changing the snapshot");
+        refusesEdit([&] { (void)edited.Remove(held); }, "Remove throws even for a present touch");
+        refusesEdit([&] { (void)edited.Remove(down); }, "Remove throws even for an absent touch");
+        refusesEdit([&] { edited.RemoveAt(1); }, "RemoveAt throws without changing the snapshot");
+        refusesEdit([&] { edited.setItemProperty(0, inserted); }, "the item setter throws without changing the snapshot");
+        refusesEdit([&] { edited.Clear(); }, "Clear throws without changing the snapshot");
     }
 }
 
@@ -131,13 +133,13 @@ CNA_DEMOS_CONSOLE(TouchValues, {
     .id = "input.touch.touch_values",
     .title = "TouchLocation and TouchCollection values",
     .description = "Builds TouchLocation values with previous locations and pressure, checks their XNA equality, hash "
-                   "and text contracts, then enumerates, searches, copies and edits a TouchCollection whose IsReadOnly "
-                   "flag is advisory.",
+                   "and text contracts, then enumerates, searches and copies a read-only TouchCollection and checks "
+                   "that its mutators throw without changing the snapshot.",
     .apis = {"TouchLocation::TouchLocation", "TouchLocation::TryGetPreviousLocation", "TouchLocation::Id",
              "TouchLocation::State", "TouchLocation::Position", "TouchLocation::PressureEXT", "TouchLocation::Equals",
              "TouchLocation::GetHashCode", "TouchLocation::op_Equality", "TouchLocation::op_Inequality",
              "TouchLocation::ToString", "TouchCollection::TouchCollection",
-             "TouchCollection::Count", "TouchCollection::IsReadOnly", "TouchCollection::FindById",
+             "TouchCollection::Count", "TouchCollection::IsConnected", "TouchCollection::IsReadOnly", "TouchCollection::FindById",
              "TouchCollection::Contains", "TouchCollection::CopyTo", "TouchCollection::IndexOf",
              "TouchCollection::Item", "TouchCollection::Add", "TouchCollection::Insert",
              "TouchCollection::Remove", "TouchCollection::RemoveAt", "TouchCollection::Clear",

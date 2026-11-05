@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
+/* TQ-060 (d681654e9): Drawable.Initialize requires an IGraphicsDeviceService; register the manager before running. */
 /* Public component properties, comparison, explicit lifecycle and event-registration ownership. */
 #include <CNA/C/cna.h>
 
@@ -72,6 +73,8 @@ int main(int argc, char** argv)
     CNA_GameComponentHandle drawable = CNA_INVALID_HANDLE;
     CNA_GameComponentEventRegistrationHandle registrations[5];
     CNA_Handle game = CNA_INVALID_HANDLE;
+    CNA_Handle manager = CNA_INVALID_HANDLE;
+    CNA_Bool running = CNA_FALSE;
     CNA_Handle owner = CNA_INVALID_HANDLE;
     CNA_GameTime time;
     Behavior plain_behavior;
@@ -98,7 +101,8 @@ int main(int argc, char** argv)
     }
 
     if (!cna_demo_check_result(&demo, cna_game_create(&info, &game), "create the component game") ||
-        !cna_demo_check_result(&demo, cna_game_run_one_frame(game), "initialize its graphics device")) {
+        !cna_demo_check_result(&demo, cna_graphics_device_manager_create(game, &manager), "register the drawable graphics service") ||
+        !cna_demo_check_result(&demo, cna_game_run_frame_ext(game, &running), "initialize its graphics device")) {
         goto cleanup;
     }
 
@@ -226,6 +230,9 @@ cleanup:
     }
     if (drawable != CNA_INVALID_HANDLE) {
         cna_demo_check_result(&demo, cna_game_component_destroy(drawable), "destroy the drawable component");
+    }
+    if (manager != CNA_INVALID_HANDLE) {
+        cna_demo_check_result(&demo, cna_graphics_device_manager_destroy(manager), "destroy the graphics manager");
     }
     if (game != CNA_INVALID_HANDLE) {
         cna_demo_check_result(&demo, cna_game_destroy(game), "destroy the component game");

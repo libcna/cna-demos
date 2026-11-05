@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
+#include "System/IO/EndOfStreamException.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentLoadException.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentManager.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentReader.hpp"
@@ -168,7 +169,14 @@ namespace
         }
         catch (const ContentLoadException& error)
         {
-            exactReadRefused = std::string(error.what()).find(TilesReaderName) != std::string::npos;
+            // TQ-053 (0735d0a10): Refresh wraps the I/O error but preserves its exact cause.
+            try {
+                if (error.getInnerExceptionProperty()) std::rethrow_exception(error.getInnerExceptionProperty());
+            }
+            catch (const System::IO::EndOfStreamException& cause) {
+                exactReadRefused = std::string(error.what()) == "Error loading \"tiles\"." &&
+                    std::string(cause.what()).find(TilesReaderName) != std::string::npos;
+            }
         }
         ctx.Check(exactReadRefused && truncatedRecordCalls == 0 && truncated.streams.opened == 1 &&
                       truncated.streams.destroyed == 1,

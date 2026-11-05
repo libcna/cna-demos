@@ -6,6 +6,8 @@
 #include <vector>
 
 #include "CnaDemos/Demo.hpp"
+#include "System/InvalidOperationException.hpp"
+#include "System/ArgumentOutOfRangeException.hpp"
 #include "CnaDemos/PixelChecks.hpp"
 #include "Microsoft/Xna/Framework/Color.hpp"
 #include "Microsoft/Xna/Framework/Matrix.hpp"
@@ -117,24 +119,34 @@ namespace
 
                 right_->setEffectProperty(nullptr);
                 device.Clear(Color::DarkSlateGray);
-                mesh_->Draw();
+                // TQ-046 (e428eb52a): Refresh refuses the null Effect after earlier parts draw.
+                bool nullEffectRefused = false;
+                try { mesh_->Draw(); }
+                catch (const System::InvalidOperationException& error) {
+                    nullEffectRefused = std::string(error.what()) == "ModelMeshPart has a null Effect.";
+                }
                 const CnaDemos::BackBufferPixels noRight(device);
-                Context().Check(right_->getEffectProperty() == nullptr &&
+                Context().Check(nullEffectRefused && right_->getEffectProperty() == nullptr &&
                                     mesh_->getEffectsProperty().getCountProperty() == 2 &&
                                     !mesh_->getEffectsProperty().Contains(green_.get()) &&
                                     CnaDemos::Near(at(noRight, -.35f, -.3f), Color::Red, 2) &&
                                     CnaDemos::Near(at(noRight, .35f, .3f), Color::DarkSlateGray, 2),
-                                "a null Effect removes membership and skips only that mesh part");
+                                "a null Effect removes membership and refuses that part after the earlier red part drew");
                 right_->setEffectProperty(green_.get());
                 left_->SetPrimitiveCount(0);
                 device.Clear(Color::DarkSlateGray);
-                mesh_->Draw();
+                // TQ-046/TQ-048: a positive NumVertices reaches the draw and refuses zero primitives.
+                bool zeroPrimitivesRefused = false;
+                try { mesh_->Draw(); }
+                catch (const System::ArgumentOutOfRangeException& error) {
+                    zeroPrimitivesRefused = error.getParamNameProperty() == "primitiveCount";
+                }
                 const CnaDemos::BackBufferPixels noLeft(device);
-                Context().Check(mesh_->getEffectsProperty().getCountProperty() == 3 &&
+                Context().Check(zeroPrimitivesRefused && mesh_->getEffectsProperty().getCountProperty() == 3 &&
                                     mesh_->getEffectsProperty().Contains(red_.get()) &&
                                     CnaDemos::Near(at(noLeft, -.35f, -.3f), Color::DarkSlateGray, 2) &&
-                                    CnaDemos::Near(at(noLeft, .35f, .3f), Color::Lime, 2),
-                                "zero primitives skip geometry without removing the part's Effect membership");
+                                    CnaDemos::Near(at(noLeft, .35f, .3f), Color::DarkSlateGray, 2),
+                                "zero primitives refuse before later geometry without removing Effect membership");
                 left_->SetPrimitiveCount(1);
 
                 device.Clear(Color::DarkSlateGray);

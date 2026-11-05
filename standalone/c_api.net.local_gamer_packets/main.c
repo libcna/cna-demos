@@ -235,9 +235,11 @@ int main(int argc, char** argv)
         &demo,
         cna_local_network_gamer_send_packet_writer(
             local, writer, CNA_SEND_DATA_OPTIONS_RELIABLE_IN_ORDER) == CNA_RESULT_SUCCESS &&
+            /* Sending rewinds Position; author the next packet before sending it again. */
+            cna_packet_writer_write_single(writer, 1.5F) == CNA_RESULT_SUCCESS &&
             cna_local_network_gamer_send_packet_writer_to(
                 local, writer, CNA_SEND_DATA_OPTIONS_RELIABLE, remote) == CNA_RESULT_SUCCESS,
-        "both PacketWriter broadcast and recipient send forms accept the authored packet");
+        "PacketWriter broadcast and recipient sends each accept a freshly authored packet");
     cna_demo_check(
         &demo,
         cna_local_network_gamer_send_data(

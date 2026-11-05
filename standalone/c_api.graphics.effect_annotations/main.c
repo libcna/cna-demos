@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: MS-PL */
+/* TQ-028 (ad6a133e4): Refresh gates annotation views by class/width/type and converts numeric values. */
 /*
  * Effect annotations from C: immutable reflection values copy their UTF-8 metadata and raw
  * payload, expose typed views, and enter collections by value. Collection lookups return new
@@ -50,6 +51,9 @@ int main(int argc, char** argv)
     CNA_EffectAnnotationCreateInfo create_info;
     CNA_EffectAnnotationInfo info;
     CNA_EffectAnnotationHandle matrix = CNA_INVALID_HANDLE;
+    CNA_EffectAnnotationHandle typed_string = CNA_INVALID_HANDLE;
+    CNA_EffectAnnotationHandle scalar = CNA_INVALID_HANDLE;
+    CNA_EffectAnnotationHandle vectors[3] = {CNA_INVALID_HANDLE, CNA_INVALID_HANDLE, CNA_INVALID_HANDLE};
     CNA_EffectAnnotationHandle integer = CNA_INVALID_HANDLE;
     CNA_EffectAnnotationHandle indexed = CNA_INVALID_HANDLE;
     CNA_EffectAnnotationHandle found_annotation = CNA_INVALID_HANDLE;
@@ -86,6 +90,28 @@ int main(int argc, char** argv)
             "create an immutable matrix annotation from caller-owned metadata and values")) {
         goto cleanup;
     }
+
+    /* Keep the exact values and ownership checks, using each getter's reflected shape. */
+    create_info.row_count = 1;
+    create_info.column_count = 1;
+    create_info.parameter_class = CNA_EFFECT_PARAMETER_CLASS_SCALAR;
+    create_info.data_count = 1U;
+    if (!cna_demo_check_result(&demo, cna_effect_annotation_create(&create_info, &scalar),
+                               "create a copied scalar annotation")) goto cleanup;
+    create_info.parameter_class = CNA_EFFECT_PARAMETER_CLASS_VECTOR;
+    for (int width = 2; width <= 4; ++width) {
+        create_info.column_count = width;
+        create_info.data_count = (uint64_t)width;
+        if (!cna_demo_check_result(&demo, cna_effect_annotation_create(&create_info, &vectors[width - 2]),
+                                   "create an exact-width vector annotation")) goto cleanup;
+    }
+    create_info.parameter_class = CNA_EFFECT_PARAMETER_CLASS_OBJECT;
+    create_info.parameter_type = CNA_EFFECT_PARAMETER_TYPE_STRING;
+    create_info.column_count = 1;
+    create_info.data = NULL;
+    create_info.data_count = 0U;
+    if (!cna_demo_check_result(&demo, cna_effect_annotation_create(&create_info, &typed_string),
+                               "create a copied string annotation")) goto cleanup;
 
     memset(name, '#', sizeof(name) - 1U);
     memset(semantic, '#', sizeof(semantic) - 1U);
@@ -134,31 +160,37 @@ int main(int argc, char** argv)
     memset(copied, 0x5A, sizeof(copied));
     cna_demo_check(
         &demo,
-        cna_effect_annotation_get_value_string_byte_count(matrix, &reported) ==
+        cna_effect_annotation_get_value_string_byte_count(typed_string, &reported) ==
                 CNA_RESULT_SUCCESS &&
             reported == UINT64_C(12) &&
-            cna_effect_annotation_copy_value_string(matrix, copied, UINT64_C(12), &reported) ==
+            cna_effect_annotation_copy_value_string(typed_string, copied, UINT64_C(12), &reported) ==
                 CNA_RESULT_SUCCESS &&
             memcmp(copied, "column-major", 12U) == 0 && (unsigned char)copied[12] == 0x5A,
         "the cached string remains owned after the caller buffer is overwritten");
 
+    cna_demo_check(&demo,
+        cna_effect_annotation_get_value_single(matrix, &single_value) == CNA_RESULT_INVALID_ARGUMENT &&
+            cna_effect_annotation_get_value_string_byte_count(matrix, &reported) == CNA_RESULT_INVALID_ARGUMENT &&
+            cna_effect_annotation_get_value_vector2(matrix, &vector2) == CNA_RESULT_INVALID_ARGUMENT,
+        "a matrix annotation refuses scalar, string and vector views with incompatible reflected types");
+
     memset(&matrix_value, 0, sizeof(matrix_value));
     cna_demo_check(
         &demo,
-        cna_effect_annotation_get_value_boolean(matrix, &boolean_value) == CNA_RESULT_SUCCESS &&
+        cna_effect_annotation_get_value_boolean(scalar, &boolean_value) == CNA_RESULT_SUCCESS &&
             boolean_value == CNA_TRUE &&
-            cna_effect_annotation_get_value_int32(matrix, &integer_value) == CNA_RESULT_SUCCESS &&
-            integer_value == INT32_C(1065353216) &&
-            cna_effect_annotation_get_value_single(matrix, &single_value) == CNA_RESULT_SUCCESS &&
+            cna_effect_annotation_get_value_int32(scalar, &integer_value) == CNA_RESULT_SUCCESS &&
+            integer_value == INT32_C(1) &&
+            cna_effect_annotation_get_value_single(scalar, &single_value) == CNA_RESULT_SUCCESS &&
             single_value == 1.0f,
-        "scalar views read the first copied raw value as Boolean, integer bits and float");
+        "scalar views numerically convert the copied value to Boolean, integer and float");
     cna_demo_check(
         &demo,
-        cna_effect_annotation_get_value_vector2(matrix, &vector2) == CNA_RESULT_SUCCESS &&
+        cna_effect_annotation_get_value_vector2(vectors[0], &vector2) == CNA_RESULT_SUCCESS &&
             vector2.x == 1.0f && vector2.y == 2.0f &&
-            cna_effect_annotation_get_value_vector3(matrix, &vector3) == CNA_RESULT_SUCCESS &&
+            cna_effect_annotation_get_value_vector3(vectors[1], &vector3) == CNA_RESULT_SUCCESS &&
             vector3.x == 1.0f && vector3.y == 2.0f && vector3.z == 3.0f &&
-            cna_effect_annotation_get_value_vector4(matrix, &vector4) == CNA_RESULT_SUCCESS &&
+            cna_effect_annotation_get_value_vector4(vectors[2], &vector4) == CNA_RESULT_SUCCESS &&
             vector4.x == 1.0f && vector4.y == 2.0f && vector4.z == 3.0f &&
             vector4.w == 4.0f,
         "vector views expose the first two, three and four copied float components");
@@ -289,6 +321,11 @@ int main(int argc, char** argv)
     cna_demo_check(&demo, result == CNA_RESULT_SUCCESS, "the independent lookup copy releases cleanly");
 
 cleanup:
+    if (typed_string != CNA_INVALID_HANDLE) (void)cna_effect_annotation_destroy(typed_string);
+    if (scalar != CNA_INVALID_HANDLE) (void)cna_effect_annotation_destroy(scalar);
+    for (int i = 0; i < 3; ++i) {
+        if (vectors[i] != CNA_INVALID_HANDLE) (void)cna_effect_annotation_destroy(vectors[i]);
+    }
     if (found_annotation != CNA_INVALID_HANDLE) {
         (void)cna_effect_annotation_destroy(found_annotation);
     }

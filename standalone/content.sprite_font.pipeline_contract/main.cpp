@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MS-PL
+// CNA-FIX-L06/L27 (f497e6aaa, 31d1dac0d): font identities isolate configured roots and length-prefix UTF-8 paths.
 // Audit the public SpriteFont source pipeline through a real OFL TrueType face and a font sheet.
 #include <algorithm>
 #include <array>
@@ -234,7 +235,7 @@ namespace
 
         const Pipeline::FontDescriptionImporter unconfiguredImporter;
         check(unconfiguredImporter.Identity() ==
-                          Pipeline::ContentComponentIdentity{"CNA.FontDescriptionImporter", "1"} &&
+                          Pipeline::ContentComponentIdentity{"CNA.FontDescriptionImporter", "3"} &&
                       unconfiguredImporter.SourceExtensions() ==
                           std::vector<std::string>{".spritefont"} &&
                       unconfiguredImporter.OutputTypes() ==
@@ -254,11 +255,13 @@ namespace
         equivalentError.clear();
         const bool searchedIsFixture = !searched.empty() &&
             std::filesystem::equivalent(searched, fontFile, equivalentError) && !equivalentError;
+        const auto fontDirectoryUtf8Bytes = fontDirectory.generic_u8string();
+        const std::string fontDirectoryUtf8(fontDirectoryUtf8Bytes.begin(), fontDirectoryUtf8Bytes.end());
         check(Pipeline::FontSearchDirectoriesEXT() ==
                           std::vector<std::filesystem::path>{fontDirectory} &&
                       importer.Identity() == Pipeline::ContentComponentIdentity{
                           "CNA.FontDescriptionImporter",
-                          "1+fonts:" + fontDirectory.generic_string()} && besideIsFixture &&
+                          "3+fonts:" + std::to_string(fontDirectoryUtf8.size()) + ":" + fontDirectoryUtf8} && besideIsFixture &&
                       searchedIsFixture &&
                       Pipeline::FindSystemFontFile("No Such CNA Font Family").empty(),
                   "configured and beside-family searches resolve the exact OFL face and participate in importer identity");

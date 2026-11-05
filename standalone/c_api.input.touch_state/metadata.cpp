@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "A C program uses CNA's public touch fixture routes to create a deterministic press, move and "
                    "release, captures each CNA_TouchState, finds the finger by id and reconstructs its previous "
                    "location. Pure gesture, capability, location and empty-state construction then leads into "
-                   "pressure-independent identity, text, insertion-copy and collection edits.",
+                   "pressure-independent identity, text, insertion-copy and refusal of read-only collection edits.",
     .apis = {"cna_touch_get_capabilities", "cna_touch_get_state", "cna_touch_state_find_by_id",
              "cna_touch_location_try_get_previous", "cna_touch_panel_set_touch_device_exists_ext",
              "cna_touch_panel_get_touch_device_exists_ext",

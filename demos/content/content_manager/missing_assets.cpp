@@ -14,7 +14,8 @@ namespace
 {
     void MissingAssets(CnaDemos::DemoContext& ctx)
     {
-        ContentManager content(nullptr, "assets");
+        ContentManager content;
+        content.setRootDirectoryProperty("assets");
 
         // A missing asset is a ContentLoadException, so a game can offer a fallback.
         std::string message;

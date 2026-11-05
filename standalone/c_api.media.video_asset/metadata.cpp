@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "Video asset metadata and ownership in C",
     .description = "A generated WMV exercises probing and declared video construction, metadata, paths, "
                    "track selection, URI-factory behavior and owned lifetime through the C ABI.",
-    .apis = {"cna_video_info_init", "cna_video_create", "cna_video_create_with_metadata",
+    .apis = {"cna_game_run_frame_ext", "cna_video_info_init", "cna_video_create", "cna_video_create_with_metadata",
              "cna_video_create_from_uri_ext", "cna_video_get_width", "cna_video_get_height",
              "cna_video_get_frames_per_second", "cna_video_get_info",
              "cna_video_get_soundtrack_type", "cna_video_get_duration", "cna_video_set_duration",

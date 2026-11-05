@@ -29,6 +29,7 @@
 #include "Microsoft/Xna/Framework/Content/ContentTypeReaderManager.hpp"
 #include "Microsoft/Xna/Framework/Content/Pipeline/Serialization/Compiler/ContentWriter.hpp"
 #include "Microsoft/Xna/Framework/Content/Pipeline/Serialization/Intermediate/IntermediateSerializer.hpp"
+#include "System/ArgumentNullException.hpp"
 
 namespace Pipeline = CNA::Content::Pipeline;
 namespace Xna = Microsoft::Xna::Framework::Content::Pipeline;
@@ -343,8 +344,9 @@ namespace
             ++reads;
             auto profile = std::make_shared<Profile>();
             profile->name = input.ReadString();
-            profile->health = input.ReadObject<Vital>().health;
             VitalReader rawReader;
+            // WriteObject(value, writer) omits the dispatch marker for a value-type hint.
+            profile->health = input.ReadObject<Vital>(rawReader).health;
             profile->rawHealth = input.ReadRawObject<Vital>(rawReader).health;
             profile->inlineBadge = input.ReadObject<std::shared_ptr<Badge>>();
             input.ReadSharedResource<std::shared_ptr<Badge>>(
@@ -451,7 +453,7 @@ int main()
             check(directRegistry.Writers() == firstDirectWriters &&
                       vitalWriter->Identity() == Pipeline::ContentComponentIdentity{
                           "CNA.XnaObjectXnbWriter[CnaDemos.XmlVital]",
-                          "2;" + Pipeline::XnbOutputOptionsDigest(directOptions)} &&
+                          "3;" + Pipeline::XnbOutputOptionsDigest(directOptions)} &&
                       vitalSchemas.size() == 1u &&
                       vitalSchemas.front().assetTypeId ==
                           static_cast<std::uint32_t>(Pipeline::XnbOutputAssetId::XnaObject) &&
@@ -469,13 +471,14 @@ int main()
             WriteFile(output / "direct-registration.xnb", directVital.bytes);
             Runtime::ContentTypeReaderManager::AddTypeCreator(
                 "CnaDemos.XmlVitalReader", [] { return std::make_unique<VitalReader>(); });
-            Runtime::ContentManager directContent(nullptr, output.string());
+            Runtime::ContentManager directContent;
+            directContent.setRootDirectoryProperty(output.string());
             check(directVital.assetTypeId == static_cast<std::uint32_t>(Pipeline::XnbOutputAssetId::XnaObject) &&
                       directVital.assetSchemaVersion == 1u && directVital.assetTypeName == "CnaDemos.XmlVital" &&
                       directVital.bytes.size() > 6u &&
-                      (static_cast<unsigned char>(directVital.bytes[5]) & 0x80u) != 0u &&
+                      (static_cast<unsigned char>(directVital.bytes[5]) & 0x80u) == 0u &&
                       directContent.Load<Vital>("direct-registration").health == 63,
-                  "a directly registered writer applies configured compression and produces a loadable typed XNB");
+                  "Windows Phone skips requested compression and the directly registered writer produces a loadable typed XNB");
             std::cout << "Direct XNB target: "
                       << (directVital.bytes[3] == 'm' ? "WindowsPhone" :
                           directVital.bytes[3] == 'x' ? "Xbox360" : "Windows")
@@ -556,7 +559,8 @@ int main()
             WriteFile(extensionOutput / "multi-extension.xnb", extensionBuilt.output.bytes);
             Runtime::ContentTypeReaderManager::AddTypeCreator(
                 "CnaDemos.XmlExtensionReader", [] { return std::make_unique<ExtensionReader>(); });
-            Runtime::ContentManager extensionContent(nullptr, extensionOutput.string());
+            Runtime::ContentManager extensionContent;
+            extensionContent.setRootDirectoryProperty(extensionOutput.string());
             check(extensionBuilt.importer.name == "XmlImporter" &&
                       extensionBuilt.processor.name == "PassThroughProcessor(CnaDemos.XmlExtensionSource)" &&
                       extensionBuilt.writer.name == "CNA.XnaObjectXnbWriter[CnaDemos.XmlExtensionSource]" &&
@@ -633,11 +637,11 @@ int main()
                       System::Type::From<Vital>(),
                   "a completed compile freezes registration while known lookup stays usable and unknown lookup is refused");
             const auto firstXnb = ReadFile(output / "sentinel.xnb");
-            check(compressionChecks == 1 && compressionPlatforms == 1 && writerContexts == 1 &&
+            check(compressionChecks == 0 && compressionPlatforms == 0 && writerContexts == 1 &&
                   firstXnb.size() > 6 && firstXnb.substr(0, 3) == "XNB" && firstXnb[3] == 'm' &&
                   (static_cast<unsigned char>(firstXnb[5]) & 0x01u) != 0 &&
                   (static_cast<unsigned char>(firstXnb[5]) & 0x80u) == 0,
-                  "the writer sees Windows Phone HiDef and declines the requested root compression");
+                  "the writer sees Windows Phone HiDef while the compiler bypasses compression and its policy callback");
             const auto manifestPath = output / Pipeline::ContentBuildManifestFileName;
             const auto firstManifest = ReadFile(manifestPath);
             const auto manifest = Pipeline::ContentBuildManifest::Parse(firstManifest);
@@ -650,7 +654,8 @@ int main()
             Runtime::ContentTypeReaderManager::AddTypeCreator(
                 "CnaDemos.XmlRareBadgeReader", [] { return std::make_unique<RareBadgeReader>(); });
             Runtime::ContentTypeReaderManager::AddTypeCreator(ReaderName, [] { return std::make_unique<ProfileReader>(); });
-            Runtime::ContentManager content(nullptr, output.string());
+            Runtime::ContentManager content;
+            content.setRootDirectoryProperty(output.string());
             const auto loaded = content.Load<std::shared_ptr<Profile>>("sentinel");
             check(loaded && loaded->name == "Sentinel" && loaded->health == 75 && loaded->rawHealth == 76 && reads == 1,
                   "ordinary, typed and raw writer paths dispatch to game readers and restore authored fields");
@@ -666,12 +671,12 @@ int main()
             check(content.Load<std::shared_ptr<Profile>>("sentinel") == loaded && reads == 1,
                   "a repeated runtime Load reuses the cached profile without invoking its reader");
             const int unchanged = Pipeline::RunContentCompiler(arguments, factory);
-            check(unchanged == 0 && initializations == 2 && writes == 1 && compressionChecks == 1 &&
+            check(unchanged == 0 && initializations == 2 && writes == 1 && compressionChecks == 0 &&
                   ReadFile(manifestPath) == firstManifest,
                   "a fresh XML pipeline registry skips unchanged authored content without calling the writer");
             AuthorProfile(source / "sentinel.xml", 120, output / "portraits" / "sentinel.xnb", false);
             const int edited = Pipeline::RunContentCompiler(arguments, factory);
-            check(edited == 0 && initializations == 3 && writes == 2 && compressionChecks == 2 &&
+            check(edited == 0 && initializations == 3 && writes == 2 && compressionChecks == 0 &&
                   initializedWrites == 2 && writerContexts == 2 && ReadFile(manifestPath) != firstManifest,
                   "editing the XML source rebuilds its XNB through the registered game writer");
             check(content.Load<std::shared_ptr<Profile>>("sentinel") == loaded && loaded->health == 75 && reads == 1,
@@ -693,7 +698,8 @@ int main()
             compressedOptions.compressContent = true;
             const auto compressed = compressedCompiler.Compile<Vital>(Vital{91}, compressedOptions);
             WriteFile(output / "default-compressed.xnb", compressed.bytes);
-            Runtime::ContentManager compressedContent(nullptr, output.string());
+            Runtime::ContentManager compressedContent;
+            compressedContent.setRootDirectoryProperty(output.string());
             const auto compressedVital = compressedContent.Load<Vital>("default-compressed");
             check(compressed.bytes.size() > 6 &&
                   (static_cast<unsigned char>(compressed.bytes[5]) & 0x80u) != 0 &&
@@ -726,13 +732,17 @@ int main()
             options.assetName = "writer-probe";
             std::string diagnostic;
             try { (void)compiler.Compile<WriterProbeSource>(value, options); }
+            catch (const System::ArgumentNullException& error)
+            {
+                if (error.getParamNameProperty() == "value") diagnostic = "ArgumentNullException:value";
+            }
             catch (const Xna::PipelineException& error) { diagnostic = error.what(); }
             foreignVitalWriter.reset();
             return diagnostic;
         };
         const auto rawNull = compileProbe(WriterProbeMode::RawNull);
-        check(rawNull.find("null reference has no raw form") != std::string::npos,
-              "WriteRawObject refuses a null reference because raw payloads have no type marker");
+        check(rawNull == "ArgumentNullException:value",
+              "WriteRawObject refuses a null reference with ArgumentNullException naming value");
         const auto missingDynamic = compileProbe(WriterProbeMode::MissingDynamic);
         check(missingDynamic.find("No ContentTypeWriter is registered for 'CnaDemos.RareBadgeSource'") != std::string::npos &&
               missingDynamic.find("declared as 'CnaDemos.BadgeSource'") != std::string::npos,

@@ -263,6 +263,7 @@ int main(int argc, char** argv)
     CNA_GameCallbacks callbacks;
     CNA_GameCreateInfo info;
     CNA_Handle game = CNA_INVALID_HANDLE;
+    CNA_Bool running = CNA_FALSE;
 
     cna_demo_init(&demo, "c_api.media.video_asset", argc, argv, 1);
     memset(&state, 0, sizeof(state));
@@ -281,7 +282,7 @@ int main(int argc, char** argv)
 
     if (cna_demo_check_result(&demo, cna_game_create(&info, &game),
                               "create the Video metadata game")) {
-        cna_demo_check_result(&demo, cna_game_run_one_frame(game),
+        cna_demo_check_result(&demo, cna_game_run_frame_ext(game, &running),
                               "run its Video inspection callback");
         cna_demo_check(&demo, state.validated == 1, "the Video metadata audit ran exactly once");
     }

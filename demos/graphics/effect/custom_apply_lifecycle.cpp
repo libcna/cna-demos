@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MS-PL
+// TQ-035 (b6b8ab844): Refresh Effect.Dispose does not call the base Disposing event.
 // Derive from Effect to observe the protected OnApply hook and public disposal contract.
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Graphics/Effect.hpp"
@@ -74,8 +75,8 @@ namespace
                 ++disposingEvents;
             };
             effect.Dispose();
-            Context().Check(effect.getIsDisposedProperty() && disposingEvents == 1,
-                            "Dispose marks the effect and raises one Disposing event");
+            Context().Check(effect.getIsDisposedProperty() && disposingEvents == 0,
+                            "Dispose marks the effect without raising Disposing, as Refresh Effect.Dispose overrides the base event");
             material.Apply();
             Context().Check(!material.getIsDisposedProperty(),
                             "the cloned EffectMaterial remains usable after its source is disposed");
@@ -85,8 +86,8 @@ namespace
                             "disposed effects reject direct and pass Apply before calling OnApply");
 
             effect.Dispose();
-            Context().Check(disposingEvents == 1,
-                            "disposing an Effect twice is idempotent");
+            Context().Check(disposingEvents == 0,
+                            "a second Effect disposal still raises no Disposing event");
             Context().Print("OnApply calls {}, Disposing events {}", effect.ApplyCount(), disposingEvents);
         }
     };

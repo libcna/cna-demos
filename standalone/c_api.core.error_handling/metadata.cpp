@@ -12,7 +12,7 @@ CNA_DEMOS_STANDALONE({
                    "failed while destruction still invokes content cleanup once.",
     .apis = {"cna_error_get_last_info", "cna_error_get_last_message_size", "cna_error_copy_last_message",
              "cna_game_get_is_active", "cna_game_get_type_name_size", "cna_game_copy_type_name",
-             "cna_game_run_one_frame", "cna_sound_effect_set_master_volume",
+             "cna_game_run_frame_ext", "cna_sound_effect_set_master_volume",
              "cna_error_get_last_exception_type_size_ext", "cna_error_copy_last_exception_type_ext",
              "cna_error_get_last_exception_param_name_size_ext", "cna_error_copy_last_exception_param_name_ext",
              "CNA_ErrorInfo", "CNA_CallbackError", "CNA_Result"},

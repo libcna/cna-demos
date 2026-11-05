@@ -6,7 +6,7 @@ CNA_DEMOS_STANDALONE({
     .title = "Morph-target data, tracks, blending and part upload in C",
     .description = "A C workflow owns morph source data, evaluates weight tracks, blends CPU "
                    "vertices and uploads an attached result through ModelMeshPart.",
-    .apis = {"cna_morph_target_data_ext_create", "cna_morph_target_data_ext_destroy",
+    .apis = {"cna_game_run_frame_ext", "cna_morph_target_data_ext_create", "cna_morph_target_data_ext_destroy",
              "cna_morph_target_data_ext_get_type_name_byte_count",
              "cna_morph_target_data_ext_copy_type_name", "cna_morph_target_data_ext_get_stride",
              "cna_morph_target_data_ext_get_base_vertex_byte_count",

@@ -7,7 +7,7 @@ CNA_DEMOS_STANDALONE({
     .description = "A C program contrasts empty and file-backed standalone textures, performs atomic typed "
                    "rectangle transfers and PNG/JPEG output, reloads a saved PNG, then creates, uploads and "
                    "decodes renderer-backed textures while controlling context-recovery CPU shadows.",
-    .apis = {"cna_texture_get_info", "cna_texture2d_create_standalone",
+    .apis = {"cna_game_run_frame_ext", "cna_texture_get_info", "cna_texture2d_create_standalone",
              "cna_texture2d_create_from_file", "cna_texture2d_create_from_file_with_device",
              "cna_texture2d_create_from_rgba8", "cna_texture2d_set_data_rgba8_bytes",
              "cna_texture2d_get_storage_info", "cna_texture2d_set_data", "cna_texture2d_get_data",
