@@ -23,9 +23,7 @@ namespace
         // On a Zune or Windows Phone this was the device's music and photo library. On a desktop
         // CNA indexes the user's music and picture folders. The numbers depend on the machine,
         // so the demo only reports them (counts only -- nothing about the files themselves).
-        std::vector<std::unique_ptr<MediaSource>> sources;
-        for (MediaSource* source : MediaSource::GetAvailableMediaSources())
-            sources.emplace_back(source);
+        const std::vector<std::shared_ptr<MediaSource>> sources = MediaSource::GetAvailableMediaSources();
         bool sourceRecordsAreNamed = !sources.empty();
         bool sourceRecordsAreLocal = !sources.empty();
         for (const auto& source : sources)
@@ -41,13 +39,13 @@ namespace
         ctx.Check(sourceRecordsAreNamed, "every returned media source has matching nonempty name and text");
         ctx.Check(sourceRecordsAreLocal, "every available CNA desktop media source is a LocalDevice");
 
-        const MediaLibrary library(sources.front().get());
-        const MediaSource* selectedSource = library.getMediaSourceProperty();
-        ctx.Check(selectedSource != nullptr && selectedSource != sources.front().get() &&
-                      selectedSource->getNameProperty() == sources.front()->getNameProperty() &&
-                      selectedSource->getMediaSourceTypeProperty() == sources.front()->getMediaSourceTypeProperty() &&
-                      selectedSource->ToString() == sources.front()->ToString(),
-                  "the library copies the selected source record instead of borrowing it");
+        // XNA's MediaLibrary keeps the very MediaSource it is given and returns it from
+        // MediaSource (CNA HND-TQ-39); CNA shares that object, so it outlives this list too.
+        const MediaLibrary library(sources.front());
+        const std::shared_ptr<MediaSource> selectedSource = library.getMediaSourceProperty();
+        ctx.Check(selectedSource != nullptr && selectedSource == sources.front() &&
+                      selectedSource->getNameProperty() == sources.front()->getNameProperty(),
+                  "the library returns the very source it was opened on");
         ctx.Print("songs {}, albums {}, artists {}, genres {}, playlists {}, pictures {}",
                   library.getSongsProperty()->getCountProperty(), library.getAlbumsProperty()->getCountProperty(),
                   library.getArtistsProperty()->getCountProperty(), library.getGenresProperty()->getCountProperty(),
