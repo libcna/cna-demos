@@ -30,7 +30,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   presents as CNA's renderer feature matrix documents them (GAP-08) and requests an override
   window that names no window only on windowless devices (CNA-DEMOS-ISSUE-158).
 - `tools/test_validate.py` stubs the hardware-safety audit stage that `tools/validate.sh` runs.
-- CI pins CNA `a8adc79c1` and sharp-runtime `0abe8a91` and initializes CNA's avatar-asset
+- CI pins CNA `1c75052a5` (which fixes CNA-DEMOS-ISSUE-157/158) and sharp-runtime `cda173e1`; the
+  local sweeps in HANDOFF.md ran against CNA `a8adc79c1` and sharp-runtime `0abe8a91`. CI initializes CNA's avatar-asset
   submodule (the previous CNA pin predated the shared `MediaSource` API, so the CI build failed);
   current documentation names SDLGPU and CNA's per-platform default renderers.
 - Extended eleven existing input, audio, texture, SpriteBatch and render-target demos to preserve
