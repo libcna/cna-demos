@@ -11,10 +11,10 @@ on:
 
 env:
   # The exact CNA and sharp-runtime commits cna-demos is built and tested against
-  # (HANDOFF.md "Dependencies"). cna-demos needs CNA newer than 0.1.0: IPlatform::Supports and
-  # the renderer capability features of C ABI 0.50.0.
-  CNA_REF: ba707082eb935809c0fd9479c0e0c9c2d42cfcce             # CNA next
-  SHARP_RUNTIME_REF: f990d0741534664dc7d879fcf6c43bc5db83acc5   # sharp-runtime next
+  # (HANDOFF.md "Dependencies"). The demos follow CNA next's current API (CNA 0.2.0, C ABI
+  # 0.60.0), so an older CNA no longer compiles them.
+  CNA_REF: a8adc79c1206773fdb0cacac1278472f72f35059             # CNA next
+  SHARP_RUNTIME_REF: 0abe8a91205093e2288a6473562446d8b2d48adf   # sharp-runtime next
 
 jobs:
   windowless:
@@ -41,7 +41,11 @@ jobs:
           path: sharp-runtime
 
       - name: CNA submodules
-        run: git -C cna submodule update --init --depth 1 third_party/SDL third_party/SDL_mixer third_party/draco
+        # The avatar catalogs (cna-avatar-assets) are a submodule since CNA 56d5d8202; CNA's
+        # gamer-services module refuses to configure without them.
+        run: |
+          git -C cna submodule update --init --depth 1 third_party/SDL third_party/SDL_mixer \
+            third_party/draco modules/gamer-services/assets/avatars
 
       - name: Install dependencies
         run: |

@@ -14,10 +14,12 @@ concrete areas is [docs/ROADMAP.md](docs/ROADMAP.md); the current state is [HAND
   graphics-ext (CNAEXT), net, gamer-services (incl. avatars), platform, c-api, 8 renderer
   families.
 * **Renderers:** 10 public identities -- OPENGLES3, OPENGL33, WEBGL2, WEBGPU, HEADLESS, SOFTWARE,
-  STUB, DIRECTX9, SDL_GPU, FNA3D. Compile-time selection plus
+  STUB, DIRECTX9, SDLGPU, FNA3D. Compile-time selection plus
   an opt-in multi-renderer mode with runtime selection (`CNA::GraphicsRendererSelection`, latched
-  at the first GraphicsDevice; `CNA_GRAPHICS_RENDERER` environment variable). SDL_RENDERER,
-  VULKAN, DIRECTX11 and METAL were retired on 2026-10-13; their C ABI identities remain reserved.
+  at the first GraphicsDevice; `CNA_GRAPHICS_RENDERER` environment variable). The default is
+  WEBGL2 under Emscripten, SDLGPU on Windows/macOS/iOS and OPENGLES3 elsewhere. Retired
+  identities are refused by name and keep their reserved C ABI values (CNA
+  `docs/removed-renderers.md`).
 * **Build/consumption:** no installed CMake package; consumers `add_subdirectory()` a CNA source
   checkout and link the `CNA` umbrella (cna-template, cna-examples, cna-samples all do this).
   Siblings: `../sharp-runtime` (always), `../easy-gl` + `../meta-gl` (GL renderers). Submodules:

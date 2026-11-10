@@ -10,8 +10,10 @@ global variables and one cue variable. music.xwb is a streaming wave bank (flag 
 kind a game streams from disc instead of loading. limits.xgs reuses the tone banks with
 authored category limits: Music rejects a second voice and SFX replaces the oldest.
 release.xsb authors a 500 ms fade-out on a complex single-sound cue backed by a three-second tone.
-release_rpc.xgs/.xsb bind a volume RPC to XACT's built-in ReleaseTime variable, giving a simple cue
-a 150 ms public Stopping phase without an authored cue fade.
+release_rpc.xgs/.xsb bind a track-level volume RPC to XACT's built-in cue-instance ReleaseTime
+variable, giving a simple cue a 150 ms public Stopping phase without an authored cue fade. XACT
+derives an RPC-only release only from such a binding: a sound-level curve or a global variable
+named ReleaseTime supplies none (CNA docs/xact-rpc.md, FAudio FACT_internal.c:802-827).
 
 tools/generate_assets.py calls write_all(); the files land in assets/xact/.
 """
@@ -152,8 +154,9 @@ def xsb(bank: str, wave_bank: str, cues, fade_out_ms: int | None = None,
 
 
 def release_rpc_xgs() -> bytes:
-    """One category and one built-in ReleaseTime variable driving a volume RPC. The curve reaches
-    its -20 dB floor at 30 ms and extends to 150 ms; the final x value defines the release phase."""
+    """One category and a cue-instance ReleaseTime variable (flags 0x07: public, read-only, cue
+    instance) driving a volume RPC. The curve reaches its -20 dB floor at 30 ms and extends to
+    150 ms; the final x value defines the release phase."""
     header_size = 69
     category_offset = header_size
     variable_offset = category_offset + 10
@@ -168,7 +171,7 @@ def release_rpc_xgs() -> bytes:
     assert len(out) == header_size
 
     out += struct.pack("<BHHBHBB", 255, 0, 0, 0, 0xFFFF, 255, 0)
-    out += struct.pack("<Bfff", 0x03, 0.0, 0.0, 100000.0)
+    out += struct.pack("<Bfff", 0x07, 0.0, 0.0, 100000.0)
     out += b"Default\0ReleaseTime\0"
     assert len(out) == rpc_offset
 
@@ -180,7 +183,8 @@ def release_rpc_xgs() -> bytes:
 
 
 def release_rpc_xsb(rpc_code: int = 112) -> bytes:
-    """A simple ReleaseTimeCue using Release wave zero and one sound-level RPC code."""
+    """A simple ReleaseTimeCue using Release wave zero and one track-level RPC code (sound flag
+    0x04; a simple sound's single track owns the code list)."""
     header = 138
     wave_bank_name_offset = header
     sound_offset = wave_bank_name_offset + 64
@@ -196,7 +200,7 @@ def release_rpc_xsb(rpc_code: int = 112) -> bytes:
     out += name64("ReleaseRpcSounds")
     assert len(out) == header
     out += name64("Release")
-    out += struct.pack("<BHBhBHHB", 0x02, 0, 0x64, 0, 0, 0, 0, 0)
+    out += struct.pack("<BHBhBHHB", 0x04, 0, 0x64, 0, 0, 0, 0, 0)
     out += struct.pack("<HBI", 7, 1, rpc_code)
     out += struct.pack("<BI", 0, sound_offset)
     out += struct.pack("<IH", name_offset, 0)

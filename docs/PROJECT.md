@@ -25,7 +25,7 @@ The same demo serves several purposes at once:
 | Documentation | metadata is structured enough to generate API example pages later |
 | API confidence | each demo uses the real CNA API of the checked-out version, and is built and run |
 | Regression detection | automated demos carry checks; every demo is a CTest test |
-| Renderer validation | one process per renderer; the same demo runs on SOFTWARE, OpenGL ES 3, Vulkan, ... |
+| Renderer validation | one process per renderer; the same demo runs on SOFTWARE, OpenGL ES 3, SDLGPU, ... |
 | Maintainability of CNA | gaps and bugs surface as failing demos and are recorded in `CNA_ISSUES.md` |
 
 ## How it differs from neighbouring things

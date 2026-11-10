@@ -16,6 +16,7 @@
 #include "Microsoft/Xna/Framework/Graphics/SpriteFont.hpp"
 #include "Microsoft/Xna/Framework/Graphics/SpriteSortMode.hpp"
 #include "Microsoft/Xna/Framework/Vector2.hpp"
+#include "System/InvalidOperationException.hpp"
 
 using namespace Microsoft::Xna::Framework;
 using namespace Microsoft::Xna::Framework::Graphics;
@@ -46,6 +47,14 @@ namespace
             detached.EndScreenDeviceChange("Synthetic display", 320, 240);
             Context().Check(detached.getScreenDeviceNameProperty() == "Synthetic display" && detachedChanges == 1,
                             "ending a detached device change stores its display name and raises one event");
+            // Each End consumes its Begin; XNA 4.0 Refresh refuses an End without one
+            // (WindowsGameForm.EndScreenDeviceChange IL_0000..0017, CNA TQ-060).
+            bool unpairedRefused = false;
+            try { detached.EndScreenDeviceChange("Synthetic display"); }
+            catch (const System::InvalidOperationException&) { unpairedRefused = true; }
+            Context().Check(unpairedRefused && detachedChanges == 1,
+                            "an End without a preceding Begin is refused and raises nothing");
+            detached.BeginScreenDeviceChange(false);
             detached.EndScreenDeviceChange("Synthetic display");
             Context().Check(detachedChanges == 1,
                             "the current-size overload does not repeat an unchanged display event");

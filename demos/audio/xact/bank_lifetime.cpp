@@ -93,8 +93,11 @@ namespace
                 ++activeEvents;
                 cueSenders = cueSenders && sender == expected;
             });
-            ctx.Check(prepared->getIsPreparedProperty() && !waves.getIsInUseProperty() && !sounds.getIsInUseProperty(),
-                      "prepared cues alone do not put either bank in use");
+            // XACT 3.6's owner boundary (CNA TQ-XACT-30/32): GetCue prepares the cue and resolves
+            // its waves before anything plays. An undisposed cue handle keeps its sound bank in use,
+            // and the sound bank's resolved references keep the wave bank in use.
+            ctx.Check(prepared->getIsPreparedProperty() && waves.getIsInUseProperty() && sounds.getIsInUseProperty(),
+                      "prepared cue handles put the sound bank in use, and their resolved waves the wave bank");
             active->Play();
             active->Pause();
             ctx.Check(active->getIsPausedProperty() && waves.getIsInUseProperty() && sounds.getIsInUseProperty(),
@@ -104,17 +107,26 @@ namespace
             ctx.Check(waves.getIsDisposedProperty() && active->getIsDisposedProperty() &&
                       active->getIsStoppedProperty() && !waves.getIsInUseProperty(),
                       "disposing the wave bank disposes its consuming cue");
-            ctx.Check(!sounds.getIsDisposedProperty() && prepared->getIsPreparedProperty() &&
-                      !prepared->getIsDisposedProperty() && !sounds.getIsInUseProperty(),
-                      "the sound bank and never-played prepared cue survive wave-bank disposal");
+            // The never-played prepared cue resolved the same waves, so it is released as well.
+            ctx.Check(!sounds.getIsDisposedProperty() && prepared->getIsDisposedProperty() &&
+                      prepared->getIsStoppedProperty() && !sounds.getIsInUseProperty(),
+                      "the sound bank survives wave-bank disposal, which also releases the never-played prepared cue");
             waves.Dispose();
-            ctx.Check(waveEvents == 1 && waveSender && preparedEvents == 0 && activeEvents == 1 && cueSenders,
+            ctx.Check(waveEvents == 1 && waveSender && preparedEvents == 1 && activeEvents == 1 && cueSenders,
                       "wave-bank disposal identifies each released object once despite repetition");
+            bool missingWavesRefused = false;
+            try
+            {
+                const std::unique_ptr<Cue> unexpected(sounds.GetCue("MidTone"));
+                static_cast<void>(unexpected);
+            }
+            catch (const System::InvalidOperationException&) { missingWavesRefused = true; }
+            ctx.Check(missingWavesRefused, "GetCue refuses a cue whose wave bank is no longer loaded");
 
             sounds.Dispose();
-            ctx.Check(sounds.getIsDisposedProperty() && prepared->getIsDisposedProperty() &&
-                      prepared->getIsStoppedProperty(),
-                      "disposing the sound bank also disposes its never-played prepared cue");
+            ctx.Check(sounds.getIsDisposedProperty() && !sounds.getIsInUseProperty() &&
+                          prepared->getIsDisposedProperty() && active->getIsDisposedProperty(),
+                      "the sound bank disposes after its wave bank without reviving either cue");
             bool getCueRefused = false;
             bool playCueRefused = false;
             try
@@ -129,12 +141,28 @@ namespace
                       "a disposed sound bank refuses both controlled and fire-and-forget cue creation");
             sounds.Dispose();
             ctx.Check(soundEvents == 1 && soundSender && preparedEvents == 1 && activeEvents == 1 && cueSenders,
-                      "sound-bank disposal identifies the remaining cue without repeating prior notifications");
+                      "sound-bank disposal notifies once and repeats none of the cue notifications");
             ctx.Check(!engine.getIsDisposedProperty(), "disposing the banks leaves their engine alive");
             // unique_ptr still deletes the caller-owned wrappers, already disposed by their banks.
         }
         ctx.Check(waveEvents == 1 && soundEvents == 1 && preparedEvents == 1 && activeEvents == 1,
                   "deleting the disposed bank and cue wrappers raises no extra notifications");
+
+        // A sound bank's own disposal releases a never-played prepared cue, and with it the
+        // last resolved reference that kept the wave bank in use.
+        {
+            WaveBank waves(&engine, TitleLocation::Path() + "/assets/xact/tones.xwb");
+            SoundBank sounds(&engine, "assets/xact/tones.xsb");
+            std::unique_ptr<Cue> prepared(sounds.GetCue("MidTone"));
+            prepared.reset();
+            ctx.Check(!sounds.getIsInUseProperty() && waves.getIsInUseProperty(),
+                      "deleting the only cue handle frees the sound bank, whose resolved references keep the wave bank in use");
+            prepared.reset(sounds.GetCue("MidTone"));
+            sounds.Dispose();
+            ctx.Check(prepared->getIsDisposedProperty() && prepared->getIsStoppedProperty() &&
+                          !waves.getIsDisposedProperty() && !waves.getIsInUseProperty(),
+                      "disposing the sound bank disposes its never-played prepared cue and frees the wave bank");
+        }
 
         // Fresh banks can register with the same live engine. Disposing the engine now releases
         // the entire graph, including both a paused consumer and a never-played prepared cue.
@@ -200,15 +228,15 @@ namespace
         ctx.Check(getVariableRefused && setVariableRefused,
                   "a disposed engine refuses both global-variable access directions");
         ctx.Check(updateCompleted, "Update is a safe no-op after engine disposal");
-        ctx.Print("Wave-bank and sound-bank ownership differ for a prepared cue; engine disposal releases both. "
-                  "Event counts are checked without requiring a global callback order.");
+        ctx.Print("A prepared cue depends on both banks: disposing either releases it, and engine disposal releases "
+                  "the whole graph. Event counts are checked without requiring a global callback order.");
     }
 }
 CNA_DEMOS_CONSOLE(BankLifetime, {
     .id = "audio.xact.bank_lifetime",
     .title = "XACT bank and engine disposal",
-    .description = "Checks XACT bank construction failures and stub states, then contrasts prepared and paused cues "
-                   "during bank/engine disposal and verifies AudioEngine behavior afterward.",
+    .description = "Checks XACT bank construction failures and stub states, then follows prepared and paused cues "
+                   "and the banks' IsInUse through bank/engine disposal and verifies AudioEngine behavior afterward.",
     .apis = {"AudioEngine::Dispose", "AudioEngine::IsDisposed", "AudioEngine::Disposing", "AudioEngine::Update",
              "AudioEngine::RendererDetails", "AudioEngine::GetCategory", "AudioEngine::GetGlobalVariable",
              "AudioEngine::SetGlobalVariable",

@@ -296,11 +296,19 @@ int main(int argc, char** argv)
             cna_audio_category_stop(sfx, CNA_AUDIO_STOP_OPTIONS_IMMEDIATE) ==
                 CNA_RESULT_SUCCESS &&
             cna_audio_engine_update(engine) == CNA_RESULT_SUCCESS &&
-            cna_sound_bank_get_is_in_use(sound_bank, &flag) == CNA_RESULT_SUCCESS &&
-            flag == CNA_FALSE &&
+            cna_cue_get_info(sfx_cue, &sfx_info) == CNA_RESULT_SUCCESS &&
+            sfx_info.is_stopped == CNA_TRUE,
+        "category Stop is selective, validates its option and stops both categories' cues");
+    /* XACT 3.6's owner boundary (CNA TQ-XACT-30/32): a stopped Cue handle keeps its sound bank
+       in use until it is destroyed, and the sound bank's resolved references keep the wave
+       bank in use until the sound bank itself is destroyed. */
+    cna_demo_check(
+        &demo,
+        cna_sound_bank_get_is_in_use(sound_bank, &flag) == CNA_RESULT_SUCCESS &&
+            flag == CNA_TRUE &&
             cna_wave_bank_get_is_in_use(resident, &flag) == CNA_RESULT_SUCCESS &&
-            flag == CNA_FALSE,
-        "category Stop is selective, validates its option and makes both banks idle at the end");
+            flag == CNA_TRUE,
+        "the stopped caller-owned Cue handles keep both banks in use");
 
     cna_demo_check(
         &demo,
@@ -310,10 +318,8 @@ int main(int argc, char** argv)
             flag == CNA_TRUE &&
             cna_audio_category_stop(sfx, CNA_AUDIO_STOP_OPTIONS_IMMEDIATE) ==
                 CNA_RESULT_SUCCESS &&
-            cna_audio_engine_update(engine) == CNA_RESULT_SUCCESS &&
-            cna_sound_bank_get_is_in_use(sound_bank, &flag) == CNA_RESULT_SUCCESS &&
-            flag == CNA_FALSE,
-        "fire-and-forget playback is bank-owned and category Stop retires it through Update");
+            cna_audio_engine_update(engine) == CNA_RESULT_SUCCESS,
+        "fire-and-forget playback is bank-owned and category Stop applies to it through Update");
     memset(&listener, 0, sizeof(listener));
     memset(&emitter, 0, sizeof(emitter));
     cna_demo_check(
@@ -343,6 +349,14 @@ int main(int argc, char** argv)
         "both stopped caller-owned Cue handles release before their bank");
     music_cue = CNA_INVALID_HANDLE;
     sfx_cue = CNA_INVALID_HANDLE;
+    cna_demo_check(
+        &demo,
+        cna_sound_bank_get_is_in_use(sound_bank, &flag) == CNA_RESULT_SUCCESS &&
+            flag == CNA_FALSE &&
+            cna_wave_bank_get_is_in_use(resident, &flag) == CNA_RESULT_SUCCESS &&
+            flag == CNA_TRUE,
+        "with the Cue handles released and category Stop having retired the fire-and-forget cues, the "
+        "sound bank is idle while its resolved references keep the wave bank in use");
 
 cleanup:
     if (music_cue != CNA_INVALID_HANDLE) {
@@ -372,6 +386,13 @@ cleanup:
             cna_sound_bank_destroy(sound_bank) == CNA_RESULT_SUCCESS && sound_disposals == 1,
             "sound-bank destruction raises its subscribed event exactly once");
         sound_bank = CNA_INVALID_HANDLE;
+        if (resident != CNA_INVALID_HANDLE) {
+            cna_demo_check(
+                &demo,
+                cna_wave_bank_get_is_in_use(resident, &flag) == CNA_RESULT_SUCCESS &&
+                    flag == CNA_FALSE,
+                "destroying the sound bank releases its resolved references to the resident wave bank");
+        }
     }
     if (sound_registration != CNA_INVALID_HANDLE) {
         cna_demo_check_result(&demo, cna_audio_unsubscribe_ext(sound_registration),

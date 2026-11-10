@@ -48,7 +48,8 @@ tests, cna-samples and cna-examples is explained in [docs/PROJECT.md](docs/PROJE
 * CMake **3.23** or newer (**3.29+ recommended**: with older CMake, CNA is linked statically --
   see [CNA_ISSUES.md](docs/CNA_ISSUES.md) CNA-DEMOS-ISSUE-001).
 * A C++23 compiler: GCC 14+, Clang 18+ or MSVC 19.38+ (what CNA itself requires).
-* CNA **0.1.0** and its sibling checkouts, side by side with this repository:
+* CNA `next` (0.2.0) and its sibling checkouts, side by side with this repository; the exact
+  commits CI builds against are pinned in `.github/workflows/ci.yml` (HANDOFF.md "Dependencies"):
 
   ```text
   parent/
@@ -92,7 +93,7 @@ minutes. `cmake --list-presets` shows all presets:
 
 | Preset | Renderers | Needs |
 |---|---|---|
-| `default` | CNA's platform default (OPENGLES3 on Linux, SDLGPU on Windows/macOS) | a display for running |
+| `default` | CNA's platform default (OPENGLES3 on Linux, SDLGPU on Windows/macOS, WEBGL2 under Emscripten) | a display for running |
 | `windowless` | SOFTWARE (default), HEADLESS, STUB | nothing -- no display, no GL siblings; used by CI |
 | `diagnostics-full` | windowless + `CNA_DIAGNOSTICS=FULL` | full profiler zones and trace recording |
 | `linux-multi` | OPENGLES3 (default), OPENGL33, SOFTWARE, HEADLESS, STUB | easy-gl/meta-gl |
@@ -157,8 +158,7 @@ described in [docs/AUTOMATION.md](docs/AUTOMATION.md). `python3 tools/coverage_r
 ## Platform caveats
 
 * Developed and tested on Linux (Ubuntu 24.04, GCC 14): SOFTWARE, HEADLESS, STUB without a display;
-  OPENGLES3/OPENGL33 under Xvfb with Mesa's software drivers. Historical checkpoints also
-  exercised CNA's since-retired SDL_RENDERER and VULKAN renderers. Windows, macOS,
+  OPENGLES3/OPENGL33 under Xvfb with Mesa's software drivers. Windows, macOS,
   web and Android builds follow CNA's support matrix but have **not** been tested for cna-demos
   yet -- see HANDOFF.md for exactly what was exercised.
 * Input demos need a person (they are smoke-tested unattended only). Audio demos need an audio

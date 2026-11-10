@@ -52,7 +52,11 @@ namespace
         ctx.Check(music.getIsPreparedProperty(), "the streaming wave bank becomes prepared");
         ctx.Check(!music.getIsInUseProperty(), "nothing plays from it yet");
 
+        // GetCue prepares the cue and resolves its wave (XACT 3.6's owner boundary, CNA
+        // TQ-XACT-30/32): the sound bank now holds a reference into the streaming bank.
         std::unique_ptr<Cue> theme(sounds.GetCue("Theme"));
+        ctx.Check(theme->getIsPreparedProperty() && music.getIsInUseProperty(),
+                  "preparing the music cue resolves its wave and puts the bank in use before playback");
         theme->Play();
         engine.Update();
         ctx.Check(theme->getIsPlayingProperty(), "the music cue plays from the streaming bank");
@@ -63,12 +67,19 @@ namespace
             engine.Update();
         }
 
-        // Music stops when the level ends; the bank is free again.
+        // Music stops when the level ends. Neither the stopped cue nor its disposal releases the
+        // sound bank's resolved reference; the bank is free once the sound bank is disposed.
         theme->Stop(AudioStopOptions::Immediate);
         engine.Update();
-        ctx.Check(theme->getIsStoppedProperty() && !music.getIsInUseProperty(),
-                  "after Stop the cue is stopped and the bank no longer in use");
+        ctx.Check(theme->getIsStoppedProperty() && music.getIsInUseProperty(),
+                  "after Stop the cue is stopped and the sound bank's reference keeps the bank in use");
         theme->Dispose();
+        engine.Update();
+        ctx.Check(!sounds.getIsInUseProperty() && music.getIsInUseProperty(),
+                  "disposing the cue frees the sound bank but not the wave data it resolved");
+        sounds.Dispose();
+        ctx.Check(!music.getIsInUseProperty() && !music.getIsDisposedProperty(),
+                  "disposing the sound bank releases the streaming bank, which stays loaded");
     }
 }
 
@@ -76,9 +87,11 @@ CNA_DEMOS_CONSOLE(StreamingWaveBank, {
     .id = "audio.xact.streaming_wave_bank",
     .title = "Streaming wave bank (music)",
     .description = "Shows the streaming WaveBank constructor's compatibility arguments, waits for IsPrepared through "
-                   "AudioEngine::Update, and plays a music cue while IsInUse follows playback.",
+                   "AudioEngine::Update, and plays a music cue while IsInUse follows the sound bank's resolved "
+                   "reference from GetCue until the sound bank is disposed.",
     .apis = {"WaveBank::WaveBank", "WaveBank::IsPrepared", "WaveBank::IsInUse", "AudioEngine::Update",
-             "SoundBank::GetCue", "Cue::Play", "Cue::Stop"},
+             "SoundBank::GetCue", "SoundBank::IsInUse", "SoundBank::Dispose", "Cue::IsPrepared", "Cue::Play",
+             "Cue::Stop", "Cue::Dispose"},
     .tags = {"audio", "xact", "music", "streaming"},
     .needs = CnaDemos::Need::Audio,
     .assets = {"xact/demo.xgs", "xact/music.xwb", "xact/music.xsb"},

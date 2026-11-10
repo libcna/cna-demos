@@ -92,8 +92,10 @@ namespace
         otherCopy->Dispose();
         replacement->Dispose();
 
-        // FACT counts a cue-level limit by definition, but ReplaceOldest searches the whole
-        // SoundBank for its victim. cue_replace.xsb gives MidTone a one/ReplaceOldest limit.
+        // FACT counts a cue-level limit by definition, and ReplaceOldest replaces an eligible
+        // instance of that same definition; older cues of other definitions in the bank are not
+        // victims (FACT handle_instance_limit, CNA TQ-XACT-4). cue_replace.xsb gives MidTone a
+        // one/ReplaceOldest limit.
         AudioEngine replaceEngine("assets/xact/demo.xgs");
         WaveBank replaceWaves(&replaceEngine, TitleLocation::Path() + "/assets/xact/tones.xwb");
         SoundBank replaceSounds(&replaceEngine, "assets/xact/cue_replace.xsb");
@@ -107,10 +109,10 @@ namespace
                   "an unrelated bank cue does not consume MidTone's definition-local slot");
         std::unique_ptr<Cue> triggerB(replaceSounds.GetCue("MidTone"));
         triggerB->Play();
-        ctx.Check(bankOldest->getIsStoppedProperty(),
-                  "cue-level ReplaceOldest evicts the oldest playing cue bank-wide");
-        ctx.Check(triggerA->getIsPausedProperty() && triggerB->getIsPlayingProperty(),
-                  "the older same-definition cue survives while the replacement starts");
+        ctx.Check(triggerA->getIsStoppedProperty() && triggerB->getIsPlayingProperty(),
+                  "cue-level ReplaceOldest replaces the older instance of the same definition");
+        ctx.Check(bankOldest->getIsPausedProperty(),
+                  "the bank's oldest cue, of another definition, survives the cue-level replacement");
         bankOldest->Dispose();
         triggerA->Dispose();
         triggerB->Dispose();
@@ -144,7 +146,7 @@ CNA_DEMOS_CONSOLE(InstanceLimits, {
     .id = "audio.xact.instance_limits",
     .title = "Authored XACT category and cue instance limits",
     .description = "Contrasts category and cue-definition limits, including Fail, ReplaceOldest, "
-                   "ReplaceLowestPriority and FACT's bank-wide cue-level victim search.",
+                   "ReplaceLowestPriority and FACT's definition-scoped cue-level replacement.",
     .apis = {"AudioEngine::AudioEngine", "SoundBank::GetCue", "Cue::Play", "Cue::Stop",
              "Cue::IsPlaying", "Cue::IsPaused", "Cue::Pause", "Cue::IsStopped", "Cue::Dispose", "AudioStopOptions::Immediate"},
     .tags = {"audio", "xact", "category", "instance-limit", "voice"},

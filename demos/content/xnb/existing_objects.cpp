@@ -127,8 +127,14 @@ namespace
         ctx.Check(observed.automaticRawSucceeded,
                   "ReadRawObject<T>(existing) resolves the registered reader by target type (CNA-DEMOS-ISSUE-043)");
         if (!observed.automaticRawSucceeded) ctx.Print("Automatic raw lookup failed before consuming payload: {}", observed.rawLookupError);
-        ctx.Check(observed.readerContract && observed.constructed == (observed.automaticRawSucceeded ? 4 : 3),
+        ctx.Check(observed.readerContract,
                   "the dependent reader retains the correct target type and advertises existing-object support");
+        // Three constructions: the two table readers and the fresh reader GetTypeReader returns
+        // (CNA documents that it constructs one). The inferred raw read constructs none: like
+        // XNA 4.0 Refresh's ReadRawObject<T>, it reuses the manifest's initialized weapon reader
+        // (CNA 759624b54).
+        ctx.Check(observed.constructed == 3 && observed.weaponInitializations == 1,
+                  "the inferred raw read reuses the manifest's initialized reader instead of constructing another");
         if (!ctx.Check(loadout.primary && loadout.secondary, "both serialized weapon payloads populate their slots")) return;
         ctx.Check(loadout.primaryRetained && loadout.primary->name == "Sword" && loadout.primary->ammunition == 12,
                   "indexed ReadObject fills the existing primary object without replacing its identity");

@@ -142,7 +142,8 @@ namespace
                   "Immediate interrupts an authored release without waiting for its deadline");
         interrupted->Dispose();
 
-        // A separate settings bank binds a volume RPC to XACT's built-in ReleaseTime variable.
+        // A separate settings bank binds a track-level volume RPC to XACT's built-in cue-instance
+        // ReleaseTime variable; only such a binding supplies an RPC release (CNA docs/xact-rpc.md).
         // This simple cue has no fadeOut field, so its Stopping tail comes only from the RPC's
         // final 150 ms input point rather than the authored cue fade exercised above.
         AudioEngine rpcEngine("assets/xact/release_rpc.xgs");

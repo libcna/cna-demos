@@ -16,8 +16,70 @@ CNA revision used unless stated otherwise: `10a4ef1cb4cd832f761536d7758800010494
 
 ## Open
 
-None. The final handoff audit (2026-10-24) gave every historical ID a final disposition, and
-no demo carries a `knownIssue` marker. A newly found CNA problem is added here.
+The final handoff audit (2026-10-24) gave every earlier ID a final disposition, and no demo
+carries a `knownIssue` marker. A newly found CNA problem is added here.
+
+### CNA-DEMOS-ISSUE-157 -- the C XACT `*_get_is_in_use` routes still document playback-based use
+
+- **Status: Open (documentation only), found 2026-11-10 against CNA `679ab9d64`, still present at `a8adc79c1`.** Runtime
+  behaviour is correct and the demo asserts it; no demo carries a marker.
+- **Area:** documentation only, `modules/c-api/include/CNA/C/xact.h`:
+  `cna_sound_bank_get_is_in_use` ("Reports whether any cue from a sound bank is currently
+  playing ... non-zero while a cue from the bank is playing") and `cna_wave_bank_get_is_in_use`
+  ("Reports whether any cue is currently using a wave bank ... non-zero while a cue is using the
+  bank").
+- **Related demos:** `c_api.audio.xact_banks` (C), `audio.xact.bank_lifetime` and
+  `audio.xact.streaming_wave_bank` (C++).
+- **Evidence:** CNA TQ-XACT-29/30/32 (`feb0654f3`, `b6888e522`, `2d924de08`) moved both flags
+  to XACT 3.6's measured owner boundary, and the C++ headers say so: `SoundBank::IsInUse` is true
+  "while an associated cue handle remains undisposed" (stopped cues included), and
+  `WaveBank::IsInUse` is true "until all sound banks retaining resolved references are disposed"
+  (references outlive stopped or disposed cues). The C routes forward to them. In
+  `c_api.audio.xact_banks`, after both categories are stopped and the engine updated, the two
+  stopped caller-owned Cue handles still report the sound bank and the resident wave bank in use;
+  after both handles are destroyed the sound bank reports idle while the wave bank still reports
+  in use, with no cue left at all; only destroying the sound bank clears the wave bank's flag.
+- **Expected:** the C comments state the same contract as the C++ getters: a sound bank is in use
+  while any of its cue handles (caller-owned or fire-and-forget) is undisposed, and a wave bank
+  while a sound bank retains resolved references to its waves.
+- **Suggested correction:** replace both `@brief`/`@param` texts with the C++ wording.
+
+### CNA-DEMOS-ISSUE-158 -- `Present` with an override handle that names no X11 window crashes
+
+- **Status: Open (crash), found 2026-11-10 against CNA `a8adc79c1`.** Probe-backed, no runtime
+  marker: as for ISSUE-058, the smoke catalog does not invoke the crash to keep a failing check.
+  `graphics.device.owned_lifecycle` makes the request only on windowless devices (SOFTWARE,
+  HEADLESS, STUB) and prints that it was not made on the others.
+- **Area/API:** `GraphicsDevice::Present(sourceRectangle, destinationRectangle,
+  overrideWindowHandle)` on a windowed device under SDL3's x11 driver;
+  `modules/graphics/src/Xna/GraphicsDevice.cpp` (`Present`, override binding at lines 956-978),
+  `modules/platform/src/Sdl3/Sdl3Platform.cpp` (`AdoptNativeWindowHandle`, lines 554-633),
+  `modules/platform/src/Sdl3/Sdl3GraphicsServices.cpp` (`Sdl3SurfacePresenter`, line 264).
+- **Reproduction:** on OPENGLES3 through CNA's private display runner (rootful Xwayland), a
+  separately constructed `GraphicsDevice` (default adapter, HiDef, 256x144 windowed) calls
+  `Present(std::nullopt, Rectangle(0, 0, 64, 36), 0x1234)`, 0x1234 being an XID of no window. This
+  is the call `graphics.device.owned_lifecycle` made before this change
+  (`cna-demos graphics.device.owned_lifecycle --automated --renderer OPENGLES3` at cna-demos
+  `8c2fa09`).
+- **Observed:** four `X protocol error ignored: error_code=3` (BadWindow) lines for resource
+  0x1234, then SIGSEGV. Core stack: `XVisualIDFromVisual` <- SDL `X11_GetVisualInfoFromVisual` <-
+  `X11_CreateWindowFramebuffer` <- `SDL_GetWindowSurface` <- `Sdl3SurfacePresenter` <-
+  `Sdl3Platform::CreateSurfacePresenter` <- `GraphicsDevice::Present`. `AdoptNativeWindowHandle`
+  passes the XID to `SDL_CreateWindowWithProperties` unchecked; SDL's external-window setup
+  (`SDL_x11window.c:414`) ignores the failed `XGetWindowAttributes` and keeps an uninitialised
+  visual, because CNA's X error handler (VULKAN-154) no longer exits on BadWindow. A full
+  OPENGLES3 smoke run dies at this demo. OPENGL33, SDLGPU and WEBGPU take the same adoption and
+  presenter path; only OPENGLES3 was run with the handle.
+- **Expected:** `IPlatform::AdoptNativeWindowHandle` documents "@throws PlatformException If
+  invalid or unsupported on this window system"; `Present` then propagates the refusal and the
+  device keeps presenting normally (CNA's own `ARefusedAdoptionLeavesOrdinaryPresentationUsable`).
+  Validating the XID (for example with `XGetWindowAttributes` under a trapping error handler)
+  before the import would give that refusal. XNA forwards the handle to Direct3D 9's `Present`
+  (Refresh `GraphicsDevice.Present` IL_0078-0082); its result for an invalid handle was not
+  measured here.
+- **Related documentation:** `GraphicsDevice.hpp`'s three-argument `Present` comment still says
+  "No renderer honours a destination rectangle or a foreign window", which GAP-08a/b/c and
+  `docs/graphics-renderer-feature-matrix.md` no longer state.
 
 ---
 

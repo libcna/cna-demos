@@ -92,8 +92,16 @@ namespace
             Context().Check(owned.getGraphicsDeviceStatusProperty() == GraphicsDeviceStatus::Normal,
                             "null source, null destination and window zero use ordinary Present");
 
+            // Which renderer honours which region request is CNA's documented renderer matrix
+            // (docs/graphics-renderer-feature-matrix.md, GAP-08a/b/c): every renderer but STUB and
+            // FNA3D (FNA3D-8) presents a source region, and a destination rectangle also needs a
+            // presentation window, which this windowless SOFTWARE device does not have. HEADLESS
+            // accepts every request and presents nothing.
             const std::string renderer = std::string(owned.GetGraphicsRendererName());
-            const bool acceptsSourceRegion = renderer == "SOFTWARE" || renderer == "HEADLESS";
+            const bool refusesRegions = renderer == "STUB" || renderer == "FNA3D";
+            const bool acceptsSourceRegion = !refusesRegions;
+            const bool acceptsDestination = !refusesRegions && renderer != "SOFTWARE";
+            const bool windowless = renderer == "SOFTWARE" || renderer == "HEADLESS" || renderer == "STUB";
             bool sourceRegionPresented = false;
             std::string sourceRefusal;
             try
@@ -118,23 +126,48 @@ namespace
                 }),
                 "a source region entirely outside the back buffer is rejected before presentation");
 
-            bool destinationAndWindowPresented = false;
+            bool destinationPresented = false;
             std::string destinationRefusal;
             try
             {
-                owned.Present(std::nullopt, Rectangle(0, 0, 64, 36),
-                              static_cast<std::uintptr_t>(0x1234));
-                destinationAndWindowPresented = true;
+                owned.Present(std::nullopt, Rectangle(0, 0, 64, 36), 0);
+                destinationPresented = true;
             }
             catch (const System::NotSupportedException& error)
             {
                 destinationRefusal = error.what();
             }
-            Context().Check(destinationAndWindowPresented == (renderer == "HEADLESS") &&
-                                (destinationAndWindowPresented ||
-                                 (destinationRefusal.find("destination rectangle") != std::string::npos &&
-                                  destinationRefusal.find("override window") != std::string::npos)),
-                            "destination and override-window requests are honored only by HEADLESS");
+            Context().Check(destinationPresented == acceptsDestination &&
+                                (destinationPresented ||
+                                 destinationRefusal.find("destination rectangle") != std::string::npos),
+                            "a destination rectangle is honored only by the documented renderer contract");
+
+            // An override handle names a native window (XNA forwards it to Direct3D 9's Present);
+            // 0x1234 names none. A device without a window refuses the request as unsupported, and
+            // HEADLESS accepts it. A windowed SDL3 device would adopt the handle instead, which
+            // CNA-DEMOS-ISSUE-158 turns into a crash, so the request is made only without a window.
+            if (windowless)
+            {
+                bool overridePresented = false;
+                std::string overrideRefusal;
+                try
+                {
+                    owned.Present(std::nullopt, std::nullopt, static_cast<std::uintptr_t>(0x1234));
+                    overridePresented = true;
+                }
+                catch (const System::NotSupportedException& error)
+                {
+                    overrideRefusal = error.what();
+                }
+                Context().Check(overridePresented == (renderer == "HEADLESS") &&
+                                    (overridePresented || overrideRefusal.find("override window") != std::string::npos),
+                                "a windowless device refuses an override window, which HEADLESS accepts");
+            }
+            else
+            {
+                Context().Print("An override handle that names no window is not presented on {} "
+                                "(CNA-DEMOS-ISSUE-158).", renderer);
+            }
 
             PresentationParameters resized = owned.getPresentationParametersProperty().Clone();
             resized.setBackBufferWidthProperty(320);
@@ -203,5 +236,5 @@ CNA_DEMOS_GAME(OwnedDeviceLifecycleDemo, {
              "PresentInterval::Default", "PresentInterval::One", "PresentInterval::Two"},
     .tags = {"device", "lifecycle", "reset", "present", "region", "dispose"},
     .frames = 1,
-    .restrictions = "SOFTWARE presents source regions; OPENGLES3 truthfully refuses region requests. No presented window pixels are inspected. DeviceLost is observed as absent and not claimed as exercised.",
+    .restrictions = "Region expectations follow CNA's renderer feature matrix: the windowless SOFTWARE device presents source regions only, the windowed renderers source and destination regions. An override window that names no window is requested only on windowless devices (CNA-DEMOS-ISSUE-158). No presented window pixels are inspected. DeviceLost is observed as absent and not claimed as exercised.",
 })
