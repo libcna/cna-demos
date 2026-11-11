@@ -16,6 +16,8 @@ versions follow Semantic Versioning (pre-1.0: a minor version may change the CLI
   XNB interoperability demo verifies a real independently produced compressed asset.
 
 ### Changed
+- CI pins CNA `4ef67873b` and sharp-runtime `f8ea4b1f`. The demos pass unchanged against it,
+  including CNA's stock effects latching their parameters at `EffectPass.Apply` (HANDOFF.md).
 - Followed CNA next `a8adc79c1` (C ABI 0.60.0): the XACT demos (`audio.xact.bank_lifetime`,
   `audio.xact.streaming_wave_bank`, `c_api.audio.xact_banks`) expect XACT 3.6's owner boundary for
   `SoundBank`/`WaveBank` `IsInUse` (cue handles and resolved wave references, not playback),

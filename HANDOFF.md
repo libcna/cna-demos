@@ -1,3 +1,25 @@
+# Current handoff — 2026-11-11 (CNA next `4ef67873b` re-verification)
+
+Chain: cna-demos `develop` `c1aff5b` plus this change; CNA `next`
+`4ef67873b252bb07bcb270011ae7bc5a55aac105` (CNA 0.2.0, C ABI 0.60.0); sharp-runtime `next`
+`f8ea4b1f781fffab887d55966949395ae6e1b5ab`; easy-gl `b582bd85f646678d1de38473160defed4729f323`;
+meta-gl `146e171a85571f30b7166521120502b269c1775b` (795bcdcf plus one commit that only adds GL ES
+enum names). CI pins the CNA and sharp-runtime commits (section 11).
+
+CNA changed since the last checkpoint: stock effects latch their parameters at `EffectPass.Apply`
+(`d07de8c49`), stock parameters start at zero (`c5afd4874`), disposed effects and textures are
+named by type (`e9d084fa2`), plus content, XACT loop, Net discovery and FNA3D changes. No demo
+needed a change: a review of every `Apply` call site found no stock-effect property assigned
+between `Apply` and the draw it is meant to affect, and no check pins one of the changed messages.
+
+Checks (linux-full, GCC 14, Debug, `taskset -c 0-5`, `-j4`; window and GPU runs through CNA's
+private display runner with dummy audio, section 8): build has no warnings outside CNA's vendored
+draco (16 deprecation warnings); `--validate` 733/0; 65 hardware-safety invariants; migration
+ledger 248/248; tool tests 7 + 4 + 5 pass; CTest 739 enabled, 697 PASS, 42 declared SKIP, 0 FAIL,
+ten manual tests disabled (301 s); SOFTWARE smoke 681/0/42/10; OPENGLES3 smoke 716/0/7/10.
+`docs/COVERAGE.md` is regenerated (733 demos, 308/329 types, 2128/2326 members; only its date
+changed). The CI windowless job runs on GitHub against the new pins.
+
 # Current handoff — 2026-11-10 (CNA next `a8adc79c1` stabilization)
 
 Chain: cna-demos `develop` `8c2fa09` plus this change; CNA `next`
@@ -6813,8 +6835,8 @@ avatar-asset submodules. cna-demos follows CNA next's current API.
 
 | Repo | Version | Commit |
 |---|---|---|
-| cna | next (CNA 0.2.0, C ABI 0.60.0) | a8adc79c1206773fdb0cacac1278472f72f35059 |
-| sharp-runtime | next | 0abe8a91205093e2288a6473562446d8b2d48adf |
+| cna | next (CNA 0.2.0, C ABI 0.60.0) | 4ef67873b252bb07bcb270011ae7bc5a55aac105 |
+| sharp-runtime | next | f8ea4b1f781fffab887d55966949395ae6e1b5ab |
 | easy-gl | 0.1.1 (develop) | b582bd85f646678d1de38473160defed4729f323 |
 | meta-gl | 0.4.1 (develop) | 795bcdcfe9e2c418ced189717d3699cbb0847cc0 |
 

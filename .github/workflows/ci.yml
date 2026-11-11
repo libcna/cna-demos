@@ -13,8 +13,8 @@ env:
   # The exact CNA and sharp-runtime commits cna-demos is built and tested against
   # (HANDOFF.md "Dependencies"). The demos follow CNA next's current API (CNA 0.2.0, C ABI
   # 0.60.0), so an older CNA no longer compiles them.
-  CNA_REF: 1c75052a5ddc7dcdf4ef430e5b68b0558ac2f377             # CNA next
-  SHARP_RUNTIME_REF: cda173e1ef2ad45f2d87b08daa99df98a5ebf46a   # sharp-runtime next
+  CNA_REF: 4ef67873b252bb07bcb270011ae7bc5a55aac105             # CNA next
+  SHARP_RUNTIME_REF: f8ea4b1f781fffab887d55966949395ae6e1b5ab   # sharp-runtime next
 
 jobs:
   windowless:
