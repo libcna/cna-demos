@@ -384,6 +384,10 @@ int main(int argc, char** argv)
                 parameter, CNA_EFFECT_TEXTURE_2D, &returned_texture) == CNA_RESULT_SUCCESS &&
             returned_texture == texture && cna_texture2d_destroy(texture) == CNA_RESULT_INVALID_STATE,
         "the typed Texture2D slot returns and retains the exact owned handle");
+    /* XNA's parameter holds one native texture whichever SetValue overload wrote it, so the base
+       overload writes that same slot: the typed getter reads it back, and the base form itself has
+       no getter. */
+    returned_texture = CNA_INVALID_HANDLE;
     cna_demo_check(
         &demo,
         cna_effect_parameter_set_value_texture(
@@ -391,12 +395,14 @@ int main(int argc, char** argv)
             cna_effect_parameter_get_value_texture(
                 parameter, CNA_EFFECT_TEXTURE_BASE, &returned_texture) ==
                 CNA_RESULT_INVALID_ARGUMENT &&
-            cna_effect_parameter_set_value_texture(
-                parameter, CNA_EFFECT_TEXTURE_2D, CNA_INVALID_HANDLE) == CNA_RESULT_SUCCESS &&
+            cna_effect_parameter_get_value_texture(
+                parameter, CNA_EFFECT_TEXTURE_2D, &returned_texture) == CNA_RESULT_SUCCESS &&
+            returned_texture == texture &&
             cna_texture2d_destroy(texture) == CNA_RESULT_INVALID_STATE,
-        "the separate base slot retains the texture and deliberately has no getter");
+        "the base overload writes the parameter's one texture slot, which the typed getter reads");
+    /* Clearing the slot through any overload releases the texture. */
     result = cna_effect_parameter_set_value_texture(
-        parameter, CNA_EFFECT_TEXTURE_BASE, CNA_INVALID_HANDLE);
+        parameter, CNA_EFFECT_TEXTURE_2D, CNA_INVALID_HANDLE);
     if (result == CNA_RESULT_SUCCESS && cna_texture2d_destroy(texture) == CNA_RESULT_SUCCESS) {
         texture = CNA_INVALID_HANDLE;
         cna_demo_check(

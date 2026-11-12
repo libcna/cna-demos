@@ -137,13 +137,13 @@ int main(int argc, char** argv)
     cna_demo_check(
         &demo,
         cna_dynamic_sound_effect_instance_update_ext(integer_stream) == CNA_RESULT_SUCCESS &&
-            needed.calls == 3,
-        "an explicit empty-queue update raises the three low-buffer requests");
+            needed.calls == 1,
+        "the update delivers the one request Play posted (two buffers pending at the start)");
     cna_demo_check(
         &demo,
         cna_audio_unsubscribe_ext(registration) == CNA_RESULT_SUCCESS &&
             cna_dynamic_sound_effect_instance_update_ext(integer_stream) == CNA_RESULT_SUCCESS &&
-            needed.calls == 3 &&
+            needed.calls == 1 &&
             cna_audio_unsubscribe_ext(registration) == CNA_RESULT_INVALID_HANDLE,
         "released BufferNeeded registration ignores later updates and expires once");
     registration = CNA_INVALID_HANDLE;

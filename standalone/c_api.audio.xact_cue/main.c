@@ -155,8 +155,10 @@ int main(int argc, char** argv)
         cna_cue_set_variable(second, view("Intensity"), 250.0F) == CNA_RESULT_SUCCESS &&
             cna_cue_get_variable(second, view("Intensity"), &other) == CNA_RESULT_SUCCESS &&
             other == 100.0F &&
+            /* An engine-global (or unknown) name is XACTENGINE_E_INVALIDVARIABLEINDEX, which XNA
+               raises as IndexOutOfRangeException and the C API reports as INVALID_ARGUMENT. */
             cna_cue_get_variable(first, view("SpeedOfSound"), &value) ==
-                CNA_RESULT_INVALID_STATE,
+                CNA_RESULT_INVALID_ARGUMENT,
         "Cue variable writes clamp to their authored range and reject an engine-global name");
 
     memset(&listener, 0, sizeof(listener));

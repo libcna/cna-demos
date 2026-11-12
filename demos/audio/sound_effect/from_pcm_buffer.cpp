@@ -10,6 +10,7 @@
 #include "Microsoft/Xna/Framework/Audio/AudioChannels.hpp"
 #include "Microsoft/Xna/Framework/Audio/NoAudioHardwareException.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundEffect.hpp"
+#include "Microsoft/Xna/Framework/FrameworkDispatcher.hpp"
 #include "Microsoft/Xna/Framework/MathHelper.hpp"
 #include "System/ArgumentException.hpp"
 #include "System/ArgumentOutOfRangeException.hpp"
@@ -98,6 +99,9 @@ namespace
         ctx.Check(offsetRejected && countRejected && rateRejected && channelsRejected,
                   "PCM construction distinguishes invalid windows from unsupported formats");
 
+        // Fire-and-forget sounds need the framework dispatcher: without a Game (whose constructor
+        // runs it) XNA's SoundEffect.Play refuses until FrameworkDispatcher.Update has run once.
+        FrameworkDispatcher::Update();
         ctx.Check(tone.Play(), "the synthesised sound plays");
     }
 }

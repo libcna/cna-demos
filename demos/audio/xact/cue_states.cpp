@@ -89,7 +89,9 @@ namespace
             disposedCleanupSafe = true;
         }
         catch (...) {}
-        ctx.Check(disposedCleanupSafe && cue->getIsDisposedProperty() && cue->getIsStoppedProperty(),
+        // A disposed cue reports no state: XNA's get_IsStopped reads the released handle's native
+        // state, 0 (Cue.get_IsStopped IL_0000-0014), like the other state getters.
+        ctx.Check(disposedCleanupSafe && cue->getIsDisposedProperty() && !cue->getIsStoppedProperty(),
                   "Pause, Resume and Stop remain safe cleanup no-ops after disposal");
         ctx.Check(disposals == 1 && disposedSender == cue.get(), "Disposing identifies the cue being released");
         cue->Dispose();

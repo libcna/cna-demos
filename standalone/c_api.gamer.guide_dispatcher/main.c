@@ -51,6 +51,7 @@ int main(int argc, char** argv)
     CNA_Bool trial = CNA_TRUE;
     CNA_NotificationPosition original_position = CNA_NOTIFICATION_POSITION_BOTTOM_CENTER;
     CNA_NotificationPosition changed_position = CNA_NOTIFICATION_POSITION_TOP_LEFT;
+    CNA_NotificationPosition flag_position = CNA_NOTIFICATION_POSITION_BOTTOM_CENTER;
     uint64_t window_handle = UINT64_C(0);
     uint64_t freed = UINT64_MAX;
     Events events;
@@ -105,16 +106,18 @@ int main(int argc, char** argv)
     changed_position = original_position == CNA_NOTIFICATION_POSITION_TOP_LEFT
         ? CNA_NOTIFICATION_POSITION_BOTTOM_RIGHT
         : CNA_NOTIFICATION_POSITION_TOP_LEFT;
+    /* Before gamer services are initialized a changed position is refused (XNA
+       set_NotificationPosition IL_0008 reaches GamerServicesDispatcher.get_PacketBuffer); an
+       unchanged one returns early (IL_0000-0006) and an undefined identity is refused first. */
     cna_demo_check(
         &demo,
-        cna_guide_set_notification_position(changed_position) == CNA_RESULT_SUCCESS &&
-            cna_guide_get_notification_position(&original_position) == CNA_RESULT_SUCCESS &&
-            original_position == changed_position &&
+        cna_guide_set_notification_position(original_position) == CNA_RESULT_SUCCESS &&
+            cna_guide_set_notification_position(changed_position) == CNA_RESULT_INVALID_STATE &&
             cna_guide_set_notification_position(UINT32_C(99)) ==
                 CNA_RESULT_INVALID_ARGUMENT &&
-            cna_guide_get_notification_position(&original_position) == CNA_RESULT_SUCCESS &&
-            original_position == changed_position,
-        "notification position round-trips while an undefined identity is atomic");
+            cna_guide_get_notification_position(&flag_position) == CNA_RESULT_SUCCESS &&
+            flag_position == original_position,
+        "before initialization only an unchanged notification position is accepted");
     cna_demo_check(
         &demo,
         cna_guide_get_simulate_trial_mode(&flag) == CNA_RESULT_SUCCESS &&
@@ -162,6 +165,16 @@ int main(int argc, char** argv)
                 CNA_RESULT_SUCCESS &&
             window_handle != UINT64_C(0x1234567890ABCDEF),
         "component initialization installs the dispatcher and Guide and replaces the caller's window sentinel");
+    cna_demo_check(
+        &demo,
+        cna_guide_set_notification_position(changed_position) == CNA_RESULT_SUCCESS &&
+            cna_guide_get_notification_position(&flag_position) == CNA_RESULT_SUCCESS &&
+            flag_position == changed_position &&
+            cna_guide_set_notification_position(UINT32_C(99)) ==
+                CNA_RESULT_INVALID_ARGUMENT &&
+            cna_guide_get_notification_position(&flag_position) == CNA_RESULT_SUCCESS &&
+            flag_position == changed_position,
+        "once initialized, the notification position round-trips while an undefined identity is atomic");
     cna_demo_check(
         &demo,
         cna_guide_get_is_trial_mode(&trial) == CNA_RESULT_SUCCESS && trial == CNA_TRUE &&

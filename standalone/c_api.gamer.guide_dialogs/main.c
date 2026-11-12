@@ -42,8 +42,40 @@ int main(int argc, char** argv)
     uint64_t copied = UINT64_C(0);
     char text[64];
     char before[64];
+    static const char AppName[] = "cna-demos-c-api-guide-dialogs";
+    static const char WindowTitle[] = "C API Guide dialogs";
+    CNA_GameCreateInfo info;
+    CNA_Handle game = CNA_INVALID_HANDLE;
 
     cna_demo_init(&demo, "c_api.gamer.guide_dialogs", argc, argv, 1);
+    memset(&info, 0, sizeof(info));
+    info.struct_size = (uint32_t)sizeof(info);
+    info.struct_version = UINT32_C(1);
+    info.target_elapsed_time_ticks = INT64_C(166667);
+    info.window_title = text_view(WindowTitle, sizeof(WindowTitle) - 1U);
+
+    /* The Guide's dialogs reach the gamer-services kernel, so as in XNA they refuse until gamer
+       services are initialized (GamerServicesDispatcher.get_PacketBuffer); a game initializes them
+       with its gamer-services component, or directly as here. */
+    cna_demo_check(
+        &demo,
+        cna_guide_begin_show_keyboard_input(
+            CNA_PLAYER_INDEX_ONE, text_view(Title, sizeof(Title) - 1U),
+            text_view(Description, sizeof(Description) - 1U), text_view("", 0U), CNA_FALSE,
+            on_completed, &completions) == CNA_RESULT_INVALID_STATE &&
+            completions == 0,
+        "before gamer services are initialized the Guide refuses its dialogs");
+    if (!cna_demo_check_result(
+            &demo,
+            cna_storage_set_app_name_ext(text_view(AppName, sizeof(AppName) - 1U)),
+            "select an empty local-profile store for deterministic startup") ||
+        !cna_demo_check_result(
+            &demo, cna_game_create(&info, &game), "create the game that owns gamer services") ||
+        !cna_demo_check_result(
+            &demo, cna_gamer_services_dispatcher_initialize(game),
+            "initialize gamer services for the Guide")) {
+        goto cleanup;
+    }
     cna_demo_check(
         &demo,
         cna_guide_reset_pending_keyboard_input_ext() == CNA_RESULT_SUCCESS &&
@@ -263,5 +295,8 @@ int main(int argc, char** argv)
 cleanup:
     (void)cna_guide_reset_pending_keyboard_input_ext();
     (void)cna_guide_reset_pending_message_box_ext();
+    if (game != CNA_INVALID_HANDLE) {
+        (void)cna_game_destroy(game);
+    }
     return cna_demo_finish(&demo);
 }

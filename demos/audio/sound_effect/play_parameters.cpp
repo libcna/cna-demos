@@ -6,6 +6,7 @@
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundEffect.hpp"
+#include "Microsoft/Xna/Framework/FrameworkDispatcher.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentManager.hpp"
 #include "Microsoft/Xna/Framework/TitleLocation.hpp"
 #include "System/ArgumentOutOfRangeException.hpp"
@@ -23,6 +24,10 @@ namespace
         ContentManager content;
         content.setRootDirectoryProperty("assets");
         SoundEffect tone = content.Load<SoundEffect>("sounds/tone_440");
+
+        // Fire-and-forget sounds need the framework dispatcher: without a Game (whose constructor
+        // runs it) XNA's SoundEffect.Play refuses until FrameworkDispatcher.Update has run once.
+        FrameworkDispatcher::Update();
 
         // volume 0..1, pitch -1..1 (one octave down to one octave up), pan -1 (left) .. 1 (right).
         ctx.Check(tone.Play(1.0f, 0.0f, -1.0f), "full volume, original pitch, left");

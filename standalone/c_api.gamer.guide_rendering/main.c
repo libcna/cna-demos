@@ -284,6 +284,7 @@ int main(int argc, char** argv)
     CNA_GameCreateInfo create_info;
     CNA_Handle game = CNA_INVALID_HANDLE;
     CNA_Handle manager = CNA_INVALID_HANDLE;
+    CNA_Handle gamer_services = CNA_INVALID_HANDLE;
 
     cna_demo_init(&demo, "c_api.gamer.guide_rendering", argc, argv, 2);
     memset(&state, 0, sizeof(state));
@@ -312,7 +313,23 @@ int main(int argc, char** argv)
         "C Guide dialog rendering", sizeof("C Guide dialog rendering") - 1U);
     create_info.callbacks = &callbacks;
     if (!cna_demo_check_result(
+            &demo,
+            cna_storage_set_app_name_ext(text_view(
+                "cna-demos-c-api-guide-rendering", sizeof("cna-demos-c-api-guide-rendering") - 1U)),
+            "select an empty local-profile store so no sign-in toast covers the overlays") ||
+        !cna_demo_check_result(
             &demo, cna_game_create(&create_info, &game), "create the Guide rendering game")) {
+        return cna_demo_finish(&demo);
+    }
+    /* The Guide's dialogs need initialized gamer services, as in XNA: the game adds its
+       gamer-services component, which initializes them in Initialize and pumps them each frame. */
+    if (!cna_demo_check_result(
+            &demo, cna_gamer_services_component_create(game, &gamer_services),
+            "create the gamer-services component") ||
+        !cna_demo_check_result(
+            &demo, cna_game_components_add(game, gamer_services),
+            "add the gamer-services component before the game runs")) {
+        (void)cna_game_destroy(game);
         return cna_demo_finish(&demo);
     }
     cna_demo_check_result(
@@ -330,6 +347,11 @@ int main(int argc, char** argv)
         cna_demo_check_result(
             &demo, cna_graphics_device_manager_destroy(manager),
             "destroy the Guide graphics-device manager");
+    }
+    if (gamer_services != CNA_INVALID_HANDLE) {
+        cna_demo_check_result(
+            &demo, cna_game_component_destroy(gamer_services),
+            "remove and release the gamer-services component");
     }
     cna_demo_check_result(&demo, cna_game_destroy(game), "destroy the Guide rendering game");
     return cna_demo_finish(&demo);

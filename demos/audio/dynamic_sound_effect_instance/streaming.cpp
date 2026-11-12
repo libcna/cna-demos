@@ -56,12 +56,15 @@ namespace
                                        &args == &System::EventArgs::Empty;
                     recoveryProbe.SubmitBuffer(recoveryBuffer);
                 });
+            // XNA posts one BufferNeeded when Play starts a Stopped voice with at most two buffers
+            // pending, and the next update delivers it; it never raises from Play itself.
             recoveryProbe.Play();
+            Context().Check(recoveryRequests == 0, "Play itself raises no BufferNeeded");
             recoveryProbe.Update();
-            Context().Check(recoveryRequests == 3 && recoveryProbe.getPendingBufferCountProperty() == 3 &&
+            Context().Check(recoveryRequests == 1 && recoveryProbe.getPendingBufferCountProperty() <= 1 &&
                                 recoveryProbe.getStateProperty() == SoundState::Playing && recoveryPayloads,
-                            "an empty playing stream requests exactly three buffers and recovers synchronously");
-            Context().Check(oneShotRequests == 1 && recoveryRequests == 3 && recoveryProbe.BufferNeeded.Size() == 1,
+                            "starting an empty stream asks once, at the next update, and the refill is queued");
+            Context().Check(oneShotRequests == 1 && recoveryRequests == 1 && recoveryProbe.BufferNeeded.Size() == 1,
                             "a listener can remove itself without suppressing the independent refill listener");
             recoveryProbe.BufferNeeded.Remove(recoveryToken);
             recoveryProbe.Stop();

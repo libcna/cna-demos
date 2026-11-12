@@ -104,12 +104,14 @@ namespace
                       "a paused consuming cue keeps both banks in use");
 
             waves.Dispose();
+            // A disposed cue reports no state at all: XNA's get_IsStopped (like the other state
+            // getters) reads the released handle's native state, 0 (Cue.get_IsStopped IL_0000-0014).
             ctx.Check(waves.getIsDisposedProperty() && active->getIsDisposedProperty() &&
-                      active->getIsStoppedProperty() && !waves.getIsInUseProperty(),
+                      !active->getIsStoppedProperty() && !waves.getIsInUseProperty(),
                       "disposing the wave bank disposes its consuming cue");
             // The never-played prepared cue resolved the same waves, so it is released as well.
             ctx.Check(!sounds.getIsDisposedProperty() && prepared->getIsDisposedProperty() &&
-                      prepared->getIsStoppedProperty() && !sounds.getIsInUseProperty(),
+                      !prepared->getIsStoppedProperty() && !sounds.getIsInUseProperty(),
                       "the sound bank survives wave-bank disposal, which also releases the never-played prepared cue");
             waves.Dispose();
             ctx.Check(waveEvents == 1 && waveSender && preparedEvents == 1 && activeEvents == 1 && cueSenders,
@@ -159,7 +161,7 @@ namespace
                       "deleting the only cue handle frees the sound bank, whose resolved references keep the wave bank in use");
             prepared.reset(sounds.GetCue("MidTone"));
             sounds.Dispose();
-            ctx.Check(prepared->getIsDisposedProperty() && prepared->getIsStoppedProperty() &&
+            ctx.Check(prepared->getIsDisposedProperty() && !prepared->getIsStoppedProperty() &&
                           !waves.getIsDisposedProperty() && !waves.getIsInUseProperty(),
                       "disposing the sound bank disposes its never-played prepared cue and frees the wave bank");
         }

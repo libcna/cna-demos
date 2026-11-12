@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MS-PL
-// TQ-084 (3274f9572): engine-global wrong-domain lookups use IndexOutOfRangeException; cue lookups keep their family.
+// TQ-084 (3274f9572) and RV-CUE (d9464bd61): wrong-domain and unknown variable names are
+// IndexOutOfRangeException for the engine and for a cue alike (XACTENGINE_E_INVALIDVARIABLEINDEX).
 // XACT cue variables: values each Cue keeps for itself (unlike the engine's global variables).
 #include <memory>
 #include "CnaDemos/Demo.hpp"
@@ -19,7 +20,9 @@ using Microsoft::Xna::Framework::TitleLocation;
 
 namespace
 {
-    // Whether calling f is refused, as XNA refuses a variable name of the wrong kind.
+    // Whether calling f is refused, as XNA refuses a variable name of the wrong kind: the native
+    // XACTENGINE_E_INVALIDVARIABLEINDEX becomes IndexOutOfRangeException (Helpers.GetExceptionFromResult
+    // IL_0189-0193).
     template <typename F>
     bool Refused(F&& f)
     {
@@ -27,7 +30,7 @@ namespace
         {
             f();
         }
-        catch (const System::InvalidOperationException&)
+        catch (const System::IndexOutOfRangeException&)
         {
             return true;
         }

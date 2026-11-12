@@ -191,7 +191,9 @@ namespace
               "a Vorbis rating reaches Song as 8 while an unrated peer stays explicitly unrated");
 
         Song* plain = byName["Plain Wave"];
-        check(plain->getArtistProperty() && plain->getAlbumProperty() && !plain->getGenreProperty() &&
+        // A missing genre is XNA's shared Genre.Empty (named ""), never null.
+        check(plain->getArtistProperty() && plain->getAlbumProperty() && plain->getGenreProperty() &&
+                  plain->getGenreProperty()->getNameProperty().empty() &&
                   plain->getArtistProperty()->getNameProperty() == "Fallback Artist" &&
                   plain->getAlbumProperty()->getNameProperty() == "Fallback Album" &&
                   plain->getTrackNumberProperty() == 0 && !plain->getIsRatedProperty() &&
@@ -199,7 +201,8 @@ namespace
               "an untagged WAV derives title, artist and album from its nested path without inventing other tags");
         Song* partialSong = byName["Partial Tag"];
         check(partialSong->getArtistProperty() && partialSong->getAlbumProperty() &&
-                  !partialSong->getGenreProperty() && partialSong->getNameProperty() == "Partial Tag" &&
+                  partialSong->getGenreProperty() && partialSong->getGenreProperty()->getNameProperty().empty() &&
+                  partialSong->getNameProperty() == "Partial Tag" &&
                   partialSong->getArtistProperty()->getNameProperty() == "Partial Artist" &&
                   partialSong->getAlbumProperty()->getNameProperty() == "Partial Album" &&
                   partialSong->getTrackNumberProperty() == 0,

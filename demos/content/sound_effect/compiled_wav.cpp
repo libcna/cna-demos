@@ -5,6 +5,7 @@
 
 #include "CnaDemos/Demo.hpp"
 #include "Microsoft/Xna/Framework/Audio/SoundEffect.hpp"
+#include "Microsoft/Xna/Framework/FrameworkDispatcher.hpp"
 #include "Microsoft/Xna/Framework/Content/ContentManager.hpp"
 #include "System/TimeSpan.hpp"
 
@@ -27,6 +28,9 @@ namespace
                       "the compiled chime keeps its 0.3 s length");
         ctx.CheckNear(tone.getDurationProperty().getTotalSecondsProperty(), 0.25, 0.001, "the loose tone is 0.25 s");
 
+        // Fire-and-forget sounds need the framework dispatcher: without a Game (whose constructor
+        // runs it) XNA's SoundEffect.Play refuses until FrameworkDispatcher.Update has run once.
+        Microsoft::Xna::Framework::FrameworkDispatcher::Update();
         chime.Play();
         std::this_thread::sleep_for(std::chrono::milliseconds(350));
         tone.Play();

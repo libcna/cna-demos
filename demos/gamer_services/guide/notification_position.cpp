@@ -71,17 +71,19 @@ namespace
         NotificationPositionDemo()
             : GamerServicesDemo("Position One,Position Two,Position Three")
         {
-            // Set before the profiles sign in, so the first queued notification already uses it.
             // Three real sign-in toasts keep the rendered grid anchors observable even when a
             // slow software back-buffer read cannot visit them within one toast's finite lifetime.
-            // (XNA's default is BottomCenter.)
-            defaultPosition_ = Guide::getNotificationPositionProperty();
-            Guide::setNotificationPositionProperty(Positions.front());
         }
 
     protected:
         void LoadContent() override
         {
+            // Changing the position needs initialized gamer services (XNA set_NotificationPosition
+            // IL_0008 reaches GamerServicesDispatcher.get_PacketBuffer), which the component has
+            // done by now; the toasts read it when they draw, so the first one already uses it.
+            // (XNA's default is BottomCenter.)
+            defaultPosition_ = Guide::getNotificationPositionProperty();
+            Guide::setNotificationPositionProperty(Positions.front());
             auto& ctx = Context();
             spriteBatch_ = std::make_unique<SpriteBatch>(getGraphicsDeviceProperty());
             font_.emplace(getContentProperty().Load<SpriteFont>("fonts/pixel_font"));

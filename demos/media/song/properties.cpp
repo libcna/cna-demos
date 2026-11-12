@@ -4,7 +4,11 @@
 #include <string>
 
 #include "CnaDemos/Demo.hpp"
+#include "Microsoft/Xna/Framework/Media/Album.hpp"
+#include "Microsoft/Xna/Framework/Media/Artist.hpp"
+#include "Microsoft/Xna/Framework/Media/Genre.hpp"
 #include "Microsoft/Xna/Framework/Media/Song.hpp"
+#include "Microsoft/Xna/Framework/Media/SongCollection.hpp"
 #include "Microsoft/Xna/Framework/TitleLocation.hpp"
 #include "System/ObjectDisposedException.hpp"
 
@@ -55,12 +59,15 @@ namespace
                   "different files remain unequal despite equal display names, which supply diagnostic text");
 
         // Album, artist, genre, protection and rating come from a media library (a music
-        // collection the platform indexes); a song made from a file has none of them. Duration
-        // is filled in when CNA can probe the file (builds with the FFmpeg media module); without
-        // a probe it is zero, and playback still runs to the end.
-        ctx.Check(song->getAlbumProperty() == nullptr && song->getArtistProperty() == nullptr &&
-                      song->getGenreProperty() == nullptr,
-                  "a song from a file has no album, artist or genre");
+        // collection the platform indexes); a song made from a file has none of them, so XNA
+        // answers its shared empty objects -- never null -- named "" and with no songs or albums.
+        // Duration is filled in when CNA can probe the file (builds with the FFmpeg media
+        // module); without a probe it is zero, and playback still runs to the end.
+        ctx.Check(song->getAlbumProperty() != nullptr && song->getAlbumProperty()->getNameProperty().empty() &&
+                      song->getAlbumProperty()->getSongsProperty()->getCountProperty() == 0 &&
+                      song->getArtistProperty() != nullptr && song->getArtistProperty()->getNameProperty().empty() &&
+                      song->getGenreProperty() != nullptr && song->getGenreProperty()->getNameProperty().empty(),
+                  "a song from a file has XNA's empty album, artist and genre, not null");
         ctx.Check(!song->getIsProtectedProperty() && !song->getIsRatedProperty(), "it is neither DRM-protected nor rated");
         ctx.Check(!song->getIsDisposedProperty(), "IsDisposed is false until Dispose");
         song->Dispose();
