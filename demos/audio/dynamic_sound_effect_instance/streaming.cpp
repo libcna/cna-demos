@@ -87,12 +87,11 @@ namespace
             Context().Check(voice_->getPendingBufferCountProperty() == 2,
                             "two submitted buffers are pending before playback starts");
             voice_->Play();
-            // There is no authored release region to enter: Stop(false) is invalid once playing.
-            bool releaseRejected = false;
-            try { voice_->Stop(false); }
-            catch (const System::InvalidOperationException&) { releaseRejected = true; }
-            Context().Check(releaseRejected && voice_->getStateProperty() == SoundState::Playing,
-                            "Stop(false) is rejected without interrupting the stream");
+            // Dynamic buffers have no loop to exit, so Stop(false) leaves playback alone (XNA's
+            // KernelSoundEffectInstance.Stop only calls ExitLoop for it, IL_0065-0072).
+            voice_->Stop(false);
+            Context().Check(voice_->getStateProperty() == SoundState::Playing,
+                            "Stop(false) leaves the non-looping stream playing");
         }
 
         void Update(GameTime& gameTime) override
